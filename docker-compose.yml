@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-    postgresdb:
+    identitydb:
         image: postgres
     identityapi:
         image: identityapi
@@ -9,7 +9,7 @@ services:
             context: .
             dockerfile: IdentityApi/Dockerfile
         environment:
-            - ConnectionStrings:IdentityContext=User Id=postgres;Password=NDGSTUDIOPOSTGRESFORAWS;Server=postgresdb;Port=5432;Database=postgres;Integrated Security=true;Pooling=true;
+            - ConnectionStrings__IdentityContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
             - JWTSECRET=ApplicationSecretWhichUsed4Authentication.JwtToken*?xx23.45dsajdnjaIsykKhJdyshahbBHSBDA.HBDSHA33X3SJDNJSAKU.WHDEWO2348nG2mS9ASDrA34oS5D.J.SAD
 volumes:
-    postgresdb_volume:
+    identitydb_volume:
