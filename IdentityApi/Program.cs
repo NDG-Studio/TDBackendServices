@@ -79,7 +79,7 @@ using (var serviceScope = app.Services
 }
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<JWTMiddleware>();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

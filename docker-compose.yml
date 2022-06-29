@@ -7,16 +7,19 @@ version: '3.4'
 services:
     identitydb:
         image: postgres
+        mem_limit: 1g
         #networks:
         #    - isolation-network
     progressdb:
         image: postgres
+        mem_limit: 1g
         #networks:
         #    - isolation-network
     identityapi:
         #networks:
         #    - isolation-network
-        image: identityapi
+        image: ugurcanbagriyanik/identityapi
+        mem_limit: 1g
         build:
             context: .
             dockerfile: IdentityApi/Dockerfile
@@ -26,7 +29,8 @@ services:
     progressapi:
         #networks:
         #    - isolation-network
-        image: progressapi
+        image: ugurcanbagriyanik/progressapi
+        mem_limit: 1g
         build:
             context: .
             dockerfile: ProgressApi/Dockerfile
