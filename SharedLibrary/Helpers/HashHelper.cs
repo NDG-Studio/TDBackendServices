@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 
 
-namespace IdentityApi.Helpers
+namespace SharedLibrary.Helpers
 {
     public static class HashHelper
     {

@@ -1,14 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SharedLibrary.Models;
 
 namespace IdentityApi.Models
 {
-    public class UserDto
-    {
-        public long Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-
-    }
 
     public class UserRequest
     {

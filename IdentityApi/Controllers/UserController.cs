@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using IdentityApi.Models;
-using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
+using SharedLibrary.Models;
 
 namespace IdentityApi.Controllers
 {
@@ -26,9 +26,14 @@ namespace IdentityApi.Controllers
         {
             return await _userService.GetUserById(id);
         }
-        
 
-        // [AdminRequired]
+        [HttpGet("CheckToken")]
+        public async Task<TDResponse> CheckToken([FromQuery]string token)
+        {
+            return await _userService.CheckToken(token);
+        }
+
+
         [HttpPost("AddUser")]
         public async Task<TDResponse> AddUser([FromBody] UserRequest userRequest)
         {

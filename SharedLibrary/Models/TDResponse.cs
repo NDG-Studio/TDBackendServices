@@ -1,4 +1,6 @@
-namespace IdentityApi.Helpers
+using SharedLibrary.Helpers;
+
+namespace SharedLibrary.Models
 {
 
     public class TDResponse
@@ -9,31 +11,31 @@ namespace IdentityApi.Helpers
 
         public void SetError(string Message)
         {
-            this.HasError = true;
+            HasError = true;
             this.Message = Message;
         }
         public void SetError()
         {
-            this.HasError = true;
-            this.Message = OperationMessages.GeneralError;
+            HasError = true;
+            Message = OperationMessages.GeneralError;
         }
 
         public void SetSuccess(string Message)
         {
-            this.HasError = false;
+            HasError = false;
             this.Message = Message;
         }
         public void SetSuccess()
         {
-            this.HasError = false;
-            this.Message = OperationMessages.Success;
+            HasError = false;
+            Message = OperationMessages.Success;
         }
 
 
     }
     public class TDResponse<T> : TDResponse
     {
-        public T? Data { get; set; } = default(T);
+        public T? Data { get; set; } = default;
 
     }
 

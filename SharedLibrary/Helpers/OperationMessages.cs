@@ -1,5 +1,5 @@
 
-namespace IdentityApi.Helpers
+namespace SharedLibrary.Helpers
 {
     public static class OperationMessages{
         public const string GeneralError = "Hata nedeniyle işleminiz gerçekleştirilemedi";
@@ -16,5 +16,7 @@ namespace IdentityApi.Helpers
         public const string ModelStateNotValid = "Lütfen girilen bilgileri kontrol edip tekrar deneyiniz";
 
         public const string DuplicateRecord = "Bu kayıt daha önceden eklendiğinden tekrar eklenemez.";
+
+        public const string TokenFail = "İzinsiz giriş denemesi!";
     }
 }

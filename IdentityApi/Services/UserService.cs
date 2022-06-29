@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Mvc;
 using IdentityApi.Models;
 using IdentityApi.Entities;
 using IdentityApi.Interfaces;
-using IdentityApi.Helpers;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using SharedLibrary.Helpers;
+using SharedLibrary.Models;
 
 namespace IdentityApi.Services
 {
@@ -30,21 +30,6 @@ namespace IdentityApi.Services
             _configuration=configuration;
         }
 
-        //public async Task<TDResponse<Paging<UserDto>>> GetUserList(Paging pagingParameters)
-        //{
-        //    TDResponse<Paging<UserDto>> response = new TDResponse<Paging<UserDto>>();
-        //    try
-        //    {
-        //        response.Data = await _context.User.ToPagingAsync<User, UserDto>(pagingParameters, _mapper);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response.SetError(OperationMessages.DbError);
-        //    }
-
-        //    return response;
-        //}
-
         public async Task<TDResponse<UserDto>> GetUserById(long id)
         {
             TDResponse<UserDto> response = new TDResponse<UserDto>();
@@ -59,8 +44,38 @@ namespace IdentityApi.Services
             }
 
             return response;
-        }    
-        
+        }
+
+        public async Task<TDResponse<UserDto>> CheckToken(string token)
+        {
+            TDResponse<UserDto> response = new TDResponse<UserDto>();
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSECRET"));
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = long.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+
+                response.Data = GetUserById(userId).Result.Data;
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.TokenFail);
+            }
+
+            return response;
+        }
+
 
         public async Task<TDResponse> AddUser(UserRequest userRequest)
         {
@@ -104,34 +119,6 @@ namespace IdentityApi.Services
 
             return response;
         }
-        
-        //public async Task<TDResponse> UpdateUser(UserDto userDto)
-        //{
-        //    TDResponse response = new TDResponse();
-        //    try
-        //    {
-        //        var user = await _context.User.Where(l => l.Id == userDto.Id).FirstOrDefaultAsync();
-        //        if (user != null)
-        //        {
-        //            user.Name = userDto.Name;
-        //            user.Surname = userDto.Surname;
-        //            user.Email = userDto.Email;
-        //            user.PhoneNumber = userDto.PhoneNumber;
-        //            await _context.SaveChangesAsync();
-        //            response.SetSuccess();
-        //        }
-        //        else
-        //        {
-        //            response.SetError(OperationMessages.DbItemNotFound);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response.SetError(OperationMessages.DbError);
-        //    }
-
-        //    return response;
-        //}
 
         public async Task<TDResponse<AuthenticateResponse>> Login(AuthenticateRequest model)
         {

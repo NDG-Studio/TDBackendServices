@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-//using UserService.Models;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 
-namespace IdentityApi.Helpers
+namespace SharedLibrary.Helpers
 {
     public class Paging<T>
     {
