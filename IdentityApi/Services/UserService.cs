@@ -22,12 +22,12 @@ namespace IdentityApi.Services
         private readonly IdentityContext _context;
         private readonly IConfiguration _configuration;
 
-        public UserService(ILogger<UserService> logger, IdentityContext context, IMapper mapper,IConfiguration configuration)
+        public UserService(ILogger<UserService> logger, IdentityContext context, IMapper mapper, IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
-            _configuration=configuration;
+            _configuration = configuration;
         }
 
         public async Task<TDResponse<UserDto>> GetUserById(long id)
@@ -77,14 +77,50 @@ namespace IdentityApi.Services
         }
 
 
-        public async Task<TDResponse> AddUser(UserRequest userRequest)
+        public async Task<TDResponse> SignInRequest(UserRequest userRequest)
         {
             TDResponse response = new TDResponse();
             try
             {
                 var us = _mapper.Map<User>(userRequest);
+                us.IsActive = null;
+                us.LastSeen = DateTimeOffset.UtcNow;
                 us.PasswordHash = HashHelper.ComputeSha256Hash(userRequest.Password);
-                await _context.AddAsync(us);
+                var existUser = await _context.User.Where(l => l.Username == us.Username).FirstOrDefaultAsync();
+
+                if (existUser != null)
+                {
+                    if (existUser.IsActive == true)
+                    {
+                        response.SetError(OperationMessages.DbError);
+                        return response;
+                    }
+                    else if (existUser.IsActive == null)
+                    {
+                        existUser.PasswordHash = us.PasswordHash;
+                        existUser.Email = us.Email;
+                        existUser.MobileUserId = us.MobileUserId;
+                        existUser.IsAndroid = us.IsAndroid;
+                        existUser.LastSeen = us.LastSeen;
+                        existUser.UsingNFT  =us.UsingNFT;
+                    }
+                }
+                else
+                {
+                    await _context.AddAsync(us);
+                }
+
+                #region Create Token
+                var userToken = new UserToken()
+                {
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    IsActive = true,
+                    Token = new Random().Next(100000, 999999).ToString(),
+                    UserId = us.Id
+                };
+                await _context.AddAsync(userToken);
+                #endregion
+                //todo:sendmail
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
             }
@@ -123,7 +159,7 @@ namespace IdentityApi.Services
         public async Task<TDResponse<AuthenticateResponse>> Login(AuthenticateRequest model)
         {
             TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
-            var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive!=false);
+            var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
 
             if (!userEnt.PasswordHash.Equals(HashHelper.ComputeSha256Hash(model.Password)))
             {

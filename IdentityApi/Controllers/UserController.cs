@@ -34,10 +34,10 @@ namespace IdentityApi.Controllers
         }
 
 
-        [HttpPost("AddUser")]
-        public async Task<TDResponse> AddUser([FromBody] UserRequest userRequest)
+        [HttpPost("SignInRequest")]
+        public async Task<TDResponse> SignInRequest([FromBody] UserRequest userRequest)
         {
-            return await _userService.AddUser(userRequest);
+            return await _userService.SignInRequest(userRequest);
         }
         
 

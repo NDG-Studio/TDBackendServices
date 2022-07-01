@@ -15,6 +15,7 @@ namespace IdentityApi
 
 
         public DbSet<User> User { get; set; }
+        public DbSet<UserToken> UserToken { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
