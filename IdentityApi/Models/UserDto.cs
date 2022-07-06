@@ -16,6 +16,15 @@ namespace IdentityApi.Models
 
     }
 
+    public class ActivationRequest
+    {
+        [Required]
+        public long userId { get; set; }
+
+        [Required]
+        public string token { get; set; }
+    }
+
     public class AuthenticateRequest
     {
         [Required]

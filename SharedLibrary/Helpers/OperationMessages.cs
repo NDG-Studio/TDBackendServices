@@ -16,7 +16,10 @@ namespace SharedLibrary.Helpers
         public const string ModelStateNotValid = "Lütfen girilen bilgileri kontrol edip tekrar deneyiniz";
 
         public const string DuplicateRecord = "Bu kayıt daha önceden eklendiğinden tekrar eklenemez.";
+        public const string DuplicateMail = "Bu mail sisteme kayıtlı!";
 
         public const string TokenFail = "İzinsiz giriş denemesi!";
+
+        public const string UserAllreadyActive = "Kullanıcı zaten aktif olduğundan işleminiz gerçekleşmedi!";
     }
 }

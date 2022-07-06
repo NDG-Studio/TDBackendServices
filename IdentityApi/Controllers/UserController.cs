@@ -35,11 +35,23 @@ namespace IdentityApi.Controllers
 
 
         [HttpPost("SignInRequest")]
-        public async Task<TDResponse> SignInRequest([FromBody] UserRequest userRequest)
+        public async Task<TDResponse<long>> SignInRequest([FromBody] UserRequest userRequest)
         {
             return await _userService.SignInRequest(userRequest);
-        }
+        }        
         
+        [HttpPost("ActivateUser")]
+        public async Task<TDResponse> ActivateUser([FromBody] ActivationRequest activationRequest)
+        {
+            return await _userService.ActivateUser(activationRequest.userId, activationRequest.token);
+        }
+
+        [HttpPost("ResendToken")]
+        public async Task<TDResponse> ResendToken([FromQuery] long userId)
+        {
+            return await _userService.ResendToken(userId);
+        }
+
 
 
         [HttpPost("Login")]

@@ -3,6 +3,7 @@ using System;
 using IdentityApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityApi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20220704094223_usertoken_added")]
+    partial class usertoken_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +71,7 @@ namespace IdentityApi.Migrations
                             Email = "ugurcan.bagriyanik@ndgstudio.com.tr",
                             IsActive = true,
                             IsAndroid = true,
-                            LastSeen = new DateTimeOffset(new DateTime(2022, 7, 4, 12, 47, 22, 335, DateTimeKind.Unspecified).AddTicks(9685), new TimeSpan(0, 3, 0, 0, 0)),
+                            LastSeen = new DateTimeOffset(new DateTime(2022, 7, 4, 12, 42, 23, 323, DateTimeKind.Unspecified).AddTicks(7677), new TimeSpan(0, 3, 0, 0, 0)),
                             MobileUserId = "dummyMobileUserId1",
                             PasswordHash = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
                             Username = "Ugur",
@@ -100,20 +102,7 @@ namespace IdentityApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("UserToken");
-                });
-
-            modelBuilder.Entity("IdentityApi.Entities.UserToken", b =>
-                {
-                    b.HasOne("IdentityApi.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -59,6 +59,7 @@ builder.Services.AddAutoMapper(
     typeof(UserProfile)
     );
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMailService, MailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

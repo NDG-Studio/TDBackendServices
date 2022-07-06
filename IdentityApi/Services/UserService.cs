@@ -21,13 +21,15 @@ namespace IdentityApi.Services
         private readonly IMapper _mapper;
         private readonly IdentityContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMailService _mailService;
 
-        public UserService(ILogger<UserService> logger, IdentityContext context, IMapper mapper, IConfiguration configuration)
+        public UserService(ILogger<UserService> logger, IdentityContext context, IMailService mailService, IMapper mapper, IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
             _configuration = configuration;
+            _mailService = mailService;
         }
 
         public async Task<TDResponse<UserDto>> GetUserById(long id)
@@ -77,52 +79,77 @@ namespace IdentityApi.Services
         }
 
 
-        public async Task<TDResponse> SignInRequest(UserRequest userRequest)
+        public async Task<TDResponse<long>> SignInRequest(UserRequest userRequest)
         {
-            TDResponse response = new TDResponse();
+            TDResponse<long> response = new TDResponse<long>();
             try
             {
-                var us = _mapper.Map<User>(userRequest);
-                us.IsActive = null;
-                us.LastSeen = DateTimeOffset.UtcNow;
-                us.PasswordHash = HashHelper.ComputeSha256Hash(userRequest.Password);
-                var existUser = await _context.User.Where(l => l.Username == us.Username).FirstOrDefaultAsync();
-
-                if (existUser != null)
+                using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
                 {
-                    if (existUser.IsActive == true)
+                    try
                     {
-                        response.SetError(OperationMessages.DbError);
-                        return response;
+                        var us = _mapper.Map<User>(userRequest);
+                        us.IsActive = null;
+                        us.LastSeen = DateTimeOffset.UtcNow;
+                        us.PasswordHash = HashHelper.ComputeSha256Hash(userRequest.Password);
+                        if (await _context.User.Where(l => l.Email == us.Email && l.IsActive != false).AnyAsync())
+                        {
+                            response.SetError(OperationMessages.DuplicateMail);
+                            return response;
+                        }
+
+                        var existUser = await _context.User.Where(l => l.Username == us.Username && l.IsActive!=false).FirstOrDefaultAsync();
+
+                        if (existUser != null)
+                        {
+                            if (existUser.IsActive == true)
+                            {
+                                response.SetError(OperationMessages.DuplicateRecord);
+                                return response;
+                            }
+                            else if (existUser.IsActive == null)
+                            {
+                                existUser.PasswordHash = us.PasswordHash;
+                                existUser.Email = us.Email;
+                                existUser.MobileUserId = us.MobileUserId;
+                                existUser.IsAndroid = us.IsAndroid;
+                                existUser.LastSeen = us.LastSeen;
+                                existUser.UsingNFT = us.UsingNFT;
+                            }
+                        }
+                        else
+                        {
+                            await _context.AddAsync(us);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        #region Create Token
+                        
+                        var userToken = new UserToken()
+                        {
+                            CreatedDate = DateTimeOffset.UtcNow,
+                            IsActive = true,
+                            Token = new Random().Next(100000, 999999).ToString(),
+                            UserId = existUser != null ? existUser.Id : us.Id
+                        };
+                        var tokenExist = await _context.UserToken.Where(l=>l.UserId == userToken.UserId && l.IsActive==true).ToListAsync();
+                        foreach (var t in tokenExist)
+                        {
+                            t.IsActive = false;
+                        }
+                        await _context.AddAsync(userToken);
+                        #endregion
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                        _mailService.SendMailAsync(us.Email, userToken.Token);
+                        response.SetSuccess();
                     }
-                    else if (existUser.IsActive == null)
+                    catch (Exception e)
                     {
-                        existUser.PasswordHash = us.PasswordHash;
-                        existUser.Email = us.Email;
-                        existUser.MobileUserId = us.MobileUserId;
-                        existUser.IsAndroid = us.IsAndroid;
-                        existUser.LastSeen = us.LastSeen;
-                        existUser.UsingNFT  =us.UsingNFT;
+                        transaction.Rollback();
+                        throw e;
                     }
                 }
-                else
-                {
-                    await _context.AddAsync(us);
-                }
-
-                #region Create Token
-                var userToken = new UserToken()
-                {
-                    CreatedDate = DateTimeOffset.UtcNow,
-                    IsActive = true,
-                    Token = new Random().Next(100000, 999999).ToString(),
-                    UserId = us.Id
-                };
-                await _context.AddAsync(userToken);
-                #endregion
-                //todo:sendmail
-                await _context.SaveChangesAsync();
-                response.SetSuccess();
             }
             catch (Exception e)
             {
@@ -131,6 +158,72 @@ namespace IdentityApi.Services
 
             return response;
         }
+
+
+        public async Task<TDResponse> ActivateUser(long userId,string token)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                var xx = await _context.UserToken.Where(l => l.UserId == userId && l.Token == token && l.IsActive == true && l.CreatedDate < DateTimeOffset.UtcNow.AddMinutes(5)).FirstOrDefaultAsync();
+                if (xx!=null)
+                {
+                    xx.IsActive = false;
+                    var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
+                    _user.IsActive = true;
+                    _user.LastSeen = DateTimeOffset.UtcNow;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                }
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+        }        
+        
+        public async Task<TDResponse> ResendToken(long userId)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
+                if (_user==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    return response;
+                }
+                else if (_user.IsActive==true)
+                {
+                    response.SetError(OperationMessages.UserAllreadyActive);
+                    return response;
+                }
+
+                var tokenExist = await _context.UserToken.Where(l => l.UserId == userId && l.IsActive == true).ToListAsync();
+                foreach (var t in tokenExist)
+                {
+                    t.IsActive = false;
+                }
+                var newToken = new UserToken()
+                {
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    IsActive = true,
+                    Token = new Random().Next(100000, 999999).ToString(),
+                    UserId = userId
+                };
+                await _context.AddAsync(newToken);
+                await _context.SaveChangesAsync();
+                _mailService.SendMailAsync(_user.Email, newToken.Token);
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+        }
+
 
         public async Task<TDResponse> DeleteUserById(int id)
         {
@@ -161,7 +254,7 @@ namespace IdentityApi.Services
             TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
             var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
 
-            if (!userEnt.PasswordHash.Equals(HashHelper.ComputeSha256Hash(model.Password)))
+            if (userEnt?.PasswordHash?.Equals(HashHelper.ComputeSha256Hash(model.Password)) != true)
             {
                 response.SetError(OperationMessages.AuthenticateError);
             }

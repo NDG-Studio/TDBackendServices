@@ -5,7 +5,7 @@ namespace IdentityApi.Interfaces
 {
     public interface IMailService    
     {
-        bool SendMail(string mailAdress, string token);
+        Task<bool> SendMailAsync(string mailAdress, string token);
 
     }
 }
