@@ -9,6 +9,8 @@ using System.Security.Claims;
 using System.Text;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityApi.Services
 {
@@ -32,6 +34,27 @@ namespace IdentityApi.Services
             _mailService = mailService;
         }
 
+        public async Task<TDResponse<UserDto>> GetUserById(BaseRequest<long> req)
+        {
+            TDResponse<UserDto> response = new TDResponse<UserDto>();
+            req.SetInfo("GetUserById");
+            var id = req.Data;
+            try
+            {
+                var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
+                response.Data = _mapper.Map<UserDto>(user);
+                response.SetSuccess();
+                req.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(req.Info?.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                _logger.LogError(getException(e, "GetUserById"));
+            }
+
+            return response;
+        }        
         public async Task<TDResponse<UserDto>> GetUserById(long id)
         {
             TDResponse<UserDto> response = new TDResponse<UserDto>();
@@ -79,9 +102,11 @@ namespace IdentityApi.Services
         }
 
 
-        public async Task<TDResponse<long>> SignInRequest(UserRequest userRequest)
+        public async Task<TDResponse<long>> SignInRequest(BaseRequest<UserRequest> req)
         {
             TDResponse<long> response = new TDResponse<long>();
+            var userRequest = req.Data;
+            req.SetInfo("SignInRequest");
             try
             {
                 using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
@@ -95,16 +120,20 @@ namespace IdentityApi.Services
                         if (await _context.User.Where(l => l.Email == us.Email && l.IsActive != false).AnyAsync())
                         {
                             response.SetError(OperationMessages.DuplicateMail);
+                            req.AddInfo(OperationMessages.DuplicateMail);
+                            _logger.LogInformation(req.Info?.ToString());
                             return response;
                         }
 
-                        var existUser = await _context.User.Where(l => l.Username == us.Username && l.IsActive!=false).FirstOrDefaultAsync();
+                        var existUser = await _context.User.Where(l => l.Username == us.Username && l.IsActive != false).FirstOrDefaultAsync();
 
                         if (existUser != null)
                         {
                             if (existUser.IsActive == true)
                             {
                                 response.SetError(OperationMessages.DuplicateRecord);
+                                req.AddInfo(OperationMessages.DuplicateRecord);
+                                _logger.LogInformation(req.Info?.ToString());
                                 return response;
                             }
                             else if (existUser.IsActive == null)
@@ -124,7 +153,7 @@ namespace IdentityApi.Services
                         }
 
                         #region Create Token
-                        
+
                         var userToken = new UserToken()
                         {
                             CreatedDate = DateTimeOffset.UtcNow,
@@ -132,7 +161,8 @@ namespace IdentityApi.Services
                             Token = new Random().Next(100000, 999999).ToString(),
                             UserId = existUser != null ? existUser.Id : us.Id
                         };
-                        var tokenExist = await _context.UserToken.Where(l=>l.UserId == userToken.UserId && l.IsActive==true).ToListAsync();
+                        req.AddInfo("Token eklendi");
+                        var tokenExist = await _context.UserToken.Where(l => l.UserId == userToken.UserId && l.IsActive == true).ToListAsync();
                         foreach (var t in tokenExist)
                         {
                             t.IsActive = false;
@@ -143,6 +173,8 @@ namespace IdentityApi.Services
                         transaction.Commit();
                         _mailService.SendMailAsync(us.Email, userToken.Token);
                         response.SetSuccess();
+                        req.AddInfo(OperationMessages.Success);
+                        _logger.LogInformation(req.Info?.ToString());
                     }
                     catch (Exception e)
                     {
@@ -154,19 +186,23 @@ namespace IdentityApi.Services
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
+                _logger.LogError(getException(e, "SignInRequest"));
             }
 
             return response;
         }
 
 
-        public async Task<TDResponse> ActivateUser(long userId,string token)
+        public async Task<TDResponse> ActivateUser(BaseRequest<ActivationRequest> req)
         {
             TDResponse response = new TDResponse();
+            req.SetInfo("ActivateUser");
+            var userId = req.Data.userId;
+            var token = req.Data.token;
             try
             {
                 var xx = await _context.UserToken.Where(l => l.UserId == userId && l.Token == token && l.IsActive == true && l.CreatedDate < DateTimeOffset.UtcNow.AddMinutes(5)).FirstOrDefaultAsync();
-                if (xx!=null)
+                if (xx != null)
                 {
                     xx.IsActive = false;
                     var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
@@ -174,29 +210,39 @@ namespace IdentityApi.Services
                     _user.LastSeen = DateTimeOffset.UtcNow;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
+                    req.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(req.Info?.ToString());
                 }
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
+                req.AddInfo(OperationMessages.DbError);
+                _logger.LogError(getException(e, "ActivateUser"));
             }
             return response;
-        }        
-        
-        public async Task<TDResponse> ResendToken(long userId)
+        }
+
+        public async Task<TDResponse> ResendToken(BaseRequest<long> req)
         {
             TDResponse response = new TDResponse();
+            req.SetInfo("ResendToken");
+            var userId = req.Data;
             try
             {
                 var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
-                if (_user==null)
+                if (_user == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
+                    req.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(req.Info?.ToString());
                     return response;
                 }
-                else if (_user.IsActive==true)
+                else if (_user.IsActive == true)
                 {
                     response.SetError(OperationMessages.UserAllreadyActive);
+                    req.AddInfo(OperationMessages.UserAllreadyActive);
+                    _logger.LogInformation(req.Info?.ToString());
                     return response;
                 }
 
@@ -216,54 +262,77 @@ namespace IdentityApi.Services
                 await _context.SaveChangesAsync();
                 _mailService.SendMailAsync(_user.Email, newToken.Token);
                 response.SetSuccess();
+                req.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(req.Info?.ToString());
+
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
+                _logger.LogError(getException(e, "ResendToken"));
             }
             return response;
         }
 
 
-        public async Task<TDResponse> DeleteUserById(int id)
+        //public async Task<TDResponse> DeleteUserById(int id)
+        //{
+        //    TDResponse response = new TDResponse();
+        //    try
+        //    {
+        //        var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
+        //        if (user != null)
+        //        {
+        //            _context.Remove(user);
+        //            response.SetSuccess();
+        //        }
+        //        else
+        //        {
+        //            response.SetError(OperationMessages.DbItemNotFound);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        response.SetError(OperationMessages.DbError);
+        //        _logger.LogError(getException(e, "DeleteUserById"));
+        //    }
+
+        //    return response;
+        //}
+
+        public async Task<TDResponse<AuthenticateResponse>> Login(BaseRequest<AuthenticateRequest> req)
         {
-            TDResponse response = new TDResponse();
+
+            req.SetInfo("Login");
+            
+            var model = req.Data;
+            TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
             try
             {
-                var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
-                if (user != null)
+                var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
+
+                if (userEnt?.PasswordHash?.Equals(HashHelper.ComputeSha256Hash(model.Password)) != true)
                 {
-                    _context.Remove(user);
-                    response.SetSuccess();
+                    response.SetError(OperationMessages.AuthenticateError);
+                    req.AddInfo(OperationMessages.AuthenticateError);
+                    _logger.LogInformation(req.Info?.ToString());
                 }
                 else
                 {
-                    response.SetError(OperationMessages.DbItemNotFound);
+                    var user = _mapper.Map<User, UserDto>(userEnt);
+                    var token = generateJwtToken(user);
+                    response.Data = new AuthenticateResponse(user, token);
+                    response.SetSuccess();
+                    req.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(req.Info?.ToString());
                 }
+                throw new ArgumentNullException();
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-            }
-
-            return response;
-        }
-
-        public async Task<TDResponse<AuthenticateResponse>> Login(AuthenticateRequest model)
-        {
-            TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
-            var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
-
-            if (userEnt?.PasswordHash?.Equals(HashHelper.ComputeSha256Hash(model.Password)) != true)
-            {
-                response.SetError(OperationMessages.AuthenticateError);
-            }
-            else
-            {
-                var user = _mapper.Map<User, UserDto>(userEnt);
-                var token = generateJwtToken(user);
-                response.Data = new AuthenticateResponse(user, token);
-                response.SetSuccess();
+                req.AddInfo(OperationMessages.DbError);
+                _logger.LogError(getException(e, "Login"));
             }
 
             return response;
@@ -284,6 +353,10 @@ namespace IdentityApi.Services
             return tokenHandler.WriteToken(token);
         }
 
+        private string getException(Exception e,string action)
+        {
+            return "---Action : " + action + "--- \n  E.message: " + e.Message + "\n" + "E.inner:" + (e.InnerException?.Message ?? "") + "\n" + "E.StackTrace:" + e.StackTrace;
+        }
 
 
     }

@@ -6,8 +6,14 @@ using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Services;
 using IdentityApi.MapperProfiles;
+using SharedLibrary.Helpers;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddDbLogger(options =>
+{
+    builder.Configuration.GetSection("Logging").GetSection("Database").GetSection("Options").Bind(options);
+});
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddDbContext<IdentityContext>(o =>
 {
@@ -52,6 +58,9 @@ builder.Services.AddSwaggerGen(setup =>
     {
         { jwtSecurityScheme, Array.Empty<string>() }
     });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    setup.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
 });
 

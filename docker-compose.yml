@@ -34,6 +34,14 @@ services:
             - MailConfigs__SignInMail__Topic=Welcome To TowerDefense
             - MailConfigs__SignInMail__Body=
             - MailConfigs__SignInMail__IsBodyHtml=true
+            - Logging__LogLevel__Default=Information
+            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
+            - Logging__Database__Options__LogTable=Log
+            - Logging__Database__Options__LogInfoTable=LogAction
+            - Logging__Database__LogLevel__Default=Information
+            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
     progressapi:
         #networks:
         #    - isolation-network

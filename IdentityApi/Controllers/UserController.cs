@@ -20,44 +20,53 @@ namespace IdentityApi.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// [LoginRequired]
+        /// Get spesific user via id
+        /// </summary>
+        /// <param name="Data">UserId</param>
+        /// <returns></returns>
         [LoginRequired]
-        [HttpGet("GetUserById/{id}")]
-        public async Task<TDResponse<UserDto>> GetUserById(long id)
+        [HttpPost("GetUserById")]
+        public async Task<TDResponse<UserDto>> GetUserById([FromBody] BaseRequest<long> req)
         {
-            return await _userService.GetUserById(id);
+            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            return await _userService.GetUserById(req);
         }
 
-        [HttpGet("CheckToken")]
-        public async Task<TDResponse> CheckToken([FromQuery]string token)
+        [HttpPost("CheckToken")]
+        public async Task<TDResponse> CheckToken([FromBody] BaseRequest<string> req)
         {
-            return await _userService.CheckToken(token);
+            return await _userService.CheckToken(req.Data);
         }
 
 
         [HttpPost("SignInRequest")]
-        public async Task<TDResponse<long>> SignInRequest([FromBody] UserRequest userRequest)
+        public async Task<TDResponse<long>> SignInRequest([FromBody] BaseRequest<UserRequest> req)
         {
-            return await _userService.SignInRequest(userRequest);
+            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            return await _userService.SignInRequest(req);
         }        
         
         [HttpPost("ActivateUser")]
-        public async Task<TDResponse> ActivateUser([FromBody] ActivationRequest activationRequest)
+        public async Task<TDResponse> ActivateUser([FromBody] BaseRequest<ActivationRequest> req)
         {
-            return await _userService.ActivateUser(activationRequest.userId, activationRequest.token);
+            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            return await _userService.ActivateUser(req);
         }
 
         [HttpPost("ResendToken")]
-        public async Task<TDResponse> ResendToken([FromQuery] long userId)
+        public async Task<TDResponse> ResendToken([FromBody] BaseRequest<long> req)
         {
-            return await _userService.ResendToken(userId);
+            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            return await _userService.ResendToken(req);
         }
 
-
-
         [HttpPost("Login")]
-        public async Task<TDResponse<AuthenticateResponse>> Login(AuthenticateRequest model)
+        public async Task<TDResponse<AuthenticateResponse>> Login([FromBody] BaseRequest<AuthenticateRequest> req)
         {
-            return await _userService.Login(model);
+            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            return await _userService.Login(req);
         }
     }
 }

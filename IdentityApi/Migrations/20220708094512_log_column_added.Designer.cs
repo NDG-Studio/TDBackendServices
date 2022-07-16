@@ -3,6 +3,7 @@ using System;
 using IdentityApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityApi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20220708094512_log_column_added")]
+    partial class log_column_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,6 +54,7 @@ namespace IdentityApi.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("TimeMs")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("UserId")
@@ -64,62 +67,6 @@ namespace IdentityApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Log");
-                });
-
-            modelBuilder.Entity("IdentityApi.Entities.LogAction", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Action")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AdditionalInfo")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AppVersion")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Body")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DeviceId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeviceModel")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeviceType")
-                        .HasColumnType("text");
-
-                    b.Property<double?>("Duration")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("EventId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EventName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Ip")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OsVersion")
-                        .HasColumnType("text");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogAction");
                 });
 
             modelBuilder.Entity("IdentityApi.Entities.User", b =>
@@ -169,7 +116,7 @@ namespace IdentityApi.Migrations
                             Email = "ugurcan.bagriyanik@ndgstudio.com.tr",
                             IsActive = true,
                             IsAndroid = true,
-                            LastSeen = new DateTimeOffset(new DateTime(2022, 7, 16, 13, 56, 18, 784, DateTimeKind.Unspecified).AddTicks(8267), new TimeSpan(0, 3, 0, 0, 0)),
+                            LastSeen = new DateTimeOffset(new DateTime(2022, 7, 8, 12, 45, 12, 314, DateTimeKind.Unspecified).AddTicks(2923), new TimeSpan(0, 3, 0, 0, 0)),
                             MobileUserId = "dummyMobileUserId1",
                             PasswordHash = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
                             Username = "Ugur",
