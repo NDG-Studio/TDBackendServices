@@ -326,7 +326,6 @@ namespace IdentityApi.Services
                     req.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(req.Info?.ToString());
                 }
-                throw new ArgumentNullException();
             }
             catch (Exception e)
             {
