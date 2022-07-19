@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityApi.Entities
+namespace SharedLibrary.Entities
 {
-    public class LogAction
+    public class Log
     {
         [Key]
         public long Id { get; set; }
@@ -20,5 +20,7 @@ namespace IdentityApi.Entities
         public string? AdditionalInfo { get; set; }
         public string? Action { get; set; }
         public string? Body { get; set; }
+        public string? Exception { get; set; }
+        public string? InnerException { get; set; }
     }
 }

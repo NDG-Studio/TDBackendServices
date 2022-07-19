@@ -10,7 +10,7 @@ namespace IdentityApi.Interfaces
         Task<TDResponse<long>> SignInRequest(BaseRequest<UserRequest> req);
         Task<TDResponse> ActivateUser(BaseRequest<ActivationRequest> req);
         Task<TDResponse> ResendToken(BaseRequest<long> req);
-        Task<TDResponse<UserDto>> CheckToken(string token);
+        Task<TDResponse<UserDto>> CheckToken(BaseRequest<string> token);
         Task<TDResponse<AuthenticateResponse>> Login(BaseRequest<AuthenticateRequest> req);
 
     }

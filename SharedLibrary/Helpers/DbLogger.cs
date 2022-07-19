@@ -60,18 +60,21 @@ namespace SharedLibrary.Helpers
             {
                 return;
             }
-            InfoDto info = null;
+            InfoDetail info = null;
+            try
+            {
+                info = InfoDetail.GetFromString(formatter(state, exception));
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return;
+            }
+
             if (logLevel==LogLevel.Information)
             {
-                try
-                {
-                    info = JsonConvert.DeserializeObject<InfoDto>(formatter(state, exception));
-                    LogInformation(eventId, info);
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
+                LogInformation(eventId, info);
                 return;
             }
 
@@ -126,15 +129,31 @@ namespace SharedLibrary.Helpers
                 {
                     command.Connection = connection;
                     command.CommandType = System.Data.CommandType.Text;
-                    command.CommandText = string.Format("INSERT INTO \"{0}\" (\"Values\", \"Created\") VALUES (@Values, @Created)", _dbLoggerProvider.Options.LogTable);
+                    command.CommandText =
+                        string.Format(
+                            "INSERT INTO" +
+                            " \"{0}\" (\"Ip\", \"DeviceId\", \"EventId\", \"EventName\" , \"UserId\", \"DeviceType\" , \"DeviceModel\", \"OsVersion\" , \"AppVersion\" , \"AdditionalInfo\", \"Created\" , \"Duration\" , \"Action\" , \"Body\" ,\"Exception\" , \"InnerException\" )" +
+                            " VALUES " +
+                            "(@Ip, @DeviceId, @EventId, @EventName, @UserId, @DeviceType , @DeviceModel, @OsVersion , @AppVersion , @AdditionalInfo, @Created, @Duration, @Action, @Body , @Exception, @InnerException)"
+                            , _dbLoggerProvider.Options.LogTable
+                            );
 
-                    command.Parameters.Add(new NpgsqlParameter("@Values", JsonConvert.SerializeObject(values, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        DefaultValueHandling = DefaultValueHandling.Ignore,
-                        Formatting = Formatting.None
-                    }).ToString()));
-                    command.Parameters.Add(new NpgsqlParameter("@Created", DateTimeOffset.Now));
+                    command.Parameters.Add(new NpgsqlParameter("@Ip", info.Ip));
+                    command.Parameters.Add(new NpgsqlParameter("@DeviceId", info.DeviceId));
+                    command.Parameters.Add(new NpgsqlParameter("@EventId", eventId.Id));
+                    command.Parameters.Add(new NpgsqlParameter("@EventName", eventId.Name ?? ""));
+                    command.Parameters.Add(new NpgsqlParameter("@UserId", info.UserId));
+                    command.Parameters.Add(new NpgsqlParameter("@DeviceType", info.DeviceType));
+                    command.Parameters.Add(new NpgsqlParameter("@DeviceModel", info.DeviceModel));
+                    command.Parameters.Add(new NpgsqlParameter("@OsVersion", info.OsVersion));
+                    command.Parameters.Add(new NpgsqlParameter("@AppVersion", info.AppVersion));
+                    command.Parameters.Add(new NpgsqlParameter("@Created", info.Created));
+                    command.Parameters.Add(new NpgsqlParameter("@Duration", (DateTimeOffset.Now - info.Created).GetValueOrDefault().TotalMilliseconds));
+                    command.Parameters.Add(new NpgsqlParameter("@AdditionalInfo", info.AdditionalInfo));
+                    command.Parameters.Add(new NpgsqlParameter("@Action", info.Action));
+                    command.Parameters.Add(new NpgsqlParameter("@Body", info.Body));
+                    command.Parameters.Add(new NpgsqlParameter("@Exception", info.Exception.ToString()));
+                    command.Parameters.Add(new NpgsqlParameter("@InnerException", info.Exception.InnerException?.ToString() ?? ""));
 
                     command.ExecuteNonQuery();
                 }
@@ -143,7 +162,7 @@ namespace SharedLibrary.Helpers
             }
         }
 
-        public void LogInformation(EventId eventId,InfoDto info)
+        public void LogInformation(EventId eventId,InfoDetail info)
         {
             // Store record.
             try

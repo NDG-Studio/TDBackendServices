@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using IdentityApi.Entities;
+using SharedLibrary.Entities;
 
 namespace IdentityApi
 {

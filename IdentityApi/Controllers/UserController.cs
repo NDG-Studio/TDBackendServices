@@ -30,42 +30,43 @@ namespace IdentityApi.Controllers
         [HttpPost("GetUserById")]
         public async Task<TDResponse<UserDto>> GetUserById([FromBody] BaseRequest<long> req)
         {
-            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.GetUserById(req);
         }
 
         [HttpPost("CheckToken")]
         public async Task<TDResponse> CheckToken([FromBody] BaseRequest<string> req)
         {
-            return await _userService.CheckToken(req.Data);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.CheckToken(req);
         }
 
 
         [HttpPost("SignInRequest")]
         public async Task<TDResponse<long>> SignInRequest([FromBody] BaseRequest<UserRequest> req)
         {
-            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.SignInRequest(req);
         }        
         
         [HttpPost("ActivateUser")]
         public async Task<TDResponse> ActivateUser([FromBody] BaseRequest<ActivationRequest> req)
         {
-            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.ActivateUser(req);
         }
 
         [HttpPost("ResendToken")]
         public async Task<TDResponse> ResendToken([FromBody] BaseRequest<long> req)
         {
-            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.ResendToken(req);
         }
 
         [HttpPost("Login")]
         public async Task<TDResponse<AuthenticateResponse>> Login([FromBody] BaseRequest<AuthenticateRequest> req)
         {
-            req.Info.Ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.Login(req);
         }
     }

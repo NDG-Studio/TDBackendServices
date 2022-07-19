@@ -9,8 +9,6 @@ using System.Security.Claims;
 using System.Text;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
 
 namespace IdentityApi.Services
 {
@@ -37,20 +35,21 @@ namespace IdentityApi.Services
         public async Task<TDResponse<UserDto>> GetUserById(BaseRequest<long> req)
         {
             TDResponse<UserDto> response = new TDResponse<UserDto>();
-            req.SetInfo("GetUserById");
+            var info = InfoDetail.CreateInfo(req, "GetUserById");
             var id = req.Data;
             try
             {
                 var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
                 response.Data = _mapper.Map<UserDto>(user);
                 response.SetSuccess();
-                req.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(req.Info?.ToString());
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-                _logger.LogError(getException(e, "GetUserById"));
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
 
             return response;
@@ -71,11 +70,14 @@ namespace IdentityApi.Services
             return response;
         }
 
-        public async Task<TDResponse<UserDto>> CheckToken(string token)
+        public async Task<TDResponse<UserDto>> CheckToken(BaseRequest<string> req)
         {
+
             TDResponse<UserDto> response = new TDResponse<UserDto>();
+            var info = InfoDetail.CreateInfo(req, "CheckToken");
             try
             {
+                var token = req.Data;
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWTSECRET"));
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -92,10 +94,14 @@ namespace IdentityApi.Services
 
                 response.Data = GetUserById(userId).Result.Data;
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.TokenFail);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
 
             return response;
@@ -106,7 +112,7 @@ namespace IdentityApi.Services
         {
             TDResponse<long> response = new TDResponse<long>();
             var userRequest = req.Data;
-            req.SetInfo("SignInRequest");
+            var info = InfoDetail.CreateInfo(req, "SignInRequest");
             try
             {
                 using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
@@ -120,8 +126,8 @@ namespace IdentityApi.Services
                         if (await _context.User.Where(l => l.Email == us.Email && l.IsActive != false).AnyAsync())
                         {
                             response.SetError(OperationMessages.DuplicateMail);
-                            req.AddInfo(OperationMessages.DuplicateMail);
-                            _logger.LogInformation(req.Info?.ToString());
+                            info.AddInfo(OperationMessages.DuplicateMail);
+                            _logger.LogInformation(info.ToString());
                             return response;
                         }
 
@@ -132,8 +138,8 @@ namespace IdentityApi.Services
                             if (existUser.IsActive == true)
                             {
                                 response.SetError(OperationMessages.DuplicateRecord);
-                                req.AddInfo(OperationMessages.DuplicateRecord);
-                                _logger.LogInformation(req.Info?.ToString());
+                                info.AddInfo(OperationMessages.DuplicateRecord);
+                                _logger.LogInformation(info.ToString());
                                 return response;
                             }
                             else if (existUser.IsActive == null)
@@ -161,7 +167,7 @@ namespace IdentityApi.Services
                             Token = new Random().Next(100000, 999999).ToString(),
                             UserId = existUser != null ? existUser.Id : us.Id
                         };
-                        req.AddInfo("Token eklendi");
+                        info.AddInfo("Token eklendi");
                         var tokenExist = await _context.UserToken.Where(l => l.UserId == userToken.UserId && l.IsActive == true).ToListAsync();
                         foreach (var t in tokenExist)
                         {
@@ -173,8 +179,8 @@ namespace IdentityApi.Services
                         transaction.Commit();
                         _mailService.SendMailAsync(us.Email, userToken.Token);
                         response.SetSuccess();
-                        req.AddInfo(OperationMessages.Success);
-                        _logger.LogInformation(req.Info?.ToString());
+                        info.AddInfo(OperationMessages.Success);
+                        _logger.LogInformation(info.ToString());
                     }
                     catch (Exception e)
                     {
@@ -186,7 +192,8 @@ namespace IdentityApi.Services
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-                _logger.LogError(getException(e, "SignInRequest"));
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
 
             return response;
@@ -196,8 +203,9 @@ namespace IdentityApi.Services
         public async Task<TDResponse> ActivateUser(BaseRequest<ActivationRequest> req)
         {
             TDResponse response = new TDResponse();
-            req.SetInfo("ActivateUser");
             var userId = req.Data.userId;
+            var info = InfoDetail.CreateInfo(req, "ActivateUser");
+            info.SetUser(userId);
             var token = req.Data.token;
             try
             {
@@ -210,15 +218,15 @@ namespace IdentityApi.Services
                     _user.LastSeen = DateTimeOffset.UtcNow;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
-                    req.AddInfo(OperationMessages.Success);
-                    _logger.LogInformation(req.Info?.ToString());
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
                 }
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-                req.AddInfo(OperationMessages.DbError);
-                _logger.LogError(getException(e, "ActivateUser"));
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
             return response;
         }
@@ -226,23 +234,24 @@ namespace IdentityApi.Services
         public async Task<TDResponse> ResendToken(BaseRequest<long> req)
         {
             TDResponse response = new TDResponse();
-            req.SetInfo("ResendToken");
+            var info = InfoDetail.CreateInfo(req, "ResendToken");
             var userId = req.Data;
+            info.SetUser(userId);
             try
             {
                 var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
                 if (_user == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
-                    req.AddInfo(OperationMessages.DbItemNotFound);
-                    _logger.LogInformation(req.Info?.ToString());
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
                     return response;
                 }
                 else if (_user.IsActive == true)
                 {
                     response.SetError(OperationMessages.UserAllreadyActive);
-                    req.AddInfo(OperationMessages.UserAllreadyActive);
-                    _logger.LogInformation(req.Info?.ToString());
+                    info.AddInfo(OperationMessages.UserAllreadyActive);
+                    _logger.LogInformation(info.ToString());
                     return response;
                 }
 
@@ -262,14 +271,15 @@ namespace IdentityApi.Services
                 await _context.SaveChangesAsync();
                 _mailService.SendMailAsync(_user.Email, newToken.Token);
                 response.SetSuccess();
-                req.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(req.Info?.ToString());
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-                _logger.LogError(getException(e, "ResendToken"));
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
             return response;
         }
@@ -303,19 +313,19 @@ namespace IdentityApi.Services
         public async Task<TDResponse<AuthenticateResponse>> Login(BaseRequest<AuthenticateRequest> req)
         {
 
-            req.SetInfo("Login");
-            
+            var info = InfoDetail.CreateInfo(req, "Login");
+
             var model = req.Data;
             TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
             try
             {
                 var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
-
+                
                 if (userEnt?.PasswordHash?.Equals(HashHelper.ComputeSha256Hash(model.Password)) != true)
                 {
                     response.SetError(OperationMessages.AuthenticateError);
-                    req.AddInfo(OperationMessages.AuthenticateError);
-                    _logger.LogInformation(req.Info?.ToString());
+                    info.AddInfo(OperationMessages.AuthenticateError);
+                    _logger.LogInformation(info.ToString());
                 }
                 else
                 {
@@ -323,15 +333,17 @@ namespace IdentityApi.Services
                     var token = generateJwtToken(user);
                     response.Data = new AuthenticateResponse(user, token);
                     response.SetSuccess();
-                    req.AddInfo(OperationMessages.Success);
-                    _logger.LogInformation(req.Info?.ToString());
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
+
                 }
+                
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
-                req.AddInfo(OperationMessages.DbError);
-                _logger.LogError(getException(e, "Login"));
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
 
             return response;
@@ -352,10 +364,6 @@ namespace IdentityApi.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private string getException(Exception e,string action)
-        {
-            return "---Action : " + action + "--- \n  E.message: " + e.Message + "\n" + "E.inner:" + (e.InnerException?.Message ?? "") + "\n" + "E.StackTrace:" + e.StackTrace;
-        }
 
 
     }
