@@ -3,7 +3,6 @@ using SharedLibrary.Models;
 
 namespace ProgressApi.Models
 {
-
     public class ProgressDto
     {
         public int? StageId { get; set; }

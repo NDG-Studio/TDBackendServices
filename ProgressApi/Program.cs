@@ -6,9 +6,14 @@ using ProgressApi.Services;
 using ProgressApi.MapperProfiles;
 using ProgressApi.Interfaces;
 using ProgressApi.Helpers;
+using SharedLibrary.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
+builder.Logging.AddDbLogger(options =>
+{
+    builder.Configuration.GetSection("Logging").GetSection("Database").GetSection("Options").Bind(options);
+});
 builder.Services.AddDbContext<ProgressContext>(o =>
 {
     o.UseNpgsql(builder.Configuration["ConnectionStrings:ProgressContext"]);
@@ -66,6 +71,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 using (var serviceScope = app.Services

@@ -5,6 +5,6 @@ namespace ProgressApi.Interfaces
 {
     public interface IProgressService    
     {
-        Task<TDResponse> AddProgress(ProgressDto progressDto,string? ip,UserDto userDto);
+        Task<TDResponse> AddProgress(BaseRequest<ProgressDto> req, UserDto userDto);
     }
 }

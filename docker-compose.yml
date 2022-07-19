@@ -53,6 +53,14 @@ services:
         environment:
             - ConnectionStrings__ProgressContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
             - IdentityEndpoint=https://identityapi
+            - Logging__LogLevel__Default=Information
+            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
+            - Logging__Database__Options__LogTable=Log
+            - Logging__Database__Options__LogInfoTable=LogAction
+            - Logging__Database__LogLevel__Default=Information
+            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
 volumes:
     identitydb_volume:
     progressdb_volume:

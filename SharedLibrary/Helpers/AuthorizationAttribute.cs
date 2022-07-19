@@ -16,7 +16,7 @@ public class LoginRequiredAttribute : Attribute, IAuthorizationFilter
             var response = new TDResponse();
             response.SetError("Unauthorized");
             // not logged in
-            context.Result = new JsonResult(response){ StatusCode = StatusCodes.Status401Unauthorized };
+            context.Result = new JsonResult(response) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }
 }

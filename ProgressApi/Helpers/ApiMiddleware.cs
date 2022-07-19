@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SharedLibrary.Models;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Newtonsoft.Json.Linq;
 
 namespace ProgressApi.Helpers
 {
@@ -28,17 +29,39 @@ namespace ProgressApi.Helpers
 
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
-            if (token != null)
+            try
             {
-                attachUserToContext(context, token);
-            }
+                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                InfoDto? info = null;
+                var yy = context.Request.Body;
+                context.Request.EnableBuffering();
 
-            await _next(context);
+                var buffer = new byte[Convert.ToInt32(context.Request.ContentLength)];
+                await context.Request.Body.ReadAsync(buffer, 0, buffer.Length);
+                var requestContent = Encoding.UTF8.GetString(buffer);
+                context.Request.Body.Position = 0;
+                JObject o = JObject.Parse(requestContent);
+                var i = o["info"];
+                if (i != null)
+                {
+                    info = JsonConvert.DeserializeObject<InfoDto>(i.ToString());
+                }
+
+
+                if (token != null && info != null)
+                {
+                    attachUserToContext(context, token, info);
+                }
+                context.Request.Body.Position = 0;
+                await _next(context);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
-        private async void attachUserToContext(HttpContext context, string token)
+        private async void attachUserToContext(HttpContext context, string token, InfoDto info)
         {
             try
             {
@@ -51,24 +74,29 @@ namespace ProgressApi.Helpers
                   X509Certificate2 cert,
                   X509Chain chain,
                   SslPolicyErrors errors
-                 ) => { return true; }; //TODO: Prodda silinmeli
+                 ) =>
+                { return true; }; //TODO: Prodda silinmeli
 
                 using (HttpClient client = new HttpClient(handler))
                 {
-                    var request = new HttpRequestMessage
-                    {
-                        Method = HttpMethod.Get,
-                        RequestUri = new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken?token=" + token),
-                    };
+                    //var request = new HttpRequestMessage
+                    //{
+                    //    Method = HttpMethod.Post,
+                    //    RequestUri = new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken"),
+                    //    Content = new StringContent((new BaseRequest<string>() { Data = token, Info = info }).ToString()!, Encoding.UTF8, "application/json")
 
-                    var response = client.SendAsync(request).Result;
+                    //};
+
+                    var response = client.PostAsync(new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken"),
+                        new StringContent(JsonConvert.SerializeObject((new BaseRequest<string>() { Data = token, Info = info })), Encoding.UTF8, "application/json")).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         var content = response.Content.ReadAsStringAsync().Result;
                         userDto = JsonConvert.DeserializeObject<TDResponse<UserDto>>(content)?.Data;
+                        context.Items["User"] = userDto;
                     }
                 }
-                context.Items["User"] = userDto;
+
 
 
             }

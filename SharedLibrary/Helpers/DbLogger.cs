@@ -68,7 +68,7 @@ namespace SharedLibrary.Helpers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(formatter(state, exception));
                 return;
             }
 

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProgressApi.Models;
 using ProgressApi.Interfaces;
 using SharedLibrary.Models;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace ProgressApi.Controllers
 {
@@ -23,11 +22,12 @@ namespace ProgressApi.Controllers
 
         [LoginRequired]
         [HttpPost("AddProgress")]
-        public async Task<TDResponse> AddProgress(ProgressDto progressDto)
+        public async Task<TDResponse> AddProgress([FromBody] BaseRequest<ProgressDto> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
-            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
-            return await _progressService.AddProgress(progressDto,ip,user);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.AddProgress(req, user);
         }
     }
 }

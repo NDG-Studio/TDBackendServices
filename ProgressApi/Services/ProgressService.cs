@@ -26,23 +26,28 @@ namespace ProgressApi.Services
         }
 
 
-        public async Task<TDResponse> AddProgress(ProgressDto progressDto,string? ip,UserDto userDto)
+        public async Task<TDResponse> AddProgress(BaseRequest<ProgressDto> req,UserDto userDto)
         {
             TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddProgress");
             try
             {
-                var pr = _mapper.Map<UserProgress>(progressDto);
-                pr.Ip = ip;
+                var pr = _mapper.Map<UserProgress>(req.Data);
+                pr.Ip = req.Info.Ip;
                 pr.UserId = userDto.Id;
                 pr.Username = userDto.Username;
                 pr.Email = userDto.Email;
                 await _context.AddAsync(pr);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
             }
 
             return response;

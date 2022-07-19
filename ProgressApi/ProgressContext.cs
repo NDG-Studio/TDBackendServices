@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using ProgressApi.Entities;
+using SharedLibrary.Entities;
 
 namespace ProgressApi
 {
@@ -16,6 +17,8 @@ namespace ProgressApi
 
         public DbSet<Stage> Stage { get; set; }
         public DbSet<UserProgress> UserProcess { get; set; }
+        public DbSet<Log> Log { get; set; }
+        public DbSet<LogAction> LogAction { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
