@@ -9,14 +9,19 @@ namespace ProgressApi.MapperProfiles
         public ProgressProfile(){
 
             CreateMap<ProgressDto, UserProgress>()
-                .ForMember(dest => dest.LevelStartTime, operations => operations
+                .ForMember(dest => dest.StageStartTime, operations => operations
                 .MapFrom(
-                    source => source.LevelStartTime != null ? DateTimeOffset.Parse(source.LevelStartTime) : DateTimeOffset.MinValue))
-                .ForMember(dest => dest.LevelStartTime, operations => operations
-                .MapFrom(
-                    source => source.LevelEndTime != null ? DateTimeOffset.Parse(source.LevelEndTime) : DateTimeOffset.MinValue));
+                    source => source.StageStartTime != null ? DateTimeOffset.Parse(source.StageStartTime) : DateTimeOffset.MinValue));
 
-
+            CreateMap<Zombie, ZombieDto>();
+            CreateMap<Tower, TowerDto>();
+            CreateMap<Stage, StageDto>();
+            CreateMap<TowerProgressDto, TowerProgress>();
+            CreateMap<ZombieKillDto, ZombieKill>();
+            CreateMap<UserProgress, StageStatusDto>()
+                .ForMember(dest => dest.StageName, operations => operations.MapFrom(source => source.Stage!.Name))
+                .ForMember(dest => dest.StageCode, operations => operations.MapFrom(source => source.Stage!.Code));
+                
         }
 
     }

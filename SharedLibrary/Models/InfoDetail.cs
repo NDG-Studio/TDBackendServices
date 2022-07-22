@@ -12,7 +12,8 @@ namespace SharedLibrary.Models
         public double? Duration { get; set; }
         public string? Action { get; set; }
         public string? Body { get; set; }
-        public Exception Exception { get; set; }
+        public string Exception { get; set; } = string.Empty;
+        public string InnerException { get; set; } =string.Empty;
 
         //public InfoDetail(string? ip, long? userId, string? deviceId, string? deviceType, string? deviceModel, string? osVersion, string? appVersion, string? additionalInfo) : base(deviceId, deviceType, deviceModel, osVersion, appVersion)
         //{
@@ -30,12 +31,12 @@ namespace SharedLibrary.Models
         public static InfoDetail CreateInfo<T>(BaseRequest<T> req, string action)
         {
             var newDetail = new InfoDetail();
-            
+
             if (req.Info == null)
             {
                 throw new Exception(OperationMessages.InfoNull);
             }
-            newDetail.Ip= req.Info.Ip;
+            newDetail.Ip = req.Info.Ip;
             newDetail.Action = action;
             newDetail.AdditionalInfo = string.Empty;
             newDetail.Body = JsonConvert.SerializeObject(req.Data, new JsonSerializerSettings
@@ -44,6 +45,27 @@ namespace SharedLibrary.Models
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 Formatting = Formatting.None
             }).ToString();
+            newDetail.Created = DateTimeOffset.Now;
+            newDetail.DeviceId = req.Info.DeviceId;
+            newDetail.DeviceType = req.Info.DeviceType;
+            newDetail.DeviceModel = req.Info.DeviceModel;
+            newDetail.OsVersion = req.Info.OsVersion;
+            newDetail.AppVersion = req.Info.AppVersion;
+            return newDetail;
+        }
+
+        public static InfoDetail CreateInfo(BaseRequest req, string action)
+        {
+            var newDetail = new InfoDetail();
+
+            if (req.Info == null)
+            {
+                throw new Exception(OperationMessages.InfoNull);
+            }
+            newDetail.Ip = req.Info.Ip;
+            newDetail.Action = action;
+            newDetail.AdditionalInfo = string.Empty;
+            newDetail.Body = "";
             newDetail.Created = DateTimeOffset.Now;
             newDetail.DeviceId = req.Info.DeviceId;
             newDetail.DeviceType = req.Info.DeviceType;
@@ -85,16 +107,20 @@ namespace SharedLibrary.Models
             {
                 return;
             }
-            Exception = ex;
+            Exception = ex.ToString();
+            if (ex.InnerException!=null)
+            {
+                InnerException = ex.InnerException.ToString();
+            }
         }
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting = Formatting.None
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }).ToString();
         }
 

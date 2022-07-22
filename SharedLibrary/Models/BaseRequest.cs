@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace SharedLibrary.Models
 {
-    public class BaseRequest<T>
+    public class BaseRequest
     {
-        public T? Data { get; set; } = default;
         public InfoDto? Info { get; set; } = null;
 
         public void SetUser(long? userId)
@@ -29,5 +28,9 @@ namespace SharedLibrary.Models
             }
             Info.Ip = ip;
         }
+    }
+    public class BaseRequest<T> : BaseRequest
+    {
+        public T? Data { get; set; } = default;
     }
 }

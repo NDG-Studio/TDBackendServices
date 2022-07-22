@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProgressApi;
@@ -11,9 +12,10 @@ using ProgressApi;
 namespace ProgressApi.Migrations
 {
     [DbContext(typeof(ProgressContext))]
-    partial class ProgressContextModelSnapshot : ModelSnapshot
+    [Migration("20220721114314_stage_minibug_fixed")]
+    partial class stage_minibug_fixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -7111,6 +7113,9 @@ namespace ProgressApi.Migrations
                     b.Property<string>("Ip")
                         .HasColumnType("text");
 
+                    b.Property<DateTimeOffset>("LevelStartTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<double>("Score")
                         .HasColumnType("double precision");
 
@@ -7119,9 +7124,6 @@ namespace ProgressApi.Migrations
 
                     b.Property<int?>("StageId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("StageStartTime")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("StarCount")
                         .HasColumnType("integer");

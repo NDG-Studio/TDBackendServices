@@ -29,5 +29,42 @@ namespace ProgressApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _progressService.AddProgress(req, user);
         }
+
+        [HttpPost("GetZombies")]
+        public async Task<TDResponse<List<ZombieDto>>> GetZombies([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user?.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.GetZombies(req);
+        }
+
+        [HttpPost("GetTowers")]
+        public async Task<TDResponse<List<TowerDto>>> GetTowers([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user?.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.GetTowers(req);
+        }        
+        
+        [HttpPost("GetStages")]
+        public async Task<TDResponse<List<StageDto>>> GetStages([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user?.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.GetStages(req);
+        }
+
+        [LoginRequired]
+        [HttpPost("GetUserStageStatus")]
+        public async Task<TDResponse<List<StageStatusDto>>> GetUserStageStatus(BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user?.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.GetUserStageStatus(req, user);
+        }
     }
 }

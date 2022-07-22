@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProgressApi;
@@ -11,9 +12,10 @@ using ProgressApi;
 namespace ProgressApi.Migrations
 {
     [DbContext(typeof(ProgressContext))]
-    partial class ProgressContextModelSnapshot : ModelSnapshot
+    [Migration("20220720155435_progress_stages_added")]
+    partial class progress_stages_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,625 +51,625 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 11,
-                            Code = "01.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 12,
-                            Code = "01.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 13,
-                            Code = "01.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 14,
-                            Code = "01.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 15,
-                            Code = "01.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 16,
-                            Code = "01.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 17,
-                            Code = "01.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 18,
-                            Code = "01.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 19,
-                            Code = "01.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "01.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 20,
-                            Code = "02",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 21,
-                            Code = "02.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 22,
-                            Code = "02.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 23,
-                            Code = "02.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 24,
-                            Code = "02.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 25,
-                            Code = "02.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 26,
-                            Code = "02.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 27,
-                            Code = "02.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 28,
-                            Code = "02.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 29,
-                            Code = "02.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "02.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 30,
-                            Code = "03",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 31,
-                            Code = "03.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 32,
-                            Code = "03.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 33,
-                            Code = "03.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 34,
-                            Code = "03.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 35,
-                            Code = "03.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 36,
-                            Code = "03.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 37,
-                            Code = "03.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 38,
-                            Code = "03.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 39,
-                            Code = "03.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "03.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 40,
-                            Code = "04",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 41,
-                            Code = "04.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 42,
-                            Code = "04.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 43,
-                            Code = "04.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 44,
-                            Code = "04.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 45,
-                            Code = "04.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 46,
-                            Code = "04.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 47,
-                            Code = "04.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 48,
-                            Code = "04.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 49,
-                            Code = "04.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "04.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 50,
-                            Code = "05",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 51,
-                            Code = "05.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 52,
-                            Code = "05.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 53,
-                            Code = "05.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 54,
-                            Code = "05.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 55,
-                            Code = "05.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 56,
-                            Code = "05.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 57,
-                            Code = "05.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 58,
-                            Code = "05.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 59,
-                            Code = "05.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "05.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 60,
-                            Code = "06",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 61,
-                            Code = "06.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 62,
-                            Code = "06.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 63,
-                            Code = "06.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 64,
-                            Code = "06.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 65,
-                            Code = "06.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 66,
-                            Code = "06.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 67,
-                            Code = "06.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 68,
-                            Code = "06.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 69,
-                            Code = "06.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "06.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 70,
-                            Code = "07",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 71,
-                            Code = "07.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 72,
-                            Code = "07.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 73,
-                            Code = "07.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 74,
-                            Code = "07.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 75,
-                            Code = "07.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 76,
-                            Code = "07.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 77,
-                            Code = "07.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 78,
-                            Code = "07.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 79,
-                            Code = "07.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "07.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 80,
-                            Code = "08",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 81,
-                            Code = "08.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 82,
-                            Code = "08.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 83,
-                            Code = "08.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 84,
-                            Code = "08.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 85,
-                            Code = "08.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 86,
-                            Code = "08.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 87,
-                            Code = "08.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 88,
-                            Code = "08.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 89,
-                            Code = "08.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "08.9"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 90,
-                            Code = "09",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 91,
-                            Code = "09.1",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.1"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 92,
-                            Code = "09.2",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.2"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 93,
-                            Code = "09.3",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.3"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 94,
-                            Code = "09.4",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.4"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 95,
-                            Code = "09.5",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.5"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 96,
-                            Code = "09.6",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.6"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 97,
-                            Code = "09.7",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.7"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 98,
-                            Code = "09.8",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.8"
+                            Name = "0"
                         },
                         new
                         {
                             Id = 99,
-                            Code = "09.9",
+                            Code = "0",
                             IsActive = true,
-                            Name = "09.9"
+                            Name = "0"
                         },
                         new
                         {
@@ -7111,6 +7113,9 @@ namespace ProgressApi.Migrations
                     b.Property<string>("Ip")
                         .HasColumnType("text");
 
+                    b.Property<DateTimeOffset>("LevelStartTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<double>("Score")
                         .HasColumnType("double precision");
 
@@ -7119,9 +7124,6 @@ namespace ProgressApi.Migrations
 
                     b.Property<int?>("StageId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("StageStartTime")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("StarCount")
                         .HasColumnType("integer");

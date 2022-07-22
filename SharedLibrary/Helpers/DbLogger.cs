@@ -152,8 +152,8 @@ namespace SharedLibrary.Helpers
                     command.Parameters.Add(new NpgsqlParameter("@AdditionalInfo", info.AdditionalInfo));
                     command.Parameters.Add(new NpgsqlParameter("@Action", info.Action));
                     command.Parameters.Add(new NpgsqlParameter("@Body", info.Body));
-                    command.Parameters.Add(new NpgsqlParameter("@Exception", info.Exception.ToString()));
-                    command.Parameters.Add(new NpgsqlParameter("@InnerException", info.Exception.InnerException?.ToString() ?? ""));
+                    command.Parameters.Add(new NpgsqlParameter("@Exception", info.Exception));
+                    command.Parameters.Add(new NpgsqlParameter("@InnerException", info.InnerException));
 
                     command.ExecuteNonQuery();
                 }

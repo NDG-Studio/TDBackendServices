@@ -11,13 +11,14 @@ namespace ProgressApi.Entities
         public string? Username { get; set; }
         public string? Email { get; set; }
         public int? StageId { get; set; }
-        public int? FailCount { get; set; }
-        public int? KillCount { get; set; }
-        public int? EndGameScore { get; set; }
         public string? Ip { get; set; }
         public string? DeviceId { get; set; }
-        public DateTimeOffset LevelStartTime { get; set; }
-        public DateTimeOffset LevelEndTime { get; set; }
+        public int StarCount { get; set; }
+        public double Score { get; set; }
+        public double ScrapValue { get; set; }
+        public double BarrierHealth { get; set; }
+        public DateTimeOffset StageStartTime { get; set; }
+        public double Time { get; set; }
 
         [ForeignKey("StageId")]
         public Stage? Stage { get; set; }
