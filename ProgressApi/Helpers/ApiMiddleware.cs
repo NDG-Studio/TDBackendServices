@@ -41,7 +41,7 @@ namespace ProgressApi.Helpers
                 var requestContent = Encoding.UTF8.GetString(buffer);
                 context.Request.Body.Position = 0;
                 JObject o = JObject.Parse(requestContent);
-                var i = o["info"];
+                var i = o["info"] ?? o["Info"];
                 if (i != null)
                 {
                     info = JsonConvert.DeserializeObject<InfoDto>(i.ToString());
