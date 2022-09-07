@@ -22,7 +22,15 @@ namespace PlayerBaseApi
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BuildingType>().HasData(
-                new BuildingType() { Id = 1, Name = "Base", MaxLevel=1000, IsActive = true }
+                new BuildingType() { Id = 1, Name = "Base", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 2, Name = "Gang Tower", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 3, Name = "Wall", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 4, Name = "Hospital", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 5, Name = "Prison", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 6, Name = "Market", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 7, Name = "Altar", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 8, Name = "Watch Tower", MaxLevel=1000, IsActive = true },
+                new BuildingType() { Id = 9, Name = "Research Laboratory", MaxLevel=1000, IsActive = true }
             );
             modelBuilder.Entity<PlayerBasePlacement>().HasData(
                 new PlayerBasePlacement() { Id = 1,BuildingTypeId=1,BuildingLevel=1,CoordX=1,CoordY=1,UpdateEndDate=null,UserId=1 }
