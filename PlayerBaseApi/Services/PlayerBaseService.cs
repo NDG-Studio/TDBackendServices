@@ -43,6 +43,29 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
+        }        
+        
+        public async Task<TDResponse<List<BuildingTypeDTO>>> GetBuildingTypes(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<BuildingTypeDTO>> response = new TDResponse<List<BuildingTypeDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetBuildingTypes");
+            try
+            {
+                var query = _context.BuildingType.Where(l =>  l.IsActive);
+                var qlist = await _mapper.ProjectTo<BuildingTypeDTO>(query).ToListAsync();
+                response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
         }
     }
 }
