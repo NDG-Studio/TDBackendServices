@@ -33,6 +33,17 @@ services:
         environment:
             - POSTGRES_DB=playerbasedb
             - POSTGRES_USER=ndg
+            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS    
+    mapdb:
+        container_name: mapdb_cont
+        restart: always
+        ports:
+            - "3235:5432" 
+        volumes:
+            - mapdb_volume:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=mapdb
+            - POSTGRES_USER=ndg
             - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
     identityapi:
         environment:
@@ -70,3 +81,15 @@ services:
             - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
         depends_on:
             - playerbasedb
+    mapapi:
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+        ports:
+            - "5006:80"
+            - "5007:443"
+        volumes:
+            - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+            - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+        depends_on:
+            - mapdb

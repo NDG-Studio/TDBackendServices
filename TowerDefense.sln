@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgressApi", "ProgressApi\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{601B9817-C92E-44BF-A606-536602A75B77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerBaseApi", "PlayerBaseApi\PlayerBaseApi.csproj", "{2E1952FD-9A81-45B3-AC91-510E36B1EA24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerBaseApi", "PlayerBaseApi\PlayerBaseApi.csproj", "{2E1952FD-9A81-45B3-AC91-510E36B1EA24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapApi", "MapApi\MapApi.csproj", "{121BBE22-8967-49ED-B3D6-3692176E6355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2E1952FD-9A81-45B3-AC91-510E36B1EA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E1952FD-9A81-45B3-AC91-510E36B1EA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E1952FD-9A81-45B3-AC91-510E36B1EA24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121BBE22-8967-49ED-B3D6-3692176E6355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{121BBE22-8967-49ED-B3D6-3692176E6355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{121BBE22-8967-49ED-B3D6-3692176E6355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{121BBE22-8967-49ED-B3D6-3692176E6355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
