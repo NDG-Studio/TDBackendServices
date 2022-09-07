@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using PlayerBaseApi.Entities;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
@@ -67,5 +68,53 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+
+
+        public async Task<TDResponse> AddPlayerBaseBuilding(BaseRequest<PlayerBaseBuildingRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddPlayerBaseBuilding");
+            try
+            {
+                var duplicateQuery = await _context.PlayerBasePlacement.AnyAsync(l => l.UserId == user.Id && l.BuildingTypeId == req.Data!.BuildingTypeId);
+                if (duplicateQuery)
+                {
+                    info.AddInfo(OperationMessages.DuplicateRecord);
+                    response.SetError(OperationMessages.DuplicateRecord);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var typeIsActive = await _context.BuildingType.AnyAsync(l => l.IsActive && l.Id==req.Data!.BuildingTypeId);
+                if (!typeIsActive)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var ent = new PlayerBasePlacement();
+                ent.BuildingLevel = 1;
+                ent.BuildingTypeId= req.Data!.BuildingTypeId;
+                ent.CoordX= req.Data!.CoordX;
+                ent.CoordY= req.Data!.CoordY;
+                ent.UserId = user.Id;
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
     }
 }
