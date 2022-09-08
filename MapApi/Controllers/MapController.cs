@@ -60,6 +60,16 @@ namespace MapApi.Controllers
             return await _mapService.GetMapByAreaIds(req, user);
         }
        
+        [LoginRequired]
+        [HttpPost("GetApeIsRecommended")]
+        public async Task<TDResponse<bool>> GetApeIsRecommended([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.GetApeIsRecommended(req, user);
+        }
+       
 
     }
 }

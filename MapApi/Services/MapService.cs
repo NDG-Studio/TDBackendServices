@@ -183,6 +183,29 @@ namespace MapApi.Services
 
         }
 
+        public async Task<TDResponse<bool>> GetApeIsRecommended(BaseRequest req, UserDto user)
+        {
+            TDResponse<bool> response = new TDResponse<bool>();
+            var info = InfoDetail.CreateInfo(req, "GetApeIsRecommended");
+            try
+            {
+                var apeCount = await _context.MapItem.CountAsync(l => l.IsApe);
+                var humanCount = await _context.MapItem.CountAsync(l => !l.IsApe);
+                response.Data = apeCount - humanCount >= 0 ? true : false;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
 
     }
 }

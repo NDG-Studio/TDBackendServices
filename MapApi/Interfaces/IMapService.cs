@@ -9,5 +9,6 @@ namespace MapApi.Interfaces
         Task<TDResponse<MapItemDTO>> AddUserBase(BaseRequest<bool> isApe, UserDto user);
         Task<TDResponse> MoveUserBase(BaseRequest<MapItemDTO> req, UserDto user);
         Task<TDResponse<List<MapInfoDto>>> GetMapByAreaIds(BaseRequest<List<int>> req, UserDto user);
+        Task<TDResponse<bool>> GetApeIsRecommended(BaseRequest req, UserDto user);
     }
 }
