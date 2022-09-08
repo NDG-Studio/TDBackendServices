@@ -60,6 +60,8 @@ namespace IdentityApi.Services
             try
             {
                 var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
+                user!.LastSeen = DateTimeOffset.UtcNow;
+                await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<UserDto>(user);
             }
             catch (Exception e)
@@ -216,6 +218,7 @@ namespace IdentityApi.Services
                     var _user = await _context.User.Where(l => l.Id == userId).FirstOrDefaultAsync();
                     _user.IsActive = true;
                     _user.LastSeen = DateTimeOffset.UtcNow;
+                    _user.FirstLogInDate = DateTimeOffset.UtcNow;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     info.AddInfo(OperationMessages.Success);

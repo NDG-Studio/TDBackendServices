@@ -10,6 +10,7 @@ namespace IdentityApi.Entities
         [MaxLength(50, ErrorMessage = "Username length must be lower than 50 character!")]
         public string Username { get; set; } = string.Empty;
         public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.MinValue;
+        public DateTimeOffset FirstLogInDate { get; set; } = DateTimeOffset.Now;
         public string? PasswordHash { get; set; }
 
         [MaxLength(50)]
