@@ -191,7 +191,7 @@ namespace MapApi.Services
             {
                 var apeCount = await _context.MapItem.CountAsync(l => l.IsApe);
                 var humanCount = await _context.MapItem.CountAsync(l => !l.IsApe);
-                response.Data = apeCount - humanCount >= 0 ? true : false;
+                response.Data = apeCount - humanCount >= 0 ? false : true;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
