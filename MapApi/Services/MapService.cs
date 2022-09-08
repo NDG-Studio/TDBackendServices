@@ -91,13 +91,13 @@ namespace MapApi.Services
                 {
                     for (int l = randArea.YMin; l < randArea.YMax; l++)
                     {
-                        if (!exclude.Any(t=>t.CoordX==i && t.CoordY==l))
+                        if (!exclude.Any(t => t.CoordX == i && t.CoordY == l))
                         {
-                            m.Add(new MapItemDTO() { CoordX=i, CoordY=l});
+                            m.Add(new MapItemDTO() { CoordX = i, CoordY = l });
                         }
                     }
                 }
-                var x = m[new Random().Next(0,m.Count())];
+                var x = m[new Random().Next(0, m.Count())];
 
 
                 var ent = new MapItem()
@@ -141,11 +141,34 @@ namespace MapApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var q = await _context.MapItem.Where(l => l.UserId==user.Id).FirstOrDefaultAsync();
+                var q = await _context.MapItem.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 q.CoordX = req.Data.CoordX;
                 q.CoordY = req.Data.CoordY;
-                q.AreaId = await _context.Area.Where(l => l.XMax > q.CoordX && l.XMin <= q.CoordX && l.YMax > q.CoordY && l.YMin <= q.CoordY).Select(l=>l.Id).FirstOrDefaultAsync();
+                q.AreaId = await _context.Area.Where(l => l.XMax > q.CoordX && l.XMin <= q.CoordX && l.YMax > q.CoordY && l.YMin <= q.CoordY).Select(l => l.Id).FirstOrDefaultAsync();
                 await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse<List<MapInfoDto>>> GetMapByAreaIds(BaseRequest<List<int>> req, UserDto user)
+        {
+            TDResponse<List<MapInfoDto>> response = new TDResponse<List<MapInfoDto>>();
+            var info = InfoDetail.CreateInfo(req, "GetMapByAreaIds");
+            try
+            {
+                var q = _context.MapItem.Where(l => req.Data.Contains(l.AreaId));
+                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

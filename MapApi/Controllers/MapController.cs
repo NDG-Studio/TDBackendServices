@@ -49,6 +49,16 @@ namespace MapApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _mapService.MoveUserBase(req, user);
         }
+
+        [LoginRequired]
+        [HttpPost("GetMapByAreaIds")]
+        public async Task<TDResponse<List<MapInfoDto>>> GetMapByAreaIds([FromBody] BaseRequest<List<int>> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.GetMapByAreaIds(req, user);
+        }
        
 
     }
