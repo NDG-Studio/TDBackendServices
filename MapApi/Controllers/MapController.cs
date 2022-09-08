@@ -28,6 +28,26 @@ namespace MapApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _mapService.GetMapItemTypes(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("AddUserBase")]
+        public async Task<TDResponse<MapItemDTO>> AddUserBase([FromBody] BaseRequest<bool> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.AddUserBase(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("MoveUserBase")]
+        public async Task<TDResponse> MoveUserBase([FromBody] BaseRequest<MapItemDTO> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.MoveUserBase(req, user);
         }
        
 

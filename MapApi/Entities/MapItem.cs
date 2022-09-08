@@ -13,6 +13,7 @@ namespace MapApi.Entities
         public int MapItemTypeId { get; set; }
         public int CoordX { get; set; }
         public int CoordY { get; set; }
+        public bool IsApe { get; set; }
 
         [ForeignKey("AreaId")]
         public Area Area { get; set; }

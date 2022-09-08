@@ -9,6 +9,7 @@ namespace MapApi.MapperProfiles
         public MapApiProfile()
         {
             CreateMap<MapItemType, MapItemTypeDTO>();
+            CreateMap<MapItem, MapItemDTO>();
         }
 
     }

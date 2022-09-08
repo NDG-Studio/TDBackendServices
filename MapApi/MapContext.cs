@@ -38,21 +38,21 @@ namespace MapApi
                         var xcc = 0;
                         for (int l = 1; l < 4; l++)
                         {
-                            areaList.Add(new Area() { Id = c, XMin = xc+xcc, XMax = xc+xcc + 150, YMin = yc, YMax = yc + 150,ZoneId=zId});
-                            xcc += 150;
+                            areaList.Add(new Area() { Id = c, XMin = xc+xcc, XMax = xc+xcc + 15, YMin = yc, YMax = yc + 15,ZoneId=zId});
+                            xcc += 15;
                             c++;
                         }
-                        yc += 150;
+                        yc += 15;
                         
                     }
                     
                     zId++;
-                    xc += 450;
+                    xc += 45;
                     
 
 
                 }
-                ky += 450;
+                ky += 45;
             }
             modelBuilder.Entity<MapItemType>().HasData(
                 new MapItemType() { Id = 1, Name = "Player", IsActive = true },
@@ -61,21 +61,21 @@ namespace MapApi
             );
 
             modelBuilder.Entity<Zone>().HasData(
-                new Zone() { Id = 1, XMin = 0, XMax = 450, YMin = 0, YMax = 450 },
-                new Zone() { Id = 2, XMin = 450, XMax = 900, YMin = 0, YMax = 450 },
-                new Zone() { Id = 3, XMin = 900, XMax = 1350, YMin = 0, YMax = 450 },
-                new Zone() { Id = 4, XMin = 0, XMax = 450, YMin = 450, YMax = 900 },
-                new Zone() { Id = 5, XMin = 450, XMax = 900, YMin = 450, YMax = 900 },
-                new Zone() { Id = 6, XMin = 900, XMax = 1350, YMin = 450, YMax = 900 },
-                new Zone() { Id = 7, XMin = 0, XMax = 450, YMin = 900, YMax = 1350 },
-                new Zone() { Id = 8, XMin = 450, XMax = 900, YMin = 900, YMax = 1350 },
-                new Zone() { Id = 9, XMin = 900, XMax = 1350, YMin = 900, YMax = 1350 },
-                new Zone() { Id = 10, XMin = 0, XMax = 450, YMin = 1350, YMax = 1800 },
-                new Zone() { Id = 11, XMin = 450, XMax = 900, YMin = 1350, YMax = 1800 },
-                new Zone() { Id = 12, XMin = 900, XMax = 1350, YMin = 1350, YMax = 1800 },
-                new Zone() { Id = 13, XMin = 0, XMax = 450, YMin = 1800, YMax = 2250 },
-                new Zone() { Id = 14, XMin = 450, XMax = 900, YMin = 1800, YMax = 2250 },
-                new Zone() { Id = 15, XMin = 900, XMax = 1350, YMin = 1800, YMax = 2250 }
+                new Zone() { Id = 1, XMin = 0, XMax = 45, YMin = 0, YMax = 45 },
+                new Zone() { Id = 2, XMin = 45, XMax = 90, YMin = 0, YMax = 45 },
+                new Zone() { Id = 3, XMin = 90, XMax = 135, YMin = 0, YMax = 45 },
+                new Zone() { Id = 4, XMin = 0, XMax = 45, YMin = 45, YMax = 90 },
+                new Zone() { Id = 5, XMin = 45, XMax = 90, YMin = 45, YMax = 90 },
+                new Zone() { Id = 6, XMin = 90, XMax = 135, YMin = 45, YMax = 90 },
+                new Zone() { Id = 7, XMin = 0, XMax = 45, YMin = 90, YMax = 135 },
+                new Zone() { Id = 8, XMin = 45, XMax = 90, YMin = 90, YMax = 135 },
+                new Zone() { Id = 9, XMin = 90, XMax = 135, YMin = 90, YMax = 135 },
+                new Zone() { Id = 10, XMin = 0, XMax = 45, YMin = 135, YMax = 180 },
+                new Zone() { Id = 11, XMin = 45, XMax = 90, YMin = 135, YMax = 180 },
+                new Zone() { Id = 12, XMin = 90, XMax = 135, YMin = 135, YMax = 180 },
+                new Zone() { Id = 13, XMin = 0, XMax = 45, YMin = 180, YMax = 225 },
+                new Zone() { Id = 14, XMin = 45, XMax = 90, YMin = 180, YMax = 225 },
+                new Zone() { Id = 15, XMin = 90, XMax = 135, YMin = 180, YMax = 225 }
             );
 
             modelBuilder.Entity<Area>().HasData(
