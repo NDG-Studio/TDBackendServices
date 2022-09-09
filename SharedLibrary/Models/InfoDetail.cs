@@ -45,6 +45,7 @@ namespace SharedLibrary.Models
                 DefaultValueHandling = DefaultValueHandling.Ignore,
                 Formatting = Formatting.None
             }).ToString();
+            newDetail.UserId= req.Info.UserId;
             newDetail.Created = DateTimeOffset.Now;
             newDetail.DeviceId = req.Info.DeviceId;
             newDetail.DeviceType = req.Info.DeviceType;
