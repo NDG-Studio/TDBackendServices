@@ -67,6 +67,7 @@ namespace SharedLibrary.Models
             newDetail.Action = action;
             newDetail.AdditionalInfo = string.Empty;
             newDetail.Body = "";
+            newDetail.UserId = req.Info.UserId;
             newDetail.Created = DateTimeOffset.Now;
             newDetail.DeviceId = req.Info.DeviceId;
             newDetail.DeviceType = req.Info.DeviceType;
