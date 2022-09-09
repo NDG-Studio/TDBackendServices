@@ -167,7 +167,12 @@ namespace MapApi.Services
             var info = InfoDetail.CreateInfo(req, "GetMapByAreaIds");
             try
             {
+
                 var q = _context.MapItem.Where(l => req.Data.Contains(l.AreaId));
+                if (req.Data == null || req.Data?.Count == 0)//TODO: test için eklendi prodda sil
+                {
+                    q = _context.MapItem;
+                }
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -182,6 +187,7 @@ namespace MapApi.Services
             return response;
 
         }
+
 
         public async Task<TDResponse<bool>> GetApeIsRecommended(BaseRequest req, UserDto user)
         {
