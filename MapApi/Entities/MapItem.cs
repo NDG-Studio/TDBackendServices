@@ -10,6 +10,7 @@ namespace MapApi.Entities
         public long UserId { get; set; }
         public string UserName { get; set; }
         public int AreaId { get; set; }
+        public int BaseLevel { get; set; } = 1;
         public int MapItemTypeId { get; set; }
         public int CoordX { get; set; }
         public int CoordY { get; set; }

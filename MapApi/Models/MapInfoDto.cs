@@ -10,5 +10,6 @@
         public string UserName { get; set; }
         public long UserId { get; set; }
         public int AreaId { get; set; }
+        public int BaseLevel { get; set; }
     }
 }

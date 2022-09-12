@@ -108,7 +108,8 @@ namespace MapApi.Services
                     IsApe = isApe.Data,
                     MapItemTypeId = 1,//player
                     UserId = user.Id,
-                    UserName = user.Username
+                    UserName = user.Username,
+                    BaseLevel = 1
                 };
                 await _context.AddAsync(ent);
                 await _context.SaveChangesAsync();
