@@ -9,5 +9,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<List<BuildingTypeDTO>>> GetBuildingTypes(BaseRequest req, UserDto user);
         Task<TDResponse> AddPlayerBaseBuilding(BaseRequest<PlayerBaseBuildingRequest> req, UserDto user);
         Task<TDResponse> MovePlayerBuilding(BaseRequest<PlayerBaseBuildingRequest> req, UserDto user);
+        Task<TDResponse<PlayerBaseInfoDTO>> GetPlayerBaseInfo(BaseRequest req, UserDto user);
+        Task<TDResponse<PlayerBaseInfoDTO>> UpdatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req, UserDto user);
     }
 }

@@ -29,7 +29,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetBuildings");
             try
             {
-                var query = _context.PlayerBasePlacement.Include(l=>l.BuildingType).Where(l => l.UserId == user.Id && l.BuildingType.IsActive);
+                var query = _context.PlayerBasePlacement.Include(l => l.BuildingType).Where(l => l.UserId == user.Id && l.BuildingType.IsActive);
                 var qlist = await _mapper.ProjectTo<PlayerBasePlacementDTO>(query).ToListAsync();
                 response.Data = qlist;
                 response.SetSuccess();
@@ -44,15 +44,15 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
-        }        
-        
+        }
+
         public async Task<TDResponse<List<BuildingTypeDTO>>> GetBuildingTypes(BaseRequest req, UserDto user)
         {
             TDResponse<List<BuildingTypeDTO>> response = new TDResponse<List<BuildingTypeDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetBuildingTypes");
             try
             {
-                var query = _context.BuildingType.Where(l =>  l.IsActive);
+                var query = _context.BuildingType.Where(l => l.IsActive);
                 var qlist = await _mapper.ProjectTo<BuildingTypeDTO>(query).ToListAsync();
                 response.Data = qlist;
                 response.SetSuccess();
@@ -85,7 +85,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var typeIsActive = await _context.BuildingType.AnyAsync(l => l.IsActive && l.Id==req.Data!.BuildingTypeId);
+                var typeIsActive = await _context.BuildingType.AnyAsync(l => l.IsActive && l.Id == req.Data!.BuildingTypeId);
                 if (!typeIsActive)
                 {
                     info.AddInfo(OperationMessages.DbItemNotFound);
@@ -95,9 +95,9 @@ namespace PlayerBaseApi.Services
                 }
                 var ent = new PlayerBasePlacement();
                 ent.BuildingLevel = 1;
-                ent.BuildingTypeId= req.Data!.BuildingTypeId;
-                ent.CoordX= req.Data!.CoordX;
-                ent.CoordY= req.Data!.CoordY;
+                ent.BuildingTypeId = req.Data!.BuildingTypeId;
+                ent.CoordX = req.Data!.CoordX;
+                ent.CoordY = req.Data!.CoordY;
                 ent.UserId = user.Id;
                 await _context.AddAsync(ent);
                 await _context.SaveChangesAsync();
@@ -113,8 +113,8 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
-        }        
-        
+        }
+
         public async Task<TDResponse> MovePlayerBuilding(BaseRequest<PlayerBaseBuildingRequest> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -122,7 +122,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == req.Data!.BuildingTypeId).FirstOrDefaultAsync();
-                if (query==null)
+                if (query == null)
                 {
                     info.AddInfo(OperationMessages.DbItemNotFound);
                     response.SetError(OperationMessages.DbItemNotFound);
@@ -130,7 +130,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var typeIsActive = await _context.BuildingType.AnyAsync(l => l.IsActive && l.Id==req.Data!.BuildingTypeId);
+                var typeIsActive = await _context.BuildingType.AnyAsync(l => l.IsActive && l.Id == req.Data!.BuildingTypeId);
                 if (!typeIsActive)
                 {
                     info.AddInfo(OperationMessages.DbItemNotFound);
@@ -140,8 +140,72 @@ namespace PlayerBaseApi.Services
                 }
 
                 query.CoordX = req.Data!.CoordX;
-                query.CoordY= req.Data!.CoordY;
+                query.CoordY = req.Data!.CoordY;
                 await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<PlayerBaseInfoDTO>> GetPlayerBaseInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerBaseInfoDTO> response = new TDResponse<PlayerBaseInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
+            try
+            {
+                var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req, UserDto user)
+        {
+            TDResponse<PlayerBaseInfoDTO> response = new TDResponse<PlayerBaseInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "UpdatePlayerBaseInfo");
+            try
+            {
+                var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.Scraps = req.Data.Scraps;
+                query.BluePrints = req.Data.BluePrints;
+                query.HeroCards = req.Data.HeroCards;
+                query.Gems = req.Data.Gems;
+                query.LastBaseCollect = req.Data.LastBaseCollect != null && req.Data.LastBaseCollect != "" ? DateTimeOffset.Now : query.LastBaseCollect;
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

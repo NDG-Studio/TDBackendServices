@@ -57,6 +57,26 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.MovePlayerBuilding(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("GetPlayerBaseInfo")]
+        public async Task<TDResponse<PlayerBaseInfoDTO>> GetPlayerBaseInfo([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPlayerBaseInfo(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("UpdatePlayerBaseInfo")]
+        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpdatePlayerBaseInfo(req, user);
         }
     }
 }
