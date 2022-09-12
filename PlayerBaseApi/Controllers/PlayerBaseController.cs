@@ -70,13 +70,13 @@ namespace PlayerBaseApi.Controllers
         }        
         
         [LoginRequired]
-        [HttpPost("UpdatePlayerBaseInfo")]
-        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
+        [HttpPost("UpdateOrCreatePlayerBaseInfo")]
+        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.UpdatePlayerBaseInfo(req, user);
+            return await _playerBaseService.UpdateOrCreatePlayerBaseInfo(req, user);
         }
     }
 }

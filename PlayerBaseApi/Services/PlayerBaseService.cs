@@ -185,27 +185,40 @@ namespace PlayerBaseApi.Services
 
         }
 
-        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req, UserDto user)
+        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req, UserDto user)
         {
             TDResponse<PlayerBaseInfoDTO> response = new TDResponse<PlayerBaseInfoDTO>();
             var info = InfoDetail.CreateInfo(req, "UpdatePlayerBaseInfo");
             try
             {
                 var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                if (query == null)
+                if (query != null)
                 {
-                    info.AddInfo(OperationMessages.DbItemNotFound);
-                    response.SetError(OperationMessages.DbItemNotFound);
-                    _logger.LogInformation(info.ToString());
-                    return response;
+                    query.Scraps = req.Data.Scraps;
+                    query.BluePrints = req.Data.BluePrints;
+                    query.HeroCards = req.Data.HeroCards;
+                    query.Gems = req.Data.Gems;
+                    query.LastBaseCollect = req.Data.LastBaseCollect != null && req.Data.LastBaseCollect != "" ? DateTimeOffset.Now : query.LastBaseCollect;
+                    response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
                 }
-                query.Scraps = req.Data.Scraps;
-                query.BluePrints = req.Data.BluePrints;
-                query.HeroCards = req.Data.HeroCards;
-                query.Gems = req.Data.Gems;
-                query.LastBaseCollect = req.Data.LastBaseCollect != null && req.Data.LastBaseCollect != "" ? DateTimeOffset.Now : query.LastBaseCollect;
+                else
+                {
+                    var newInfo = new PlayerBaseInfo()
+                    {
+                        BaseLevel = 1,
+                        BluePrints = 0,
+                        Gems = 0,
+                        HeroCards = 0,
+                        LastBaseCollect = DateTimeOffset.Now,
+                        Scraps = 0,
+                        UserId = user.Id,
+                        Username = user.Username
+                    };
+                    await _context.AddAsync(newInfo);
+                    response.Data=_mapper.Map<PlayerBaseInfoDTO>(newInfo);
+                }
                 await _context.SaveChangesAsync();
-                response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
+                
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
