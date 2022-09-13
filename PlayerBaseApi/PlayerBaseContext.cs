@@ -17,6 +17,7 @@ namespace PlayerBaseApi
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
+        public DbSet<BuildingUpdateTime> BuildingUpdateTime { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<LogAction> LogAction { get; set; }
 
