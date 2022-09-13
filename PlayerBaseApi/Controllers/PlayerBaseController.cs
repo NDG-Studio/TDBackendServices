@@ -37,8 +37,8 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetBuildingTypes(req, user);
-        }        
-        
+        }
+
         [LoginRequired]
         [HttpPost("AddPlayerBaseBuilding")]
         public async Task<TDResponse> AddPlayerBaseBuilding([FromBody] BaseRequest<PlayerBaseBuildingRequest> req)
@@ -57,8 +57,8 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.MovePlayerBuilding(req, user);
-        }        
-        
+        }
+
         [LoginRequired]
         [HttpPost("GetPlayerBaseInfo")]
         public async Task<TDResponse<PlayerBaseInfoDTO>> GetPlayerBaseInfo([FromBody] BaseRequest req)
@@ -67,8 +67,8 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetPlayerBaseInfo(req, user);
-        }        
-        
+        }
+
         [LoginRequired]
         [HttpPost("UpdateOrCreatePlayerBaseInfo")]
         public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
@@ -77,6 +77,26 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.UpdateOrCreatePlayerBaseInfo(req, user);
+        }
+
+        [LoginRequired]
+        [HttpPost("UpdateBuildingRequest")]
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingRequest([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpdateBuildingRequest(req, user);
+        }
+
+        [LoginRequired]
+        [HttpPost("UpdateBuildingDoneRequest")]
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingDoneRequest([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpdateBuildingDoneRequest(req, user);
         }
     }
 }

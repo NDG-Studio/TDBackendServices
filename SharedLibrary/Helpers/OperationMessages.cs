@@ -21,6 +21,7 @@ namespace SharedLibrary.Helpers
         public const string TokenFail = "İzinsiz giriş denemesi!";
 
         public const string UserAllreadyActive = "Kullanıcı zaten aktif olduğundan işleminiz gerçekleşmedi!";
+        public const string ProcessAllreadyExist= "Kullanıcı zaten aktif olduğundan işleminiz gerçekleşmedi!";
         public const string InfoNull = "İşlemi gerçekleştirmek için yeterli bilgiye ulaşılamadı!";
     }
 }

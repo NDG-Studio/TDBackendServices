@@ -215,10 +215,91 @@ namespace PlayerBaseApi.Services
                         Username = user.Username
                     };
                     await _context.AddAsync(newInfo);
-                    response.Data=_mapper.Map<PlayerBaseInfoDTO>(newInfo);
+                    response.Data = _mapper.Map<PlayerBaseInfoDTO>(newInfo);
                 }
                 await _context.SaveChangesAsync();
-                
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingRequest(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<PlayerBasePlacementDTO> response = new TDResponse<PlayerBasePlacementDTO>();
+            var info = InfoDetail.CreateInfo(req, "UpdateBuildingRequest");
+            try
+            {
+
+                var query = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == req.Data).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (query.UpdateEndDate != null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var buildingUpdateTime = await _context.BuildingUpdateTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
+                query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpdateDuration ?? new TimeSpan(2, 0, 0));
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingDoneRequest(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<PlayerBasePlacementDTO> response = new TDResponse<PlayerBasePlacementDTO>();
+            var info = InfoDetail.CreateInfo(req, "UpdateBuildingDoneRequest");
+            try
+            {
+
+                var query = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == req.Data).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (query.UpdateEndDate == null || (query.UpdateEndDate - DateTimeOffset.Now > TimeSpan.Zero))
+                {
+                    response.SetError(OperationMessages.NoChanges);
+                    info.AddInfo(OperationMessages.NoChanges);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.UpdateEndDate = null;
+                query.BuildingLevel = query.BuildingLevel + 1;
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
