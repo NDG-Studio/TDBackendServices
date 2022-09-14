@@ -59,9 +59,11 @@ builder.Services.AddSwaggerGen(setup =>
 });
 
 builder.Services.AddAutoMapper(
-    typeof(PlayerBaseProfile)
+    typeof(PlayerBaseProfile),
+    typeof(HeroProfile)
     );
 builder.Services.AddScoped<IPlayerBaseService, PlayerBaseService>();
+builder.Services.AddScoped<IHeroService, HeroService>();
 
 var app = builder.Build();
 

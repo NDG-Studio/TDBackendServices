@@ -18,11 +18,18 @@ namespace PlayerBaseApi
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
         public DbSet<BuildingUpdateTime> BuildingUpdateTime { get; set; }
+
+        public DbSet<Hero> Hero { get; set; }
+        public DbSet<PlayerHero> PlayerHero { get; set; }
+        public DbSet<TalentTree> TalentTree { get; set; }
+        public DbSet<TalentTreeNode> TalentTreeNode { get; set; }
+        public DbSet<PlayerTalentTreeNode> PlayerTalentTreeNode { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<LogAction> LogAction { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region PlayerBaseEntities
             modelBuilder.Entity<BuildingType>().HasData(
                 new BuildingType() { Id = 1, Name = "Base", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-5.png", IsActive = true },
                 new BuildingType() { Id = 2, Name = "Gang Tower", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true },
@@ -76,7 +83,157 @@ namespace PlayerBaseApi
                 new BuildingUpdateTime() { Id = 35, BuildingTypeId = 8, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
                 new BuildingUpdateTime() { Id = 36, BuildingTypeId = 9, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) }
             );
+            #endregion
 
+            #region HeroEntities
+
+            modelBuilder.Entity<Hero>().HasData(
+                new Hero() { 
+                    Id = 1,
+                    Name="Zeus",
+                    Description="dummydescription", 
+                    Story = "Dummyherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel=30,
+                    ThemeColor= "#993333",
+                    ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe= false,
+                    IsActive=true
+                },
+                new Hero()
+                {
+                    Id = 2,
+                    Name = "Hades",
+                    Description = "Hadesdescription",
+                    Story = "Hadesherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#2F4F4F",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-2-100x100.png",
+                    IsApe = false,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 3,
+                    Name = "Poseidon",
+                    Description = "Poseidondescription",
+                    Story = "Poseidonherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#00FFFF",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-3-100x100.png",
+                    IsApe = false,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 4,
+                    Name = "Odin",
+                    Description = "Odindescription",
+                    Story = "Odinherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#993333",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = false,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 5,
+                    Name = "Thor",
+                    Description = "Thordescription",
+                    Story = "Thorherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#993333",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = false,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 6,
+                    Name = "Hulk",
+                    Description = "Smasher",
+                    Story = "Hulkherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#006400",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 7,
+                    Name = "Abomination",
+                    Description = "Abominationdescription",
+                    Story = "Abominationherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#7CFC00",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 8,
+                    Name = "Dr. Octopus",
+                    Description = "octopusdescription",
+                    Story = "Octopusherostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#778899",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 9,
+                    Name = "Joker",
+                    Description = "Just Joker",
+                    Story = "Dramatic Hero Story",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#FF8C00",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 10,
+                    Name = "Black Noir",
+                    Description = "Black Noir description",
+                    Story = "Black Noir herostory",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#000000",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = true
+                },
+                new Hero()
+                {
+                    Id = 11,
+                    Name = "Thanos",
+                    Description = "Invinsible Gauntlet Lover",
+                    Story = "Long Story",
+                    BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
+                    MaxLevel = 30,
+                    ThemeColor = "#8A2BE2",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = true,
+                    IsActive = false
+                }
+
+            );
+
+            #endregion
         }
     }
 }
