@@ -31,7 +31,13 @@ namespace PlayerBaseApi.Services
             {
                 var query = _context.Hero.Where(l => l.IsActive);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
+                var ownedHeroes= await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).Select(l=>l.HeroId).ToListAsync();
+                
                 response.Data = qlist;
+                foreach (var oh in ownedHeroes)
+                {
+                    qlist.FirstOrDefault(l => l.Id == oh).Owned = true;
+                }
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -46,37 +52,23 @@ namespace PlayerBaseApi.Services
 
         }
 
-        public async Task<TDResponse<List<PlayerHeroDTO>>> GetPlayerHeroes(BaseRequest req, UserDto user)
+        public async Task<TDResponse<PlayerHeroDTO>> GetPlayersHeroById(BaseRequest<int> req, UserDto user)
         {
-            TDResponse<List<PlayerHeroDTO>> response = new TDResponse<List<PlayerHeroDTO>>();
-            var info = InfoDetail.CreateInfo(req, "GetPlayerHeroes");
+            TDResponse<PlayerHeroDTO> response = new TDResponse<PlayerHeroDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayersHeroById");
             try
             {
-                var query = _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id);
-                var qlist = await _mapper.ProjectTo<PlayerHeroDTO>(query).ToListAsync();
-                response.Data = qlist;
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
-            }
-            catch (Exception e)
-            {
-                response.SetError(OperationMessages.DbError);
-                info.SetException(e);
-                _logger.LogError(info.ToString());
-            }
-            return response;
-
-        }
-
-        public async Task<TDResponse<List<HeroLevelThresholdDTO>>> GetHeroesThresholds(BaseRequest req, UserDto user)
-        {
-            TDResponse<List<HeroLevelThresholdDTO>> response = new TDResponse<List<HeroLevelThresholdDTO>>();
-            var info = InfoDetail.CreateInfo(req, "GetHeroesThresholds");
-            try
-            {
-                var query = _context.HeroLevelThreshold.Where(l => l.Hero.IsActive);
-                var qlist = await _mapper.ProjectTo<HeroLevelThresholdDTO>(query).ToListAsync();
+                var query = _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id && l.HeroId==req.Data);
+                var qlist = await _mapper.ProjectTo<PlayerHeroDTO>(query).FirstOrDefaultAsync();
+                if (qlist == null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                qlist.ThresholdLeft = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel).Select(l=>l.Experience).FirstOrDefaultAsync();
+                qlist.ThresholdRight = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel+1).Select(l=>l.Experience).FirstOrDefaultAsync();
                 response.Data = qlist;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

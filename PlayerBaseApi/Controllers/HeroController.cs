@@ -30,23 +30,13 @@ namespace PlayerBaseApi.Controllers
         }
 
         [LoginRequired]
-        [HttpPost("GetPlayerHeroes")]
-        public async Task<TDResponse<List<PlayerHeroDTO>>> GetPlayerHeroes([FromBody] BaseRequest req)
+        [HttpPost("GetPlayersHeroById")]
+        public async Task<TDResponse<PlayerHeroDTO>> GetPlayersHeroById([FromBody] BaseRequest<int> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _heroService.GetPlayerHeroes(req, user);
-        }
-
-        [LoginRequired]
-        [HttpPost("GetHeroesThresholds")]
-        public async Task<TDResponse<List<HeroLevelThresholdDTO>>> GetHeroesThresholds([FromBody] BaseRequest req)
-        {
-            var user = (HttpContext.Items["User"] as UserDto);
-            req.SetUser(user.Id);
-            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _heroService.GetHeroesThresholds(req, user);
+            return await _heroService.GetPlayersHeroById(req, user);
         }
 
         [LoginRequired]

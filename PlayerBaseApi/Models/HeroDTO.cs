@@ -10,6 +10,7 @@
         public string BackgroundPictureUrl { get; set; }
         public string ThemeColor { get; set; }
         public int MaxLevel { get; set; }
+        public bool Owned { get; set; }
         public bool IsApe { get; set; }
     }
 
