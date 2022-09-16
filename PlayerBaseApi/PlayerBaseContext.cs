@@ -17,7 +17,7 @@ namespace PlayerBaseApi
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
-        public DbSet<BuildingUpdateTime> BuildingUpdateTime { get; set; }
+        public DbSet<BuildingUpgradeTime> BuildingUpgradeTime { get; set; }
 
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
@@ -46,43 +46,43 @@ namespace PlayerBaseApi
                 new PlayerBasePlacement() { Id = 1, BuildingTypeId = 1, BuildingLevel = 1, CoordX = 1, CoordY = 1, UpdateEndDate = null, UserId = 1 }
             );
 
-            modelBuilder.Entity<BuildingUpdateTime>().HasData(
-                new BuildingUpdateTime() { Id = 1, BuildingTypeId = 1, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 2, BuildingTypeId = 2, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 3, BuildingTypeId = 3, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 4, BuildingTypeId = 4, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 5, BuildingTypeId = 5, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 6, BuildingTypeId = 6, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 7, BuildingTypeId = 7, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 8, BuildingTypeId = 8, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 9, BuildingTypeId = 9, Level = 2, UpdateDuration = new TimeSpan(0, 2, 0) },
-                new BuildingUpdateTime() { Id = 10, BuildingTypeId = 1, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 11, BuildingTypeId = 2, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 12, BuildingTypeId = 3, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 13, BuildingTypeId = 4, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 14, BuildingTypeId = 5, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 15, BuildingTypeId = 6, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 16, BuildingTypeId = 7, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 17, BuildingTypeId = 8, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 18, BuildingTypeId = 9, Level = 3, UpdateDuration = new TimeSpan(0, 5, 0) },
-                new BuildingUpdateTime() { Id = 19, BuildingTypeId = 1, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 20, BuildingTypeId = 2, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 21, BuildingTypeId = 3, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 22, BuildingTypeId = 4, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 23, BuildingTypeId = 5, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 24, BuildingTypeId = 6, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 25, BuildingTypeId = 7, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 26, BuildingTypeId = 8, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 27, BuildingTypeId = 9, Level = 4, UpdateDuration = new TimeSpan(0, 10, 0) },
-                new BuildingUpdateTime() { Id = 28, BuildingTypeId = 1, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 29, BuildingTypeId = 2, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 30, BuildingTypeId = 3, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 31, BuildingTypeId = 4, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 32, BuildingTypeId = 5, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 33, BuildingTypeId = 6, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 34, BuildingTypeId = 7, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 35, BuildingTypeId = 8, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) },
-                new BuildingUpdateTime() { Id = 36, BuildingTypeId = 9, Level = 5, UpdateDuration = new TimeSpan(0, 30, 0) }
+            modelBuilder.Entity<BuildingUpgradeTime>().HasData(
+                new BuildingUpgradeTime() { Id = 1, BuildingTypeId = 1, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 2, BuildingTypeId = 2, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 3, BuildingTypeId = 3, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 4, BuildingTypeId = 4, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 5, BuildingTypeId = 5, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 6, BuildingTypeId = 6, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 7, BuildingTypeId = 7, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 8, BuildingTypeId = 8, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 9, BuildingTypeId = 9, Level = 2, UpgradeDuration = new TimeSpan(0, 2, 0) },
+                new BuildingUpgradeTime() { Id = 10, BuildingTypeId = 1, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 11, BuildingTypeId = 2, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 12, BuildingTypeId = 3, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 13, BuildingTypeId = 4, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 14, BuildingTypeId = 5, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 15, BuildingTypeId = 6, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 16, BuildingTypeId = 7, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 17, BuildingTypeId = 8, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 18, BuildingTypeId = 9, Level = 3, UpgradeDuration = new TimeSpan(0, 5, 0) },
+                new BuildingUpgradeTime() { Id = 19, BuildingTypeId = 1, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 20, BuildingTypeId = 2, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 21, BuildingTypeId = 3, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 22, BuildingTypeId = 4, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 23, BuildingTypeId = 5, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 24, BuildingTypeId = 6, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 25, BuildingTypeId = 7, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 26, BuildingTypeId = 8, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 27, BuildingTypeId = 9, Level = 4, UpgradeDuration = new TimeSpan(0, 10, 0) },
+                new BuildingUpgradeTime() { Id = 28, BuildingTypeId = 1, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 29, BuildingTypeId = 2, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 30, BuildingTypeId = 3, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 31, BuildingTypeId = 4, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 32, BuildingTypeId = 5, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 33, BuildingTypeId = 6, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 34, BuildingTypeId = 7, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 35, BuildingTypeId = 8, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
+                new BuildingUpgradeTime() { Id = 36, BuildingTypeId = 9, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) }
             );
             #endregion
 

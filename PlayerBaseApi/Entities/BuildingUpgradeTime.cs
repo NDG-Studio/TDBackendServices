@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlayerBaseApi.Entities
 {
-    public class BuildingUpdateTime
+    public class BuildingUpgradeTime
     {
         [Key]
         public int Id { get; set; }
         public int BuildingTypeId { get; set; }
         public int Level { get; set; }
-        public TimeSpan UpdateDuration { get; set; }
+        public TimeSpan UpgradeDuration { get; set; }
 
         [ForeignKey("BuildingTypeId")]
         public BuildingType BuildingType { get; set; }

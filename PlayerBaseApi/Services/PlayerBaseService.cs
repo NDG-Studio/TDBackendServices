@@ -234,10 +234,10 @@ namespace PlayerBaseApi.Services
         }
 
 
-        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingRequest(BaseRequest<int> req, UserDto user)
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingRequest(BaseRequest<int> req, UserDto user)
         {
             TDResponse<PlayerBasePlacementDTO> response = new TDResponse<PlayerBasePlacementDTO>();
-            var info = InfoDetail.CreateInfo(req, "UpdateBuildingRequest");
+            var info = InfoDetail.CreateInfo(req, "UpgradeBuildingRequest");
             try
             {
 
@@ -256,8 +256,8 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var buildingUpdateTime = await _context.BuildingUpdateTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
-                query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpdateDuration ?? new TimeSpan(2, 0, 0));
+                var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
+                query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0));
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
@@ -274,10 +274,10 @@ namespace PlayerBaseApi.Services
 
         }
 
-        public async Task<TDResponse<PlayerBasePlacementDTO>> UpdateBuildingDoneRequest(BaseRequest<int> req, UserDto user)
+        public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingDoneRequest(BaseRequest<int> req, UserDto user)
         {
             TDResponse<PlayerBasePlacementDTO> response = new TDResponse<PlayerBasePlacementDTO>();
-            var info = InfoDetail.CreateInfo(req, "UpdateBuildingDoneRequest");
+            var info = InfoDetail.CreateInfo(req, "UpgradeBuildingDoneRequest");
             try
             {
 
