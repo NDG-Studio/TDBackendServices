@@ -9,6 +9,10 @@ namespace PlayerBaseApi.MapperProfiles
         public HeroProfile(){
 
             CreateMap<Hero, HeroDTO>();
+            CreateMap<PlayerHero, PlayerHeroDTO>()
+                .ForMember(dest => dest.EndDate, operations => operations
+                .MapFrom(
+                    source => source.EndDate != null ? source.EndDate.ToString() : null));
 
 
         }

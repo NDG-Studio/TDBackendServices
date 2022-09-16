@@ -46,6 +46,29 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse<List<PlayerHeroDTO>>> GetPlayerHeroes(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerHeroDTO>> response = new TDResponse<List<PlayerHeroDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerHeroes");
+            try
+            {
+                var query = _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id);
+                var qlist = await _mapper.ProjectTo<PlayerHeroDTO>(query).ToListAsync();
+                response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
 
     }
 }
