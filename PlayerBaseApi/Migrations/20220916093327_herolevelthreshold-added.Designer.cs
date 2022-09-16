@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220916093327_herolevelthreshold-added")]
+    partial class herolevelthresholdadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -626,336 +628,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 2,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 3
                         },
                         new
                         {
                             Id = 3,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 4
                         },
                         new
                         {
                             Id = 4,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 5
                         },
                         new
                         {
                             Id = 5,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 6
                         },
                         new
                         {
                             Id = 6,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 7
                         },
                         new
                         {
                             Id = 7,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 8
                         },
                         new
                         {
                             Id = 8,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 9
                         },
                         new
                         {
                             Id = 9,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 10
                         },
                         new
                         {
                             Id = 10,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 11
                         },
                         new
                         {
                             Id = 11,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 12
                         },
                         new
                         {
                             Id = 12,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 13
                         },
                         new
                         {
                             Id = 13,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 14
                         },
                         new
                         {
                             Id = 14,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 15
                         },
                         new
                         {
                             Id = 15,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 16
                         },
                         new
                         {
                             Id = 16,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 17
                         },
                         new
                         {
                             Id = 17,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 18
                         },
                         new
                         {
                             Id = 18,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 19
                         },
                         new
                         {
                             Id = 19,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 20
                         },
                         new
                         {
                             Id = 20,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 21
                         },
                         new
                         {
                             Id = 21,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 22
                         },
                         new
                         {
                             Id = 22,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 23
                         },
                         new
                         {
                             Id = 23,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 24
                         },
                         new
                         {
                             Id = 24,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 25
                         },
                         new
                         {
                             Id = 25,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 26
                         },
                         new
                         {
                             Id = 26,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 27
                         },
                         new
                         {
                             Id = 27,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 28
                         },
                         new
                         {
                             Id = 28,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 29
                         },
                         new
                         {
                             Id = 29,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 30
                         },
                         new
                         {
                             Id = 30,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 31
                         },
                         new
                         {
                             Id = 31,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 32
                         },
                         new
                         {
                             Id = 32,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 33
                         },
                         new
                         {
                             Id = 33,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 34
                         },
                         new
                         {
                             Id = 34,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 35
                         },
                         new
                         {
                             Id = 35,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 36
                         },
                         new
                         {
                             Id = 36,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 37
                         },
                         new
                         {
                             Id = 37,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 38
                         },
                         new
                         {
                             Id = 38,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 39
                         },
                         new
                         {
                             Id = 39,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 40
                         },
                         new
                         {
                             Id = 40,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 41
                         },
                         new
                         {
                             Id = 41,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 42
                         },
                         new
                         {
                             Id = 42,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 43
                         },
                         new
                         {
                             Id = 43,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 44
                         },
                         new
                         {
                             Id = 44,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 45
                         },
                         new
                         {
                             Id = 45,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 46
                         },
                         new
                         {
                             Id = 46,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 47
                         },
                         new
                         {
                             Id = 47,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 48
                         },
                         new
                         {
                             Id = 48,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 49
                         },
                         new
                         {
                             Id = 49,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 1,
                             Level = 50
                         },
@@ -969,336 +971,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 51,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 3
                         },
                         new
                         {
                             Id = 52,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 4
                         },
                         new
                         {
                             Id = 53,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 5
                         },
                         new
                         {
                             Id = 54,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 6
                         },
                         new
                         {
                             Id = 55,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 7
                         },
                         new
                         {
                             Id = 56,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 8
                         },
                         new
                         {
                             Id = 57,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 9
                         },
                         new
                         {
                             Id = 58,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 10
                         },
                         new
                         {
                             Id = 59,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 11
                         },
                         new
                         {
                             Id = 60,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 12
                         },
                         new
                         {
                             Id = 61,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 13
                         },
                         new
                         {
                             Id = 62,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 14
                         },
                         new
                         {
                             Id = 63,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 15
                         },
                         new
                         {
                             Id = 64,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 16
                         },
                         new
                         {
                             Id = 65,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 17
                         },
                         new
                         {
                             Id = 66,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 18
                         },
                         new
                         {
                             Id = 67,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 19
                         },
                         new
                         {
                             Id = 68,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 20
                         },
                         new
                         {
                             Id = 69,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 21
                         },
                         new
                         {
                             Id = 70,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 22
                         },
                         new
                         {
                             Id = 71,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 23
                         },
                         new
                         {
                             Id = 72,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 24
                         },
                         new
                         {
                             Id = 73,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 25
                         },
                         new
                         {
                             Id = 74,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 26
                         },
                         new
                         {
                             Id = 75,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 27
                         },
                         new
                         {
                             Id = 76,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 28
                         },
                         new
                         {
                             Id = 77,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 29
                         },
                         new
                         {
                             Id = 78,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 30
                         },
                         new
                         {
                             Id = 79,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 31
                         },
                         new
                         {
                             Id = 80,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 32
                         },
                         new
                         {
                             Id = 81,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 33
                         },
                         new
                         {
                             Id = 82,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 34
                         },
                         new
                         {
                             Id = 83,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 35
                         },
                         new
                         {
                             Id = 84,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 36
                         },
                         new
                         {
                             Id = 85,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 37
                         },
                         new
                         {
                             Id = 86,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 38
                         },
                         new
                         {
                             Id = 87,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 39
                         },
                         new
                         {
                             Id = 88,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 40
                         },
                         new
                         {
                             Id = 89,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 41
                         },
                         new
                         {
                             Id = 90,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 42
                         },
                         new
                         {
                             Id = 91,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 43
                         },
                         new
                         {
                             Id = 92,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 44
                         },
                         new
                         {
                             Id = 93,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 45
                         },
                         new
                         {
                             Id = 94,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 46
                         },
                         new
                         {
                             Id = 95,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 47
                         },
                         new
                         {
                             Id = 96,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 48
                         },
                         new
                         {
                             Id = 97,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 49
                         },
                         new
                         {
                             Id = 98,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 2,
                             Level = 50
                         },
@@ -1312,336 +1314,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 100,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 3
                         },
                         new
                         {
                             Id = 101,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 4
                         },
                         new
                         {
                             Id = 102,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 5
                         },
                         new
                         {
                             Id = 103,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 6
                         },
                         new
                         {
                             Id = 104,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 7
                         },
                         new
                         {
                             Id = 105,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 8
                         },
                         new
                         {
                             Id = 106,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 9
                         },
                         new
                         {
                             Id = 107,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 10
                         },
                         new
                         {
                             Id = 108,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 11
                         },
                         new
                         {
                             Id = 109,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 12
                         },
                         new
                         {
                             Id = 110,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 13
                         },
                         new
                         {
                             Id = 111,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 14
                         },
                         new
                         {
                             Id = 112,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 15
                         },
                         new
                         {
                             Id = 113,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 16
                         },
                         new
                         {
                             Id = 114,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 17
                         },
                         new
                         {
                             Id = 115,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 18
                         },
                         new
                         {
                             Id = 116,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 19
                         },
                         new
                         {
                             Id = 117,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 20
                         },
                         new
                         {
                             Id = 118,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 21
                         },
                         new
                         {
                             Id = 119,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 22
                         },
                         new
                         {
                             Id = 120,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 23
                         },
                         new
                         {
                             Id = 121,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 24
                         },
                         new
                         {
                             Id = 122,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 25
                         },
                         new
                         {
                             Id = 123,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 26
                         },
                         new
                         {
                             Id = 124,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 27
                         },
                         new
                         {
                             Id = 125,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 28
                         },
                         new
                         {
                             Id = 126,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 29
                         },
                         new
                         {
                             Id = 127,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 30
                         },
                         new
                         {
                             Id = 128,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 31
                         },
                         new
                         {
                             Id = 129,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 32
                         },
                         new
                         {
                             Id = 130,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 33
                         },
                         new
                         {
                             Id = 131,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 34
                         },
                         new
                         {
                             Id = 132,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 35
                         },
                         new
                         {
                             Id = 133,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 36
                         },
                         new
                         {
                             Id = 134,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 37
                         },
                         new
                         {
                             Id = 135,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 38
                         },
                         new
                         {
                             Id = 136,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 39
                         },
                         new
                         {
                             Id = 137,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 40
                         },
                         new
                         {
                             Id = 138,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 41
                         },
                         new
                         {
                             Id = 139,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 42
                         },
                         new
                         {
                             Id = 140,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 43
                         },
                         new
                         {
                             Id = 141,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 44
                         },
                         new
                         {
                             Id = 142,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 45
                         },
                         new
                         {
                             Id = 143,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 46
                         },
                         new
                         {
                             Id = 144,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 47
                         },
                         new
                         {
                             Id = 145,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 48
                         },
                         new
                         {
                             Id = 146,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 49
                         },
                         new
                         {
                             Id = 147,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 3,
                             Level = 50
                         },
@@ -1655,336 +1657,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 149,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 3
                         },
                         new
                         {
                             Id = 150,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 4
                         },
                         new
                         {
                             Id = 151,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 5
                         },
                         new
                         {
                             Id = 152,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 6
                         },
                         new
                         {
                             Id = 153,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 7
                         },
                         new
                         {
                             Id = 154,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 8
                         },
                         new
                         {
                             Id = 155,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 9
                         },
                         new
                         {
                             Id = 156,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 10
                         },
                         new
                         {
                             Id = 157,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 11
                         },
                         new
                         {
                             Id = 158,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 12
                         },
                         new
                         {
                             Id = 159,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 13
                         },
                         new
                         {
                             Id = 160,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 14
                         },
                         new
                         {
                             Id = 161,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 15
                         },
                         new
                         {
                             Id = 162,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 16
                         },
                         new
                         {
                             Id = 163,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 17
                         },
                         new
                         {
                             Id = 164,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 18
                         },
                         new
                         {
                             Id = 165,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 19
                         },
                         new
                         {
                             Id = 166,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 20
                         },
                         new
                         {
                             Id = 167,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 21
                         },
                         new
                         {
                             Id = 168,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 22
                         },
                         new
                         {
                             Id = 169,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 23
                         },
                         new
                         {
                             Id = 170,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 24
                         },
                         new
                         {
                             Id = 171,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 25
                         },
                         new
                         {
                             Id = 172,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 26
                         },
                         new
                         {
                             Id = 173,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 27
                         },
                         new
                         {
                             Id = 174,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 28
                         },
                         new
                         {
                             Id = 175,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 29
                         },
                         new
                         {
                             Id = 176,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 30
                         },
                         new
                         {
                             Id = 177,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 31
                         },
                         new
                         {
                             Id = 178,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 32
                         },
                         new
                         {
                             Id = 179,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 33
                         },
                         new
                         {
                             Id = 180,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 34
                         },
                         new
                         {
                             Id = 181,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 35
                         },
                         new
                         {
                             Id = 182,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 36
                         },
                         new
                         {
                             Id = 183,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 37
                         },
                         new
                         {
                             Id = 184,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 38
                         },
                         new
                         {
                             Id = 185,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 39
                         },
                         new
                         {
                             Id = 186,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 40
                         },
                         new
                         {
                             Id = 187,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 41
                         },
                         new
                         {
                             Id = 188,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 42
                         },
                         new
                         {
                             Id = 189,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 43
                         },
                         new
                         {
                             Id = 190,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 44
                         },
                         new
                         {
                             Id = 191,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 45
                         },
                         new
                         {
                             Id = 192,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 46
                         },
                         new
                         {
                             Id = 193,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 47
                         },
                         new
                         {
                             Id = 194,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 48
                         },
                         new
                         {
                             Id = 195,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 49
                         },
                         new
                         {
                             Id = 196,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 4,
                             Level = 50
                         },
@@ -1998,336 +2000,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 198,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 3
                         },
                         new
                         {
                             Id = 199,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 4
                         },
                         new
                         {
                             Id = 200,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 5
                         },
                         new
                         {
                             Id = 201,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 6
                         },
                         new
                         {
                             Id = 202,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 7
                         },
                         new
                         {
                             Id = 203,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 8
                         },
                         new
                         {
                             Id = 204,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 9
                         },
                         new
                         {
                             Id = 205,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 10
                         },
                         new
                         {
                             Id = 206,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 11
                         },
                         new
                         {
                             Id = 207,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 12
                         },
                         new
                         {
                             Id = 208,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 13
                         },
                         new
                         {
                             Id = 209,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 14
                         },
                         new
                         {
                             Id = 210,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 15
                         },
                         new
                         {
                             Id = 211,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 16
                         },
                         new
                         {
                             Id = 212,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 17
                         },
                         new
                         {
                             Id = 213,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 18
                         },
                         new
                         {
                             Id = 214,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 19
                         },
                         new
                         {
                             Id = 215,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 20
                         },
                         new
                         {
                             Id = 216,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 21
                         },
                         new
                         {
                             Id = 217,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 22
                         },
                         new
                         {
                             Id = 218,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 23
                         },
                         new
                         {
                             Id = 219,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 24
                         },
                         new
                         {
                             Id = 220,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 25
                         },
                         new
                         {
                             Id = 221,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 26
                         },
                         new
                         {
                             Id = 222,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 27
                         },
                         new
                         {
                             Id = 223,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 28
                         },
                         new
                         {
                             Id = 224,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 29
                         },
                         new
                         {
                             Id = 225,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 30
                         },
                         new
                         {
                             Id = 226,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 31
                         },
                         new
                         {
                             Id = 227,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 32
                         },
                         new
                         {
                             Id = 228,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 33
                         },
                         new
                         {
                             Id = 229,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 34
                         },
                         new
                         {
                             Id = 230,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 35
                         },
                         new
                         {
                             Id = 231,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 36
                         },
                         new
                         {
                             Id = 232,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 37
                         },
                         new
                         {
                             Id = 233,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 38
                         },
                         new
                         {
                             Id = 234,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 39
                         },
                         new
                         {
                             Id = 235,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 40
                         },
                         new
                         {
                             Id = 236,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 41
                         },
                         new
                         {
                             Id = 237,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 42
                         },
                         new
                         {
                             Id = 238,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 43
                         },
                         new
                         {
                             Id = 239,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 44
                         },
                         new
                         {
                             Id = 240,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 45
                         },
                         new
                         {
                             Id = 241,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 46
                         },
                         new
                         {
                             Id = 242,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 47
                         },
                         new
                         {
                             Id = 243,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 48
                         },
                         new
                         {
                             Id = 244,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 49
                         },
                         new
                         {
                             Id = 245,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 5,
                             Level = 50
                         },
@@ -2341,336 +2343,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 247,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 3
                         },
                         new
                         {
                             Id = 248,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 4
                         },
                         new
                         {
                             Id = 249,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 5
                         },
                         new
                         {
                             Id = 250,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 6
                         },
                         new
                         {
                             Id = 251,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 7
                         },
                         new
                         {
                             Id = 252,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 8
                         },
                         new
                         {
                             Id = 253,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 9
                         },
                         new
                         {
                             Id = 254,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 10
                         },
                         new
                         {
                             Id = 255,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 11
                         },
                         new
                         {
                             Id = 256,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 12
                         },
                         new
                         {
                             Id = 257,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 13
                         },
                         new
                         {
                             Id = 258,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 14
                         },
                         new
                         {
                             Id = 259,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 15
                         },
                         new
                         {
                             Id = 260,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 16
                         },
                         new
                         {
                             Id = 261,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 17
                         },
                         new
                         {
                             Id = 262,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 18
                         },
                         new
                         {
                             Id = 263,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 19
                         },
                         new
                         {
                             Id = 264,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 20
                         },
                         new
                         {
                             Id = 265,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 21
                         },
                         new
                         {
                             Id = 266,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 22
                         },
                         new
                         {
                             Id = 267,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 23
                         },
                         new
                         {
                             Id = 268,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 24
                         },
                         new
                         {
                             Id = 269,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 25
                         },
                         new
                         {
                             Id = 270,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 26
                         },
                         new
                         {
                             Id = 271,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 27
                         },
                         new
                         {
                             Id = 272,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 28
                         },
                         new
                         {
                             Id = 273,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 29
                         },
                         new
                         {
                             Id = 274,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 30
                         },
                         new
                         {
                             Id = 275,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 31
                         },
                         new
                         {
                             Id = 276,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 32
                         },
                         new
                         {
                             Id = 277,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 33
                         },
                         new
                         {
                             Id = 278,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 34
                         },
                         new
                         {
                             Id = 279,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 35
                         },
                         new
                         {
                             Id = 280,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 36
                         },
                         new
                         {
                             Id = 281,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 37
                         },
                         new
                         {
                             Id = 282,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 38
                         },
                         new
                         {
                             Id = 283,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 39
                         },
                         new
                         {
                             Id = 284,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 40
                         },
                         new
                         {
                             Id = 285,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 41
                         },
                         new
                         {
                             Id = 286,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 42
                         },
                         new
                         {
                             Id = 287,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 43
                         },
                         new
                         {
                             Id = 288,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 44
                         },
                         new
                         {
                             Id = 289,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 45
                         },
                         new
                         {
                             Id = 290,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 46
                         },
                         new
                         {
                             Id = 291,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 47
                         },
                         new
                         {
                             Id = 292,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 48
                         },
                         new
                         {
                             Id = 293,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 49
                         },
                         new
                         {
                             Id = 294,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 6,
                             Level = 50
                         },
@@ -2684,336 +2686,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 296,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 3
                         },
                         new
                         {
                             Id = 297,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 4
                         },
                         new
                         {
                             Id = 298,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 5
                         },
                         new
                         {
                             Id = 299,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 6
                         },
                         new
                         {
                             Id = 300,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 7
                         },
                         new
                         {
                             Id = 301,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 8
                         },
                         new
                         {
                             Id = 302,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 9
                         },
                         new
                         {
                             Id = 303,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 10
                         },
                         new
                         {
                             Id = 304,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 11
                         },
                         new
                         {
                             Id = 305,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 12
                         },
                         new
                         {
                             Id = 306,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 13
                         },
                         new
                         {
                             Id = 307,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 14
                         },
                         new
                         {
                             Id = 308,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 15
                         },
                         new
                         {
                             Id = 309,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 16
                         },
                         new
                         {
                             Id = 310,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 17
                         },
                         new
                         {
                             Id = 311,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 18
                         },
                         new
                         {
                             Id = 312,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 19
                         },
                         new
                         {
                             Id = 313,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 20
                         },
                         new
                         {
                             Id = 314,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 21
                         },
                         new
                         {
                             Id = 315,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 22
                         },
                         new
                         {
                             Id = 316,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 23
                         },
                         new
                         {
                             Id = 317,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 24
                         },
                         new
                         {
                             Id = 318,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 25
                         },
                         new
                         {
                             Id = 319,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 26
                         },
                         new
                         {
                             Id = 320,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 27
                         },
                         new
                         {
                             Id = 321,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 28
                         },
                         new
                         {
                             Id = 322,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 29
                         },
                         new
                         {
                             Id = 323,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 30
                         },
                         new
                         {
                             Id = 324,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 31
                         },
                         new
                         {
                             Id = 325,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 32
                         },
                         new
                         {
                             Id = 326,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 33
                         },
                         new
                         {
                             Id = 327,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 34
                         },
                         new
                         {
                             Id = 328,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 35
                         },
                         new
                         {
                             Id = 329,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 36
                         },
                         new
                         {
                             Id = 330,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 37
                         },
                         new
                         {
                             Id = 331,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 38
                         },
                         new
                         {
                             Id = 332,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 39
                         },
                         new
                         {
                             Id = 333,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 40
                         },
                         new
                         {
                             Id = 334,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 41
                         },
                         new
                         {
                             Id = 335,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 42
                         },
                         new
                         {
                             Id = 336,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 43
                         },
                         new
                         {
                             Id = 337,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 44
                         },
                         new
                         {
                             Id = 338,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 45
                         },
                         new
                         {
                             Id = 339,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 46
                         },
                         new
                         {
                             Id = 340,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 47
                         },
                         new
                         {
                             Id = 341,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 48
                         },
                         new
                         {
                             Id = 342,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 49
                         },
                         new
                         {
                             Id = 343,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 7,
                             Level = 50
                         },
@@ -3027,336 +3029,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 345,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 3
                         },
                         new
                         {
                             Id = 346,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 4
                         },
                         new
                         {
                             Id = 347,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 5
                         },
                         new
                         {
                             Id = 348,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 6
                         },
                         new
                         {
                             Id = 349,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 7
                         },
                         new
                         {
                             Id = 350,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 8
                         },
                         new
                         {
                             Id = 351,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 9
                         },
                         new
                         {
                             Id = 352,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 10
                         },
                         new
                         {
                             Id = 353,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 11
                         },
                         new
                         {
                             Id = 354,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 12
                         },
                         new
                         {
                             Id = 355,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 13
                         },
                         new
                         {
                             Id = 356,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 14
                         },
                         new
                         {
                             Id = 357,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 15
                         },
                         new
                         {
                             Id = 358,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 16
                         },
                         new
                         {
                             Id = 359,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 17
                         },
                         new
                         {
                             Id = 360,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 18
                         },
                         new
                         {
                             Id = 361,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 19
                         },
                         new
                         {
                             Id = 362,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 20
                         },
                         new
                         {
                             Id = 363,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 21
                         },
                         new
                         {
                             Id = 364,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 22
                         },
                         new
                         {
                             Id = 365,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 23
                         },
                         new
                         {
                             Id = 366,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 24
                         },
                         new
                         {
                             Id = 367,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 25
                         },
                         new
                         {
                             Id = 368,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 26
                         },
                         new
                         {
                             Id = 369,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 27
                         },
                         new
                         {
                             Id = 370,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 28
                         },
                         new
                         {
                             Id = 371,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 29
                         },
                         new
                         {
                             Id = 372,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 30
                         },
                         new
                         {
                             Id = 373,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 31
                         },
                         new
                         {
                             Id = 374,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 32
                         },
                         new
                         {
                             Id = 375,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 33
                         },
                         new
                         {
                             Id = 376,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 34
                         },
                         new
                         {
                             Id = 377,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 35
                         },
                         new
                         {
                             Id = 378,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 36
                         },
                         new
                         {
                             Id = 379,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 37
                         },
                         new
                         {
                             Id = 380,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 38
                         },
                         new
                         {
                             Id = 381,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 39
                         },
                         new
                         {
                             Id = 382,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 40
                         },
                         new
                         {
                             Id = 383,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 41
                         },
                         new
                         {
                             Id = 384,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 42
                         },
                         new
                         {
                             Id = 385,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 43
                         },
                         new
                         {
                             Id = 386,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 44
                         },
                         new
                         {
                             Id = 387,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 45
                         },
                         new
                         {
                             Id = 388,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 46
                         },
                         new
                         {
                             Id = 389,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 47
                         },
                         new
                         {
                             Id = 390,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 48
                         },
                         new
                         {
                             Id = 391,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 49
                         },
                         new
                         {
                             Id = 392,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 8,
                             Level = 50
                         },
@@ -3370,336 +3372,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 394,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 3
                         },
                         new
                         {
                             Id = 395,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 4
                         },
                         new
                         {
                             Id = 396,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 5
                         },
                         new
                         {
                             Id = 397,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 6
                         },
                         new
                         {
                             Id = 398,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 7
                         },
                         new
                         {
                             Id = 399,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 8
                         },
                         new
                         {
                             Id = 400,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 9
                         },
                         new
                         {
                             Id = 401,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 10
                         },
                         new
                         {
                             Id = 402,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 11
                         },
                         new
                         {
                             Id = 403,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 12
                         },
                         new
                         {
                             Id = 404,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 13
                         },
                         new
                         {
                             Id = 405,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 14
                         },
                         new
                         {
                             Id = 406,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 15
                         },
                         new
                         {
                             Id = 407,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 16
                         },
                         new
                         {
                             Id = 408,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 17
                         },
                         new
                         {
                             Id = 409,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 18
                         },
                         new
                         {
                             Id = 410,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 19
                         },
                         new
                         {
                             Id = 411,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 20
                         },
                         new
                         {
                             Id = 412,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 21
                         },
                         new
                         {
                             Id = 413,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 22
                         },
                         new
                         {
                             Id = 414,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 23
                         },
                         new
                         {
                             Id = 415,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 24
                         },
                         new
                         {
                             Id = 416,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 25
                         },
                         new
                         {
                             Id = 417,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 26
                         },
                         new
                         {
                             Id = 418,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 27
                         },
                         new
                         {
                             Id = 419,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 28
                         },
                         new
                         {
                             Id = 420,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 29
                         },
                         new
                         {
                             Id = 421,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 30
                         },
                         new
                         {
                             Id = 422,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 31
                         },
                         new
                         {
                             Id = 423,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 32
                         },
                         new
                         {
                             Id = 424,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 33
                         },
                         new
                         {
                             Id = 425,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 34
                         },
                         new
                         {
                             Id = 426,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 35
                         },
                         new
                         {
                             Id = 427,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 36
                         },
                         new
                         {
                             Id = 428,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 37
                         },
                         new
                         {
                             Id = 429,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 38
                         },
                         new
                         {
                             Id = 430,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 39
                         },
                         new
                         {
                             Id = 431,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 40
                         },
                         new
                         {
                             Id = 432,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 41
                         },
                         new
                         {
                             Id = 433,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 42
                         },
                         new
                         {
                             Id = 434,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 43
                         },
                         new
                         {
                             Id = 435,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 44
                         },
                         new
                         {
                             Id = 436,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 45
                         },
                         new
                         {
                             Id = 437,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 46
                         },
                         new
                         {
                             Id = 438,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 47
                         },
                         new
                         {
                             Id = 439,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 48
                         },
                         new
                         {
                             Id = 440,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 49
                         },
                         new
                         {
                             Id = 441,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 9,
                             Level = 50
                         },
@@ -3713,336 +3715,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 443,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 3
                         },
                         new
                         {
                             Id = 444,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 4
                         },
                         new
                         {
                             Id = 445,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 5
                         },
                         new
                         {
                             Id = 446,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 6
                         },
                         new
                         {
                             Id = 447,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 7
                         },
                         new
                         {
                             Id = 448,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 8
                         },
                         new
                         {
                             Id = 449,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 9
                         },
                         new
                         {
                             Id = 450,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 10
                         },
                         new
                         {
                             Id = 451,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 11
                         },
                         new
                         {
                             Id = 452,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 12
                         },
                         new
                         {
                             Id = 453,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 13
                         },
                         new
                         {
                             Id = 454,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 14
                         },
                         new
                         {
                             Id = 455,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 15
                         },
                         new
                         {
                             Id = 456,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 16
                         },
                         new
                         {
                             Id = 457,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 17
                         },
                         new
                         {
                             Id = 458,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 18
                         },
                         new
                         {
                             Id = 459,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 19
                         },
                         new
                         {
                             Id = 460,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 20
                         },
                         new
                         {
                             Id = 461,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 21
                         },
                         new
                         {
                             Id = 462,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 22
                         },
                         new
                         {
                             Id = 463,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 23
                         },
                         new
                         {
                             Id = 464,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 24
                         },
                         new
                         {
                             Id = 465,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 25
                         },
                         new
                         {
                             Id = 466,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 26
                         },
                         new
                         {
                             Id = 467,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 27
                         },
                         new
                         {
                             Id = 468,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 28
                         },
                         new
                         {
                             Id = 469,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 29
                         },
                         new
                         {
                             Id = 470,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 30
                         },
                         new
                         {
                             Id = 471,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 31
                         },
                         new
                         {
                             Id = 472,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 32
                         },
                         new
                         {
                             Id = 473,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 33
                         },
                         new
                         {
                             Id = 474,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 34
                         },
                         new
                         {
                             Id = 475,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 35
                         },
                         new
                         {
                             Id = 476,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 36
                         },
                         new
                         {
                             Id = 477,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 37
                         },
                         new
                         {
                             Id = 478,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 38
                         },
                         new
                         {
                             Id = 479,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 39
                         },
                         new
                         {
                             Id = 480,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 40
                         },
                         new
                         {
                             Id = 481,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 41
                         },
                         new
                         {
                             Id = 482,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 42
                         },
                         new
                         {
                             Id = 483,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 43
                         },
                         new
                         {
                             Id = 484,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 44
                         },
                         new
                         {
                             Id = 485,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 45
                         },
                         new
                         {
                             Id = 486,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 46
                         },
                         new
                         {
                             Id = 487,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 47
                         },
                         new
                         {
                             Id = 488,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 48
                         },
                         new
                         {
                             Id = 489,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 49
                         },
                         new
                         {
                             Id = 490,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 10,
                             Level = 50
                         },
@@ -4056,336 +4058,336 @@ namespace PlayerBaseApi.Migrations
                         new
                         {
                             Id = 492,
-                            Experience = 130L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 3
                         },
                         new
                         {
                             Id = 493,
-                            Experience = 169L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 4
                         },
                         new
                         {
                             Id = 494,
-                            Experience = 219L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 5
                         },
                         new
                         {
                             Id = 495,
-                            Experience = 284L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 6
                         },
                         new
                         {
                             Id = 496,
-                            Experience = 369L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 7
                         },
                         new
                         {
                             Id = 497,
-                            Experience = 479L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 8
                         },
                         new
                         {
                             Id = 498,
-                            Experience = 622L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 9
                         },
                         new
                         {
                             Id = 499,
-                            Experience = 808L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 10
                         },
                         new
                         {
                             Id = 500,
-                            Experience = 1050L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 11
                         },
                         new
                         {
                             Id = 501,
-                            Experience = 1365L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 12
                         },
                         new
                         {
                             Id = 502,
-                            Experience = 1774L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 13
                         },
                         new
                         {
                             Id = 503,
-                            Experience = 2306L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 14
                         },
                         new
                         {
                             Id = 504,
-                            Experience = 2997L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 15
                         },
                         new
                         {
                             Id = 505,
-                            Experience = 3896L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 16
                         },
                         new
                         {
                             Id = 506,
-                            Experience = 5064L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 17
                         },
                         new
                         {
                             Id = 507,
-                            Experience = 6583L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 18
                         },
                         new
                         {
                             Id = 508,
-                            Experience = 8557L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 19
                         },
                         new
                         {
                             Id = 509,
-                            Experience = 11124L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 20
                         },
                         new
                         {
                             Id = 510,
-                            Experience = 14461L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 21
                         },
                         new
                         {
                             Id = 511,
-                            Experience = 18799L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 22
                         },
                         new
                         {
                             Id = 512,
-                            Experience = 24438L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 23
                         },
                         new
                         {
                             Id = 513,
-                            Experience = 31769L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 24
                         },
                         new
                         {
                             Id = 514,
-                            Experience = 41299L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 25
                         },
                         new
                         {
                             Id = 515,
-                            Experience = 53688L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 26
                         },
                         new
                         {
                             Id = 516,
-                            Experience = 69794L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 27
                         },
                         new
                         {
                             Id = 517,
-                            Experience = 90732L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 28
                         },
                         new
                         {
                             Id = 518,
-                            Experience = 117951L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 29
                         },
                         new
                         {
                             Id = 519,
-                            Experience = 153336L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 30
                         },
                         new
                         {
                             Id = 520,
-                            Experience = 199336L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 31
                         },
                         new
                         {
                             Id = 521,
-                            Experience = 259136L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 32
                         },
                         new
                         {
                             Id = 522,
-                            Experience = 336876L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 33
                         },
                         new
                         {
                             Id = 523,
-                            Experience = 437938L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 34
                         },
                         new
                         {
                             Id = 524,
-                            Experience = 569319L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 35
                         },
                         new
                         {
                             Id = 525,
-                            Experience = 740114L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 36
                         },
                         new
                         {
                             Id = 526,
-                            Experience = 962148L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 37
                         },
                         new
                         {
                             Id = 527,
-                            Experience = 1250792L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 38
                         },
                         new
                         {
                             Id = 528,
-                            Experience = 1626029L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 39
                         },
                         new
                         {
                             Id = 529,
-                            Experience = 2113837L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 40
                         },
                         new
                         {
                             Id = 530,
-                            Experience = 2747988L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 41
                         },
                         new
                         {
                             Id = 531,
-                            Experience = 3572384L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 42
                         },
                         new
                         {
                             Id = 532,
-                            Experience = 4644099L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 43
                         },
                         new
                         {
                             Id = 533,
-                            Experience = 6037328L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 44
                         },
                         new
                         {
                             Id = 534,
-                            Experience = 7848526L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 45
                         },
                         new
                         {
                             Id = 535,
-                            Experience = 10203083L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 46
                         },
                         new
                         {
                             Id = 536,
-                            Experience = 13264007L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 47
                         },
                         new
                         {
                             Id = 537,
-                            Experience = 17243209L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 48
                         },
                         new
                         {
                             Id = 538,
-                            Experience = 22416171L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 49
                         },
                         new
                         {
                             Id = 539,
-                            Experience = 29141022L,
+                            Experience = 100L,
                             HeroId = 11,
                             Level = 50
                         });

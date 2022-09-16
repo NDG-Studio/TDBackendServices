@@ -38,5 +38,25 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.GetPlayerHeroes(req, user);
         }
+
+        [LoginRequired]
+        [HttpPost("GetHeroesThresholds")]
+        public async Task<TDResponse<List<HeroLevelThresholdDTO>>> GetHeroesThresholds([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.GetHeroesThresholds(req, user);
+        }
+
+        [LoginRequired]
+        [HttpPost("AddHeroExperience")]
+        public async Task<TDResponse<bool>> AddHeroExperience([FromBody] BaseRequest<AddHeroExperienceRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.AddHeroExperience(req, user);
+        }
     }
 }

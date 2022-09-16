@@ -21,6 +21,7 @@ namespace PlayerBaseApi
 
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
+        public DbSet<HeroLevelThreshold> HeroLevelThreshold { get; set; }
         public DbSet<TalentTree> TalentTree { get; set; }
         public DbSet<TalentTreeNode> TalentTreeNode { get; set; }
         public DbSet<PlayerTalentTreeNode> PlayerTalentTreeNode { get; set; }
@@ -87,18 +88,21 @@ namespace PlayerBaseApi
 
             #region HeroEntities
 
+
+
             modelBuilder.Entity<Hero>().HasData(
-                new Hero() { 
+                new Hero()
+                {
                     Id = 1,
-                    Name="Zeus",
-                    Description="dummydescription", 
+                    Name = "Zeus",
+                    Description = "dummydescription",
                     Story = "Dummyherostory",
                     BackgroundPictureUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg",
-                    MaxLevel=30,
-                    ThemeColor= "#993333",
-                    ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
-                    IsApe= false,
-                    IsActive=true
+                    MaxLevel = 30,
+                    ThemeColor = "#993333",
+                    ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png",
+                    IsApe = false,
+                    IsActive = true
                 },
                 new Hero()
                 {
@@ -232,6 +236,30 @@ namespace PlayerBaseApi
                 }
 
             );
+
+
+            List<HeroLevelThreshold> listThreshold = new List<HeroLevelThreshold>();
+            var c = 1;
+            for (int i = 1; i < 12; i++)
+            {
+                long thresholdStart = 100;
+                var autoThresholdPercent = 30;
+                for (int k = 2; k < 51; k++)
+                {
+                    listThreshold.Add(new HeroLevelThreshold()
+                    {
+                        Id = c,
+                        HeroId = i,
+                        Level = k,
+                        Experience = thresholdStart
+                    });
+                    thresholdStart += (long)((double)thresholdStart * ((double)autoThresholdPercent / 100));
+                    c++;
+                }
+
+            }
+
+            modelBuilder.Entity<HeroLevelThreshold>().HasData(listThreshold);
 
             #endregion
         }

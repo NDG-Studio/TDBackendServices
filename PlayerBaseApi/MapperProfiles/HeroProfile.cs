@@ -13,6 +13,7 @@ namespace PlayerBaseApi.MapperProfiles
                 .ForMember(dest => dest.EndDate, operations => operations
                 .MapFrom(
                     source => source.EndDate != null ? source.EndDate.ToString() : null));
+            CreateMap<HeroLevelThreshold, HeroLevelThresholdDTO>();
 
 
         }
