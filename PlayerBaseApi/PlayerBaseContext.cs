@@ -261,6 +261,29 @@ namespace PlayerBaseApi
 
             modelBuilder.Entity<HeroLevelThreshold>().HasData(listThreshold);
 
+
+            modelBuilder.Entity<TalentTree>().HasData(
+                new TalentTree() { Id=1,Name="Talent Tree _1_",ThemeColor="#000000",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
+                new TalentTree() { Id=2,Name="Talent Tree _2_",ThemeColor="#2f2f2f",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
+                new TalentTree() { Id=3,Name="Talent Tree _3_",ThemeColor="#ffffff",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" }
+                );
+
+            List<TalentTreeNode> talentTreeNodes = new List<TalentTreeNode>();
+            c = 1;
+            for (int h = 1; h < 12; h++)
+            {
+                for (int tt = 1; tt < 4; tt++)
+                {
+                    for (int n = 1; n < 34; n++)
+                    {
+                        var node = new TalentTreeNode() { Id = c, Name = "node_" + n.ToString(), Capacity = 5, Description = "dummynodedescription", HeroId = h, TalentTreeId = tt, ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", BuffId = 1, IsActive = true };
+                        talentTreeNodes.Add(node);
+                        c++;
+                    }
+                }
+            }
+            modelBuilder.Entity<TalentTreeNode>().HasData(talentTreeNodes);
+
             #endregion
         }
     }

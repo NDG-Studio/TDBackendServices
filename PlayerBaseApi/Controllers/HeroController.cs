@@ -58,5 +58,15 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.AddHeroExperience(req, user);
         }
+
+        [LoginRequired]
+        [HttpPost("GetHeroTalentTreeByHeroId")]
+        public async Task<TDResponse<List<TalentTreeDTO>>> GetHeroTalentTreeByHeroId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.GetHeroTalentTreeByHeroId(req, user);
+        }
     }
 }

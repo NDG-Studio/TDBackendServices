@@ -15,7 +15,8 @@ namespace PlayerBaseApi.MapperProfiles
                     source => source.EndDate != null ? source.EndDate.ToString() : null));
             CreateMap<HeroLevelThreshold, HeroLevelThresholdDTO>();
 
-
+            CreateMap<TalentTree, TalentTreeDTO>();
+            CreateMap<TalentTreeNode, TalentTreeNodeDTO>();
         }
 
     }

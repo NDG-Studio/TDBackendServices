@@ -142,6 +142,33 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse<List<TalentTreeDTO>>> GetHeroTalentTreeByHeroId(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<List<TalentTreeDTO>> response = new TDResponse<List<TalentTreeDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetHeroTalentTreeByHeroId");
+            try
+            {
+                var talentTrees = _context.TalentTree;
+                var qlist = await _mapper.ProjectTo<TalentTreeDTO>(talentTrees).ToListAsync();
+                for (int i = 0; i < qlist.Count; i++)
+                {
+                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data);
+                    qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
+                }
+                response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
     }
 }
