@@ -58,5 +58,15 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.GetHeroTalentTreeByHeroId(req, user);
         }
+        
+        [LoginRequired]
+        [HttpPost("AddHeroTalentNodeByNodeId")]
+        public async Task<TDResponse> AddHeroTalentNodeByNodeId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.AddHeroTalentNodeByNodeId(req, user);
+        }
     }
 }

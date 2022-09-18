@@ -31,8 +31,8 @@ namespace PlayerBaseApi.Services
             {
                 var query = _context.Hero.Where(l => l.IsActive);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
-                var ownedHeroes= await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).Select(l=>l.HeroId).ToListAsync();
-                
+                var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).Select(l => l.HeroId).ToListAsync();
+
                 response.Data = qlist;
                 foreach (var oh in ownedHeroes)
                 {
@@ -58,7 +58,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetPlayersHeroById");
             try
             {
-                var query = _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id && l.HeroId==req.Data);
+                var query = _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id && l.HeroId == req.Data);
                 var qlist = await _mapper.ProjectTo<PlayerHeroDTO>(query).FirstOrDefaultAsync();
                 if (qlist == null)
                 {
@@ -67,8 +67,8 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                qlist.ThresholdLeft = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel).Select(l=>l.Experience).FirstOrDefaultAsync();
-                qlist.ThresholdRight = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel+1).Select(l=>l.Experience).FirstOrDefaultAsync();
+                qlist.ThresholdLeft = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel).Select(l => l.Experience).FirstOrDefaultAsync();
+                qlist.ThresholdRight = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel + 1).Select(l => l.Experience).FirstOrDefaultAsync();
                 response.Data = qlist;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -91,8 +91,8 @@ namespace PlayerBaseApi.Services
             try
             {
                 var pH = await _context.PlayerHero.Include(l => l.Hero)
-                    .Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId && l.EndDate == null ).FirstOrDefaultAsync();
-                if(pH == null)
+                    .Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId && l.EndDate == null).FirstOrDefaultAsync();
+                if (pH == null)
                 {
                     info.AddInfo(OperationMessages.DbItemNotFound);
                     response.SetError(OperationMessages.DbItemNotFound);
@@ -148,6 +148,67 @@ namespace PlayerBaseApi.Services
                     qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
                 }
                 response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse> AddHeroTalentNodeByNodeId(BaseRequest<int> req, UserDto user) //TODO: yeterli talent point var mı bakılacak
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddHeroTalentNodeByNodeId");
+            try
+            {
+                var existEnt = await _context.PlayerTalentTreeNode.Include(l => l.TalentTreeNode).Where(l => l.TalentTreeNodeId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
+                if (existEnt != null)
+                {
+                    if (existEnt.TalentTreeNode.Capacity == existEnt.Level)
+                    {
+                        response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                        info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+
+                    }
+                    existEnt.Level++;
+                }
+                else
+                {
+                    var ttn = await _context.TalentTreeNode.Include(l => l.Hero).Where(l => l.IsActive && l.Id == req.Data).FirstOrDefaultAsync();
+                    if (ttn == null)
+                    {
+                        response.SetError(OperationMessages.DbItemNotFound);
+                        info.AddInfo(OperationMessages.DbItemNotFound);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    if (!(await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == ttn.HeroId).AnyAsync()))//TODO: Enddate için ekleme yapılmalı
+                    {
+                        response.SetError(OperationMessages.PlayerHaveNoHero);
+                        info.AddInfo(OperationMessages.PlayerHaveNoHero);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+
+                    var ent = new PlayerTalentTreeNode()
+                    {
+                        Level = 1,
+                        TalentTreeNodeId = req.Data,
+                        UserId = user.Id
+                    };
+                    await _context.AddAsync(ent);
+                }
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
