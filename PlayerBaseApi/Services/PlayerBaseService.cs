@@ -208,6 +208,9 @@ namespace PlayerBaseApi.Services
                         BaseLevel = 1,
                         BluePrints = 0,
                         Gems = 0,
+                        BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
+                        Fuel = 0,
+                        ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
                         HeroCards = 0,
                         LastBaseCollect = DateTimeOffset.Now,
                         Scraps = 0,
@@ -300,6 +303,50 @@ namespace PlayerBaseApi.Services
                 query.BuildingLevel = query.BuildingLevel + 1;
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<CollectBaseResponse>> CollectBaseResources(BaseRequest req, UserDto user)
+        {
+            TDResponse<CollectBaseResponse> response = new TDResponse<CollectBaseResponse>();
+            var info = InfoDetail.CreateInfo(req, "CollectBaseResources");
+            try
+            {
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds < (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+                {
+                    response.SetError(OperationMessages.NoChanges);
+                    info.AddInfo(OperationMessages.NoChanges);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
+                duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
+
+                
+                response.Data = new CollectBaseResponse()
+                {
+                    CollectDuration=duration,
+                    CollectedResource= (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour),
+                    ResourceProductionPerHour=playerBaseInfo.ResourceProductionPerHour,
+                    BaseFullDuration = playerBaseInfo.BaseFullDuration
+                };
+                playerBaseInfo.Fuel += response.Data.CollectedResource;
+                playerBaseInfo.Scraps += response.Data.CollectedResource;
+                playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
+
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

@@ -13,12 +13,14 @@ namespace PlayerBaseApi.Entities
         public int Gems { get; set; } = 0;
         public int HeroCards { get; set; } = 0;
         public int BluePrints { get; set; } = 0;
+        public int Fuel { get; set; } = 0;
         public DateTimeOffset LastBaseCollect { get; set; }
-        //public TimeSpan BaseFullDuration { get; set; }
-        ///// <summary>
-        ///// Saatte üretilen resource sayısı
-        ///// </summary>
-        //public long ResourceProductionSpeed { get; set; }
+        public TimeSpan BaseFullDuration { get; set; }
+
+        /// <summary>
+        /// Saatte üretilen resource sayısı
+        /// </summary>
+        public int ResourceProductionPerHour { get; set; }
 
     }
 }

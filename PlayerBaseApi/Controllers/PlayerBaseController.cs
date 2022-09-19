@@ -97,6 +97,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.UpgradeBuildingDoneRequest(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("CollectBaseResources")]
+        public async Task<TDResponse<CollectBaseResponse>> CollectBaseResources([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.CollectBaseResources(req, user);
         }
     }
 }

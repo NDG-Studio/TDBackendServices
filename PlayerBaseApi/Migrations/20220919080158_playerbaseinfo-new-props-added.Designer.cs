@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220919080158_playerbaseinfo-new-props-added")]
+    partial class playerbaseinfonewpropsadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4420,8 +4422,8 @@ namespace PlayerBaseApi.Migrations
                     b.Property<DateTimeOffset>("LastBaseCollect")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ResourceProductionPerHour")
-                        .HasColumnType("integer");
+                    b.Property<long>("ResourceProductionPerHour")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Scraps")
                         .HasColumnType("integer");
