@@ -18,6 +18,9 @@ namespace PlayerBaseApi.MapperProfiles
                 .MapFrom(
                     source => source.LastBaseCollect != null ? source.LastBaseCollect.ToString() : null));
 
+            CreateMap<ResearchTable, ResearchTableDTO>();
+            CreateMap<ResearchNode, ResearchNodeDTO>();
+
 
         }
 

@@ -18,6 +18,10 @@ namespace PlayerBaseApi
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
         public DbSet<BuildingUpgradeTime> BuildingUpgradeTime { get; set; }
+        public DbSet<ResearchTable> ResearchTable { get; set; }
+        public DbSet<ResearchNode> ResearchNode { get; set; }
+        public DbSet<PlayerResearchNode> PlayerResearchNode { get; set; }
+        public DbSet<ResearchNodeUpgradeNecessaries> ResearchNodeUpgradeNecessaries { get; set; }
 
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
@@ -84,6 +88,63 @@ namespace PlayerBaseApi
                 new BuildingUpgradeTime() { Id = 35, BuildingTypeId = 8, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) },
                 new BuildingUpgradeTime() { Id = 36, BuildingTypeId = 9, Level = 5, UpgradeDuration = new TimeSpan(0, 30, 0) }
             );
+
+            modelBuilder.Entity<ResearchTable>().HasData(
+                new ResearchTable() { Id=1,Name="Military Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id=2,Name="Economical Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id=3,Name="General Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id=4,Name="Tower Defense Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" }
+                );
+
+            var c = 1;
+            var researchNodeList = new List<ResearchNode>();
+            for (int i = 1; i < 5; i++)
+            {
+                for (int l = 1; l < 6; l++)
+                {
+                    researchNodeList.Add(new ResearchNode()
+                    {
+                        Id = c,
+                        BuffId=1,
+                        Name="Node_"+l.ToString(),
+                        Description="research description",
+                        Capacity=5,
+                        PlaceId=l,
+                        ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png",
+                        ResearchTableId=i,
+                        IsActive=true
+                    });
+                    c++;
+                }
+            }
+
+            modelBuilder.Entity<ResearchNode>().HasData(
+                researchNodeList
+                );
+
+            var researchNodeUpgradeNecessaries = new List<ResearchNodeUpgradeNecessaries>();
+            c = 1;
+            for (int i = 1; i < 21; i++)
+            {
+                for (int l = 1; l < 6; l++)
+                {
+                    researchNodeUpgradeNecessaries.Add(new ResearchNodeUpgradeNecessaries()
+                    {
+                        Id=c,
+                        BluePrintCount=l*10,
+                        Duration=new TimeSpan(0,0,l*2,0),
+                        ResearchNodeId=i,
+                        ScrapCount=l*100,
+                        UpgradeLevel=l
+                    });
+                    c++;
+                }
+            }
+
+            modelBuilder.Entity<ResearchNodeUpgradeNecessaries>().HasData(
+                researchNodeUpgradeNecessaries
+            );
+
             #endregion
 
             #region HeroEntities
@@ -239,7 +300,7 @@ namespace PlayerBaseApi
 
 
             List<HeroLevelThreshold> listThreshold = new List<HeroLevelThreshold>();
-            var c = 1;
+            c = 1;
             for (int i = 1; i < 12; i++)
             {
                 long thresholdStart = 100;
@@ -276,13 +337,18 @@ namespace PlayerBaseApi
                 {
                     for (int n = 1; n < 34; n++)
                     {
-                        var node = new TalentTreeNode() { Id = c, Name = "node_" + n.ToString(), Capacity = 5, Description = "dummynodedescription", HeroId = h, TalentTreeId = tt, ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", BuffId = 1, IsActive = true };
+                        var node = new TalentTreeNode() { Id = c, Name = "node_" + n.ToString(), PlaceId=n, Capacity = 5, Description = "dummynodedescription", HeroId = h, TalentTreeId = tt, ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", BuffId = 1, IsActive = true };
                         talentTreeNodes.Add(node);
                         c++;
                     }
                 }
             }
             modelBuilder.Entity<TalentTreeNode>().HasData(talentTreeNodes);
+
+
+
+
+
 
             #endregion
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220919124054_research-entities-added")]
+    partial class researchentitiesadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4518,33 +4520,6 @@ namespace PlayerBaseApi.Migrations
                     b.ToTable("PlayerHero");
                 });
 
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerResearchNode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CurrentLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ResearchNodeId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("UpdateEndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResearchNodeId");
-
-                    b.ToTable("PlayerResearchNode");
-                });
-
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>
                 {
                     b.Property<int>("Id")
@@ -4594,9 +4569,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ResearchTableId")
                         .HasColumnType("integer");
 
@@ -4619,7 +4591,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4631,7 +4602,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4643,7 +4613,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4655,7 +4624,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4667,7 +4635,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4679,7 +4646,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4691,7 +4657,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4703,7 +4668,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4715,7 +4679,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4727,7 +4690,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4739,7 +4701,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4751,7 +4712,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4763,7 +4723,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4775,7 +4734,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4787,7 +4745,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4799,7 +4756,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4811,7 +4767,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4823,7 +4778,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4835,7 +4789,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4847,7 +4800,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         });
@@ -5908,9 +5860,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("TalentTreeId")
                         .HasColumnType("integer");
 
@@ -5936,7 +5885,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -5949,7 +5897,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -5962,7 +5909,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -5975,7 +5921,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -5988,7 +5933,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6001,7 +5945,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6014,7 +5957,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6027,7 +5969,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6040,7 +5981,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6053,7 +5993,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6066,7 +6005,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6079,7 +6017,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6092,7 +6029,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6105,7 +6041,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6118,7 +6053,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6131,7 +6065,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6144,7 +6077,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6157,7 +6089,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6170,7 +6101,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6183,7 +6113,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6196,7 +6125,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6209,7 +6137,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6222,7 +6149,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6235,7 +6161,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6248,7 +6173,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6261,7 +6185,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6274,7 +6197,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6287,7 +6209,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6300,7 +6221,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6313,7 +6233,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6326,7 +6245,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6339,7 +6257,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6352,7 +6269,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6365,7 +6281,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6378,7 +6293,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6391,7 +6305,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6404,7 +6317,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6417,7 +6329,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6430,7 +6341,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6443,7 +6353,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6456,7 +6365,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6469,7 +6377,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6482,7 +6389,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6495,7 +6401,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6508,7 +6413,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6521,7 +6425,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6534,7 +6437,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6547,7 +6449,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6560,7 +6461,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6573,7 +6473,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6586,7 +6485,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6599,7 +6497,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6612,7 +6509,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6625,7 +6521,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6638,7 +6533,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6651,7 +6545,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6664,7 +6557,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6677,7 +6569,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6690,7 +6581,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6703,7 +6593,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6716,7 +6605,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6729,7 +6617,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6742,7 +6629,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6755,7 +6641,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6768,7 +6653,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6781,7 +6665,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6794,7 +6677,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6807,7 +6689,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6820,7 +6701,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6833,7 +6713,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6846,7 +6725,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6859,7 +6737,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6872,7 +6749,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6885,7 +6761,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6898,7 +6773,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6911,7 +6785,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6924,7 +6797,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6937,7 +6809,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6950,7 +6821,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6963,7 +6833,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6976,7 +6845,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -6989,7 +6857,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7002,7 +6869,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7015,7 +6881,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7028,7 +6893,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7041,7 +6905,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7054,7 +6917,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7067,7 +6929,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7080,7 +6941,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7093,7 +6953,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7106,7 +6965,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7119,7 +6977,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7132,7 +6989,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7145,7 +7001,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7158,7 +7013,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7171,7 +7025,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7184,7 +7037,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7197,7 +7049,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7210,7 +7061,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 1,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7223,7 +7073,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7236,7 +7085,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7249,7 +7097,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7262,7 +7109,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7275,7 +7121,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7288,7 +7133,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7301,7 +7145,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7314,7 +7157,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7327,7 +7169,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7340,7 +7181,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7353,7 +7193,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7366,7 +7205,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7379,7 +7217,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7392,7 +7229,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7405,7 +7241,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7418,7 +7253,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7431,7 +7265,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7444,7 +7277,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7457,7 +7289,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7470,7 +7301,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7483,7 +7313,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7496,7 +7325,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7509,7 +7337,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7522,7 +7349,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7535,7 +7361,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7548,7 +7373,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7561,7 +7385,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7574,7 +7397,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7587,7 +7409,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7600,7 +7421,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7613,7 +7433,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7626,7 +7445,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7639,7 +7457,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7652,7 +7469,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7665,7 +7481,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7678,7 +7493,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7691,7 +7505,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7704,7 +7517,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7717,7 +7529,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7730,7 +7541,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7743,7 +7553,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7756,7 +7565,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7769,7 +7577,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7782,7 +7589,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7795,7 +7601,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7808,7 +7613,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7821,7 +7625,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7834,7 +7637,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7847,7 +7649,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7860,7 +7661,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7873,7 +7673,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7886,7 +7685,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7899,7 +7697,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7912,7 +7709,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7925,7 +7721,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7938,7 +7733,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7951,7 +7745,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7964,7 +7757,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7977,7 +7769,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -7990,7 +7781,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8003,7 +7793,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8016,7 +7805,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8029,7 +7817,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8042,7 +7829,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8055,7 +7841,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8068,7 +7853,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8081,7 +7865,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8094,7 +7877,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8107,7 +7889,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8120,7 +7901,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8133,7 +7913,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8146,7 +7925,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8159,7 +7937,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8172,7 +7949,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8185,7 +7961,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8198,7 +7973,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8211,7 +7985,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8224,7 +7997,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8237,7 +8009,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8250,7 +8021,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8263,7 +8033,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8276,7 +8045,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8289,7 +8057,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8302,7 +8069,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8315,7 +8081,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8328,7 +8093,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8341,7 +8105,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8354,7 +8117,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8367,7 +8129,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8380,7 +8141,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8393,7 +8153,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8406,7 +8165,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8419,7 +8177,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8432,7 +8189,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8445,7 +8201,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8458,7 +8213,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8471,7 +8225,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8484,7 +8237,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8497,7 +8249,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 2,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8510,7 +8261,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8523,7 +8273,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8536,7 +8285,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8549,7 +8297,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8562,7 +8309,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8575,7 +8321,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8588,7 +8333,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8601,7 +8345,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8614,7 +8357,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8627,7 +8369,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8640,7 +8381,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8653,7 +8393,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8666,7 +8405,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8679,7 +8417,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8692,7 +8429,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8705,7 +8441,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8718,7 +8453,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8731,7 +8465,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8744,7 +8477,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8757,7 +8489,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8770,7 +8501,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8783,7 +8513,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8796,7 +8525,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8809,7 +8537,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8822,7 +8549,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8835,7 +8561,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8848,7 +8573,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8861,7 +8585,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8874,7 +8597,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8887,7 +8609,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8900,7 +8621,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8913,7 +8633,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8926,7 +8645,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8939,7 +8657,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8952,7 +8669,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8965,7 +8681,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8978,7 +8693,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -8991,7 +8705,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9004,7 +8717,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9017,7 +8729,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9030,7 +8741,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9043,7 +8753,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9056,7 +8765,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9069,7 +8777,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9082,7 +8789,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9095,7 +8801,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9108,7 +8813,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9121,7 +8825,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9134,7 +8837,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9147,7 +8849,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9160,7 +8861,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9173,7 +8873,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9186,7 +8885,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9199,7 +8897,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9212,7 +8909,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9225,7 +8921,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9238,7 +8933,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9251,7 +8945,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9264,7 +8957,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9277,7 +8969,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9290,7 +8981,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9303,7 +8993,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9316,7 +9005,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9329,7 +9017,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9342,7 +9029,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9355,7 +9041,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9368,7 +9053,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9381,7 +9065,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9394,7 +9077,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9407,7 +9089,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9420,7 +9101,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9433,7 +9113,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9446,7 +9125,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9459,7 +9137,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9472,7 +9149,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9485,7 +9161,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9498,7 +9173,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9511,7 +9185,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9524,7 +9197,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9537,7 +9209,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9550,7 +9221,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9563,7 +9233,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9576,7 +9245,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9589,7 +9257,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9602,7 +9269,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9615,7 +9281,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9628,7 +9293,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9641,7 +9305,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9654,7 +9317,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9667,7 +9329,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9680,7 +9341,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9693,7 +9353,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9706,7 +9365,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9719,7 +9377,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9732,7 +9389,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9745,7 +9401,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9758,7 +9413,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9771,7 +9425,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9784,7 +9437,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 3,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9797,7 +9449,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9810,7 +9461,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9823,7 +9473,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9836,7 +9485,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9849,7 +9497,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9862,7 +9509,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9875,7 +9521,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9888,7 +9533,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9901,7 +9545,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9914,7 +9557,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9927,7 +9569,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9940,7 +9581,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9953,7 +9593,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9966,7 +9605,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9979,7 +9617,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -9992,7 +9629,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10005,7 +9641,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10018,7 +9653,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10031,7 +9665,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10044,7 +9677,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10057,7 +9689,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10070,7 +9701,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10083,7 +9713,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10096,7 +9725,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10109,7 +9737,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10122,7 +9749,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10135,7 +9761,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10148,7 +9773,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10161,7 +9785,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10174,7 +9797,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10187,7 +9809,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10200,7 +9821,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10213,7 +9833,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10226,7 +9845,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10239,7 +9857,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10252,7 +9869,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10265,7 +9881,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10278,7 +9893,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10291,7 +9905,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10304,7 +9917,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10317,7 +9929,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10330,7 +9941,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10343,7 +9953,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10356,7 +9965,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10369,7 +9977,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10382,7 +9989,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10395,7 +10001,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10408,7 +10013,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10421,7 +10025,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10434,7 +10037,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10447,7 +10049,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10460,7 +10061,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10473,7 +10073,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10486,7 +10085,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10499,7 +10097,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10512,7 +10109,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10525,7 +10121,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10538,7 +10133,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10551,7 +10145,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10564,7 +10157,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10577,7 +10169,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10590,7 +10181,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10603,7 +10193,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10616,7 +10205,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10629,7 +10217,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10642,7 +10229,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10655,7 +10241,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10668,7 +10253,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10681,7 +10265,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10694,7 +10277,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10707,7 +10289,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10720,7 +10301,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10733,7 +10313,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10746,7 +10325,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10759,7 +10337,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10772,7 +10349,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10785,7 +10361,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10798,7 +10373,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10811,7 +10385,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10824,7 +10397,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10837,7 +10409,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10850,7 +10421,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10863,7 +10433,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10876,7 +10445,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10889,7 +10457,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10902,7 +10469,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10915,7 +10481,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10928,7 +10493,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10941,7 +10505,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10954,7 +10517,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10967,7 +10529,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10980,7 +10541,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -10993,7 +10553,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11006,7 +10565,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11019,7 +10577,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11032,7 +10589,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11045,7 +10601,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11058,7 +10613,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11071,7 +10625,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 4,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11084,7 +10637,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11097,7 +10649,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11110,7 +10661,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11123,7 +10673,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11136,7 +10685,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11149,7 +10697,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11162,7 +10709,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11175,7 +10721,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11188,7 +10733,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11201,7 +10745,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11214,7 +10757,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11227,7 +10769,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11240,7 +10781,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11253,7 +10793,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11266,7 +10805,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11279,7 +10817,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11292,7 +10829,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11305,7 +10841,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11318,7 +10853,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11331,7 +10865,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11344,7 +10877,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11357,7 +10889,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11370,7 +10901,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11383,7 +10913,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11396,7 +10925,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11409,7 +10937,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11422,7 +10949,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11435,7 +10961,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11448,7 +10973,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11461,7 +10985,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11474,7 +10997,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11487,7 +11009,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11500,7 +11021,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11513,7 +11033,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11526,7 +11045,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11539,7 +11057,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11552,7 +11069,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11565,7 +11081,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11578,7 +11093,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11591,7 +11105,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11604,7 +11117,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11617,7 +11129,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11630,7 +11141,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11643,7 +11153,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11656,7 +11165,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11669,7 +11177,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11682,7 +11189,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11695,7 +11201,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11708,7 +11213,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11721,7 +11225,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11734,7 +11237,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11747,7 +11249,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11760,7 +11261,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11773,7 +11273,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11786,7 +11285,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11799,7 +11297,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11812,7 +11309,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11825,7 +11321,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11838,7 +11333,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11851,7 +11345,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11864,7 +11357,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11877,7 +11369,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11890,7 +11381,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11903,7 +11393,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11916,7 +11405,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11929,7 +11417,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11942,7 +11429,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11955,7 +11441,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11968,7 +11453,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11981,7 +11465,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -11994,7 +11477,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12007,7 +11489,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12020,7 +11501,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12033,7 +11513,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12046,7 +11525,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12059,7 +11537,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12072,7 +11549,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12085,7 +11561,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12098,7 +11573,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12111,7 +11585,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12124,7 +11597,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12137,7 +11609,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12150,7 +11621,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12163,7 +11633,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12176,7 +11645,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12189,7 +11657,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12202,7 +11669,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12215,7 +11681,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12228,7 +11693,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12241,7 +11705,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12254,7 +11717,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12267,7 +11729,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12280,7 +11741,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12293,7 +11753,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12306,7 +11765,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12319,7 +11777,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12332,7 +11789,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12345,7 +11801,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12358,7 +11813,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 5,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12371,7 +11825,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12384,7 +11837,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12397,7 +11849,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12410,7 +11861,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12423,7 +11873,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12436,7 +11885,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12449,7 +11897,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12462,7 +11909,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12475,7 +11921,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12488,7 +11933,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12501,7 +11945,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12514,7 +11957,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12527,7 +11969,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12540,7 +11981,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12553,7 +11993,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12566,7 +12005,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12579,7 +12017,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12592,7 +12029,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12605,7 +12041,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12618,7 +12053,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12631,7 +12065,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12644,7 +12077,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12657,7 +12089,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12670,7 +12101,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12683,7 +12113,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12696,7 +12125,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12709,7 +12137,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12722,7 +12149,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12735,7 +12161,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12748,7 +12173,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12761,7 +12185,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12774,7 +12197,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12787,7 +12209,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12800,7 +12221,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12813,7 +12233,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12826,7 +12245,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12839,7 +12257,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12852,7 +12269,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12865,7 +12281,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12878,7 +12293,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12891,7 +12305,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12904,7 +12317,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12917,7 +12329,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12930,7 +12341,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12943,7 +12353,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12956,7 +12365,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12969,7 +12377,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12982,7 +12389,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -12995,7 +12401,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13008,7 +12413,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13021,7 +12425,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13034,7 +12437,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13047,7 +12449,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13060,7 +12461,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13073,7 +12473,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13086,7 +12485,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13099,7 +12497,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13112,7 +12509,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13125,7 +12521,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13138,7 +12533,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13151,7 +12545,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13164,7 +12557,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13177,7 +12569,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13190,7 +12581,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13203,7 +12593,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13216,7 +12605,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13229,7 +12617,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13242,7 +12629,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13255,7 +12641,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13268,7 +12653,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13281,7 +12665,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13294,7 +12677,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13307,7 +12689,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13320,7 +12701,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13333,7 +12713,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13346,7 +12725,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13359,7 +12737,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13372,7 +12749,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13385,7 +12761,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13398,7 +12773,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13411,7 +12785,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13424,7 +12797,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13437,7 +12809,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13450,7 +12821,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13463,7 +12833,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13476,7 +12845,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13489,7 +12857,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13502,7 +12869,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13515,7 +12881,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13528,7 +12893,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13541,7 +12905,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13554,7 +12917,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13567,7 +12929,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13580,7 +12941,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13593,7 +12953,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13606,7 +12965,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13619,7 +12977,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13632,7 +12989,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13645,7 +13001,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 6,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13658,7 +13013,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13671,7 +13025,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13684,7 +13037,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13697,7 +13049,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13710,7 +13061,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13723,7 +13073,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13736,7 +13085,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13749,7 +13097,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13762,7 +13109,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13775,7 +13121,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13788,7 +13133,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13801,7 +13145,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13814,7 +13157,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13827,7 +13169,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13840,7 +13181,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13853,7 +13193,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13866,7 +13205,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13879,7 +13217,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13892,7 +13229,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13905,7 +13241,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13918,7 +13253,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13931,7 +13265,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13944,7 +13277,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13957,7 +13289,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13970,7 +13301,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13983,7 +13313,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -13996,7 +13325,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14009,7 +13337,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14022,7 +13349,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14035,7 +13361,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14048,7 +13373,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14061,7 +13385,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14074,7 +13397,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14087,7 +13409,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14100,7 +13421,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14113,7 +13433,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14126,7 +13445,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14139,7 +13457,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14152,7 +13469,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14165,7 +13481,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14178,7 +13493,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14191,7 +13505,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14204,7 +13517,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14217,7 +13529,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14230,7 +13541,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14243,7 +13553,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14256,7 +13565,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14269,7 +13577,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14282,7 +13589,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14295,7 +13601,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14308,7 +13613,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14321,7 +13625,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14334,7 +13637,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14347,7 +13649,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14360,7 +13661,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14373,7 +13673,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14386,7 +13685,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14399,7 +13697,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14412,7 +13709,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14425,7 +13721,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14438,7 +13733,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14451,7 +13745,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14464,7 +13757,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14477,7 +13769,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14490,7 +13781,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14503,7 +13793,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14516,7 +13805,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14529,7 +13817,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14542,7 +13829,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14555,7 +13841,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14568,7 +13853,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14581,7 +13865,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14594,7 +13877,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14607,7 +13889,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14620,7 +13901,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14633,7 +13913,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14646,7 +13925,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14659,7 +13937,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14672,7 +13949,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14685,7 +13961,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14698,7 +13973,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14711,7 +13985,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14724,7 +13997,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14737,7 +14009,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14750,7 +14021,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14763,7 +14033,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14776,7 +14045,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14789,7 +14057,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14802,7 +14069,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14815,7 +14081,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14828,7 +14093,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14841,7 +14105,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14854,7 +14117,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14867,7 +14129,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14880,7 +14141,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14893,7 +14153,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14906,7 +14165,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14919,7 +14177,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14932,7 +14189,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 7,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14945,7 +14201,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14958,7 +14213,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14971,7 +14225,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14984,7 +14237,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -14997,7 +14249,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15010,7 +14261,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15023,7 +14273,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15036,7 +14285,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15049,7 +14297,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15062,7 +14309,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15075,7 +14321,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15088,7 +14333,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15101,7 +14345,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15114,7 +14357,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15127,7 +14369,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15140,7 +14381,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15153,7 +14393,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15166,7 +14405,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15179,7 +14417,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15192,7 +14429,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15205,7 +14441,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15218,7 +14453,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15231,7 +14465,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15244,7 +14477,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15257,7 +14489,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15270,7 +14501,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15283,7 +14513,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15296,7 +14525,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15309,7 +14537,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15322,7 +14549,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15335,7 +14561,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15348,7 +14573,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15361,7 +14585,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15374,7 +14597,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15387,7 +14609,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15400,7 +14621,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15413,7 +14633,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15426,7 +14645,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15439,7 +14657,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15452,7 +14669,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15465,7 +14681,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15478,7 +14693,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15491,7 +14705,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15504,7 +14717,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15517,7 +14729,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15530,7 +14741,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15543,7 +14753,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15556,7 +14765,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15569,7 +14777,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15582,7 +14789,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15595,7 +14801,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15608,7 +14813,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15621,7 +14825,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15634,7 +14837,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15647,7 +14849,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15660,7 +14861,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15673,7 +14873,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15686,7 +14885,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15699,7 +14897,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15712,7 +14909,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15725,7 +14921,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15738,7 +14933,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15751,7 +14945,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15764,7 +14957,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15777,7 +14969,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15790,7 +14981,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15803,7 +14993,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15816,7 +15005,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15829,7 +15017,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15842,7 +15029,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15855,7 +15041,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15868,7 +15053,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15881,7 +15065,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15894,7 +15077,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15907,7 +15089,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15920,7 +15101,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15933,7 +15113,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15946,7 +15125,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15959,7 +15137,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15972,7 +15149,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15985,7 +15161,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -15998,7 +15173,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16011,7 +15185,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16024,7 +15197,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16037,7 +15209,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16050,7 +15221,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16063,7 +15233,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16076,7 +15245,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16089,7 +15257,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16102,7 +15269,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16115,7 +15281,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16128,7 +15293,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16141,7 +15305,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16154,7 +15317,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16167,7 +15329,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16180,7 +15341,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16193,7 +15353,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16206,7 +15365,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16219,7 +15377,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 8,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16232,7 +15389,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16245,7 +15401,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16258,7 +15413,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16271,7 +15425,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16284,7 +15437,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16297,7 +15449,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16310,7 +15461,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16323,7 +15473,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16336,7 +15485,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16349,7 +15497,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16362,7 +15509,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16375,7 +15521,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16388,7 +15533,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16401,7 +15545,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16414,7 +15557,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16427,7 +15569,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16440,7 +15581,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16453,7 +15593,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16466,7 +15605,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16479,7 +15617,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16492,7 +15629,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16505,7 +15641,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16518,7 +15653,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16531,7 +15665,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16544,7 +15677,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16557,7 +15689,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16570,7 +15701,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16583,7 +15713,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16596,7 +15725,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16609,7 +15737,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16622,7 +15749,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16635,7 +15761,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16648,7 +15773,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16661,7 +15785,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16674,7 +15797,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16687,7 +15809,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16700,7 +15821,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16713,7 +15833,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16726,7 +15845,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16739,7 +15857,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16752,7 +15869,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16765,7 +15881,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16778,7 +15893,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16791,7 +15905,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16804,7 +15917,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16817,7 +15929,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16830,7 +15941,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16843,7 +15953,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16856,7 +15965,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16869,7 +15977,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16882,7 +15989,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16895,7 +16001,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16908,7 +16013,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16921,7 +16025,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16934,7 +16037,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16947,7 +16049,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16960,7 +16061,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16973,7 +16073,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16986,7 +16085,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -16999,7 +16097,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17012,7 +16109,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17025,7 +16121,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17038,7 +16133,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17051,7 +16145,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17064,7 +16157,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17077,7 +16169,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17090,7 +16181,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17103,7 +16193,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17116,7 +16205,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17129,7 +16217,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17142,7 +16229,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17155,7 +16241,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17168,7 +16253,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17181,7 +16265,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17194,7 +16277,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17207,7 +16289,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17220,7 +16301,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17233,7 +16313,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17246,7 +16325,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17259,7 +16337,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17272,7 +16349,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17285,7 +16361,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17298,7 +16373,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17311,7 +16385,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17324,7 +16397,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17337,7 +16409,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17350,7 +16421,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17363,7 +16433,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17376,7 +16445,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17389,7 +16457,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17402,7 +16469,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17415,7 +16481,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17428,7 +16493,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17441,7 +16505,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17454,7 +16517,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17467,7 +16529,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17480,7 +16541,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17493,7 +16553,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17506,7 +16565,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 9,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17519,7 +16577,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17532,7 +16589,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17545,7 +16601,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17558,7 +16613,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17571,7 +16625,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17584,7 +16637,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17597,7 +16649,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17610,7 +16661,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17623,7 +16673,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17636,7 +16685,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17649,7 +16697,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17662,7 +16709,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17675,7 +16721,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17688,7 +16733,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17701,7 +16745,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17714,7 +16757,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17727,7 +16769,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17740,7 +16781,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17753,7 +16793,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17766,7 +16805,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17779,7 +16817,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17792,7 +16829,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17805,7 +16841,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17818,7 +16853,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17831,7 +16865,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17844,7 +16877,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17857,7 +16889,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17870,7 +16901,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17883,7 +16913,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17896,7 +16925,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17909,7 +16937,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17922,7 +16949,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17935,7 +16961,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17948,7 +16973,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17961,7 +16985,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17974,7 +16997,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -17987,7 +17009,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18000,7 +17021,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18013,7 +17033,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18026,7 +17045,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18039,7 +17057,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18052,7 +17069,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18065,7 +17081,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18078,7 +17093,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18091,7 +17105,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18104,7 +17117,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18117,7 +17129,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18130,7 +17141,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18143,7 +17153,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18156,7 +17165,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18169,7 +17177,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18182,7 +17189,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18195,7 +17201,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18208,7 +17213,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18221,7 +17225,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18234,7 +17237,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18247,7 +17249,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18260,7 +17261,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18273,7 +17273,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18286,7 +17285,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18299,7 +17297,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18312,7 +17309,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18325,7 +17321,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18338,7 +17333,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18351,7 +17345,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18364,7 +17357,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18377,7 +17369,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18390,7 +17381,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18403,7 +17393,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18416,7 +17405,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18429,7 +17417,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18442,7 +17429,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18455,7 +17441,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18468,7 +17453,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18481,7 +17465,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18494,7 +17477,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18507,7 +17489,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18520,7 +17501,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18533,7 +17513,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18546,7 +17525,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18559,7 +17537,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18572,7 +17549,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18585,7 +17561,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18598,7 +17573,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18611,7 +17585,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18624,7 +17597,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18637,7 +17609,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18650,7 +17621,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18663,7 +17633,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18676,7 +17645,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18689,7 +17657,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18702,7 +17669,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18715,7 +17681,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18728,7 +17693,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18741,7 +17705,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18754,7 +17717,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18767,7 +17729,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18780,7 +17741,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18793,7 +17753,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 10,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18806,7 +17765,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18819,7 +17777,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18832,7 +17789,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18845,7 +17801,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18858,7 +17813,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18871,7 +17825,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18884,7 +17837,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18897,7 +17849,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18910,7 +17861,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18923,7 +17873,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18936,7 +17885,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18949,7 +17897,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18962,7 +17909,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18975,7 +17921,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -18988,7 +17933,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19001,7 +17945,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19014,7 +17957,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19027,7 +17969,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19040,7 +17981,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19053,7 +17993,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19066,7 +18005,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19079,7 +18017,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19092,7 +18029,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19105,7 +18041,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19118,7 +18053,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19131,7 +18065,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19144,7 +18077,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19157,7 +18089,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19170,7 +18101,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19183,7 +18113,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19196,7 +18125,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19209,7 +18137,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19222,7 +18149,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19235,7 +18161,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19248,7 +18173,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19261,7 +18185,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19274,7 +18197,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19287,7 +18209,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19300,7 +18221,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19313,7 +18233,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19326,7 +18245,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19339,7 +18257,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19352,7 +18269,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19365,7 +18281,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19378,7 +18293,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19391,7 +18305,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19404,7 +18317,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19417,7 +18329,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19430,7 +18341,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19443,7 +18353,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19456,7 +18365,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19469,7 +18377,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19482,7 +18389,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19495,7 +18401,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19508,7 +18413,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19521,7 +18425,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19534,7 +18437,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19547,7 +18449,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19560,7 +18461,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19573,7 +18473,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19586,7 +18485,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19599,7 +18497,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19612,7 +18509,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19625,7 +18521,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19638,7 +18533,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19651,7 +18545,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19664,7 +18557,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_1",
-                            PlaceId = 1,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19677,7 +18569,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_2",
-                            PlaceId = 2,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19690,7 +18581,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_3",
-                            PlaceId = 3,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19703,7 +18593,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_4",
-                            PlaceId = 4,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19716,7 +18605,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_5",
-                            PlaceId = 5,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19729,7 +18617,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_6",
-                            PlaceId = 6,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19742,7 +18629,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_7",
-                            PlaceId = 7,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19755,7 +18641,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_8",
-                            PlaceId = 8,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19768,7 +18653,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_9",
-                            PlaceId = 9,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19781,7 +18665,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_10",
-                            PlaceId = 10,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19794,7 +18677,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_11",
-                            PlaceId = 11,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19807,7 +18689,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_12",
-                            PlaceId = 12,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19820,7 +18701,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_13",
-                            PlaceId = 13,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19833,7 +18713,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_14",
-                            PlaceId = 14,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19846,7 +18725,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_15",
-                            PlaceId = 15,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19859,7 +18737,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_16",
-                            PlaceId = 16,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19872,7 +18749,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_17",
-                            PlaceId = 17,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19885,7 +18761,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_18",
-                            PlaceId = 18,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19898,7 +18773,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_19",
-                            PlaceId = 19,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19911,7 +18785,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_20",
-                            PlaceId = 20,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19924,7 +18797,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_21",
-                            PlaceId = 21,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19937,7 +18809,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_22",
-                            PlaceId = 22,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19950,7 +18821,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_23",
-                            PlaceId = 23,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19963,7 +18833,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_24",
-                            PlaceId = 24,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19976,7 +18845,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_25",
-                            PlaceId = 25,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -19989,7 +18857,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_26",
-                            PlaceId = 26,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20002,7 +18869,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_27",
-                            PlaceId = 27,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20015,7 +18881,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_28",
-                            PlaceId = 28,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20028,7 +18893,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_29",
-                            PlaceId = 29,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20041,7 +18905,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_30",
-                            PlaceId = 30,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20054,7 +18917,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_31",
-                            PlaceId = 31,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20067,7 +18929,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_32",
-                            PlaceId = 32,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -20080,7 +18941,6 @@ namespace PlayerBaseApi.Migrations
                             HeroId = 11,
                             IsActive = true,
                             Name = "node_33",
-                            PlaceId = 33,
                             TalentTreeId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         });
@@ -20246,17 +19106,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Hero");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerResearchNode", b =>
-                {
-                    b.HasOne("PlayerBaseApi.Entities.ResearchNode", "ResearchNode")
-                        .WithMany()
-                        .HasForeignKey("ResearchNodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ResearchNode");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>

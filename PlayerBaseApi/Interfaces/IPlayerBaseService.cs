@@ -14,5 +14,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingDoneRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<CollectBaseResponse>> CollectBaseResources(BaseRequest req, UserDto user);
+        Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable(BaseRequest req, UserDto user);
     }
 }

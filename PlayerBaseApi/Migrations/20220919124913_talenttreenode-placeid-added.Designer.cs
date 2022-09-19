@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220919124913_talenttreenode-placeid-added")]
+    partial class talenttreenodeplaceidadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -4518,33 +4520,6 @@ namespace PlayerBaseApi.Migrations
                     b.ToTable("PlayerHero");
                 });
 
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerResearchNode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CurrentLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ResearchNodeId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("UpdateEndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResearchNodeId");
-
-                    b.ToTable("PlayerResearchNode");
-                });
-
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>
                 {
                     b.Property<int>("Id")
@@ -4594,9 +4569,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PlaceId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ResearchTableId")
                         .HasColumnType("integer");
 
@@ -4619,7 +4591,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4631,7 +4602,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4643,7 +4613,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4655,7 +4624,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4667,7 +4635,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 1,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4679,7 +4646,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4691,7 +4657,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4703,7 +4668,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4715,7 +4679,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4727,7 +4690,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 2,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4739,7 +4701,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4751,7 +4712,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4763,7 +4723,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4775,7 +4734,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4787,7 +4745,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 3,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4799,7 +4756,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_1",
-                            PlaceId = 1,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4811,7 +4767,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_2",
-                            PlaceId = 2,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4823,7 +4778,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_3",
-                            PlaceId = 3,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4835,7 +4789,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_4",
-                            PlaceId = 4,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         },
@@ -4847,7 +4800,6 @@ namespace PlayerBaseApi.Migrations
                             Description = "research description",
                             IsActive = true,
                             Name = "Node_5",
-                            PlaceId = 5,
                             ResearchTableId = 4,
                             ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png"
                         });
@@ -20246,17 +20198,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Hero");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerResearchNode", b =>
-                {
-                    b.HasOne("PlayerBaseApi.Entities.ResearchNode", "ResearchNode")
-                        .WithMany()
-                        .HasForeignKey("ResearchNodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ResearchNode");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>

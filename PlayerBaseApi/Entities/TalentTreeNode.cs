@@ -11,6 +11,7 @@ namespace PlayerBaseApi.Entities
         public int HeroId { get; set; }
         public int TalentTreeId { get; set; }
         public int BuffId { get; set; }
+        public int PlaceId { get; set; }
         public string Description { get; set; }
         public string ThumbnailUrl { get; set; }
         public int Capacity { get; set; }

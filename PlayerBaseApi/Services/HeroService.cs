@@ -144,7 +144,7 @@ namespace PlayerBaseApi.Services
                 var qlist = await _mapper.ProjectTo<TalentTreeDTO>(talentTrees).ToListAsync();
                 for (int i = 0; i < qlist.Count; i++)
                 {
-                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data);
+                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data).OrderBy(l=>l.PlaceId);
                     var playerTalentTree = await _context.PlayerTalentTreeNode.Where(l=>l.TalentTreeNode.TalentTreeId == qlist[i].Id).ToListAsync();
                     qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
                     qlist[i].NodeList.ForEach(l => l.CurrentLevel = playerTalentTree.Where(k => k.TalentTreeNodeId == l.Id).Select(o => o.Level).FirstOrDefault());
@@ -224,6 +224,10 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+
+
+
+
 
     }
 }

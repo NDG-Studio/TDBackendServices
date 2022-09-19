@@ -362,5 +362,39 @@ namespace PlayerBaseApi.Services
         }
 
 
+        #region RESEARCH UTILS
+        public async Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<ResearchTableDTO>> response = new TDResponse<List<ResearchTableDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetResearchTable");
+            try
+            {
+                var talentTrees = _context.ResearchTable;
+                var qlist = await _mapper.ProjectTo<ResearchTableDTO>(talentTrees).ToListAsync();
+                for (int i = 0; i < qlist.Count; i++)
+                {
+                    var qq = _context.ResearchNode.Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
+                    var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.ResearchNode.ResearchTableId == qlist[i].Id).ToListAsync();
+                    qlist[i].Nodes = await _mapper.ProjectTo<ResearchNodeDTO>(qq).ToListAsync();
+                    qlist[i].Nodes.ForEach(l => l.CurrentLevel = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.CurrentLevel).FirstOrDefault());
+                    qlist[i].Nodes.ForEach(l => l.UpdateEndDate = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.UpdateEndDate.ToString()).FirstOrDefault());
+                }
+                response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
+
+
     }
 }

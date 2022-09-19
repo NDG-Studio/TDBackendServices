@@ -107,6 +107,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.CollectBaseResources(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("GetResearchTable")]
+        public async Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetResearchTable(req, user);
         }
     }
 }

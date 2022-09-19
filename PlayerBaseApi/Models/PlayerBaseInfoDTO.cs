@@ -7,6 +7,7 @@
         public int BaseLevel { get; set; } = 1;
         public int Scraps { get; set; } = 0;
         public int Gems { get; set; } = 0;
+        public int Fuel { get; set; } = 0;
         public int HeroCards { get; set; } = 0;
         public int BluePrints { get; set; } = 0;
         public string LastBaseCollect { get; set; } = "";
