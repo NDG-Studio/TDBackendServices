@@ -152,12 +152,14 @@ namespace IdentityApi.Services
                                 existUser.IsAndroid = us.IsAndroid;
                                 existUser.LastSeen = us.LastSeen;
                                 existUser.UsingNFT = us.UsingNFT;
+                                response.Data = existUser.Id;
                             }
                         }
                         else
                         {
                             await _context.AddAsync(us);
                             await _context.SaveChangesAsync();
+                            response.Data = us.Id;
                         }
 
                         #region Create Token

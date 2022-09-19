@@ -20,6 +20,7 @@ namespace PlayerBaseApi.MapperProfiles
 
             CreateMap<ResearchTable, ResearchTableDTO>();
             CreateMap<ResearchNode, ResearchNodeDTO>();
+            CreateMap<ResearchNodeUpgradeNecessaries, ResearchNodeUpgradeNecessariesDTO>();
 
 
         }

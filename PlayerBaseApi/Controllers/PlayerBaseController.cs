@@ -118,5 +118,35 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetResearchTable(req, user);
         }
+        
+        [LoginRequired]
+        [HttpPost("GetResearchNodeUpgradeNecessariesByNodeId")]
+        public async Task<TDResponse<ResearchNodeUpgradeNecessariesDTO>> GetResearchNodeUpgradeNecessariesByNodeId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetResearchNodeUpgradeNecessariesByNodeId(req, user);
+        }
+        
+        [LoginRequired]
+        [HttpPost("UpgradeResearchNode")]
+        public async Task<TDResponse> UpgradeResearchNode([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpgradeResearchNode(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("UpgradeResearchNodeDone")]
+        public async Task<TDResponse> UpgradeResearchNodeDone([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpgradeResearchNodeDone(req, user);
+        }
     }
 }

@@ -334,12 +334,12 @@ namespace PlayerBaseApi.Services
                 var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
                 duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
 
-                
+
                 response.Data = new CollectBaseResponse()
                 {
-                    CollectDuration=duration,
-                    CollectedResource= (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour),
-                    ResourceProductionPerHour=playerBaseInfo.ResourceProductionPerHour,
+                    CollectDuration = duration,
+                    CollectedResource = (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour),
+                    ResourceProductionPerHour = playerBaseInfo.ResourceProductionPerHour,
                     BaseFullDuration = playerBaseInfo.BaseFullDuration
                 };
                 playerBaseInfo.Fuel += response.Data.CollectedResource;
@@ -380,6 +380,155 @@ namespace PlayerBaseApi.Services
                     qlist[i].Nodes.ForEach(l => l.UpdateEndDate = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.UpdateEndDate.ToString()).FirstOrDefault());
                 }
                 response.Data = qlist;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<ResearchNodeUpgradeNecessariesDTO>> GetResearchNodeUpgradeNecessariesByNodeId(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<ResearchNodeUpgradeNecessariesDTO> response = new TDResponse<ResearchNodeUpgradeNecessariesDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetResearchNodeUpgradeNecessariesByNodeId");
+            try
+            {
+                var currentNode = await _context.PlayerResearchNode.Include(l => l.ResearchNode).Where(l => l.UserId == user.Id && l.ResearchNodeId == req.Data).FirstOrDefaultAsync();
+                if (currentNode != null && currentNode.UpdateEndDate != null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (currentNode != null && currentNode.CurrentLevel == currentNode.ResearchNode.Capacity)
+                {
+                    response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                    info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var nextLevel = 1;
+                if (currentNode != null)
+                {
+                    nextLevel = currentNode.CurrentLevel + 1;
+                }
+                var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == nextLevel && l.ResearchNodeId == req.Data);
+                response.Data = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse> UpgradeResearchNode(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "UpgradeResearchNode");
+            try
+            {
+                var currentNode = await _context.PlayerResearchNode.Include(l => l.ResearchNode).Where(l => l.UserId == user.Id && l.ResearchNodeId == req.Data).FirstOrDefaultAsync();
+                if (currentNode != null && currentNode.UpdateEndDate != null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (currentNode != null && currentNode.CurrentLevel == currentNode.ResearchNode.Capacity)
+                {
+                    response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                    info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var currentLevel = 0;
+                if (currentNode == null)
+                {
+                    currentNode = new PlayerResearchNode()
+                    {
+                        CurrentLevel = currentLevel,
+                        ResearchNodeId = req.Data,
+                        UserId = user.Id,
+                    };
+                    await _context.AddAsync(currentNode);
+                }
+                var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == currentLevel + 1 && l.ResearchNodeId == req.Data);
+                var necessaries = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
+                var playerResource = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (necessaries.ScrapCount <= playerResource.Scraps && necessaries.BluePrintCount <= playerResource.BluePrints)
+                {
+                    playerResource.Scraps -= necessaries.ScrapCount;
+                    playerResource.BluePrints -= necessaries.BluePrintCount;
+                    currentNode.UpdateEndDate = DateTimeOffset.Now + necessaries.Duration;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse> UpgradeResearchNodeDone(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "UpgradeResearchNodeDone");
+            try
+            {
+                var currentNode = await _context.PlayerResearchNode.Include(l => l.ResearchNode).Where(l => l.UserId == user.Id && l.ResearchNodeId == req.Data).FirstOrDefaultAsync();
+                if (currentNode != null && currentNode.UpdateEndDate == null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (currentNode != null && currentNode.CurrentLevel == currentNode.ResearchNode.Capacity)
+                {
+                    response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                    info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (currentNode != null && (currentNode.UpdateEndDate-DateTime.Now ).Value.TotalMilliseconds > new TimeSpan(0, 0, 0).TotalMilliseconds)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                currentNode.CurrentLevel++;
+                currentNode.UpdateEndDate = null;
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
