@@ -78,5 +78,15 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.GetHeroSkillsByHeroId(req, user);
         }
+        
+        [LoginRequired]
+        [HttpPost("UpgradeHeroSkillBySkillId")]
+        public async Task<TDResponse> UpgradeHeroSkillBySkillId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.UpgradeHeroSkillBySkillId(req, user);
+        }
     }
 }

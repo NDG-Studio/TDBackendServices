@@ -257,6 +257,67 @@ namespace PlayerBaseApi.Services
         }
 
 
+        public async Task<TDResponse> UpgradeHeroSkillBySkillId(BaseRequest<int> req, UserDto user) //TODO: yeterli skill point var mı bakılacak
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "UpgradeHeroSkillBySkillId");
+            try
+            {
+                var heroSkill = await _context.HeroSkill.Include(l=>l.Hero).Where(l => l.Id == req.Data).FirstOrDefaultAsync();
+                if (heroSkill==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var isOwned = await _context.PlayerHero.Where(l => l.Id == heroSkill.HeroId && l.UserId==user.Id).AnyAsync();
+                if (!isOwned)
+                {
+                    response.SetError(OperationMessages.PlayerHaveNoHero);
+                    info.AddInfo(OperationMessages.PlayerHaveNoHero);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var currentHeroSkillLevel = await _context.PlayerHeroSkillLevel.Include(l=>l.HeroSkillLevel).Where(l => l.HeroSkillLevel.HeroSkillId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
+                if (currentHeroSkillLevel==null)
+                {
+                    var newEnt = new PlayerHeroSkillLevel()
+                    {
+                        UserId = user.Id,
+                        HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).Select(l => l.Level).FirstOrDefaultAsync()
+                    };
+                    await _context.AddAsync(newEnt);
+                }
+                else
+                {
+                    if (currentHeroSkillLevel.HeroSkillLevel.Level == heroSkill.MaksLevel)
+                    {
+                        response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                        info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    currentHeroSkillLevel.HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == currentHeroSkillLevel.HeroSkillLevel.Level+1).Select(l => l.Id).FirstOrDefaultAsync();
+                }
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
 
 
 

@@ -11,5 +11,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<List<TalentTreeDTO>>> GetHeroTalentTreeByHeroId(BaseRequest<int> req, UserDto user);
         Task<TDResponse> AddHeroTalentNodeByNodeId(BaseRequest<int> req, UserDto user);
         Task<TDResponse<List<HeroSkillDTO>>> GetHeroSkillsByHeroId(BaseRequest<int> req, UserDto user);
+        Task<TDResponse> UpgradeHeroSkillBySkillId(BaseRequest<int> req, UserDto user);
     }
 }
