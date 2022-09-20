@@ -144,8 +144,8 @@ namespace PlayerBaseApi.Services
                 var qlist = await _mapper.ProjectTo<TalentTreeDTO>(talentTrees).ToListAsync();
                 for (int i = 0; i < qlist.Count; i++)
                 {
-                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data).OrderBy(l=>l.PlaceId);
-                    var playerTalentTree = await _context.PlayerTalentTreeNode.Where(l=>l.TalentTreeNode.TalentTreeId == qlist[i].Id).ToListAsync();
+                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data).OrderBy(l => l.PlaceId);
+                    var playerTalentTree = await _context.PlayerTalentTreeNode.Where(l => l.TalentTreeNode.TalentTreeId == qlist[i].Id).ToListAsync();
                     qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
                     qlist[i].NodeList.ForEach(l => l.CurrentLevel = playerTalentTree.Where(k => k.TalentTreeNodeId == l.Id).Select(o => o.Level).FirstOrDefault());
                 }
@@ -211,6 +211,37 @@ namespace PlayerBaseApi.Services
                     await _context.AddAsync(ent);
                 }
                 await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse<List<HeroSkillDTO>>> GetHeroSkillsByHeroId(BaseRequest<int> req, UserDto user) //TODO: yeterli skill point var mı bakılacak
+        {
+            TDResponse<List<HeroSkillDTO>> response = new TDResponse<List<HeroSkillDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetHeroSkillsByHeroId");
+            try
+            {
+                var query = _context.HeroSkill.Where(l => l.HeroId == req.Data).OrderBy(l => l.PlaceId);
+                var dto = await _mapper.ProjectTo<HeroSkillDTO>(query).ToListAsync();
+                foreach (var item in dto)
+                {
+                    var temp = await _context.PlayerHeroSkillLevel.Include(z => z.HeroSkillLevel).Where(o => o.UserId == user.Id && o.HeroSkillLevel.HeroSkillId == item.Id).FirstOrDefaultAsync();
+                    item.Level = temp?.HeroSkillLevel?.Level ?? 0;
+                    item.BuffId = temp?.HeroSkillLevel?.Level ?? 0;
+                }
+
+                response.Data = dto;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

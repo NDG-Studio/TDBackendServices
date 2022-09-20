@@ -26,6 +26,9 @@ namespace PlayerBaseApi
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
         public DbSet<HeroLevelThreshold> HeroLevelThreshold { get; set; }
+        public DbSet<HeroSkill> HeroSkill { get; set; }
+        public DbSet<HeroSkillLevel> HeroSkillLevel { get; set; }
+        public DbSet<PlayerHeroSkillLevel> PlayerHeroSkillLevel { get; set; }
         public DbSet<TalentTree> TalentTree { get; set; }
         public DbSet<TalentTreeNode> TalentTreeNode { get; set; }
         public DbSet<PlayerTalentTreeNode> PlayerTalentTreeNode { get; set; }
@@ -90,10 +93,10 @@ namespace PlayerBaseApi
             );
 
             modelBuilder.Entity<ResearchTable>().HasData(
-                new ResearchTable() { Id=1,Name="Military Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
-                new ResearchTable() { Id=2,Name="Economical Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
-                new ResearchTable() { Id=3,Name="General Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
-                new ResearchTable() { Id=4,Name="Tower Defense Research",ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" }
+                new ResearchTable() { Id = 1, Name = "Military Research", ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id = 2, Name = "Economical Research", ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id = 3, Name = "General Research", ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" },
+                new ResearchTable() { Id = 4, Name = "Tower Defense Research", ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" }
                 );
 
             var c = 1;
@@ -105,14 +108,14 @@ namespace PlayerBaseApi
                     researchNodeList.Add(new ResearchNode()
                     {
                         Id = c,
-                        BuffId=1,
-                        Name="Node_"+l.ToString(),
-                        Description="research description",
-                        Capacity=5,
-                        PlaceId=l,
-                        ThumbnailUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png",
-                        ResearchTableId=i,
-                        IsActive=true
+                        BuffId = 1,
+                        Name = "Node_" + l.ToString(),
+                        Description = "research description",
+                        Capacity = 5,
+                        PlaceId = l,
+                        ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png",
+                        ResearchTableId = i,
+                        IsActive = true
                     });
                     c++;
                 }
@@ -130,12 +133,12 @@ namespace PlayerBaseApi
                 {
                     researchNodeUpgradeNecessaries.Add(new ResearchNodeUpgradeNecessaries()
                     {
-                        Id=c,
-                        BluePrintCount=l*10,
-                        Duration=new TimeSpan(0,0,l*2,0),
-                        ResearchNodeId=i,
-                        ScrapCount=l*100,
-                        UpgradeLevel=l
+                        Id = c,
+                        BluePrintCount = l * 10,
+                        Duration = new TimeSpan(0, 0, l * 2, 0),
+                        ResearchNodeId = i,
+                        ScrapCount = l * 100,
+                        UpgradeLevel = l
                     });
                     c++;
                 }
@@ -323,10 +326,52 @@ namespace PlayerBaseApi
             modelBuilder.Entity<HeroLevelThreshold>().HasData(listThreshold);
 
 
+            List<HeroSkill> heroSkills = new List<HeroSkill>();
+            List<HeroSkillLevel> heroSkillLevels = new List<HeroSkillLevel>();
+            c = 1;
+            var cl = 1;
+            for (int i = 1; i < 12; i++)
+            {
+                for (int k = 1; k < 5; k++)
+                {
+                    heroSkills.Add(new HeroSkill()
+                    {
+                        Id = c,
+                        PlaceId = k,
+                        IsPassiveSkill = k == 1 ? false : true,
+                        Description = "dummy hero description",
+                        HeroId = i,
+                        MaksLevel = 5,
+                        Name = "HeroSkill_" + k,
+                        TumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2018/06/h2-custom-icon-img-1.png"
+
+                    });
+                    c++;
+                    for (int l = 1; l < 6; l++)
+                    {
+                        heroSkillLevels.Add(new HeroSkillLevel()
+                        {
+                            Id = cl,
+                            BuffId = 1,
+                            HeroSkillId = c-1,
+                            Level = l
+                        });
+                        cl++;
+                    }
+                }
+            }
+
+            modelBuilder.Entity<HeroSkill>().HasData(heroSkills);
+            modelBuilder.Entity<HeroSkillLevel>().HasData(heroSkillLevels);
+
+
+
+
+
             modelBuilder.Entity<TalentTree>().HasData(
-                new TalentTree() { Id=1,Name="Talent Tree _1_",ThemeColor="#000000",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
-                new TalentTree() { Id=2,Name="Talent Tree _2_",ThemeColor="#2f2f2f",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
-                new TalentTree() { Id=3,Name="Talent Tree _3_",ThemeColor="#ffffff",BackgroundUrl= "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" }
+                new TalentTree() { Id = 1, Name = "Talent Tree _1_", ThemeColor = "#000000", BackgroundUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
+                new TalentTree() { Id = 2, Name = "Talent Tree _2_", ThemeColor = "#2f2f2f", BackgroundUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" },
+                new TalentTree() { Id = 3, Name = "Talent Tree _3_", ThemeColor = "#ffffff", BackgroundUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2022/09/Background-min-scaled.jpg" }
                 );
 
             List<TalentTreeNode> talentTreeNodes = new List<TalentTreeNode>();
@@ -337,7 +382,7 @@ namespace PlayerBaseApi
                 {
                     for (int n = 1; n < 34; n++)
                     {
-                        var node = new TalentTreeNode() { Id = c, Name = "node_" + n.ToString(), PlaceId=n, Capacity = 5, Description = "dummynodedescription", HeroId = h, TalentTreeId = tt, ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", BuffId = 1, IsActive = true };
+                        var node = new TalentTreeNode() { Id = c, Name = "node_" + n.ToString(), PlaceId = n, Capacity = 5, Description = "dummynodedescription", HeroId = h, TalentTreeId = tt, ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", BuffId = 1, IsActive = true };
                         talentTreeNodes.Add(node);
                         c++;
                     }
