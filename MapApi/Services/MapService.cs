@@ -189,6 +189,58 @@ namespace MapApi.Services
 
         }
 
+        public async Task<TDResponse<List<InfoWithAreaDTO>>> GetMapByBoundBox(BaseRequest<BoundBox> req, UserDto user)
+        {
+            TDResponse<List<InfoWithAreaDTO>> response = new TDResponse<List<InfoWithAreaDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetMapByBoundBox");
+            try
+            {
+
+               
+
+                var qa = await _context.Area.Where(l =>
+                (l.XMin <= req.Data.XMax && l.XMin > req.Data.XMin) && (l.YMin <= req.Data.YMax && l.YMin > req.Data.YMin)
+                    ||
+                (l.XMin <= req.Data.XMax && l.XMin > req.Data.XMin) && (l.YMax <= req.Data.YMax && l.YMax > req.Data.YMin)
+                    ||
+                (l.XMax <= req.Data.XMax && l.XMax > req.Data.XMin) && (l.YMin <= req.Data.YMax && l.YMin > req.Data.YMin)
+                    ||
+                (l.XMax <= req.Data.XMax && l.XMax > req.Data.XMin) && (l.YMax <= req.Data.YMax && l.YMax > req.Data.YMin)
+                    
+                   ||
+
+                (req.Data.XMin <= l.XMax && req.Data.XMin > l.XMin) && (req.Data.YMin <= l.YMax && req.Data.YMin > l.YMin)
+                    ||
+                (req.Data.XMin <= l.XMax && req.Data.XMin > l.XMin) && (req.Data.YMax <= l.YMax && req.Data.YMax > l.YMin)
+                    ||
+                (req.Data.XMax <= l.XMax && req.Data.XMax > l.XMin) && (req.Data.YMin <= l.YMax && req.Data.YMin > l.YMin)
+                    ||
+                (req.Data.XMax <= l.XMax && req.Data.XMax > l.XMin) && (req.Data.YMax <= l.YMax && req.Data.YMax > l.YMin)
+
+
+                ).Select(l=>l.Id).ToListAsync();
+
+                var q = _context.MapItem.Where(l => qa.Contains(l.AreaId));
+
+                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).GroupBy(l => l.AreaId).Select(l=>new InfoWithAreaDTO()
+                {
+                    AreaId=l.Key,
+                    MapItems=l.ToList(),
+                }).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
 
         public async Task<TDResponse<bool>> GetApeIsRecommended(BaseRequest req, UserDto user)
         {
