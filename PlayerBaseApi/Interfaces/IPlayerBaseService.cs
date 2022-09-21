@@ -21,5 +21,7 @@ namespace PlayerBaseApi.Interfaces
 
         Task<TDResponse<PlayerPrisonDTO>> GetPrisonInfo(BaseRequest req, UserDto user);
         Task<TDResponse<int>> ExecutePrisoners(BaseRequest<int> req, UserDto user);
+        Task<TDResponse> PrisonerTrainingRequest(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<int>> PrisonerTrainingDoneRequest(BaseRequest req, UserDto user);
     }
 }

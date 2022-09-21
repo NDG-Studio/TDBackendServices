@@ -105,6 +105,14 @@ namespace PlayerBaseApi.Services
                             UserId = user.Id
                         };
                         await _context.AddAsync(pprison);
+                        break;                    
+                    case 10://military base
+                        var pTroop= new PlayerTroop()
+                        {
+                            TroopCount = 0,
+                            UserId = user.Id
+                        };
+                        await _context.AddAsync(pTroop);
                         break;
 
                     default:
@@ -279,7 +287,7 @@ namespace PlayerBaseApi.Services
                 switch (req.Data)
                 {
                     case 5://prison
-                        if (await _context.PlayerPrison.Where(l=>l.InTrainingPrisonerCount!=0 && l.UserId==user.Id).AnyAsync())//eğitimde esir var mı kontrol ediliyor.
+                        if (await _context.PlayerPrison.Where(l => l.InTrainingPrisonerCount != 0 && l.UserId == user.Id).AnyAsync())//eğitimde esir var mı kontrol ediliyor.
                         {
                             response.SetError(OperationMessages.TrainingMustBeDone);
                             info.AddInfo(OperationMessages.TrainingMustBeDone);
@@ -344,7 +352,7 @@ namespace PlayerBaseApi.Services
                         await _context.SaveChangesAsync();
                         break;
                 }
-                
+
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -628,11 +636,11 @@ namespace PlayerBaseApi.Services
             {
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                if (query.PrisonerCount<req.Data)
+                if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
                 }
-                if (query.InTrainingPrisonerCount!=0)
+                if (query.InTrainingPrisonerCount != 0)
                 {
                     response.SetError(OperationMessages.TrainingMustBeDone);
                     info.AddInfo(OperationMessages.TrainingMustBeDone);
@@ -642,6 +650,102 @@ namespace PlayerBaseApi.Services
                 query.PrisonerCount -= req.Data;
                 playerBaseInfo.Scraps += (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
                 response.Data = (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse> PrisonerTrainingRequest(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "PrisonerTrainingRequest");
+            try
+            {
+                var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.PrisonerCount < req.Data)
+                {
+                    req.Data = query.PrisonerCount;
+                }
+                if (query.InTrainingPrisonerCount != 0)
+                {
+                    response.SetError(OperationMessages.TrainingMustBeDone);
+                    info.AddInfo(OperationMessages.TrainingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerBaseInfo.Scraps < (int)(req.Data * query.PrisonLevel.TrainingCostPerUnit))
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.PrisonerCount -= req.Data;
+                query.InTrainingPrisonerCount += req.Data;
+                query.TrainingDoneDate = DateTimeOffset.Now + (query.PrisonLevel.TrainingDurationPerUnit * req.Data);
+                playerBaseInfo.Scraps -= (int)(req.Data * query.PrisonLevel.TrainingCostPerUnit);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse<int>> PrisonerTrainingDoneRequest(BaseRequest req, UserDto user)
+        {
+            TDResponse<int> response = new TDResponse<int>();
+            var info = InfoDetail.CreateInfo(req, "PrisonerTrainingDoneRequest");
+            try
+            {
+                var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.InTrainingPrisonerCount == 0)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerBaseInfo.Scraps < (int)(query.InTrainingPrisonerCount * query.PrisonLevel.TrainingCostPerUnit))
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if ((query.TrainingDoneDate-DateTimeOffset.Now).Value.TotalMilliseconds>0)
+                {
+                    response.SetError(OperationMessages.TrainingMustBeDone);
+                    info.AddInfo(OperationMessages.TrainingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                playerTroop.TroopCount += query.InTrainingPrisonerCount;
+                response.Data = query.InTrainingPrisonerCount;
+                query.InTrainingPrisonerCount = 0;
+                query.TrainingDoneDate = null;
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
