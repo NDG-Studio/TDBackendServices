@@ -147,6 +147,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.UpgradeResearchNodeDone(req, user);
+        }        
+
+        [LoginRequired]
+        [HttpPost("GetPrisonInfo")]
+        public async Task<TDResponse<PlayerPrisonDTO>> GetPrisonInfo([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPrisonInfo(req, user);
         }
     }
 }

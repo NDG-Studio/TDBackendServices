@@ -93,6 +93,23 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                switch (req.Data!.BuildingTypeId)
+                {
+                    case 5://prison
+                        var pprison = new PlayerPrison()
+                        {
+                            PrisonLevelId = 1,
+                            PrisonerCount = 0,
+                            InTrainingPrisonerCount = 0,
+                            TrainingDoneDate = null,
+                            UserId = user.Id
+                        };
+                        await _context.AddAsync(pprison);
+                        break;
+
+                    default:
+                        break;
+                }
                 var ent = new PlayerBasePlacement();
                 ent.BuildingLevel = 1;
                 ent.BuildingTypeId = req.Data!.BuildingTypeId;
@@ -259,6 +276,20 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                switch (req.Data)
+                {
+                    case 5://prison
+                        if (await _context.PlayerPrison.Where(l=>l.InTrainingPrisonerCount!=0 && l.UserId==user.Id).AnyAsync())//eğitimde esir var mı kontrol ediliyor.
+                        {
+                            response.SetError(OperationMessages.TrainingMustBeDone);
+                            info.AddInfo(OperationMessages.TrainingMustBeDone);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        break;
+                    default:
+                        break;
+                }
                 var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
                 query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0));
                 await _context.SaveChangesAsync();
@@ -301,7 +332,19 @@ namespace PlayerBaseApi.Services
                 }
                 query.UpdateEndDate = null;
                 query.BuildingLevel = query.BuildingLevel + 1;
-                await _context.SaveChangesAsync();
+                switch (req.Data)
+                {
+                    case 5://prison
+                        var pprison = await _context.PlayerPrison.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                        pprison.PrisonLevelId++;
+                        await _context.SaveChangesAsync();
+                        break;
+
+                    default:
+                        await _context.SaveChangesAsync();
+                        break;
+                }
+                
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -519,7 +562,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                if (currentNode != null && (currentNode.UpdateEndDate-DateTime.Now ).Value.TotalMilliseconds > new TimeSpan(0, 0, 0).TotalMilliseconds)
+                if (currentNode != null && (currentNode.UpdateEndDate - DateTime.Now).Value.TotalMilliseconds > new TimeSpan(0, 0, 0).TotalMilliseconds)
                 {
                     response.SetError(OperationMessages.ProcessAllreadyExist);
                     info.AddInfo(OperationMessages.ProcessAllreadyExist);
@@ -545,5 +588,37 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        #region PRISON UTILS
+
+        public async Task<TDResponse<PlayerPrisonDTO>> GetPrisonInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerPrisonDTO> response = new TDResponse<PlayerPrisonDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetPrisonInfo");
+            try
+            {
+                var query = _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id);
+                var pprison = await _mapper.ProjectTo<PlayerPrisonDTO>(query).FirstOrDefaultAsync();
+                if (pprison == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                response.Data = pprison;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
     }
 }

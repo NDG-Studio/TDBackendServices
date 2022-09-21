@@ -14,6 +14,7 @@ namespace PlayerBaseApi
             Database.Migrate();
         }
 
+        //public DbSet<GameConfig> GameConfig { get; set; }
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
@@ -22,6 +23,8 @@ namespace PlayerBaseApi
         public DbSet<ResearchNode> ResearchNode { get; set; }
         public DbSet<PlayerResearchNode> PlayerResearchNode { get; set; }
         public DbSet<ResearchNodeUpgradeNecessaries> ResearchNodeUpgradeNecessaries { get; set; }
+        public DbSet<PlayerTroop> PlayerTroop { get; set; }
+        public DbSet<PlayerPrison> PlayerPrison { get; set; }
 
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
@@ -37,6 +40,16 @@ namespace PlayerBaseApi
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<GameConfig>().HasData(
+            //    new GameConfig()
+            //    {
+            //        Id=1,
+            //        PrisonerExecutionGainPerUnit=1.2,
+            //        PrisonerMaxDuration=new TimeSpan(0,2,0),
+            //        PrisonerResorceDebuffPerHour=10,
+            //        TroopProductionPerHour=1
+            //    });
+
             #region PlayerBaseEntities
             modelBuilder.Entity<BuildingType>().HasData(
                 new BuildingType() { Id = 1, Name = "Base", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-5.png", IsActive = true },
@@ -47,7 +60,8 @@ namespace PlayerBaseApi
                 new BuildingType() { Id = 6, Name = "Market", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png", IsActive = true },
                 new BuildingType() { Id = 7, Name = "Altar", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true },
                 new BuildingType() { Id = 8, Name = "Watch Tower", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true },
-                new BuildingType() { Id = 9, Name = "Research Laboratory", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true }
+                new BuildingType() { Id = 9, Name = "Research Laboratory", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true },
+                new BuildingType() { Id = 10, Name = "Military Base", MaxLevel = 1000, BuildUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png", IsActive = true }
             );
             modelBuilder.Entity<PlayerBasePlacement>().HasData(
                 new PlayerBasePlacement() { Id = 1, BuildingTypeId = 1, BuildingLevel = 1, CoordX = 1, CoordY = 1, UpdateEndDate = null, UserId = 1 }
@@ -149,6 +163,27 @@ namespace PlayerBaseApi
             );
 
             #endregion
+
+            #region PrisonerEntities
+
+            List<PrisonLevel> prisonLevels = new List<PrisonLevel>();
+            for (int i = 1; i < 101; i++)
+            {
+                prisonLevels.Add(new PrisonLevel()
+                {
+                    Id = i,
+                    Level = i,
+                    ExecutionEarnPerUnit = i * 1.2,
+                    MaxPrisonerCount = i * 5 - i,
+                    TrainingCostPerUnit = 100 / i,
+                    TrainingDurationPerUnit = new TimeSpan(6000000000 / i),
+                });
+            }
+            modelBuilder.Entity<PrisonLevel>().HasData(
+                prisonLevels);
+
+            #endregion
+
 
             #region HeroEntities
 
@@ -353,7 +388,7 @@ namespace PlayerBaseApi
                         {
                             Id = cl,
                             BuffId = 1,
-                            HeroSkillId = c-1,
+                            HeroSkillId = c - 1,
                             Level = l
                         });
                         cl++;
@@ -396,6 +431,8 @@ namespace PlayerBaseApi
 
 
             #endregion
+
+
         }
     }
 }

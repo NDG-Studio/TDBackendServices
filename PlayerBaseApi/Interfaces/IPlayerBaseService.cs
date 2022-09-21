@@ -18,5 +18,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<ResearchNodeUpgradeNecessariesDTO>> GetResearchNodeUpgradeNecessariesByNodeId(BaseRequest<int> req, UserDto user);
         Task<TDResponse> UpgradeResearchNode(BaseRequest<int> req, UserDto user);
         Task<TDResponse> UpgradeResearchNodeDone(BaseRequest<int> req, UserDto user);
+
+        Task<TDResponse<PlayerPrisonDTO>> GetPrisonInfo(BaseRequest req, UserDto user);
     }
 }

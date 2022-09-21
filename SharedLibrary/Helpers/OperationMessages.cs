@@ -7,7 +7,7 @@ namespace SharedLibrary.Helpers
         public const string DbError = "Veritabanı hatası nedeni ile işlem gerçekleştirilemedi";
         public const string AuthenticateError = "Yanlış kullanıcı adı veya şifre";
 
-        public const string DbItemNotFound = "Güncellenecek kayıt bilgisi bulunamadığından işlem gerçekleştirilemedi";
+        public const string DbItemNotFound = "Kayıt bilgisi bulunamadığından işlem gerçekleştirilemedi";
 
         public const string NoChanges = "Kayıtta değişiklik yapılmadığı için kayıt edilmedi.";
 
@@ -26,5 +26,6 @@ namespace SharedLibrary.Helpers
         public const string HeroAllreadyMaxLevel = "Daha fazla yükseltilemez!";
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";
         public const string PlayerDoesNotHaveResource = "Kullanıcı gerekli kaynaklara sahip değil!";
+        public const string TrainingMustBeDone = "Yükseltmek için eğitimin bitmesini bekleyin!";
     }
 }

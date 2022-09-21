@@ -22,6 +22,13 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<ResearchNode, ResearchNodeDTO>();
             CreateMap<ResearchNodeUpgradeNecessaries, ResearchNodeUpgradeNecessariesDTO>();
 
+            CreateMap<PlayerPrison,PlayerPrisonDTO>()
+                .ForMember(dest => dest.TrainingDoneDate, operations => operations
+                .MapFrom(
+                    source => source.TrainingDoneDate != null ? source.TrainingDoneDate.ToString() : null));
+            
+            CreateMap<PrisonLevel,PrisonLevelDTO>();
+
 
         }
 
