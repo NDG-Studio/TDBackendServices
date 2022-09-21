@@ -87,6 +87,8 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.UpgradeHeroSkillBySkillId(req, user);
-        }
+        }        
+        
+
     }
 }

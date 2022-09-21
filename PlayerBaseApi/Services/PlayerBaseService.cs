@@ -619,6 +619,44 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+
+        public async Task<TDResponse<int>> ExecutePrisoners(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<int> response = new TDResponse<int>();
+            var info = InfoDetail.CreateInfo(req, "ExecutePrisoners");
+            try
+            {
+                var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.PrisonerCount<req.Data)
+                {
+                    req.Data = query.PrisonerCount;
+                }
+                if (query.InTrainingPrisonerCount!=0)
+                {
+                    response.SetError(OperationMessages.TrainingMustBeDone);
+                    info.AddInfo(OperationMessages.TrainingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.PrisonerCount -= req.Data;
+                playerBaseInfo.Scraps += (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
+                response.Data = (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         #endregion
     }
 }

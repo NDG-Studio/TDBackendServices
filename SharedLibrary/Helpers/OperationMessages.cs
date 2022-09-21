@@ -26,6 +26,6 @@ namespace SharedLibrary.Helpers
         public const string HeroAllreadyMaxLevel = "Daha fazla yükseltilemez!";
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";
         public const string PlayerDoesNotHaveResource = "Kullanıcı gerekli kaynaklara sahip değil!";
-        public const string TrainingMustBeDone = "Yükseltmek için eğitimin bitmesini bekleyin!";
+        public const string TrainingMustBeDone = "Eğitimin bitmesini bekleyin!";
     }
 }
