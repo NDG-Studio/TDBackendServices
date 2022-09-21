@@ -272,7 +272,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var isOwned = await _context.PlayerHero.Where(l => l.Id == heroSkill.HeroId && l.UserId==user.Id).AnyAsync();
+                var isOwned = await _context.PlayerHero.Where(l => l.HeroId == heroSkill.HeroId && l.UserId==user.Id).AnyAsync();
                 if (!isOwned)
                 {
                     response.SetError(OperationMessages.PlayerHaveNoHero);
@@ -287,7 +287,7 @@ namespace PlayerBaseApi.Services
                     var newEnt = new PlayerHeroSkillLevel()
                     {
                         UserId = user.Id,
-                        HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).Select(l => l.Level).FirstOrDefaultAsync()
+                        HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).Select(l => l.Id).FirstOrDefaultAsync()
                     };
                     await _context.AddAsync(newEnt);
                 }
