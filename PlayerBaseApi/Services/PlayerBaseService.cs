@@ -728,13 +728,6 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                if (playerBaseInfo.Scraps < (int)(query.InTrainingPrisonerCount * query.PrisonLevel.TrainingCostPerUnit))
-                {
-                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
-                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
                 if ((query.TrainingDoneDate-DateTimeOffset.Now).Value.TotalMilliseconds>0)
                 {
                     response.SetError(OperationMessages.TrainingMustBeDone);
