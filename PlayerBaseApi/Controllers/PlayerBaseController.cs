@@ -188,5 +188,26 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.PrisonerTrainingDoneRequest(req, user);
         }
+        
+        [LoginRequired]
+        [HttpPost("GetLootRuns")]
+        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetLootRuns([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootRuns(req, user);
+        }
+                
+        [LoginRequired]
+        [HttpPost("SendLootRun")]
+        public async Task<TDResponse> SendLootRun([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SendLootRun(req, user);
+        }
+
     }
 }

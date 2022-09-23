@@ -6,7 +6,8 @@ namespace PlayerBaseApi.MapperProfiles
     public class PlayerBaseProfile : Profile
     {
 
-        public PlayerBaseProfile(){
+        public PlayerBaseProfile()
+        {
 
             CreateMap<PlayerBasePlacement, PlayerBasePlacementDTO>()
                 .ForMember(dest => dest.UpdateEndDate, operations => operations
@@ -22,12 +23,20 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<ResearchNode, ResearchNodeDTO>();
             CreateMap<ResearchNodeUpgradeNecessaries, ResearchNodeUpgradeNecessariesDTO>();
 
-            CreateMap<PlayerPrison,PlayerPrisonDTO>()
+            CreateMap<PlayerPrison, PlayerPrisonDTO>()
                 .ForMember(dest => dest.TrainingDoneDate, operations => operations
                 .MapFrom(
                     source => source.TrainingDoneDate != null ? source.TrainingDoneDate.ToString() : null));
-            
-            CreateMap<PrisonLevel,PrisonLevelDTO>();
+
+            CreateMap<PrisonLevel, PrisonLevelDTO>();
+            CreateMap<Buff, BuffDTO>();
+            CreateMap<PlayerHeroLoot, PlayerHeroLootDTO>()
+                .ForMember(dest => dest.OperationEndDate, operations => operations
+                .MapFrom(
+                    source => source.OperationEndDate != null ? source.OperationEndDate.ToString() : null))
+                .ForMember(dest => dest.Hero, operations => operations
+                .MapFrom(
+                    source => source.PlayerHero.Hero));
 
 
         }

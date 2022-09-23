@@ -14,7 +14,7 @@ namespace PlayerBaseApi
             Database.Migrate();
         }
 
-        //public DbSet<GameConfig> GameConfig { get; set; }
+        public DbSet<Buff> Buff { get; set; }
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
@@ -35,20 +35,22 @@ namespace PlayerBaseApi
         public DbSet<TalentTree> TalentTree { get; set; }
         public DbSet<TalentTreeNode> TalentTreeNode { get; set; }
         public DbSet<PlayerTalentTreeNode> PlayerTalentTreeNode { get; set; }
+        public DbSet<LootLevel> LootLevel { get; set; }
+        public DbSet<PlayerHeroLoot> PlayerHeroLoot { get; set; }
+
+
         public DbSet<Log> Log { get; set; }
         public DbSet<LogAction> LogAction { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<GameConfig>().HasData(
-            //    new GameConfig()
-            //    {
-            //        Id=1,
-            //        PrisonerExecutionGainPerUnit=1.2,
-            //        PrisonerMaxDuration=new TimeSpan(0,2,0),
-            //        PrisonerResorceDebuffPerHour=10,
-            //        TroopProductionPerHour=1
-            //    });
+            modelBuilder.Entity<Buff>().HasData(
+                new Buff()
+                {
+                    Id = 1,
+                    Description = "",
+                    Name = "0-Buff"
+                });
 
             #region PlayerBaseEntities
             modelBuilder.Entity<BuildingType>().HasData(
@@ -183,7 +185,6 @@ namespace PlayerBaseApi
                 prisonLevels);
 
             #endregion
-
 
             #region HeroEntities
 
@@ -432,7 +433,21 @@ namespace PlayerBaseApi
 
             #endregion
 
-
+            #region LootLevel
+            List<LootLevel> lootLevels = new List<LootLevel>();
+            for (int i = 1; i < 101; i++)
+            {
+                lootLevels.Add(new LootLevel()
+                {
+                    Id = i,
+                    BlueprintCount = i,
+                    GemCount = i,
+                    ScrapCount = i * 10,
+                    LootDuration = new TimeSpan(0, 1, 0) * i / 2
+                });
+            }
+            modelBuilder.Entity<LootLevel>().HasData(lootLevels);
+            #endregion
         }
     }
 }

@@ -105,9 +105,9 @@ namespace PlayerBaseApi.Services
                             UserId = user.Id
                         };
                         await _context.AddAsync(pprison);
-                        break;                    
+                        break;
                     case 10://military base
-                        var pTroop= new PlayerTroop()
+                        var pTroop = new PlayerTroop()
                         {
                             TroopCount = 0,
                             UserId = user.Id
@@ -728,7 +728,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                if ((query.TrainingDoneDate-DateTimeOffset.Now).Value.TotalMilliseconds>0)
+                if ((query.TrainingDoneDate - DateTimeOffset.Now).Value.TotalMilliseconds > 0)
                 {
                     response.SetError(OperationMessages.TrainingMustBeDone);
                     info.AddInfo(OperationMessages.TrainingMustBeDone);
@@ -753,6 +753,123 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+
+        #endregion
+
+
+        #region LOOTRUN UTILS
+
+        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetLootRuns(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerHeroLootDTO>> response = new TDResponse<List<PlayerHeroLootDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetLootRuns");
+            try
+            {
+                var playerHeroLoot = _context.PlayerHeroLoot.Where(l => l.PlayerHero.UserId == user.Id);
+
+
+                response.Data = await _mapper.ProjectTo<PlayerHeroLootDTO>(playerHeroLoot).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+
+        public async Task<TDResponse> SendLootRun(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SendLootRun");
+            try
+            {
+                var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).Where(l => l.PlayerHero.UserId == user.Id).FirstOrDefaultAsync();
+
+                if (playerHeroLoot != null) //TODO: 2 HERO GÖNDERME İŞLEMİ SONRA YAPILACAK
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!(await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data).AnyAsync())) //TODO: 2 HERO GÖNDERME İŞLEMİ SONRA YAPILACAK
+                {
+                    response.SetError(OperationMessages.PlayerHaveNoHero);
+                    info.AddInfo(OperationMessages.PlayerHaveNoHero);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var lootLevelId = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == 8).Select(l => l.BuildingLevel).FirstOrDefaultAsync();
+                var lootLevelDuration = await _context.LootLevel.Where(l => l.Id == lootLevelId).Select(l => l.LootDuration).FirstOrDefaultAsync();
+
+
+                var ent = new PlayerHeroLoot()
+                {
+                    LootLevelId = lootLevelId,
+                    PlayerHeroId = await _context.PlayerHero.Where(l => l.HeroId == req.Data && l.UserId == user.Id).Select(l => l.Id).FirstOrDefaultAsync(),
+                    OperationEndDate = DateTimeOffset.Now + lootLevelDuration
+                };
+
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        //public async Task<TDResponse> LootRunDoneRequest(BaseRequest<int> req, UserDto user)
+        //{
+        //    TDResponse response = new TDResponse();
+        //    var info = InfoDetail.CreateInfo(req, "LootRunDoneRequest");
+        //    try
+        //    {
+        //        var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero)
+        //            .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId == req.Data).FirstOrDefaultAsync();
+
+        //        if ((playerHeroLoot.OperationEndDate - DateTimeOffset.Now).TotalMilliseconds > 0)
+        //        {
+        //            response.SetError(OperationMessages.TrainingMustBeDone);
+        //            info.AddInfo(OperationMessages.TrainingMustBeDone);
+        //            _logger.LogInformation(info.ToString());
+        //            return response;
+        //        }
+
+
+        //        _context.Remove(playerHeroLoot);
+
+        //        await _context.SaveChangesAsync();
+        //        response.SetSuccess();
+        //        info.AddInfo(OperationMessages.Success);
+        //        _logger.LogInformation(info.ToString());
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        response.SetError(OperationMessages.DbError);
+        //        info.SetException(e);
+        //        _logger.LogError(info.ToString());
+        //    }
+        //    return response;
+
+        //}
 
         #endregion
     }
