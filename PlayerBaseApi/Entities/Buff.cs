@@ -9,20 +9,7 @@ namespace PlayerBaseApi.Entities
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
 
-        /// <summary>
-        /// Heronun lootta Gem getirme sansı
-        /// </summary>
-        public double LootGemChance { get; set; } = 0;
 
-        /// <summary>
-        /// Heronun lootta BluePrint getirme sansı
-        /// </summary>
-        public double LootBluePrintChance { get; set; } = 0;
-
-        /// <summary>
-        /// Heronun lootta Scrap getirme sansı
-        /// </summary>
-        public double LootScrapChance { get; set; } = 0;
 
         /// <summary>
         /// Heronun lootta getirdiği Gemlerin katsayısı 
@@ -49,6 +36,14 @@ namespace PlayerBaseApi.Entities
         public double LootScrapMultiplier { get; set; } = 0;
 
         /// <summary>
+        /// Heronun lootta getirdiği herşeyin maksimum gelme ihtimaline etkisi
+        /// <br/>
+        /// <br/>
+        /// Not: Default sayı 0.001
+        /// </summary>
+        public double LootPerfectRunMultiplier { get; set; } = 0;
+
+        /// <summary>
         /// Heronun lootdan gelme süresi için katsayı 
         /// <br/>
         /// <br/>
@@ -57,10 +52,7 @@ namespace PlayerBaseApi.Entities
         public double LootDurationMultiplier { get; set; } = 0;        
         
         /// <summary>
-        /// Heronun lootdan gelme süresi için katsayı 
-        /// <br/>
-        /// <br/>
-        /// Not: Default sayı Gözcü binasının leveline bağlı olarak değişiyor
+        /// Heronun lootdan gelirken getirebileceği maksimum resource sayısı
         /// </summary>
         public double LootCapacity{ get; set; } = 0;
 

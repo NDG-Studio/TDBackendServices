@@ -10,6 +10,8 @@ namespace PlayerBaseApi.Entities
         public int PlayerHeroId { get; set; }
         public int LootLevelId { get; set; }
         public DateTimeOffset OperationEndDate { get; set; }
+        public string GainedResources { get; set; }
+        public bool IsActive { get; set; }
 
         [ForeignKey("PlayerHeroId")]
         public PlayerHero PlayerHero { get; set; }

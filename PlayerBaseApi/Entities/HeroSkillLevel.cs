@@ -13,6 +13,9 @@ namespace PlayerBaseApi.Entities
         public int Level { get; set; }
         
         [ForeignKey("HeroSkillId")]
-        public HeroSkill HeroSkill { get; set; }
+        public HeroSkill HeroSkill { get; set; }        
+        
+        [ForeignKey("BuffId")]
+        public Buff Buff { get; set; }
     }
 }

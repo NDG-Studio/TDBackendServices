@@ -190,13 +190,23 @@ namespace PlayerBaseApi.Controllers
         }
         
         [LoginRequired]
-        [HttpPost("GetLootRuns")]
-        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetLootRuns([FromBody] BaseRequest req)
+        [HttpPost("GetActiveLootRuns")]
+        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.GetLootRuns(req, user);
+            return await _playerBaseService.GetActiveLootRuns(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("GetLootRunPrediction")]
+        public async Task<TDResponse<LootRunPredictionInfo>> GetLootRunPrediction([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootRunPrediction(req, user);
         }
                 
         [LoginRequired]
@@ -207,6 +217,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.SendLootRun(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("LootRunDoneRequest")]
+        public async Task<TDResponse<LootRunDoneInfoDTO>> LootRunDoneRequest([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.LootRunDoneRequest(req, user);
         }
 
     }

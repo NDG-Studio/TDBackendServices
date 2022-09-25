@@ -6,9 +6,12 @@ namespace PlayerBaseApi.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int ScrapCount { get; set; }
-        public int BlueprintCount { get; set; }
-        public int GemCount { get; set; }
+        public int MinScrapCount { get; set; }
+        public int MaxScrapCount { get; set; }
+        public int MinBlueprintCount { get; set; }
+        public int MaxBlueprintCount { get; set; }
+        public int MinGemCount { get; set; }
+        public int MaxGemCount { get; set; }
         public TimeSpan LootDuration { get; set; }
     }
 }

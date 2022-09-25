@@ -440,9 +440,12 @@ namespace PlayerBaseApi
                 lootLevels.Add(new LootLevel()
                 {
                     Id = i,
-                    BlueprintCount = i,
-                    GemCount = i,
-                    ScrapCount = i * 10,
+                    MinBlueprintCount = i,
+                    MaxBlueprintCount = i+((int)(i * 0.5)),
+                    MinGemCount = i,
+                    MaxGemCount = i + ((int)(i * 0.2)),
+                    MinScrapCount = i,
+                    MaxScrapCount = (i + ((int)(i * 0.5)))*10,
                     LootDuration = new TimeSpan(0, 1, 0) * i / 2
                 });
             }

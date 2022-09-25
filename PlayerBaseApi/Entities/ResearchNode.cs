@@ -18,5 +18,8 @@ namespace PlayerBaseApi.Entities
 
         [ForeignKey("ResearchTableId")]
         public ResearchTable ResearchTable { get; set; }
+
+        [ForeignKey("BuffId")]
+        public Buff Buff { get; set; }
     }
 }
