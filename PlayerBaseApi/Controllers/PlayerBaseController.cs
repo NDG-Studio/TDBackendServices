@@ -228,6 +228,36 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.LootRunDoneRequest(req, user);
         }
+                
+        [LoginRequired]
+        [HttpPost("GetHospitalInfo")]
+        public async Task<TDResponse<PlayerHospitalDTO>> GetHospitalInfo([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetHospitalInfo(req, user);
+        }
+                
+        [LoginRequired]
+        [HttpPost("HealingRequest")]
+        public async Task<TDResponse> HealingRequest([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.HealingRequest(req, user);
+        }
+                
+        [LoginRequired]
+        [HttpPost("HealingDoneRequest")]
+        public async Task<TDResponse<int>> HealingDoneRequest([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.HealingDoneRequest(req, user);
+        }
 
     }
 }

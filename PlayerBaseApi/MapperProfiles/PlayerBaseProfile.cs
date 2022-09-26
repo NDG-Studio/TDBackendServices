@@ -38,6 +38,13 @@ namespace PlayerBaseApi.MapperProfiles
                 .MapFrom(
                     source => source.PlayerHero.Hero));
 
+            CreateMap<PlayerHospital, PlayerHospitalDTO>()
+                .ForMember(dest => dest.HealingDoneDate, operations => operations
+                .MapFrom(
+                    source => source.HealingDoneDate != null ? source.HealingDoneDate.ToString() : null));
+
+            CreateMap<HospitalLevel, HospitalLevelDTO>();
+
 
         }
 

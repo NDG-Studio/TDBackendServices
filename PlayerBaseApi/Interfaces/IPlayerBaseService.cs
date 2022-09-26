@@ -14,6 +14,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingDoneRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<CollectBaseResponse>> CollectBaseResources(BaseRequest req, UserDto user);
+
         Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable(BaseRequest req, UserDto user);
         Task<TDResponse<ResearchNodeUpgradeNecessariesDTO>> GetResearchNodeUpgradeNecessariesByNodeId(BaseRequest<int> req, UserDto user);
         Task<TDResponse> UpgradeResearchNode(BaseRequest<int> req, UserDto user);
@@ -23,9 +24,14 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<int>> ExecutePrisoners(BaseRequest<int> req, UserDto user);
         Task<TDResponse> PrisonerTrainingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<int>> PrisonerTrainingDoneRequest(BaseRequest req, UserDto user);
+
         Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user);
         Task<TDResponse<LootRunPredictionInfo>> GetLootRunPrediction(BaseRequest<int> req, UserDto user);
         Task<TDResponse> SendLootRun(BaseRequest<int> req, UserDto user);
         Task<TDResponse<LootRunDoneInfoDTO>> LootRunDoneRequest(BaseRequest<int> req, UserDto user);
+
+        Task<TDResponse<PlayerHospitalDTO>> GetHospitalInfo(BaseRequest req, UserDto user);
+        Task<TDResponse> HealingRequest(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<int>> HealingDoneRequest(BaseRequest req, UserDto user);
     }
 }

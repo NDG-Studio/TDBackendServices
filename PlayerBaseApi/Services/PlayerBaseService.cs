@@ -97,6 +97,17 @@ namespace PlayerBaseApi.Services
                 }
                 switch (req.Data!.BuildingTypeId)
                 {
+                    case 4://Hospital
+                        var phospital = new PlayerHospital()
+                        {
+                            HospitalLevelId = 1,
+                            InjuredCount = 0,
+                            InHealingCount = 0,
+                            HealingDoneDate = null,
+                            UserId = user.Id
+                        };
+                        await _context.AddAsync(phospital);
+                        break;
                     case 5://prison
                         var pprison = new PlayerPrison()
                         {
@@ -297,6 +308,15 @@ namespace PlayerBaseApi.Services
                             return response;
                         }
                         break;
+                    case 4://hospital
+                        if (await _context.PlayerHospital.Where(l => l.InHealingCount != 0 && l.UserId == user.Id).AnyAsync())//iyileştirilen asker var mı kontrol ediliyor.
+                        {
+                            response.SetError(OperationMessages.HealingMustBeDone);
+                            info.AddInfo(OperationMessages.HealingMustBeDone);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -347,6 +367,11 @@ namespace PlayerBaseApi.Services
                     case 5://prison
                         var pprison = await _context.PlayerPrison.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                         pprison.PrisonLevelId++;
+                        await _context.SaveChangesAsync();
+                        break;
+                    case 4://hospital
+                        var phospital = await _context.PlayerHospital.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                        phospital.HospitalLevelId++;
                         await _context.SaveChangesAsync();
                         break;
 
@@ -940,6 +965,14 @@ namespace PlayerBaseApi.Services
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero)
                     .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId == req.Data && l.IsActive).FirstOrDefaultAsync();
 
+                if (playerHeroLoot==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
                 if ((playerHeroLoot.OperationEndDate - DateTimeOffset.Now).TotalMilliseconds > 0)
                 {
                     response.SetError(OperationMessages.ProcessAllreadyExist);
@@ -949,8 +982,136 @@ namespace PlayerBaseApi.Services
                 }
 
                 playerHeroLoot.IsActive = false;
-                response.Data = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(playerHeroLoot.GainedResources);
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(playerHeroLoot.GainedResources);
+                playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
+                playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
+                playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
 
+                await _context.SaveChangesAsync();
+
+                response.Data = gainedResource;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        #endregion
+
+
+        #region HOSPITAL UTILS
+
+        public async Task<TDResponse<PlayerHospitalDTO>> GetHospitalInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerHospitalDTO> response = new TDResponse<PlayerHospitalDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetHospitalInfo");
+            try
+            {
+                var query = _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id);
+                var phospital = await _mapper.ProjectTo<PlayerHospitalDTO>(query).FirstOrDefaultAsync();
+                if (phospital == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                response.Data = phospital;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse> HealingRequest(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "HealingRequest");
+            try
+            {
+                var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.InjuredCount < req.Data)
+                {
+                    req.Data = query.InjuredCount;
+                }
+                if (query.InHealingCount != 0)
+                {
+                    response.SetError(OperationMessages.HealingMustBeDone);
+                    info.AddInfo(OperationMessages.HealingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerBaseInfo.Scraps < (int)(req.Data * query.HospitalLevel.HealingCostPerUnit))
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.InjuredCount -= req.Data;
+                query.InHealingCount += req.Data;
+                query.HealingDoneDate = DateTimeOffset.Now + (query.HospitalLevel.HealingDurationPerUnit * req.Data);
+                playerBaseInfo.Scraps -= (int)(req.Data * query.HospitalLevel.HealingCostPerUnit);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<int>> HealingDoneRequest(BaseRequest req, UserDto user)
+        {
+            TDResponse<int> response = new TDResponse<int>();
+            var info = InfoDetail.CreateInfo(req, "HealingDoneRequest");
+            try
+            {
+                var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.InHealingCount == 0)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if ((query.HealingDoneDate - DateTimeOffset.Now).Value.TotalMilliseconds > 0)
+                {
+                    response.SetError(OperationMessages.HealingMustBeDone);
+                    info.AddInfo(OperationMessages.HealingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                playerTroop.TroopCount += query.InHealingCount;
+                response.Data = query.InHealingCount;
+                query.InHealingCount = 0;
+                query.HealingDoneDate = null;
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

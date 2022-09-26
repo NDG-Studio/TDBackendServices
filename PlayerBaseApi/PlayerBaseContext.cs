@@ -25,6 +25,9 @@ namespace PlayerBaseApi
         public DbSet<ResearchNodeUpgradeNecessaries> ResearchNodeUpgradeNecessaries { get; set; }
         public DbSet<PlayerTroop> PlayerTroop { get; set; }
         public DbSet<PlayerPrison> PlayerPrison { get; set; }
+        public DbSet<PrisonLevel> PrisonLevel { get; set; }
+        public DbSet<PlayerHospital> PlayerHospital { get; set; }
+        public DbSet<HospitalLevel> HospitalLevel { get; set; }
 
         public DbSet<Hero> Hero { get; set; }
         public DbSet<PlayerHero> PlayerHero { get; set; }
@@ -183,6 +186,25 @@ namespace PlayerBaseApi
             }
             modelBuilder.Entity<PrisonLevel>().HasData(
                 prisonLevels);
+
+            #endregion
+
+            #region HospitalEntities
+
+            List<HospitalLevel> hospitalLevels = new List<HospitalLevel>();
+            for (int i = 1; i < 101; i++)
+            {
+                hospitalLevels.Add(new HospitalLevel()
+                {
+                    Id = i,
+                    Level = i,
+                    HospitalCapacity = i * 10,
+                    HealingCostPerUnit = 100 / i,
+                    HealingDurationPerUnit = new TimeSpan(6000000000 / i)
+                });
+            }
+            modelBuilder.Entity<HospitalLevel>().HasData(
+                hospitalLevels);
 
             #endregion
 

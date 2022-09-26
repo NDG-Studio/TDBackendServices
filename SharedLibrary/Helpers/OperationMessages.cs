@@ -27,5 +27,6 @@ namespace SharedLibrary.Helpers
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";
         public const string PlayerDoesNotHaveResource = "Kullanıcı gerekli kaynaklara sahip değil!";
         public const string TrainingMustBeDone = "Eğitimin bitmesini bekleyin!";
+        public const string HealingMustBeDone = "İyileştirme bitmesini bekleyin!";
     }
 }
