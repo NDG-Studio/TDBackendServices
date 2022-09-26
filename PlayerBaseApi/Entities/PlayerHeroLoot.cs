@@ -9,6 +9,7 @@ namespace PlayerBaseApi.Entities
         public int Id { get; set; }
         public int PlayerHeroId { get; set; }
         public int LootLevelId { get; set; }
+        public DateTimeOffset OperationStartDate { get; set; }
         public DateTimeOffset OperationEndDate { get; set; }
         public string GainedResources { get; set; }
         public bool IsActive { get; set; }
@@ -18,6 +19,6 @@ namespace PlayerBaseApi.Entities
 
         [ForeignKey("LootLevelId")]
         public LootLevel LootLevel { get; set; }
-        
+
     }
 }

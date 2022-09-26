@@ -34,6 +34,9 @@ namespace PlayerBaseApi.MapperProfiles
                 .ForMember(dest => dest.OperationEndDate, operations => operations
                 .MapFrom(
                     source => source.OperationEndDate != null ? source.OperationEndDate.ToString() : null))
+                .ForMember(dest => dest.OperationStartDate, operations => operations
+                .MapFrom(
+                    source => source.OperationStartDate != null ? source.OperationStartDate.ToString() : null))
                 .ForMember(dest => dest.Hero, operations => operations
                 .MapFrom(
                     source => source.PlayerHero.Hero));

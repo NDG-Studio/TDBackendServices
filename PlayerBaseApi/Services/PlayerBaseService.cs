@@ -321,7 +321,10 @@ namespace PlayerBaseApi.Services
                         break;
                 }
                 var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
+
+
                 query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0));
+
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
@@ -935,6 +938,7 @@ namespace PlayerBaseApi.Services
                     LootLevelId = lootLevelId,
                     PlayerHeroId = await _context.PlayerHero.Where(l => l.HeroId == req.Data && l.UserId == user.Id).Select(l => l.Id).FirstOrDefaultAsync(),
                     OperationEndDate = DateTimeOffset.Now + (lootLevel.LootDuration + lootLevel.LootDuration * totalDurationMultiplier),
+                    OperationStartDate = DateTimeOffset.Now,
                     GainedResources = JsonConvert.SerializeObject(calculated),
                     IsActive = true,
                     LootLevel = lootLevel
@@ -1128,5 +1132,20 @@ namespace PlayerBaseApi.Services
         }
 
         #endregion
+
+
+        //private async Task<Buff> GetPlayerTotalBuffs(long userId,int? heroId=null)
+        //{
+        //    List<Buff> playerBuffs = new List<Buff>();
+
+        //    if (heroId!=null)
+        //    {
+        //        var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l=>l.HeroSkillLevel).The.Where(l => l.UserId == userId && l.HeroSkillLevel.HeroSkill.HeroId == heroId).Select(l => l.HeroSkillLevel.Buff).ToListAsync();
+        //    }
+
+
+
+        //    return playerBuffs;
+        //}
     }
 }
