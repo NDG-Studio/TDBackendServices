@@ -809,30 +809,25 @@ namespace PlayerBaseApi.Services
                 #region Resource Calculation
 
                 var heroLevelBuff = await _context.HeroLevelThreshold.Include(l => l.Buff)
-                    .Where(l => l.HeroId == playerHero.HeroId).Select(l => l.Buff).FirstOrDefaultAsync();
+                    .Where(l => l.HeroId == playerHero.HeroId && l.Level == playerHero.CurrentLevel).Select(l => l.Buff).FirstOrDefaultAsync();
 
-                var heroSkillBuff = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff).Where(l => l.UserId == user.Id && l.HeroSkillLevel.HeroSkill
-                .HeroId == req.Data).FirstOrDefaultAsync();
+                var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff).Where(l => l.UserId == user.Id && l.HeroSkillLevel.HeroSkill
+                .HeroId == req.Data).ToListAsync();
 
-                var totalScrapMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootScrapMultiplier ?? 0) + heroLevelBuff.LootScrapMultiplier;
-                var totalBluePrintMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootBluePrintMultiplier ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
-                var totalGemMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootGemMultiplier ?? 0) + heroLevelBuff.LootGemMultiplier;
-                var totalDurationMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootDurationMultiplier ?? 0) + heroLevelBuff.LootDurationMultiplier;
-
-                totalScrapMultiplier = totalScrapMultiplier == 0 ? 1 : totalScrapMultiplier;
-                totalBluePrintMultiplier = totalBluePrintMultiplier == 0 ? 1 : totalBluePrintMultiplier;
-                totalGemMultiplier = totalGemMultiplier == 0 ? 1 : totalGemMultiplier;
-                totalDurationMultiplier = totalDurationMultiplier == 0 ? 1 : totalDurationMultiplier;
+                var totalScrapMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootScrapMultiplier) ?? 0) + heroLevelBuff.LootScrapMultiplier;
+                var totalBluePrintMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootBluePrintMultiplier) ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
+                var totalGemMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootGemMultiplier) ?? 0) + heroLevelBuff.LootGemMultiplier;
+                var totalDurationMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootDurationMultiplier) ?? 0) + heroLevelBuff.LootDurationMultiplier;
 
                 var calculated = new LootRunPredictionInfo()
                 {
-                    MinScrapCount = (int)(lootLevel.MinScrapCount * totalScrapMultiplier),
-                    MaxScrapCount = (int)(lootLevel.MaxScrapCount * totalScrapMultiplier),
-                    MinGemCount = (int)(lootLevel.MinGemCount * totalGemMultiplier), 
-                    MaxGemCount=(int)(lootLevel.MaxGemCount * totalGemMultiplier),
-                    MinBluePrintCount = (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), 
-                    MaxBluePrintCount=(int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier),
-                    LootDuration= lootLevel.LootDuration * totalDurationMultiplier
+                    MinScrapCount = lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier),
+                    MaxScrapCount = lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier),
+                    MinGemCount = lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier),
+                    MaxGemCount = lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier),
+                    MinBluePrintCount = lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier),
+                    MaxBluePrintCount = lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier),
+                    LootDuration = lootLevel.LootDuration + (lootLevel.LootDuration * totalDurationMultiplier)
 
                 };
 
@@ -891,26 +886,21 @@ namespace PlayerBaseApi.Services
                 #region Resource Calculation
 
                 var heroLevelBuff = await _context.HeroLevelThreshold.Include(l => l.Buff)
-                    .Where(l => l.HeroId == playerHero.HeroId).Select(l => l.Buff).FirstOrDefaultAsync();
+                    .Where(l => l.HeroId == playerHero.HeroId && l.Level == playerHero.CurrentLevel).Select(l => l.Buff).FirstOrDefaultAsync();
 
-                var heroSkillBuff = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff).Where(l => l.UserId == user.Id && l.HeroSkillLevel.HeroSkill
-                .HeroId == req.Data).FirstOrDefaultAsync();
+                var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff).Where(l => l.UserId == user.Id && l.HeroSkillLevel.HeroSkill
+                .HeroId == req.Data).ToListAsync();
 
-                var totalScrapMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootScrapMultiplier ?? 0) + heroLevelBuff.LootScrapMultiplier;
-                var totalBluePrintMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootBluePrintMultiplier ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
-                var totalGemMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootGemMultiplier ?? 0) + heroLevelBuff.LootGemMultiplier;
-                var totalDurationMultiplier = (heroSkillBuff?.HeroSkillLevel.Buff.LootDurationMultiplier ?? 0) + heroLevelBuff.LootDurationMultiplier;
-
-                totalScrapMultiplier = totalScrapMultiplier == 0 ? 1 : totalScrapMultiplier;
-                totalBluePrintMultiplier = totalBluePrintMultiplier == 0 ? 1 : totalBluePrintMultiplier;
-                totalGemMultiplier = totalGemMultiplier == 0 ? 1 : totalGemMultiplier;
-                totalDurationMultiplier = totalDurationMultiplier == 0 ? 1 : totalDurationMultiplier;
+                var totalScrapMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootScrapMultiplier) ?? 0) + heroLevelBuff.LootScrapMultiplier;
+                var totalBluePrintMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootBluePrintMultiplier) ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
+                var totalGemMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootGemMultiplier) ?? 0) + heroLevelBuff.LootGemMultiplier;
+                var totalDurationMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootDurationMultiplier) ?? 0) + heroLevelBuff.LootDurationMultiplier;
 
                 var calculated = new LootRunDoneInfoDTO()
                 {
-                    ScrapCount = LootRandomer.GetRandomResource((int)(lootLevel.MinScrapCount * totalScrapMultiplier), (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
-                    GemCount = LootRandomer.GetRandomResource((int)(lootLevel.MinGemCount * totalGemMultiplier), (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
-                    BluePrintCount = LootRandomer.GetRandomResource((int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier)),
+                    ScrapCount = LootRandomer.GetRandomResource(lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier), lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
+                    GemCount = LootRandomer.GetRandomResource(lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
+                    BluePrintCount = LootRandomer.GetRandomResource(lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier)),
                 };
 
                 #endregion
@@ -919,7 +909,7 @@ namespace PlayerBaseApi.Services
                 {
                     LootLevelId = lootLevelId,
                     PlayerHeroId = await _context.PlayerHero.Where(l => l.HeroId == req.Data && l.UserId == user.Id).Select(l => l.Id).FirstOrDefaultAsync(),
-                    OperationEndDate = DateTimeOffset.Now + lootLevel.LootDuration,
+                    OperationEndDate = DateTimeOffset.Now + (lootLevel.LootDuration + lootLevel.LootDuration * totalDurationMultiplier),
                     GainedResources = JsonConvert.SerializeObject(calculated),
                     IsActive = true,
                     LootLevel = lootLevel

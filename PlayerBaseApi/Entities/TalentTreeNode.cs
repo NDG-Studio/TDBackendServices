@@ -21,6 +21,9 @@ namespace PlayerBaseApi.Entities
         public Hero Hero { get; set; }
 
         [ForeignKey("TalentTreeId")]
-        public TalentTree TalentTree { get; set; }
+        public TalentTree TalentTree { get; set; }        
+        
+        [ForeignKey("BuffId")]
+        public Buff Buff { get; set; }
     }
 }
