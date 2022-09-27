@@ -12,6 +12,14 @@ namespace PlayerBaseApi.Entities
 
 
         /// <summary>
+        /// Bina yükseltme işleminin  UpgradeDuration katsayısı
+        /// <br/>
+        /// <br/>
+        /// Not: Default değer BuildingUpgradeTime tablosunda belirlenmektedir
+        /// </summary>
+        public double BuildingUpgradeDurationMultiplier { get; set; } = 0;
+
+        /// <summary>
         /// Heronun lootta getirdiği Gemlerin katsayısı 
         /// <br/>
         /// <br/>

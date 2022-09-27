@@ -320,11 +320,12 @@ namespace PlayerBaseApi.Services
                     default:
                         break;
                 }
+
                 var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
-
-
-                query.UpdateEndDate = DateTimeOffset.Now.Add(buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0));
-
+                var duration = buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0);
+                var buff = await GetPlayersTotalBuff(user.Id);
+                duration += duration * buff.BuildingUpgradeDurationMultiplier;
+                query.UpdateEndDate = DateTimeOffset.Now.Add(duration);
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
                 response.SetSuccess();
@@ -981,7 +982,7 @@ namespace PlayerBaseApi.Services
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero)
                     .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId == req.Data && l.IsActive).FirstOrDefaultAsync();
 
-                if (playerHeroLoot==null)
+                if (playerHeroLoot == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
                     info.AddInfo(OperationMessages.DbItemNotFound);
@@ -1146,18 +1147,86 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
-        //private async Task<Buff> GetPlayerTotalBuffs(long userId,int? heroId=null)
-        //{
-        //    List<Buff> playerBuffs = new List<Buff>();
-
-        //    if (heroId!=null)
-        //    {
-        //        var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l=>l.HeroSkillLevel).The.Where(l => l.UserId == userId && l.HeroSkillLevel.HeroSkill.HeroId == heroId).Select(l => l.HeroSkillLevel.Buff).ToListAsync();
-        //    }
 
 
 
-        //    return playerBuffs;
-        //}
+
+
+
+
+
+
+
+
+        #region PRIVATE FUNCTIONS
+
+
+        /// <summary>
+        /// HeroId gönderilmezse veya null gönderilirse hero buffları eklenmez
+        /// </summary>
+        /// <param name="userId">bufflarına ulaşılmak istenen userın id değeri</param>
+        /// <param name="heroId">heroya bağlı bufflara ulaşabilmek için gerekli olan heroId</param>
+        /// <returns>Tüm buffların değerlerinin toplamı olan tek bir buff objesi döner</returns>
+        private async Task<Buff> GetPlayersTotalBuff(long userId, int? heroId = null)
+        {
+            List<Buff> playerBuffs = new List<Buff>();
+
+            if (heroId != null)
+            {
+                var heroSkillBuffs = await _context.PlayerHeroSkillLevel
+                    .Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff)
+                    .Where(l => l.UserId == userId && l.HeroSkillLevel.HeroSkill.HeroId == heroId)
+                    .Select(l => l.HeroSkillLevel.Buff).ToListAsync();
+
+                var heroTalentBuffs = await _context.PlayerTalentTreeNode
+                    .Include(l => l.TalentTreeNode).ThenInclude(l => l.Buff)
+                    .Where(l => l.UserId == userId)
+                    .Select(l => l.TalentTreeNode.Buff).ToListAsync();
+
+                var playerHeroLevel = await _context.PlayerHero
+                    .Where(l => l.UserId == userId && l.HeroId == heroId)
+                    .Select(l => l.CurrentLevel).FirstOrDefaultAsync();
+                var heroLevelBuffs = await _context.HeroLevelThreshold
+                    .Include(l => l.Buff)
+                    .Where(h => h.HeroId == heroId && h.Level == playerHeroLevel)
+                    .Select(l => l.Buff).ToListAsync();
+
+                playerBuffs.AddRange(heroSkillBuffs);
+                playerBuffs.AddRange(heroTalentBuffs);
+                playerBuffs.AddRange(heroLevelBuffs);
+            }
+
+            var researchBuffs = await _context.PlayerResearchNode
+                .Include(l => l.ResearchNode).ThenInclude(l => l.Buff)
+                .Where(l => l.UserId == userId)
+                .Select(l => l.ResearchNode.Buff).ToListAsync();
+
+            playerBuffs.AddRange(researchBuffs);
+
+
+
+            return new Buff()
+            {
+                Id = playerBuffs.Count,
+                Name = "user total buff",
+                Description = "",
+                LootBluePrintMultiplier = playerBuffs.Sum(l => l.LootBluePrintMultiplier),
+                LootCapacity = playerBuffs.Sum(l => l.LootCapacity),
+                LootDurationMultiplier = playerBuffs.Sum(l => l.LootDurationMultiplier),
+                LootGemMultiplier = playerBuffs.Sum(l => l.LootGemMultiplier),
+                LootPerfectRunMultiplier = playerBuffs.Sum(l => l.LootPerfectRunMultiplier),
+                LootScrapMultiplier = playerBuffs.Sum(l => l.LootScrapMultiplier),
+                PrisonCapacityMultiplier = playerBuffs.Sum(l => l.PrisonCapacityMultiplier),
+                PrisonCostMultiplier = playerBuffs.Sum(l => l.PrisonCostMultiplier),
+                PrisonExecutionEarnMultiplier = playerBuffs.Sum(l => l.PrisonExecutionEarnMultiplier),
+                PrisonTrainingCostMultiplier = playerBuffs.Sum(l => l.PrisonTrainingCostMultiplier),
+                PrisonTrainingDurationMultiplier = playerBuffs.Sum(l => l.PrisonTrainingDurationMultiplier),
+                BuildingUpgradeDurationMultiplier= playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier)
+            };
+        }
+
+        #endregion
+
+
     }
 }
