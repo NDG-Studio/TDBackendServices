@@ -702,8 +702,20 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "PrisonerTrainingRequest");
             try
             {
+                if (await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == 5 && l.UpdateEndDate != null).AnyAsync())//prison
+                {
+                    response.SetError(OperationMessages.UpgradingMustBeDone);
+                    info.AddInfo(OperationMessages.UpgradingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.PrisonerCount < req.Data)
+                {
+                    req.Data = query.PrisonerCount;
+                }
+
                 if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
