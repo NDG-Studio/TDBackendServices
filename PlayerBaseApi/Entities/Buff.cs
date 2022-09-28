@@ -103,5 +103,10 @@ namespace PlayerBaseApi.Entities
         /// Not: Default sayı Prison binasının leveline bağlı olarak değişiyor
         /// </summary>
         public double PrisonExecutionEarnMultiplier { get; set; } = 0;
+
+        /// <summary>
+        /// Base üretimi için katsayı
+        /// </summary>
+        public double BaseResourceMultiplier { get; set; } = 0;
     }
 }

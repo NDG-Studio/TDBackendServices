@@ -424,6 +424,7 @@ namespace PlayerBaseApi.Services
                     ResourceProductionPerHour = playerBaseInfo.ResourceProductionPerHour,
                     BaseFullDuration = playerBaseInfo.BaseFullDuration
                 };
+                response.Data.CollectedResource += (int)(response.Data.CollectedResource * (await GetPlayersTotalBuff(user.Id)).BaseResourceMultiplier);
                 playerBaseInfo.Fuel += response.Data.CollectedResource;
                 playerBaseInfo.Scraps += response.Data.CollectedResource;
                 playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
