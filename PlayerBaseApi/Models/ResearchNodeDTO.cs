@@ -11,5 +11,6 @@
         public string ThumbnailUrl { get; set; }
         public int CurrentLevel { get; set; }
         public string UpdateEndDate { get; set; }
+        public BuffDTO Buff { get; set; }
     }
 }

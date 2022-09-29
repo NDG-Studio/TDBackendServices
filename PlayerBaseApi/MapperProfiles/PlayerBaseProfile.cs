@@ -22,6 +22,16 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<ResearchTable, ResearchTableDTO>();
             CreateMap<ResearchNode, ResearchNodeDTO>();
             CreateMap<ResearchNodeUpgradeNecessaries, ResearchNodeUpgradeNecessariesDTO>();
+            CreateMap<ResearchNodeUpgradeCondition, ResearchNodeUpgradeConditionDTO>()
+                .ForMember(dest => dest.ResearchNodeName, operations => operations
+                .MapFrom(
+                    source => source.ResearchNode != null ? source.ResearchNode.Name : null))
+                .ForMember(dest => dest.BuildingTypeName, operations => operations
+                .MapFrom(
+                    source => source.BuildingType != null ? source.BuildingType.Name : null))
+                .ForMember(dest => dest.ImageUrl, operations => operations
+                .MapFrom(
+                    source => source.BuildingType != null ? source.BuildingType.BuildUrl : (source.ResearchNode != null ? source.ResearchNode.ThumbnailUrl : null)));
 
             CreateMap<PlayerPrison, PlayerPrisonDTO>()
                 .ForMember(dest => dest.TrainingDoneDate, operations => operations

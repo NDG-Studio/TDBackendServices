@@ -446,6 +446,7 @@ namespace PlayerBaseApi.Services
 
 
         #region RESEARCH UTILS
+
         public async Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable(BaseRequest req, UserDto user)
         {
             TDResponse<List<ResearchTableDTO>> response = new TDResponse<List<ResearchTableDTO>>();
@@ -456,11 +457,13 @@ namespace PlayerBaseApi.Services
                 var qlist = await _mapper.ProjectTo<ResearchTableDTO>(talentTrees).ToListAsync();
                 for (int i = 0; i < qlist.Count; i++)
                 {
-                    var qq = _context.ResearchNode.Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
+                    var qq = _context.ResearchNode.Include(l=>l.Buff).Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
                     var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.ResearchNode.ResearchTableId == qlist[i].Id).ToListAsync();
                     qlist[i].Nodes = await _mapper.ProjectTo<ResearchNodeDTO>(qq).ToListAsync();
-                    qlist[i].Nodes.ForEach(l => l.CurrentLevel = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.CurrentLevel).FirstOrDefault());
-                    qlist[i].Nodes.ForEach(l => l.UpdateEndDate = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.UpdateEndDate.ToString()).FirstOrDefault());
+                    qlist[i].Nodes.ForEach(l => {
+                        l.CurrentLevel = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.CurrentLevel).FirstOrDefault();
+                        l.UpdateEndDate = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.UpdateEndDate.ToString()).FirstOrDefault();
+                        });
                 }
                 response.Data = qlist;
                 response.SetSuccess();
@@ -505,6 +508,12 @@ namespace PlayerBaseApi.Services
                 }
                 var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == nextLevel && l.ResearchNodeId == req.Data);
                 response.Data = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
+                var ruc = _context.ResearchNodeUpgradeCondition
+                    .Include(l=>l.BuildingType)
+                    .Include(l=>l.ResearchNodeUpgradeNecessaries)
+                    .ThenInclude(l=>l.ResearchNode)
+                    .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data);
+                response.Data.ResearchNodeUpgradeConditionList = await _mapper.ProjectTo<ResearchNodeUpgradeConditionDTO>(ruc).ToListAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -541,6 +550,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                //TODO:Condition kontrolleri yapılacak
                 var currentLevel = 0;
                 if (currentNode == null)
                 {

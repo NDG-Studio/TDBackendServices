@@ -23,6 +23,7 @@ namespace PlayerBaseApi
         public DbSet<ResearchNode> ResearchNode { get; set; }
         public DbSet<PlayerResearchNode> PlayerResearchNode { get; set; }
         public DbSet<ResearchNodeUpgradeNecessaries> ResearchNodeUpgradeNecessaries { get; set; }
+        public DbSet<ResearchNodeUpgradeCondition> ResearchNodeUpgradeCondition { get; set; }
         public DbSet<PlayerTroop> PlayerTroop { get; set; }
         public DbSet<PlayerPrison> PlayerPrison { get; set; }
         public DbSet<PrisonLevel> PrisonLevel { get; set; }
