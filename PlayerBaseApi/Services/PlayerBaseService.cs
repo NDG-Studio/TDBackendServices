@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Entities;
 using PlayerBaseApi.Interfaces;
@@ -508,12 +509,41 @@ namespace PlayerBaseApi.Services
                 }
                 var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == nextLevel && l.ResearchNodeId == req.Data);
                 response.Data = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
-                var ruc = _context.ResearchNodeUpgradeCondition
+                var conditions = await _context.ResearchNodeUpgradeCondition
                     .Include(l=>l.BuildingType)
                     .Include(l=>l.ResearchNodeUpgradeNecessaries)
                     .ThenInclude(l=>l.ResearchNode)
-                    .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data);
-                response.Data.ResearchNodeUpgradeConditionList = await _mapper.ProjectTo<ResearchNodeUpgradeConditionDTO>(ruc).ToListAsync();
+                    .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data)
+                    .OrderBy(l=>l.BuildingTypeId)
+                    .ToListAsync();
+                
+                response.Data.ResearchNodeUpgradeConditionList = new List<ResearchNodeUpgradeConditionDTO>();
+                foreach (var item in conditions)
+                {
+                    if (item.BuildingTypeId!=null)
+                    {
+                        var cond = await _context.PlayerBasePlacement
+                            .Where(l => l.UserId == user.Id && l.BuildingTypeId == item.BuildingTypeId && l.BuildingLevel>=item.PrereqLevel)
+                            .AnyAsync();
+                        if (!cond)
+                        {
+                            response.Data.ResearchNodeUpgradeConditionList.Add(_mapper.Map<ResearchNodeUpgradeConditionDTO>(item));
+                        }
+                        continue;
+                    }
+
+                    if (item.ResearchNodeId != null)
+                    {
+                        var cond = await _context.PlayerResearchNode
+                            .Where(l => l.UserId == user.Id && l.ResearchNodeId == item.ResearchNodeId && l.CurrentLevel >= item.PrereqLevel)
+                            .AnyAsync();
+                        if (!cond)
+                        {
+                            response.Data.ResearchNodeUpgradeConditionList.Add(_mapper.Map<ResearchNodeUpgradeConditionDTO>(item));
+                        }
+                        continue;
+                    }
+                }
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
