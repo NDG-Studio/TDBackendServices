@@ -120,53 +120,6 @@ namespace PlayerBaseApi
                 );
 
             var c = 1;
-            var researchNodeList = new List<ResearchNode>();
-            for (int i = 1; i < 5; i++)
-            {
-                for (int l = 1; l < 6; l++)
-                {
-                    researchNodeList.Add(new ResearchNode()
-                    {
-                        Id = c,
-                        BuffId = 1,
-                        Name = "Node_" + l.ToString(),
-                        Description = "research description",
-                        Capacity = 5,
-                        PlaceId = l,
-                        ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-4.png",
-                        ResearchTableId = i,
-                        IsActive = true
-                    });
-                    c++;
-                }
-            }
-
-            modelBuilder.Entity<ResearchNode>().HasData(
-                researchNodeList
-                );
-
-            var researchNodeUpgradeNecessaries = new List<ResearchNodeUpgradeNecessaries>();
-            c = 1;
-            for (int i = 1; i < 21; i++)
-            {
-                for (int l = 1; l < 6; l++)
-                {
-                    researchNodeUpgradeNecessaries.Add(new ResearchNodeUpgradeNecessaries()
-                    {
-                        Id = c,
-                        BluePrintCount = l * 10,
-                        Duration = new TimeSpan(0, 0, l * 2, 0),
-                        ResearchNodeId = i,
-                        ScrapCount = l * 100,
-                        UpgradeLevel = l
-                    });
-                    c++;
-                }
-            }
-
-            modelBuilder.Entity<ResearchNodeUpgradeNecessaries>().HasData(
-                researchNodeUpgradeNecessaries
-            );
 
             #endregion
 
