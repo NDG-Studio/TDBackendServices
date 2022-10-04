@@ -15,6 +15,7 @@ namespace PlayerBaseApi.MapperProfiles
                     source => source.UpdateEndDate != null ? source.UpdateEndDate.ToString() : null));
 
             CreateMap<BuildingType, BuildingTypeDTO>();
+            CreateMap<BuildingUpgradeTime, BuildingUpgradeTimeDTO>();
             CreateMap<PlayerBaseInfo, PlayerBaseInfoDTO>().ForMember(dest => dest.LastBaseCollect, operations => operations
                 .MapFrom(
                     source => source.LastBaseCollect != null ? source.LastBaseCollect.ToString() : null));

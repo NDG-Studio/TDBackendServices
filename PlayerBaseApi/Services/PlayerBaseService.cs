@@ -275,6 +275,79 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse<BuildingUpgradeTimeDTO>> UpgradeBuildingInfo(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<BuildingUpgradeTimeDTO> response = new TDResponse<BuildingUpgradeTimeDTO>();
+            var info = InfoDetail.CreateInfo(req, "UpgradeBuildingInfo");
+            try
+            {
+
+                var query = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == req.Data).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (query.UpdateEndDate != null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                switch (req.Data)
+                {
+                    case 5://prison
+                        if (await _context.PlayerPrison.Where(l => l.InTrainingPrisonerCount != 0 && l.UserId == user.Id).AnyAsync())//eğitimde esir var mı kontrol ediliyor.
+                        {
+                            response.SetError(OperationMessages.TrainingMustBeDone);
+                            info.AddInfo(OperationMessages.TrainingMustBeDone);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        break;
+                    case 4://hospital
+                        if (await _context.PlayerHospital.Where(l => l.InHealingCount != 0 && l.UserId == user.Id).AnyAsync())//iyileştirilen asker var mı kontrol ediliyor.
+                        {
+                            response.SetError(OperationMessages.HealingMustBeDone);
+                            info.AddInfo(OperationMessages.HealingMustBeDone);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                var buildingUpgradeTimeQuery = _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1);
+
+                var buildingUpgradeTime = await _mapper.ProjectTo<BuildingUpgradeTimeDTO>(buildingUpgradeTimeQuery).FirstOrDefaultAsync();
+
+
+                var duration = buildingUpgradeTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0);
+                var cost = buildingUpgradeTime?.ScrapCount ?? 99999999;
+                var buff = await GetPlayersTotalBuff(user.Id);
+                duration += duration * buff.BuildingUpgradeDurationMultiplier;
+                cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
+                buildingUpgradeTime!.UpgradeDuration = duration;
+                buildingUpgradeTime!.ScrapCount = cost;
+
+                response.Data = buildingUpgradeTime;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
         public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingRequest(BaseRequest<int> req, UserDto user)
         {
@@ -324,8 +397,19 @@ namespace PlayerBaseApi.Services
 
                 var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
                 var duration = buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0);
+                var cost = buildingUpdateTime?.ScrapCount ?? 99999999;
                 var buff = await GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
+                cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
+                var playerBaseInfo= await _context.PlayerBaseInfo.Where(l=>l.UserId==user.Id).FirstOrDefaultAsync();
+                if (playerBaseInfo.Scraps<cost)
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                playerBaseInfo.Scraps -= cost;
                 query.UpdateEndDate = DateTimeOffset.Now.Add(duration);
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
@@ -458,13 +542,14 @@ namespace PlayerBaseApi.Services
                 var qlist = await _mapper.ProjectTo<ResearchTableDTO>(talentTrees).ToListAsync();
                 for (int i = 0; i < qlist.Count; i++)
                 {
-                    var qq = _context.ResearchNode.Include(l=>l.Buff).Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
+                    var qq = _context.ResearchNode.Include(l => l.Buff).Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
                     var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.ResearchNode.ResearchTableId == qlist[i].Id).ToListAsync();
                     qlist[i].Nodes = await _mapper.ProjectTo<ResearchNodeDTO>(qq).ToListAsync();
-                    qlist[i].Nodes.ForEach(l => {
+                    qlist[i].Nodes.ForEach(l =>
+                    {
                         l.CurrentLevel = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.CurrentLevel).FirstOrDefault();
                         l.UpdateEndDate = playerResearchNodes.Where(k => k.ResearchNodeId == l.Id).Select(o => o.UpdateEndDate.ToString()).FirstOrDefault();
-                        });
+                    });
                 }
                 response.Data = qlist;
                 response.SetSuccess();
@@ -510,20 +595,20 @@ namespace PlayerBaseApi.Services
                 var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == nextLevel && l.ResearchNodeId == req.Data);
                 response.Data = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
                 var conditions = await _context.ResearchNodeUpgradeCondition
-                    .Include(l=>l.BuildingType)
-                    .Include(l=>l.ResearchNodeUpgradeNecessaries)
-                    .ThenInclude(l=>l.ResearchNode)
+                    .Include(l => l.BuildingType)
+                    .Include(l => l.ResearchNodeUpgradeNecessaries)
+                    .ThenInclude(l => l.ResearchNode)
                     .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data)
-                    .OrderBy(l=>l.BuildingTypeId)
+                    .OrderBy(l => l.BuildingTypeId)
                     .ToListAsync();
-                
+
                 response.Data.ResearchNodeUpgradeConditionList = new List<ResearchNodeUpgradeConditionDTO>();
                 foreach (var item in conditions)
                 {
-                    if (item.BuildingTypeId!=null)
+                    if (item.BuildingTypeId != null)
                     {
                         var cond = await _context.PlayerBasePlacement
-                            .Where(l => l.UserId == user.Id && l.BuildingTypeId == item.BuildingTypeId && l.BuildingLevel>=item.PrereqLevel)
+                            .Where(l => l.UserId == user.Id && l.BuildingTypeId == item.BuildingTypeId && l.BuildingLevel >= item.PrereqLevel)
                             .AnyAsync();
                         if (!cond)
                         {
@@ -1262,7 +1347,7 @@ namespace PlayerBaseApi.Services
                 PrisonExecutionEarnMultiplier = playerBuffs.Sum(l => l.PrisonExecutionEarnMultiplier),
                 PrisonTrainingCostMultiplier = playerBuffs.Sum(l => l.PrisonTrainingCostMultiplier),
                 PrisonTrainingDurationMultiplier = playerBuffs.Sum(l => l.PrisonTrainingDurationMultiplier),
-                BuildingUpgradeDurationMultiplier= playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier)
+                BuildingUpgradeDurationMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier)
             };
         }
 

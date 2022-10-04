@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221003092538_buildingUpdateTime-scrap-added")]
+    partial class buildingUpdateTimescrapadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,6 @@ namespace PlayerBaseApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<double>("BaseResourceMultiplier")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("BuildingUpgradeCostMultiplier")
                         .HasColumnType("double precision");
 
                     b.Property<double>("BuildingUpgradeDurationMultiplier")
@@ -89,7 +88,6 @@ namespace PlayerBaseApi.Migrations
                         {
                             Id = 1,
                             BaseResourceMultiplier = 0.0,
-                            BuildingUpgradeCostMultiplier = 0.0,
                             BuildingUpgradeDurationMultiplier = 0.0,
                             Description = "",
                             LootBluePrintMultiplier = 0.0,

@@ -10,6 +10,7 @@ namespace PlayerBaseApi.Entities
         public int BuildingTypeId { get; set; }
         public int Level { get; set; }
         public TimeSpan UpgradeDuration { get; set; }
+        public int ScrapCount { get; set; }
 
         [ForeignKey("BuildingTypeId")]
         public BuildingType BuildingType { get; set; }

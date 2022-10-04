@@ -80,6 +80,16 @@ namespace PlayerBaseApi.Controllers
         }
 
         [LoginRequired]
+        [HttpPost("UpgradeBuildingInfo")]
+        public async Task<TDResponse<BuildingUpgradeTimeDTO>> UpgradeBuildingInfo([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpgradeBuildingInfo(req, user);
+        }
+
+        [LoginRequired]
         [HttpPost("UpgradeBuildingRequest")]
         public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingRequest([FromBody] BaseRequest<int> req)
         {
