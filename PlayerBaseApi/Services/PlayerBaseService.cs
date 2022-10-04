@@ -596,6 +596,7 @@ namespace PlayerBaseApi.Services
                 response.Data = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
                 var conditions = await _context.ResearchNodeUpgradeCondition
                     .Include(l => l.BuildingType)
+                    .Include(l => l.ResearchNode)
                     .Include(l => l.ResearchNodeUpgradeNecessaries)
                     .ThenInclude(l => l.ResearchNode)
                     .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data)

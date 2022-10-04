@@ -17,6 +17,14 @@
         public double BuildingUpgradeDurationMultiplier { get; set; } = 0;
 
         /// <summary>
+        /// Bina yükseltme işleminin  ScrapCount katsayısı
+        /// <br/>
+        /// <br/>
+        /// Not: Default değer BuildingUpgradeTime tablosunda belirlenmektedir
+        /// </summary>
+        public double BuildingUpgradeCostMultiplier { get; set; } = 0;
+
+        /// <summary>
         /// Heronun lootta getirdiği Gemlerin katsayısı 
         /// <br/>
         /// <br/>

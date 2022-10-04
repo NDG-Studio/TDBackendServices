@@ -11,7 +11,7 @@ namespace PlayerBaseApi
 
         public PlayerBaseContext()
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         public DbSet<Buff> Buff { get; set; }
