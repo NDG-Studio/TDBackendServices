@@ -401,8 +401,8 @@ namespace PlayerBaseApi.Services
                 var buff = await GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
-                var playerBaseInfo= await _context.PlayerBaseInfo.Where(l=>l.UserId==user.Id).FirstOrDefaultAsync();
-                if (playerBaseInfo.Scraps<cost)
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerBaseInfo.Scraps < cost)
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
@@ -532,6 +532,29 @@ namespace PlayerBaseApi.Services
 
         #region RESEARCH UTILS
 
+        public async Task<TDResponse<List<int>>> GetReadyResearchNodes(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<int>> response = new TDResponse<List<int>>();
+            var info = InfoDetail.CreateInfo(req, "GetReadyResearchNodes");
+            try
+            {
+                var now = DateTimeOffset.Now;
+                var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.UpdateEndDate < now && l.UserId == user.Id ).Select(l => l.ResearchNodeId).ToListAsync();
+                response.Data = playerResearchNodes;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         public async Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable(BaseRequest req, UserDto user)
         {
             TDResponse<List<ResearchTableDTO>> response = new TDResponse<List<ResearchTableDTO>>();
@@ -543,7 +566,7 @@ namespace PlayerBaseApi.Services
                 for (int i = 0; i < qlist.Count; i++)
                 {
                     var qq = _context.ResearchNode.Include(l => l.Buff).Where(l => l.IsActive && l.ResearchTableId == qlist[i].Id).OrderBy(l => l.PlaceId);
-                    var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.ResearchNode.ResearchTableId == qlist[i].Id).ToListAsync();
+                    var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.ResearchNode.ResearchTableId == qlist[i].Id && l.UserId == user.Id).ToListAsync();
                     qlist[i].Nodes = await _mapper.ProjectTo<ResearchNodeDTO>(qq).ToListAsync();
                     qlist[i].Nodes.ForEach(l =>
                     {

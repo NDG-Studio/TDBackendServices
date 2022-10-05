@@ -120,6 +120,16 @@ namespace PlayerBaseApi.Controllers
         }        
         
         [LoginRequired]
+        [HttpPost("GetReadyResearchNodes")]
+        public async Task<TDResponse<List<int>>> GetReadyResearchNodes([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetReadyResearchNodes(req, user);
+        }        
+
+        [LoginRequired]
         [HttpPost("GetResearchTable")]
         public async Task<TDResponse<List<ResearchTableDTO>>> GetResearchTable([FromBody] BaseRequest req)
         {
