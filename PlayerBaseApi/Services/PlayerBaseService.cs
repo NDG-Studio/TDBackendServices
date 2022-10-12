@@ -1450,7 +1450,33 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        #region DIALOG UTILS
+        public async Task<TDResponse<List<DialogDTO>>> GetDialogByCodeName(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse<List<DialogDTO>> response = new TDResponse<List<DialogDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetDialogByCodeName");
+            try
+            {
+                var query = _context.Dialog.Include(l => l.DialogScene)
+                    .Where(l => l.DialogScene.DialogSceneCode==req.Data).OrderBy(l => l.PlaceId);
 
+                response.Data = await _mapper.ProjectTo<DialogDTO>(query).ToListAsync();
+
+                 
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
 
 
 

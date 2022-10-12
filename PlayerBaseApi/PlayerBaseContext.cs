@@ -49,6 +49,9 @@ namespace PlayerBaseApi
         public DbSet<MarketItem> MarketItem { get; set; }
         public DbSet<PlayerMarketHistory> PlayerMarketHistory { get; set; }
 
+        public DbSet<DialogScene> DialogScene { get; set; }
+        public DbSet<Dialog> Dialog { get; set; }
+
 
 
 

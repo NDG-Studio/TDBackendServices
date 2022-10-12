@@ -70,6 +70,11 @@ namespace PlayerBaseApi.MapperProfiles
                     source => source.ItemType.IsConsumable));
             CreateMap<PlayerItem, PlayerItemDTO>();
 
+            CreateMap<Dialog, DialogDTO>()
+                .ForMember(dest => dest.Texts, operations => operations
+                .MapFrom(
+                    source => source.Text.Split("_,_",StringSplitOptions.None).ToList())); 
+
 
         }
 

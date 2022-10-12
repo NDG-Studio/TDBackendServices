@@ -1,0 +1,10 @@
+﻿namespace PlayerBaseApi.Models
+{
+    public class DialogDTO
+    {
+        public int HeroId { get; set; }
+        public string AnimId { get; set; }
+        public List<string> Texts { get; set; }
+
+    }
+}

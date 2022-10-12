@@ -319,5 +319,19 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.GetInventory(req, user);
         }
 
+
+        /// <summary>
+        /// Get dialog input: 'BaseRequest&lt;string&gt;' , output: 'TDResponse&lt;List&lt;DialogDTO&gt;&gt;'
+        /// </summary>
+        [LoginRequired]
+        [HttpPost("GetDialogByCodeName")]
+        public async Task<TDResponse<List<DialogDTO>>> GetDialogByCodeName([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetDialogByCodeName(req, user);
+        }
+
     }
 }
