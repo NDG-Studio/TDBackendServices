@@ -277,6 +277,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.HealingDoneRequest(req, user);
+        }                
+
+        [LoginRequired]
+        [HttpPost("GetMarket")]
+        public async Task<TDResponse<MarketDTO>> GetMarket([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetMarket(req, user);
         }
 
     }

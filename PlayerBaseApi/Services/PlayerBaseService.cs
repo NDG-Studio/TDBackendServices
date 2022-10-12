@@ -690,18 +690,17 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 //TODO:Condition kontrolleri yapılacak
-                var currentLevel = 0;
                 if (currentNode == null)
                 {
                     currentNode = new PlayerResearchNode()
                     {
-                        CurrentLevel = currentLevel,
+                        CurrentLevel = 0,
                         ResearchNodeId = req.Data,
                         UserId = user.Id,
                     };
                     await _context.AddAsync(currentNode);
                 }
-                var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == currentLevel + 1 && l.ResearchNodeId == req.Data);
+                var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == currentNode.CurrentLevel + 1 && l.ResearchNodeId == req.Data);
                 var necessaries = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
                 var playerResource = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (necessaries.ScrapCount <= playerResource.Scraps && necessaries.BluePrintCount <= playerResource.BluePrints)
@@ -1297,8 +1296,55 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        #region MARKET UTILS
 
+        public async Task<TDResponse<MarketDTO>> GetMarket(BaseRequest req, UserDto user)
+        {
+            TDResponse<MarketDTO> response = new TDResponse<MarketDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetMarket");
+            try
+            {
+                var query = await _context.MarketItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
+                    .Where(l => l.IsActive).OrderBy(l => l.Item.ItemTypeId).ToListAsync();
+                    
+                response.Data = new MarketDTO();
+                var qq= query.GroupBy(l => l.Item.ItemType.ItemCategoryId).OrderBy(l=>l.Key).ToList();
+                for (int i = 0; i < qq.Count(); i++)
+                {
+                    switch (qq[i].Key)
+                    {
+                        case 1:
+                            response.Data.Resources = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 2:
+                            response.Data.SpeedUps = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 3:
+                            response.Data.Buffs = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 4:
+                            response.Data.Others = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        #endregion
 
 
 

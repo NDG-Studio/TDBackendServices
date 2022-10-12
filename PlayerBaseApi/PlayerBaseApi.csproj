@@ -26,5 +26,5 @@
 	<ItemGroup>
 		<ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
 	</ItemGroup>
-
+	
 </Project>

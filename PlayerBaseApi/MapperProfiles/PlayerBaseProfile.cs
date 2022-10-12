@@ -60,6 +60,16 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<HospitalLevel, HospitalLevelDTO>();
 
 
+            CreateMap<MarketItem, MarketItemDTO>();
+            CreateMap<Item, ItemDTO>()
+                .ForMember(dest => dest.ItemTypeName, operations => operations
+                .MapFrom(
+                    source => source.ItemType.Name))
+                .ForMember(dest => dest.IsConsumable, operations => operations
+                .MapFrom(
+                    source => source.ItemType.IsConsumable));
+
+
         }
 
     }

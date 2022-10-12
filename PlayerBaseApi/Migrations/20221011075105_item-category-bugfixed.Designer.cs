@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221011075105_item-category-bugfixed")]
+    partial class itemcategorybugfixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -667,36 +669,6 @@ namespace PlayerBaseApi.Migrations
                     b.ToTable("LootLevel");
                 });
 
-            modelBuilder.Entity("PlayerBaseApi.Entities.MarketItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GemPrice")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MaxCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ScrapPrice")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("MarketItem");
-                });
-
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerBaseInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -933,45 +905,6 @@ namespace PlayerBaseApi.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("PlayerItem");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerMarketHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AfterGemCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AfterScrapCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("BeforeGemCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("BeforeScrapCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MarketItemId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("PurchaseDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MarketItemId");
-
-                    b.ToTable("PlayerMarketHistory");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerPrison", b =>
@@ -1533,17 +1466,6 @@ namespace PlayerBaseApi.Migrations
                     b.Navigation("ItemCategory");
                 });
 
-            modelBuilder.Entity("PlayerBaseApi.Entities.MarketItem", b =>
-                {
-                    b.HasOne("PlayerBaseApi.Entities.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-                });
-
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerBasePlacement", b =>
                 {
                     b.HasOne("PlayerBaseApi.Entities.BuildingType", "BuildingType")
@@ -1616,17 +1538,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerMarketHistory", b =>
-                {
-                    b.HasOne("PlayerBaseApi.Entities.MarketItem", "MarketItem")
-                        .WithMany()
-                        .HasForeignKey("MarketItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MarketItem");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerPrison", b =>

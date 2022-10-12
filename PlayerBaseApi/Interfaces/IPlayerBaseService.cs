@@ -35,5 +35,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerHospitalDTO>> GetHospitalInfo(BaseRequest req, UserDto user);
         Task<TDResponse> HealingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<int>> HealingDoneRequest(BaseRequest req, UserDto user);
+
+        Task<TDResponse<MarketDTO>> GetMarket(BaseRequest req, UserDto user);
     }
 }
