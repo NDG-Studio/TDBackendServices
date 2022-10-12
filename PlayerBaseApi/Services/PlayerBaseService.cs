@@ -1402,6 +1402,51 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse<InventoryDTO>> GetInventory(BaseRequest req, UserDto user)
+        {
+            TDResponse<InventoryDTO> response = new TDResponse<InventoryDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetInventory");
+            try
+            {
+                var query = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
+                    .OrderBy(l => l.Item.ItemTypeId).ToListAsync();
+
+                response.Data = new InventoryDTO();
+                var qq = query.GroupBy(l => l.Item.ItemType.ItemCategoryId).OrderBy(l => l.Key).ToList();
+                for (int i = 0; i < qq.Count(); i++)
+                {
+                    switch (qq[i].Key)
+                    {
+                        case 1:
+                            response.Data.Resources = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 2:
+                            response.Data.SpeedUps = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 3:
+                            response.Data.Buffs = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        case 4:
+                            response.Data.Others = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         #endregion
 
 

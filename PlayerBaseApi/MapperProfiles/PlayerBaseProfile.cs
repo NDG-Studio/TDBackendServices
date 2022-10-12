@@ -68,6 +68,7 @@ namespace PlayerBaseApi.MapperProfiles
                 .ForMember(dest => dest.IsConsumable, operations => operations
                 .MapFrom(
                     source => source.ItemType.IsConsumable));
+            CreateMap<PlayerItem, PlayerItemDTO>();
 
 
         }

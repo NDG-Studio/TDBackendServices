@@ -305,5 +305,19 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.BuyMarketItem(req, user);
         }
 
+
+        /// <summary>
+        /// GetInventory
+        /// </summary>
+        [LoginRequired]
+        [HttpPost("GetInventory")]
+        public async Task<TDResponse<InventoryDTO>> GetInventory([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetInventory(req, user);
+        }
+
     }
 }
