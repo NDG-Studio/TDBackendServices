@@ -7,6 +7,7 @@ using PlayerBaseApi.Helpers;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Services;
 using PlayerBaseApi.MapperProfiles;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
@@ -55,6 +56,9 @@ builder.Services.AddSwaggerGen(setup =>
     {
         { jwtSecurityScheme, Array.Empty<string>() }
     });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    setup.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
 });
 

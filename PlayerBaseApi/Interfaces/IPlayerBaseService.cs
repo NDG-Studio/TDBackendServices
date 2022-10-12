@@ -37,5 +37,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<int>> HealingDoneRequest(BaseRequest req, UserDto user);
 
         Task<TDResponse<MarketDTO>> GetMarket(BaseRequest req, UserDto user);
+        Task<TDResponse> BuyMarketItem(BaseRequest<BuyMarketItemRequest> req, UserDto user);
     }
 }

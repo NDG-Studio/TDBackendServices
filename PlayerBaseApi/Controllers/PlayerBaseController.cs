@@ -277,8 +277,11 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.HealingDoneRequest(req, user);
-        }                
+        }
 
+        /// <summary>
+        /// Get all items in market
+        /// </summary>
         [LoginRequired]
         [HttpPost("GetMarket")]
         public async Task<TDResponse<MarketDTO>> GetMarket([FromBody] BaseRequest req)
@@ -287,6 +290,19 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetMarket(req, user);
+        }
+
+        /// <summary>
+        /// Buy MarketItem via MarketItemId
+        /// </summary>
+        [LoginRequired]
+        [HttpPost("BuyMarketItem")]
+        public async Task<TDResponse> BuyMarketItem([FromBody] BaseRequest<BuyMarketItemRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.BuyMarketItem(req, user);
         }
 
     }

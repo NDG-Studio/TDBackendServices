@@ -539,7 +539,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var now = DateTimeOffset.Now;
-                var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.UpdateEndDate < now && l.UserId == user.Id ).Select(l => l.ResearchNodeId).ToListAsync();
+                var playerResearchNodes = await _context.PlayerResearchNode.Where(l => l.UpdateEndDate < now && l.UserId == user.Id).Select(l => l.ResearchNodeId).ToListAsync();
                 response.Data = playerResearchNodes;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -1306,9 +1306,9 @@ namespace PlayerBaseApi.Services
             {
                 var query = await _context.MarketItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
                     .Where(l => l.IsActive).OrderBy(l => l.Item.ItemTypeId).ToListAsync();
-                    
+
                 response.Data = new MarketDTO();
-                var qq= query.GroupBy(l => l.Item.ItemType.ItemCategoryId).OrderBy(l=>l.Key).ToList();
+                var qq = query.GroupBy(l => l.Item.ItemType.ItemCategoryId).OrderBy(l => l.Key).ToList();
                 for (int i = 0; i < qq.Count(); i++)
                 {
                     switch (qq[i].Key)
@@ -1329,6 +1329,64 @@ namespace PlayerBaseApi.Services
                             break;
                     }
                 }
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse> BuyMarketItem(BaseRequest<BuyMarketItemRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "BuyMarketItem");
+            try
+            {
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var marketItem = await _context.MarketItem.Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
+                if (marketItem == null || playerBaseInfo == null || req.Data == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if ((marketItem.ScrapPrice != 0 && playerBaseInfo.Scraps < marketItem.ScrapPrice * req.Data.Count) || (marketItem.GemPrice != 0 && playerBaseInfo.Gems < marketItem.GemPrice * req.Data.Count))
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var query = await _context.PlayerItem
+                    .Where(l => l.UserId == user.Id && l.ItemId == marketItem.ItemId).FirstOrDefaultAsync();
+
+                if (query == null)
+                {
+                    await _context.AddAsync(new PlayerItem()
+                    {
+                        ItemId = marketItem.ItemId,
+                        Count = req.Data.Count,
+                        UserId = user.Id
+                    });
+                }
+                else
+                {
+                    query.Count += req.Data.Count;
+                }
+
+                playerBaseInfo.Gems -= marketItem.GemPrice * req.Data.Count;
+                playerBaseInfo.Scraps -= marketItem.ScrapPrice * req.Data.Count;
+
+                await _context.SaveChangesAsync();
 
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
