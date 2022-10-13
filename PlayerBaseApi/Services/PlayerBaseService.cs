@@ -1426,7 +1426,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetInventory");
             try
             {
-                var query = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
+                var query = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType).Where(l => l.UserId == user.Id && l.Count != 0)
                     .OrderBy(l => l.Item.ItemTypeId).ToListAsync();
 
                 response.Data = new InventoryDTO();
@@ -1509,7 +1509,7 @@ namespace PlayerBaseApi.Services
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var playerItem = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
                     .Where(l => l.ItemId == (req.Data == null ? 0 : req.Data.ItemId) && l.UserId == user.Id).FirstOrDefaultAsync();
-                if (playerItem == null || playerBaseInfo == null || req.Data == null)
+                if (playerItem == null || playerBaseInfo == null || req.Data == null || req.Data.Count <= 0)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
                     info.AddInfo(OperationMessages.DbItemNotFound);
