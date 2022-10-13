@@ -10,6 +10,7 @@ namespace PlayerBaseApi.Entities
         public int HeroId { get; set; }
         public int DialogSceneId { get; set; }
         public string AnimId { get; set; }
+        public string TypeName { get; set; }
         public int PlaceId { get; set; }
         public string Text { get; set; }
 
