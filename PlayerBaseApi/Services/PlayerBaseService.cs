@@ -8,6 +8,7 @@ using SharedLibrary.Helpers;
 using PlayerBaseApi.Helpers;
 using SharedLibrary.Models;
 using Newtonsoft.Json;
+using PlayerBaseApi.Enums;
 
 namespace PlayerBaseApi.Services
 {
@@ -1458,11 +1459,11 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = _context.Dialog.Include(l => l.DialogScene)
-                    .Where(l => l.DialogScene.DialogSceneCode==req.Data).OrderBy(l => l.PlaceId);
+                    .Where(l => l.DialogScene.DialogSceneCode == req.Data).OrderBy(l => l.PlaceId);
 
                 response.Data = await _mapper.ProjectTo<DialogDTO>(query).ToListAsync();
 
-                 
+
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -1479,6 +1480,80 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        #region ITEM UTILS
+
+
+        public async Task<TDResponse> UseItem(BaseRequest<UseItemRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "UseItem");
+            try
+            {
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerItem = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
+                    .Where(l => l.ItemId == (req.Data == null ? 0 : req.Data.ItemId) && l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerItem == null || playerBaseInfo == null || req.Data == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (playerItem.Count < req.Data.Count)
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!playerItem.Item.ItemType.IsActive || !playerItem.Item.ItemType.IsConsumable)
+                {
+                    response.SetError(OperationMessages.ItemNotUsable);
+                    info.AddInfo(OperationMessages.ItemNotUsable);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                switch (playerItem.Item.ItemTypeId)//TODO: 2-3-4 CategoryId items eklenecek.
+                {
+                    case ((int)ItemTypeEnum.HeroCard):
+                        playerBaseInfo.HeroCards += req.Data.Count * playerItem.Item.Value1 ?? 0;
+                        break;
+                    case ((int)ItemTypeEnum.Blueprint):
+                        playerBaseInfo.BluePrints += req.Data.Count * playerItem.Item.Value1 ?? 0;
+                        break;
+                    case ((int)ItemTypeEnum.Scrap):
+                        playerBaseInfo.Scraps += req.Data.Count * playerItem.Item.Value1 ?? 0;
+                        break;
+                    case ((int)ItemTypeEnum.Gem):
+                        playerBaseInfo.Gems += req.Data.Count * playerItem.Item.Value1 ?? 0;
+                        break;
+                    case ((int)ItemTypeEnum.Fuel):
+                        playerBaseInfo.Fuel += req.Data.Count * playerItem.Item.Value1 ?? 0;
+                        break;
+                }
+
+                playerItem.Count -= req.Data.Count;
+
+                await _context.SaveChangesAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        #endregion
 
 
 

@@ -40,7 +40,8 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> BuyMarketItem(BaseRequest<BuyMarketItemRequest> req, UserDto user);
         Task<TDResponse<InventoryDTO>> GetInventory(BaseRequest req, UserDto user);
 
-
         Task<TDResponse<List<DialogDTO>>> GetDialogByCodeName(BaseRequest<string> req, UserDto user);
+
+        Task<TDResponse> UseItem(BaseRequest<UseItemRequest> req, UserDto user);
     }
 }

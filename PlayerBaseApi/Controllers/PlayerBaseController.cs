@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Models;
@@ -331,6 +331,19 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetDialogByCodeName(req, user);
+        }
+
+        /// <summary>
+        /// Kullanilacak itemin idsi ve sayisi(count) gönderilir. input: 'BaseRequest&lt;UseItemRequest&gt;' , output: 'TDResponse'
+        /// </summary>
+        [LoginRequired]
+        [HttpPost("UseItem")]
+        public async Task<TDResponse> UseItem([FromBody] BaseRequest<UseItemRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UseItem(req, user);
         }
 
     }
