@@ -1353,6 +1353,7 @@ namespace PlayerBaseApi.Services
             {
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var marketItem = await _context.MarketItem.Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
+
                 if (marketItem == null || playerBaseInfo == null || req.Data == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
@@ -1367,6 +1368,19 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+
+                var history = new PlayerMarketHistory()
+                {
+                    Count = req.Data.Count,
+                    MarketItemId = marketItem.Id,
+                    PurchaseDate = DateTimeOffset.Now,
+                    UserId = user.Id,
+                    BeforeGemCount = playerBaseInfo.Gems,
+                    AfterGemCount = -1,
+                    BeforeScrapCount = playerBaseInfo.Scraps,
+                    AfterScrapCount = -1
+                };
+
                 var query = await _context.PlayerItem
                     .Where(l => l.UserId == user.Id && l.ItemId == marketItem.ItemId).FirstOrDefaultAsync();
 
@@ -1386,7 +1400,10 @@ namespace PlayerBaseApi.Services
 
                 playerBaseInfo.Gems -= marketItem.GemPrice * req.Data.Count;
                 playerBaseInfo.Scraps -= marketItem.ScrapPrice * req.Data.Count;
+                history.AfterScrapCount = playerBaseInfo.Scraps;
+                history.AfterGemCount = playerBaseInfo.Gems;
 
+                await _context.AddAsync(history);
                 await _context.SaveChangesAsync();
 
                 response.SetSuccess();
