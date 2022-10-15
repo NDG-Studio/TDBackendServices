@@ -11,9 +11,9 @@ namespace ProgressApi.Models
         public double Score { get; set; }
         public double ScrapValue { get; set; }
         public double Time { get; set; }
-        public string? StageStartTime { get; set; }
+        public string? WaveStartTime { get; set; }
         public double BarrierHealth { get; set; }
-        public List<ZombieKillDto> ZombieKillList { get; set; } = new List<ZombieKillDto>();
+        public List<EnemyKillDto> ZombieKillList { get; set; } = new List<EnemyKillDto>();
 
     }
 }

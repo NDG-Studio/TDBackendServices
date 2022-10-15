@@ -33,25 +33,21 @@ namespace ProgressApi.Services
             var info = InfoDetail.CreateInfo(req, "AddProgress");
             try
             {
-                var pr = _mapper.Map<UserProgress>(req.Data);
-                pr.Ip = req.Info.Ip;
-                pr.UserId = userDto.Id;
-                pr.Username = userDto.Username;
-                pr.Email = userDto.Email;
-                await _context.AddAsync(pr);
-                await _context.SaveChangesAsync();
+                //var pr = _mapper.Map<UserProgressHistory>(req.Data);
+                //await _context.AddAsync(pr);
+                //await _context.SaveChangesAsync();
 
-                var qTowerProgress = _mapper.ProjectTo<TowerProgress>(req.Data!.TowerProgressList.AsQueryable()).ToList();
-                qTowerProgress.ForEach((l) => { l.UserProgressId = pr.Id; });
-                var qZombieKill = _mapper.ProjectTo<ZombieKill>(req.Data!.ZombieKillList.AsQueryable()).ToList();
-                qZombieKill.ForEach((l) => { l.UserProgressId = pr.Id; });
+                //var qTowerProgress = _mapper.ProjectTo<TowerProgress>(req.Data!.TowerProgressList.AsQueryable()).ToList();
+                //qTowerProgress.ForEach((l) => { l.UserProgressId = pr.Id; });
+                //var qZombieKill = _mapper.ProjectTo<EnemyKill>(req.Data!.ZombieKillList.AsQueryable()).ToList();
+                //qZombieKill.ForEach((l) => { l.UserProgressId = pr.Id; });
 
-                await _context.AddRangeAsync(qTowerProgress);
-                await _context.AddRangeAsync(qZombieKill);
-                await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
+                //await _context.AddRangeAsync(qTowerProgress);
+                //await _context.AddRangeAsync(qZombieKill);
+                //await _context.SaveChangesAsync();
+                //response.SetSuccess();
+                //info.AddInfo(OperationMessages.Success);
+                //_logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -64,17 +60,17 @@ namespace ProgressApi.Services
         }
 
 
-        public async Task<TDResponse<List<ZombieDto>>> GetZombies(BaseRequest req)
+        public async Task<TDResponse<List<EnemyDto>>> GetZombies(BaseRequest req)
         {
-            TDResponse<List<ZombieDto>> response = new TDResponse<List<ZombieDto>>();
+            TDResponse<List<EnemyDto>> response = new TDResponse<List<EnemyDto>>();
             var info = InfoDetail.CreateInfo(req, "GetZombies");
             try
             {
-                var d = _context.Zombie.Where(l => l.IsActive).OrderBy(l=>l.Id);
-                response.Data = await _mapper.ProjectTo<ZombieDto>(d).ToListAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
+                //var d = _context.Zombie.Where(l => l.IsActive).OrderBy(l=>l.Id);
+                //response.Data = await _mapper.ProjectTo<EnemyDto>(d).ToListAsync();
+                //response.SetSuccess();
+                //info.AddInfo(OperationMessages.Success);
+                //_logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -92,11 +88,11 @@ namespace ProgressApi.Services
             var info = InfoDetail.CreateInfo(req, "GetTowers");
             try
             {
-                var d = _context.Tower.Where(l => l.IsActive).OrderBy(l => l.Id);
-                response.Data = await _mapper.ProjectTo<TowerDto>(d).ToListAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
+                //var d = _context.Tower.Where(l => l.IsActive).OrderBy(l => l.Id);
+                //response.Data = await _mapper.ProjectTo<TowerDto>(d).ToListAsync();
+                //response.SetSuccess();
+                //info.AddInfo(OperationMessages.Success);
+                //_logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -114,11 +110,11 @@ namespace ProgressApi.Services
             var info = InfoDetail.CreateInfo(req, "GetStages");
             try
             {
-                var d = _context.Stage.Where(l => l.IsActive).OrderBy(l => l.Id);
-                response.Data = await _mapper.ProjectTo<StageDto>(d).ToListAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
+                //var d = _context.Stage.Where(l => l.IsActive).OrderBy(l => l.Id);
+                //response.Data = await _mapper.ProjectTo<StageDto>(d).ToListAsync();
+                //response.SetSuccess();
+                //info.AddInfo(OperationMessages.Success);
+                //_logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -137,12 +133,12 @@ namespace ProgressApi.Services
             var info = InfoDetail.CreateInfo(req, "GetUserStageStatus");
             try
             {
-                var d = _context.UserProgress.Include(l => l.Stage).Where(l => l.UserId == userDto.Id && l.StageId != null).ToList();
-                var ek = d.GroupBy(l => l.StageId).Select(l=> l.MaxBy(k=>k.Score));
-                response.Data = _mapper.ProjectTo<StageStatusDto>(ek.AsQueryable()).ToList();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
+                //var d = _context.UserProgress.Include(l => l.Wave).Where(l => l.UserId == userDto.Id && l.Wave != null).ToList();
+                //var ek = d.GroupBy(l => l.WaveId).Select(l=> l.MaxBy(k=>k.));
+                //response.Data = _mapper.ProjectTo<StageStatusDto>(ek.AsQueryable()).ToList();
+                //response.SetSuccess();
+                //info.AddInfo(OperationMessages.Success);
+                //_logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {

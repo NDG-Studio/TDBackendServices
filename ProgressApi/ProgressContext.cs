@@ -17,10 +17,10 @@ namespace ProgressApi
 
         public DbSet<Stage> Stage { get; set; }
         public DbSet<Tower> Tower { get; set; }
-        public DbSet<Zombie> Zombie { get; set; }
+        public DbSet<Enemy> Zombie { get; set; }
         public DbSet<TowerProgress> TowerProgress { get; set; }
-        public DbSet<ZombieKill> ZombieKill { get; set; }
-        public DbSet<UserProgress> UserProgress { get; set; }
+        public DbSet<EnemyKill> ZombieKill { get; set; }
+        public DbSet<UserProgressHistory> UserProgress { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<LogAction> LogAction { get; set; }
 
@@ -48,16 +48,16 @@ namespace ProgressApi
                 new Tower() { Id = 9, Name = "CommandTower", IsActive = true }
             );
 
-            modelBuilder.Entity<Zombie>().HasData(
-                new Zombie() { Id = 1, Name = "z1", IsActive = true },
-                new Zombie() { Id = 2, Name = "z2", IsActive = true },
-                new Zombie() { Id = 3, Name = "z3", IsActive = true },
-                new Zombie() { Id = 4, Name = "z4", IsActive = true },
-                new Zombie() { Id = 5, Name = "z5", IsActive = true },
-                new Zombie() { Id = 6, Name = "z6", IsActive = true },
-                new Zombie() { Id = 7, Name = "z7", IsActive = true },
-                new Zombie() { Id = 8, Name = "z8", IsActive = true },
-                new Zombie() { Id = 9, Name = "z9", IsActive = true }
+            modelBuilder.Entity<Enemy>().HasData(
+                new Enemy() { Id = 1, Name = "z1", IsActive = true },
+                new Enemy() { Id = 2, Name = "z2", IsActive = true },
+                new Enemy() { Id = 3, Name = "z3", IsActive = true },
+                new Enemy() { Id = 4, Name = "z4", IsActive = true },
+                new Enemy() { Id = 5, Name = "z5", IsActive = true },
+                new Enemy() { Id = 6, Name = "z6", IsActive = true },
+                new Enemy() { Id = 7, Name = "z7", IsActive = true },
+                new Enemy() { Id = 8, Name = "z8", IsActive = true },
+                new Enemy() { Id = 9, Name = "z9", IsActive = true }
 );
 
         }

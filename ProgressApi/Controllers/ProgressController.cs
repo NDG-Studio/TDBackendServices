@@ -31,7 +31,7 @@ namespace ProgressApi.Controllers
         }
 
         [HttpPost("GetZombies")]
-        public async Task<TDResponse<List<ZombieDto>>> GetZombies([FromBody] BaseRequest req)
+        public async Task<TDResponse<List<EnemyDto>>> GetZombies([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user?.Id);

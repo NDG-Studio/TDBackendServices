@@ -3,7 +3,7 @@ using SharedLibrary.Models;
 
 namespace ProgressApi.Models
 {
-    public class ZombieDto
+    public class EnemyDto
     {
         public long Id { get; set; }
         public string Name { get; set; }
