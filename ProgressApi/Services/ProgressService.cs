@@ -44,7 +44,7 @@ namespace ProgressApi.Services
                 UserProgressHistory userProgressHistory = new UserProgressHistory()
                 {
                     UserId = UserDto.Id,
-                    WaveId = req.Data.WaweId,
+                    WaveId = req.Data.WaveId,
                     SpentCoin = req.Data.SpentCoin,
                     GainedCoin = req.Data.GainedCoin,
                     TotalCoin = req.Data.TotalCoin,
@@ -65,7 +65,7 @@ namespace ProgressApi.Services
                     PlaceId = l.PlaceId,
                     TowerLevelId = l.TowerLevelId,
                     UserId = UserDto.Id,
-                    WaveId = req.Data.WaweId
+                    WaveId = req.Data.WaveId
 
                 }).ToList();
 
@@ -77,7 +77,7 @@ namespace ProgressApi.Services
                         UserId = UserDto.Id,
                         BarierHealth = (int)req.Data.BarrierHealth,
                         TotalCoin = req.Data.TotalCoin,
-                        WaveId = req.Data.WaweId
+                        WaveId = req.Data.WaveId
                     };
                     await _context.AddAsync(query);
                 }
@@ -85,10 +85,11 @@ namespace ProgressApi.Services
                 {
                     query.BarierHealth = (int)req.Data.BarrierHealth;
                     query.TotalCoin = req.Data.TotalCoin;
-                    query.WaveId = req.Data.WaweId;
+                    query.WaveId = req.Data.WaveId;
                 }
 
                 await _context.AddRangeAsync(qTowerProgress);
+                await _context.AddRangeAsync(userTowerPlace);
                 await _context.AddRangeAsync(enemyKill);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();

@@ -14,7 +14,7 @@ namespace ProgressApi.Entities
         [ForeignKey("EnemyLevelId")]
         public EnemyLevel EnemyLevel { get; set; }
 
-        [ForeignKey("UserProgressId")]
+        [ForeignKey("UserProgressHistoryId")]
         public UserProgressHistory UserProgressHistory { get; set; }
     }
 }

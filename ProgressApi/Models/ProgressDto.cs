@@ -6,7 +6,7 @@ namespace ProgressApi.Models
     public class ProgressDTO
     {
         public List<TowerProgressDTO> TowerProgressList { get; set; } = new List<TowerProgressDTO>();
-        public int WaweId { get; set; }
+        public int WaveId { get; set; }
         public int SpentCoin { get; set; }
         public int GainedCoin { get; set; }
         public int TotalCoin { get; set; }
