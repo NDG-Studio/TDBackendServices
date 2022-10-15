@@ -1,6 +1,6 @@
 ﻿namespace ProgressApi.Models
 {
-    public class StageStatusDto
+    public class StageStatusDTO
     {
         public int? StageId { get; set; }
         public string StageName { get; set; }

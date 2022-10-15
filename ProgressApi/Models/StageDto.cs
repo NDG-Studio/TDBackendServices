@@ -3,10 +3,11 @@ using SharedLibrary.Models;
 
 namespace ProgressApi.Models
 {
-    public class StageDto
+    public class StageDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public int OrderId { get; set; }
+        public string SceneId { get; set; } = string.Empty;
 
     }
 }

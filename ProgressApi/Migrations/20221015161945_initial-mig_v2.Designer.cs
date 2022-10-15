@@ -12,8 +12,8 @@ using ProgressApi;
 namespace ProgressApi.Migrations
 {
     [DbContext(typeof(ProgressContext))]
-    [Migration("20220721114314_stage_minibug_fixed")]
-    partial class stage_minibug_fixed
+    [Migration("20221015161945_initial-mig_v2")]
+    partial class initialmig_v2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,144 @@ namespace ProgressApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ProgressApi.Entities.Enemy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Enemy");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            Name = "z1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsActive = true,
+                            Name = "z2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsActive = true,
+                            Name = "z3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsActive = true,
+                            Name = "z4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsActive = true,
+                            Name = "z5"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsActive = true,
+                            Name = "z6"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsActive = true,
+                            Name = "z7"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsActive = true,
+                            Name = "z8"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsActive = true,
+                            Name = "z9"
+                        });
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.EnemyKill", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("DeadCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("EnemyLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserProgressId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnemyLevelId");
+
+                    b.HasIndex("UserProgressId");
+
+                    b.ToTable("EnemyKill");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.EnemyLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Armor")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("BarierDamageAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Coin")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EnemyId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Health")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Speed")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnemyId");
+
+                    b.ToTable("EnemyLevel");
+                });
 
             modelBuilder.Entity("ProgressApi.Entities.Stage", b =>
                 {
@@ -36,10 +174,17 @@ namespace ProgressApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Coin")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SceneId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -51,6935 +196,8913 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 11,
-                            Code = "01.1",
+                            Code = "01,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.1"
+                            Name = "01,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 12,
-                            Code = "01.2",
+                            Code = "01,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.2"
+                            Name = "01,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 13,
-                            Code = "01.3",
+                            Code = "01,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.3"
+                            Name = "01,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 14,
-                            Code = "01.4",
+                            Code = "01,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.4"
+                            Name = "01,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 15,
-                            Code = "01.5",
+                            Code = "01,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.5"
+                            Name = "01,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 16,
-                            Code = "01.6",
+                            Code = "01,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.6"
+                            Name = "01,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 17,
-                            Code = "01.7",
+                            Code = "01,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.7"
+                            Name = "01,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 18,
-                            Code = "01.8",
+                            Code = "01,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.8"
+                            Name = "01,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 19,
-                            Code = "01.9",
+                            Code = "01,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "01.9"
+                            Name = "01,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 20,
                             Code = "02",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02"
+                            Name = "02",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 21,
-                            Code = "02.1",
+                            Code = "02,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.1"
+                            Name = "02,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 22,
-                            Code = "02.2",
+                            Code = "02,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.2"
+                            Name = "02,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 23,
-                            Code = "02.3",
+                            Code = "02,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.3"
+                            Name = "02,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 24,
-                            Code = "02.4",
+                            Code = "02,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.4"
+                            Name = "02,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 25,
-                            Code = "02.5",
+                            Code = "02,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.5"
+                            Name = "02,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 26,
-                            Code = "02.6",
+                            Code = "02,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.6"
+                            Name = "02,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 27,
-                            Code = "02.7",
+                            Code = "02,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.7"
+                            Name = "02,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 28,
-                            Code = "02.8",
+                            Code = "02,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.8"
+                            Name = "02,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 29,
-                            Code = "02.9",
+                            Code = "02,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "02.9"
+                            Name = "02,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 30,
                             Code = "03",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03"
+                            Name = "03",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 31,
-                            Code = "03.1",
+                            Code = "03,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.1"
+                            Name = "03,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 32,
-                            Code = "03.2",
+                            Code = "03,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.2"
+                            Name = "03,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 33,
-                            Code = "03.3",
+                            Code = "03,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.3"
+                            Name = "03,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 34,
-                            Code = "03.4",
+                            Code = "03,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.4"
+                            Name = "03,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 35,
-                            Code = "03.5",
+                            Code = "03,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.5"
+                            Name = "03,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 36,
-                            Code = "03.6",
+                            Code = "03,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.6"
+                            Name = "03,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 37,
-                            Code = "03.7",
+                            Code = "03,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.7"
+                            Name = "03,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 38,
-                            Code = "03.8",
+                            Code = "03,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.8"
+                            Name = "03,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 39,
-                            Code = "03.9",
+                            Code = "03,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "03.9"
+                            Name = "03,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 40,
                             Code = "04",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04"
+                            Name = "04",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 41,
-                            Code = "04.1",
+                            Code = "04,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.1"
+                            Name = "04,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 42,
-                            Code = "04.2",
+                            Code = "04,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.2"
+                            Name = "04,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 43,
-                            Code = "04.3",
+                            Code = "04,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.3"
+                            Name = "04,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 44,
-                            Code = "04.4",
+                            Code = "04,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.4"
+                            Name = "04,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 45,
-                            Code = "04.5",
+                            Code = "04,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.5"
+                            Name = "04,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 46,
-                            Code = "04.6",
+                            Code = "04,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.6"
+                            Name = "04,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 47,
-                            Code = "04.7",
+                            Code = "04,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.7"
+                            Name = "04,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 48,
-                            Code = "04.8",
+                            Code = "04,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.8"
+                            Name = "04,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 49,
-                            Code = "04.9",
+                            Code = "04,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "04.9"
+                            Name = "04,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 50,
                             Code = "05",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05"
+                            Name = "05",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 51,
-                            Code = "05.1",
+                            Code = "05,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.1"
+                            Name = "05,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 52,
-                            Code = "05.2",
+                            Code = "05,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.2"
+                            Name = "05,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 53,
-                            Code = "05.3",
+                            Code = "05,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.3"
+                            Name = "05,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 54,
-                            Code = "05.4",
+                            Code = "05,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.4"
+                            Name = "05,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 55,
-                            Code = "05.5",
+                            Code = "05,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.5"
+                            Name = "05,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 56,
-                            Code = "05.6",
+                            Code = "05,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.6"
+                            Name = "05,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 57,
-                            Code = "05.7",
+                            Code = "05,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.7"
+                            Name = "05,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 58,
-                            Code = "05.8",
+                            Code = "05,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.8"
+                            Name = "05,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 59,
-                            Code = "05.9",
+                            Code = "05,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "05.9"
+                            Name = "05,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 60,
                             Code = "06",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06"
+                            Name = "06",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 61,
-                            Code = "06.1",
+                            Code = "06,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.1"
+                            Name = "06,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 62,
-                            Code = "06.2",
+                            Code = "06,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.2"
+                            Name = "06,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 63,
-                            Code = "06.3",
+                            Code = "06,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.3"
+                            Name = "06,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 64,
-                            Code = "06.4",
+                            Code = "06,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.4"
+                            Name = "06,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 65,
-                            Code = "06.5",
+                            Code = "06,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.5"
+                            Name = "06,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 66,
-                            Code = "06.6",
+                            Code = "06,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.6"
+                            Name = "06,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 67,
-                            Code = "06.7",
+                            Code = "06,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.7"
+                            Name = "06,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 68,
-                            Code = "06.8",
+                            Code = "06,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.8"
+                            Name = "06,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 69,
-                            Code = "06.9",
+                            Code = "06,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "06.9"
+                            Name = "06,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 70,
                             Code = "07",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07"
+                            Name = "07",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 71,
-                            Code = "07.1",
+                            Code = "07,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.1"
+                            Name = "07,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 72,
-                            Code = "07.2",
+                            Code = "07,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.2"
+                            Name = "07,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 73,
-                            Code = "07.3",
+                            Code = "07,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.3"
+                            Name = "07,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 74,
-                            Code = "07.4",
+                            Code = "07,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.4"
+                            Name = "07,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 75,
-                            Code = "07.5",
+                            Code = "07,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.5"
+                            Name = "07,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 76,
-                            Code = "07.6",
+                            Code = "07,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.6"
+                            Name = "07,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 77,
-                            Code = "07.7",
+                            Code = "07,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.7"
+                            Name = "07,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 78,
-                            Code = "07.8",
+                            Code = "07,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.8"
+                            Name = "07,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 79,
-                            Code = "07.9",
+                            Code = "07,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "07.9"
+                            Name = "07,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 80,
                             Code = "08",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08"
+                            Name = "08",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 81,
-                            Code = "08.1",
+                            Code = "08,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.1"
+                            Name = "08,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 82,
-                            Code = "08.2",
+                            Code = "08,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.2"
+                            Name = "08,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 83,
-                            Code = "08.3",
+                            Code = "08,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.3"
+                            Name = "08,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 84,
-                            Code = "08.4",
+                            Code = "08,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.4"
+                            Name = "08,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 85,
-                            Code = "08.5",
+                            Code = "08,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.5"
+                            Name = "08,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 86,
-                            Code = "08.6",
+                            Code = "08,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.6"
+                            Name = "08,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 87,
-                            Code = "08.7",
+                            Code = "08,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.7"
+                            Name = "08,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 88,
-                            Code = "08.8",
+                            Code = "08,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.8"
+                            Name = "08,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 89,
-                            Code = "08.9",
+                            Code = "08,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "08.9"
+                            Name = "08,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 90,
                             Code = "09",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09"
+                            Name = "09",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 91,
-                            Code = "09.1",
+                            Code = "09,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.1"
+                            Name = "09,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 92,
-                            Code = "09.2",
+                            Code = "09,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.2"
+                            Name = "09,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 93,
-                            Code = "09.3",
+                            Code = "09,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.3"
+                            Name = "09,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 94,
-                            Code = "09.4",
+                            Code = "09,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.4"
+                            Name = "09,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 95,
-                            Code = "09.5",
+                            Code = "09,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.5"
+                            Name = "09,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 96,
-                            Code = "09.6",
+                            Code = "09,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.6"
+                            Name = "09,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 97,
-                            Code = "09.7",
+                            Code = "09,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.7"
+                            Name = "09,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 98,
-                            Code = "09.8",
+                            Code = "09,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.8"
+                            Name = "09,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 99,
-                            Code = "09.9",
+                            Code = "09,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "09.9"
+                            Name = "09,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 100,
                             Code = "10",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10"
+                            Name = "10",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 101,
-                            Code = "10.1",
+                            Code = "10,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.1"
+                            Name = "10,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 102,
-                            Code = "10.2",
+                            Code = "10,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.2"
+                            Name = "10,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 103,
-                            Code = "10.3",
+                            Code = "10,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.3"
+                            Name = "10,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 104,
-                            Code = "10.4",
+                            Code = "10,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.4"
+                            Name = "10,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 105,
-                            Code = "10.5",
+                            Code = "10,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.5"
+                            Name = "10,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 106,
-                            Code = "10.6",
+                            Code = "10,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.6"
+                            Name = "10,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 107,
-                            Code = "10.7",
+                            Code = "10,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.7"
+                            Name = "10,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 108,
-                            Code = "10.8",
+                            Code = "10,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.8"
+                            Name = "10,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 109,
-                            Code = "10.9",
+                            Code = "10,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "10.9"
+                            Name = "10,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 110,
                             Code = "11",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11"
+                            Name = "11",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 111,
-                            Code = "11.1",
+                            Code = "11,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.1"
+                            Name = "11,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 112,
-                            Code = "11.2",
+                            Code = "11,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.2"
+                            Name = "11,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 113,
-                            Code = "11.3",
+                            Code = "11,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.3"
+                            Name = "11,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 114,
-                            Code = "11.4",
+                            Code = "11,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.4"
+                            Name = "11,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 115,
-                            Code = "11.5",
+                            Code = "11,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.5"
+                            Name = "11,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 116,
-                            Code = "11.6",
+                            Code = "11,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.6"
+                            Name = "11,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 117,
-                            Code = "11.7",
+                            Code = "11,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.7"
+                            Name = "11,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 118,
-                            Code = "11.8",
+                            Code = "11,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.8"
+                            Name = "11,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 119,
-                            Code = "11.9",
+                            Code = "11,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "11.9"
+                            Name = "11,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 120,
                             Code = "12",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12"
+                            Name = "12",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 121,
-                            Code = "12.1",
+                            Code = "12,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.1"
+                            Name = "12,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 122,
-                            Code = "12.2",
+                            Code = "12,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.2"
+                            Name = "12,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 123,
-                            Code = "12.3",
+                            Code = "12,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.3"
+                            Name = "12,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 124,
-                            Code = "12.4",
+                            Code = "12,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.4"
+                            Name = "12,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 125,
-                            Code = "12.5",
+                            Code = "12,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.5"
+                            Name = "12,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 126,
-                            Code = "12.6",
+                            Code = "12,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.6"
+                            Name = "12,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 127,
-                            Code = "12.7",
+                            Code = "12,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.7"
+                            Name = "12,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 128,
-                            Code = "12.8",
+                            Code = "12,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.8"
+                            Name = "12,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 129,
-                            Code = "12.9",
+                            Code = "12,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "12.9"
+                            Name = "12,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 130,
                             Code = "13",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13"
+                            Name = "13",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 131,
-                            Code = "13.1",
+                            Code = "13,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.1"
+                            Name = "13,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 132,
-                            Code = "13.2",
+                            Code = "13,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.2"
+                            Name = "13,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 133,
-                            Code = "13.3",
+                            Code = "13,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.3"
+                            Name = "13,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 134,
-                            Code = "13.4",
+                            Code = "13,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.4"
+                            Name = "13,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 135,
-                            Code = "13.5",
+                            Code = "13,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.5"
+                            Name = "13,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 136,
-                            Code = "13.6",
+                            Code = "13,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.6"
+                            Name = "13,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 137,
-                            Code = "13.7",
+                            Code = "13,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.7"
+                            Name = "13,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 138,
-                            Code = "13.8",
+                            Code = "13,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.8"
+                            Name = "13,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 139,
-                            Code = "13.9",
+                            Code = "13,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "13.9"
+                            Name = "13,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 140,
                             Code = "14",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14"
+                            Name = "14",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 141,
-                            Code = "14.1",
+                            Code = "14,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.1"
+                            Name = "14,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 142,
-                            Code = "14.2",
+                            Code = "14,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.2"
+                            Name = "14,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 143,
-                            Code = "14.3",
+                            Code = "14,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.3"
+                            Name = "14,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 144,
-                            Code = "14.4",
+                            Code = "14,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.4"
+                            Name = "14,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 145,
-                            Code = "14.5",
+                            Code = "14,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.5"
+                            Name = "14,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 146,
-                            Code = "14.6",
+                            Code = "14,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.6"
+                            Name = "14,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 147,
-                            Code = "14.7",
+                            Code = "14,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.7"
+                            Name = "14,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 148,
-                            Code = "14.8",
+                            Code = "14,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.8"
+                            Name = "14,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 149,
-                            Code = "14.9",
+                            Code = "14,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "14.9"
+                            Name = "14,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 150,
                             Code = "15",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15"
+                            Name = "15",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 151,
-                            Code = "15.1",
+                            Code = "15,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.1"
+                            Name = "15,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 152,
-                            Code = "15.2",
+                            Code = "15,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.2"
+                            Name = "15,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 153,
-                            Code = "15.3",
+                            Code = "15,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.3"
+                            Name = "15,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 154,
-                            Code = "15.4",
+                            Code = "15,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.4"
+                            Name = "15,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 155,
-                            Code = "15.5",
+                            Code = "15,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.5"
+                            Name = "15,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 156,
-                            Code = "15.6",
+                            Code = "15,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.6"
+                            Name = "15,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 157,
-                            Code = "15.7",
+                            Code = "15,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.7"
+                            Name = "15,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 158,
-                            Code = "15.8",
+                            Code = "15,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.8"
+                            Name = "15,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 159,
-                            Code = "15.9",
+                            Code = "15,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "15.9"
+                            Name = "15,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 160,
                             Code = "16",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16"
+                            Name = "16",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 161,
-                            Code = "16.1",
+                            Code = "16,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.1"
+                            Name = "16,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 162,
-                            Code = "16.2",
+                            Code = "16,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.2"
+                            Name = "16,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 163,
-                            Code = "16.3",
+                            Code = "16,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.3"
+                            Name = "16,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 164,
-                            Code = "16.4",
+                            Code = "16,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.4"
+                            Name = "16,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 165,
-                            Code = "16.5",
+                            Code = "16,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.5"
+                            Name = "16,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 166,
-                            Code = "16.6",
+                            Code = "16,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.6"
+                            Name = "16,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 167,
-                            Code = "16.7",
+                            Code = "16,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.7"
+                            Name = "16,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 168,
-                            Code = "16.8",
+                            Code = "16,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.8"
+                            Name = "16,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 169,
-                            Code = "16.9",
+                            Code = "16,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "16.9"
+                            Name = "16,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 170,
                             Code = "17",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17"
+                            Name = "17",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 171,
-                            Code = "17.1",
+                            Code = "17,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.1"
+                            Name = "17,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 172,
-                            Code = "17.2",
+                            Code = "17,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.2"
+                            Name = "17,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 173,
-                            Code = "17.3",
+                            Code = "17,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.3"
+                            Name = "17,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 174,
-                            Code = "17.4",
+                            Code = "17,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.4"
+                            Name = "17,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 175,
-                            Code = "17.5",
+                            Code = "17,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.5"
+                            Name = "17,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 176,
-                            Code = "17.6",
+                            Code = "17,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.6"
+                            Name = "17,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 177,
-                            Code = "17.7",
+                            Code = "17,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.7"
+                            Name = "17,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 178,
-                            Code = "17.8",
+                            Code = "17,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.8"
+                            Name = "17,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 179,
-                            Code = "17.9",
+                            Code = "17,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "17.9"
+                            Name = "17,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 180,
                             Code = "18",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18"
+                            Name = "18",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 181,
-                            Code = "18.1",
+                            Code = "18,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.1"
+                            Name = "18,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 182,
-                            Code = "18.2",
+                            Code = "18,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.2"
+                            Name = "18,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 183,
-                            Code = "18.3",
+                            Code = "18,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.3"
+                            Name = "18,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 184,
-                            Code = "18.4",
+                            Code = "18,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.4"
+                            Name = "18,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 185,
-                            Code = "18.5",
+                            Code = "18,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.5"
+                            Name = "18,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 186,
-                            Code = "18.6",
+                            Code = "18,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.6"
+                            Name = "18,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 187,
-                            Code = "18.7",
+                            Code = "18,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.7"
+                            Name = "18,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 188,
-                            Code = "18.8",
+                            Code = "18,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.8"
+                            Name = "18,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 189,
-                            Code = "18.9",
+                            Code = "18,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "18.9"
+                            Name = "18,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 190,
                             Code = "19",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19"
+                            Name = "19",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 191,
-                            Code = "19.1",
+                            Code = "19,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.1"
+                            Name = "19,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 192,
-                            Code = "19.2",
+                            Code = "19,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.2"
+                            Name = "19,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 193,
-                            Code = "19.3",
+                            Code = "19,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.3"
+                            Name = "19,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 194,
-                            Code = "19.4",
+                            Code = "19,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.4"
+                            Name = "19,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 195,
-                            Code = "19.5",
+                            Code = "19,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.5"
+                            Name = "19,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 196,
-                            Code = "19.6",
+                            Code = "19,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.6"
+                            Name = "19,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 197,
-                            Code = "19.7",
+                            Code = "19,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.7"
+                            Name = "19,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 198,
-                            Code = "19.8",
+                            Code = "19,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.8"
+                            Name = "19,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 199,
-                            Code = "19.9",
+                            Code = "19,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "19.9"
+                            Name = "19,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 200,
                             Code = "20",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20"
+                            Name = "20",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 201,
-                            Code = "20.1",
+                            Code = "20,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.1"
+                            Name = "20,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 202,
-                            Code = "20.2",
+                            Code = "20,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.2"
+                            Name = "20,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 203,
-                            Code = "20.3",
+                            Code = "20,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.3"
+                            Name = "20,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 204,
-                            Code = "20.4",
+                            Code = "20,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.4"
+                            Name = "20,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 205,
-                            Code = "20.5",
+                            Code = "20,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.5"
+                            Name = "20,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 206,
-                            Code = "20.6",
+                            Code = "20,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.6"
+                            Name = "20,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 207,
-                            Code = "20.7",
+                            Code = "20,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.7"
+                            Name = "20,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 208,
-                            Code = "20.8",
+                            Code = "20,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.8"
+                            Name = "20,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 209,
-                            Code = "20.9",
+                            Code = "20,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "20.9"
+                            Name = "20,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 210,
                             Code = "21",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21"
+                            Name = "21",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 211,
-                            Code = "21.1",
+                            Code = "21,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.1"
+                            Name = "21,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 212,
-                            Code = "21.2",
+                            Code = "21,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.2"
+                            Name = "21,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 213,
-                            Code = "21.3",
+                            Code = "21,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.3"
+                            Name = "21,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 214,
-                            Code = "21.4",
+                            Code = "21,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.4"
+                            Name = "21,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 215,
-                            Code = "21.5",
+                            Code = "21,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.5"
+                            Name = "21,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 216,
-                            Code = "21.6",
+                            Code = "21,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.6"
+                            Name = "21,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 217,
-                            Code = "21.7",
+                            Code = "21,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.7"
+                            Name = "21,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 218,
-                            Code = "21.8",
+                            Code = "21,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.8"
+                            Name = "21,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 219,
-                            Code = "21.9",
+                            Code = "21,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "21.9"
+                            Name = "21,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 220,
                             Code = "22",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22"
+                            Name = "22",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 221,
-                            Code = "22.1",
+                            Code = "22,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.1"
+                            Name = "22,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 222,
-                            Code = "22.2",
+                            Code = "22,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.2"
+                            Name = "22,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 223,
-                            Code = "22.3",
+                            Code = "22,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.3"
+                            Name = "22,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 224,
-                            Code = "22.4",
+                            Code = "22,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.4"
+                            Name = "22,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 225,
-                            Code = "22.5",
+                            Code = "22,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.5"
+                            Name = "22,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 226,
-                            Code = "22.6",
+                            Code = "22,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.6"
+                            Name = "22,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 227,
-                            Code = "22.7",
+                            Code = "22,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.7"
+                            Name = "22,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 228,
-                            Code = "22.8",
+                            Code = "22,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.8"
+                            Name = "22,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 229,
-                            Code = "22.9",
+                            Code = "22,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "22.9"
+                            Name = "22,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 230,
                             Code = "23",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23"
+                            Name = "23",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 231,
-                            Code = "23.1",
+                            Code = "23,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.1"
+                            Name = "23,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 232,
-                            Code = "23.2",
+                            Code = "23,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.2"
+                            Name = "23,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 233,
-                            Code = "23.3",
+                            Code = "23,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.3"
+                            Name = "23,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 234,
-                            Code = "23.4",
+                            Code = "23,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.4"
+                            Name = "23,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 235,
-                            Code = "23.5",
+                            Code = "23,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.5"
+                            Name = "23,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 236,
-                            Code = "23.6",
+                            Code = "23,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.6"
+                            Name = "23,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 237,
-                            Code = "23.7",
+                            Code = "23,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.7"
+                            Name = "23,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 238,
-                            Code = "23.8",
+                            Code = "23,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.8"
+                            Name = "23,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 239,
-                            Code = "23.9",
+                            Code = "23,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "23.9"
+                            Name = "23,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 240,
                             Code = "24",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24"
+                            Name = "24",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 241,
-                            Code = "24.1",
+                            Code = "24,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.1"
+                            Name = "24,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 242,
-                            Code = "24.2",
+                            Code = "24,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.2"
+                            Name = "24,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 243,
-                            Code = "24.3",
+                            Code = "24,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.3"
+                            Name = "24,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 244,
-                            Code = "24.4",
+                            Code = "24,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.4"
+                            Name = "24,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 245,
-                            Code = "24.5",
+                            Code = "24,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.5"
+                            Name = "24,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 246,
-                            Code = "24.6",
+                            Code = "24,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.6"
+                            Name = "24,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 247,
-                            Code = "24.7",
+                            Code = "24,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.7"
+                            Name = "24,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 248,
-                            Code = "24.8",
+                            Code = "24,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.8"
+                            Name = "24,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 249,
-                            Code = "24.9",
+                            Code = "24,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "24.9"
+                            Name = "24,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 250,
                             Code = "25",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25"
+                            Name = "25",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 251,
-                            Code = "25.1",
+                            Code = "25,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.1"
+                            Name = "25,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 252,
-                            Code = "25.2",
+                            Code = "25,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.2"
+                            Name = "25,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 253,
-                            Code = "25.3",
+                            Code = "25,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.3"
+                            Name = "25,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 254,
-                            Code = "25.4",
+                            Code = "25,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.4"
+                            Name = "25,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 255,
-                            Code = "25.5",
+                            Code = "25,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.5"
+                            Name = "25,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 256,
-                            Code = "25.6",
+                            Code = "25,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.6"
+                            Name = "25,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 257,
-                            Code = "25.7",
+                            Code = "25,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.7"
+                            Name = "25,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 258,
-                            Code = "25.8",
+                            Code = "25,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.8"
+                            Name = "25,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 259,
-                            Code = "25.9",
+                            Code = "25,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "25.9"
+                            Name = "25,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 260,
                             Code = "26",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26"
+                            Name = "26",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 261,
-                            Code = "26.1",
+                            Code = "26,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.1"
+                            Name = "26,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 262,
-                            Code = "26.2",
+                            Code = "26,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.2"
+                            Name = "26,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 263,
-                            Code = "26.3",
+                            Code = "26,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.3"
+                            Name = "26,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 264,
-                            Code = "26.4",
+                            Code = "26,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.4"
+                            Name = "26,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 265,
-                            Code = "26.5",
+                            Code = "26,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.5"
+                            Name = "26,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 266,
-                            Code = "26.6",
+                            Code = "26,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.6"
+                            Name = "26,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 267,
-                            Code = "26.7",
+                            Code = "26,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.7"
+                            Name = "26,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 268,
-                            Code = "26.8",
+                            Code = "26,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.8"
+                            Name = "26,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 269,
-                            Code = "26.9",
+                            Code = "26,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "26.9"
+                            Name = "26,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 270,
                             Code = "27",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27"
+                            Name = "27",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 271,
-                            Code = "27.1",
+                            Code = "27,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.1"
+                            Name = "27,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 272,
-                            Code = "27.2",
+                            Code = "27,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.2"
+                            Name = "27,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 273,
-                            Code = "27.3",
+                            Code = "27,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.3"
+                            Name = "27,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 274,
-                            Code = "27.4",
+                            Code = "27,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.4"
+                            Name = "27,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 275,
-                            Code = "27.5",
+                            Code = "27,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.5"
+                            Name = "27,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 276,
-                            Code = "27.6",
+                            Code = "27,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.6"
+                            Name = "27,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 277,
-                            Code = "27.7",
+                            Code = "27,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.7"
+                            Name = "27,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 278,
-                            Code = "27.8",
+                            Code = "27,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.8"
+                            Name = "27,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 279,
-                            Code = "27.9",
+                            Code = "27,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "27.9"
+                            Name = "27,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 280,
                             Code = "28",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28"
+                            Name = "28",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 281,
-                            Code = "28.1",
+                            Code = "28,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.1"
+                            Name = "28,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 282,
-                            Code = "28.2",
+                            Code = "28,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.2"
+                            Name = "28,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 283,
-                            Code = "28.3",
+                            Code = "28,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.3"
+                            Name = "28,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 284,
-                            Code = "28.4",
+                            Code = "28,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.4"
+                            Name = "28,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 285,
-                            Code = "28.5",
+                            Code = "28,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.5"
+                            Name = "28,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 286,
-                            Code = "28.6",
+                            Code = "28,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.6"
+                            Name = "28,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 287,
-                            Code = "28.7",
+                            Code = "28,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.7"
+                            Name = "28,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 288,
-                            Code = "28.8",
+                            Code = "28,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.8"
+                            Name = "28,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 289,
-                            Code = "28.9",
+                            Code = "28,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "28.9"
+                            Name = "28,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 290,
                             Code = "29",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29"
+                            Name = "29",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 291,
-                            Code = "29.1",
+                            Code = "29,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.1"
+                            Name = "29,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 292,
-                            Code = "29.2",
+                            Code = "29,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.2"
+                            Name = "29,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 293,
-                            Code = "29.3",
+                            Code = "29,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.3"
+                            Name = "29,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 294,
-                            Code = "29.4",
+                            Code = "29,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.4"
+                            Name = "29,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 295,
-                            Code = "29.5",
+                            Code = "29,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.5"
+                            Name = "29,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 296,
-                            Code = "29.6",
+                            Code = "29,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.6"
+                            Name = "29,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 297,
-                            Code = "29.7",
+                            Code = "29,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.7"
+                            Name = "29,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 298,
-                            Code = "29.8",
+                            Code = "29,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.8"
+                            Name = "29,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 299,
-                            Code = "29.9",
+                            Code = "29,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "29.9"
+                            Name = "29,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 300,
                             Code = "30",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30"
+                            Name = "30",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 301,
-                            Code = "30.1",
+                            Code = "30,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.1"
+                            Name = "30,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 302,
-                            Code = "30.2",
+                            Code = "30,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.2"
+                            Name = "30,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 303,
-                            Code = "30.3",
+                            Code = "30,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.3"
+                            Name = "30,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 304,
-                            Code = "30.4",
+                            Code = "30,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.4"
+                            Name = "30,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 305,
-                            Code = "30.5",
+                            Code = "30,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.5"
+                            Name = "30,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 306,
-                            Code = "30.6",
+                            Code = "30,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.6"
+                            Name = "30,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 307,
-                            Code = "30.7",
+                            Code = "30,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.7"
+                            Name = "30,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 308,
-                            Code = "30.8",
+                            Code = "30,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.8"
+                            Name = "30,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 309,
-                            Code = "30.9",
+                            Code = "30,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "30.9"
+                            Name = "30,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 310,
                             Code = "31",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31"
+                            Name = "31",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 311,
-                            Code = "31.1",
+                            Code = "31,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.1"
+                            Name = "31,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 312,
-                            Code = "31.2",
+                            Code = "31,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.2"
+                            Name = "31,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 313,
-                            Code = "31.3",
+                            Code = "31,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.3"
+                            Name = "31,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 314,
-                            Code = "31.4",
+                            Code = "31,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.4"
+                            Name = "31,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 315,
-                            Code = "31.5",
+                            Code = "31,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.5"
+                            Name = "31,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 316,
-                            Code = "31.6",
+                            Code = "31,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.6"
+                            Name = "31,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 317,
-                            Code = "31.7",
+                            Code = "31,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.7"
+                            Name = "31,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 318,
-                            Code = "31.8",
+                            Code = "31,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.8"
+                            Name = "31,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 319,
-                            Code = "31.9",
+                            Code = "31,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "31.9"
+                            Name = "31,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 320,
                             Code = "32",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32"
+                            Name = "32",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 321,
-                            Code = "32.1",
+                            Code = "32,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.1"
+                            Name = "32,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 322,
-                            Code = "32.2",
+                            Code = "32,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.2"
+                            Name = "32,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 323,
-                            Code = "32.3",
+                            Code = "32,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.3"
+                            Name = "32,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 324,
-                            Code = "32.4",
+                            Code = "32,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.4"
+                            Name = "32,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 325,
-                            Code = "32.5",
+                            Code = "32,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.5"
+                            Name = "32,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 326,
-                            Code = "32.6",
+                            Code = "32,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.6"
+                            Name = "32,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 327,
-                            Code = "32.7",
+                            Code = "32,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.7"
+                            Name = "32,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 328,
-                            Code = "32.8",
+                            Code = "32,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.8"
+                            Name = "32,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 329,
-                            Code = "32.9",
+                            Code = "32,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "32.9"
+                            Name = "32,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 330,
                             Code = "33",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33"
+                            Name = "33",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 331,
-                            Code = "33.1",
+                            Code = "33,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.1"
+                            Name = "33,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 332,
-                            Code = "33.2",
+                            Code = "33,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.2"
+                            Name = "33,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 333,
-                            Code = "33.3",
+                            Code = "33,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.3"
+                            Name = "33,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 334,
-                            Code = "33.4",
+                            Code = "33,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.4"
+                            Name = "33,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 335,
-                            Code = "33.5",
+                            Code = "33,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.5"
+                            Name = "33,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 336,
-                            Code = "33.6",
+                            Code = "33,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.6"
+                            Name = "33,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 337,
-                            Code = "33.7",
+                            Code = "33,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.7"
+                            Name = "33,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 338,
-                            Code = "33.8",
+                            Code = "33,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.8"
+                            Name = "33,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 339,
-                            Code = "33.9",
+                            Code = "33,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "33.9"
+                            Name = "33,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 340,
                             Code = "34",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34"
+                            Name = "34",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 341,
-                            Code = "34.1",
+                            Code = "34,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.1"
+                            Name = "34,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 342,
-                            Code = "34.2",
+                            Code = "34,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.2"
+                            Name = "34,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 343,
-                            Code = "34.3",
+                            Code = "34,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.3"
+                            Name = "34,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 344,
-                            Code = "34.4",
+                            Code = "34,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.4"
+                            Name = "34,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 345,
-                            Code = "34.5",
+                            Code = "34,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.5"
+                            Name = "34,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 346,
-                            Code = "34.6",
+                            Code = "34,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.6"
+                            Name = "34,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 347,
-                            Code = "34.7",
+                            Code = "34,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.7"
+                            Name = "34,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 348,
-                            Code = "34.8",
+                            Code = "34,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.8"
+                            Name = "34,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 349,
-                            Code = "34.9",
+                            Code = "34,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "34.9"
+                            Name = "34,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 350,
                             Code = "35",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35"
+                            Name = "35",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 351,
-                            Code = "35.1",
+                            Code = "35,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.1"
+                            Name = "35,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 352,
-                            Code = "35.2",
+                            Code = "35,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.2"
+                            Name = "35,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 353,
-                            Code = "35.3",
+                            Code = "35,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.3"
+                            Name = "35,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 354,
-                            Code = "35.4",
+                            Code = "35,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.4"
+                            Name = "35,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 355,
-                            Code = "35.5",
+                            Code = "35,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.5"
+                            Name = "35,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 356,
-                            Code = "35.6",
+                            Code = "35,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.6"
+                            Name = "35,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 357,
-                            Code = "35.7",
+                            Code = "35,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.7"
+                            Name = "35,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 358,
-                            Code = "35.8",
+                            Code = "35,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.8"
+                            Name = "35,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 359,
-                            Code = "35.9",
+                            Code = "35,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "35.9"
+                            Name = "35,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 360,
                             Code = "36",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36"
+                            Name = "36",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 361,
-                            Code = "36.1",
+                            Code = "36,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.1"
+                            Name = "36,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 362,
-                            Code = "36.2",
+                            Code = "36,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.2"
+                            Name = "36,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 363,
-                            Code = "36.3",
+                            Code = "36,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.3"
+                            Name = "36,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 364,
-                            Code = "36.4",
+                            Code = "36,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.4"
+                            Name = "36,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 365,
-                            Code = "36.5",
+                            Code = "36,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.5"
+                            Name = "36,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 366,
-                            Code = "36.6",
+                            Code = "36,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.6"
+                            Name = "36,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 367,
-                            Code = "36.7",
+                            Code = "36,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.7"
+                            Name = "36,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 368,
-                            Code = "36.8",
+                            Code = "36,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.8"
+                            Name = "36,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 369,
-                            Code = "36.9",
+                            Code = "36,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "36.9"
+                            Name = "36,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 370,
                             Code = "37",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37"
+                            Name = "37",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 371,
-                            Code = "37.1",
+                            Code = "37,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.1"
+                            Name = "37,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 372,
-                            Code = "37.2",
+                            Code = "37,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.2"
+                            Name = "37,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 373,
-                            Code = "37.3",
+                            Code = "37,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.3"
+                            Name = "37,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 374,
-                            Code = "37.4",
+                            Code = "37,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.4"
+                            Name = "37,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 375,
-                            Code = "37.5",
+                            Code = "37,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.5"
+                            Name = "37,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 376,
-                            Code = "37.6",
+                            Code = "37,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.6"
+                            Name = "37,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 377,
-                            Code = "37.7",
+                            Code = "37,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.7"
+                            Name = "37,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 378,
-                            Code = "37.8",
+                            Code = "37,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.8"
+                            Name = "37,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 379,
-                            Code = "37.9",
+                            Code = "37,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "37.9"
+                            Name = "37,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 380,
                             Code = "38",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38"
+                            Name = "38",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 381,
-                            Code = "38.1",
+                            Code = "38,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.1"
+                            Name = "38,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 382,
-                            Code = "38.2",
+                            Code = "38,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.2"
+                            Name = "38,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 383,
-                            Code = "38.3",
+                            Code = "38,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.3"
+                            Name = "38,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 384,
-                            Code = "38.4",
+                            Code = "38,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.4"
+                            Name = "38,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 385,
-                            Code = "38.5",
+                            Code = "38,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.5"
+                            Name = "38,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 386,
-                            Code = "38.6",
+                            Code = "38,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.6"
+                            Name = "38,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 387,
-                            Code = "38.7",
+                            Code = "38,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.7"
+                            Name = "38,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 388,
-                            Code = "38.8",
+                            Code = "38,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.8"
+                            Name = "38,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 389,
-                            Code = "38.9",
+                            Code = "38,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "38.9"
+                            Name = "38,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 390,
                             Code = "39",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39"
+                            Name = "39",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 391,
-                            Code = "39.1",
+                            Code = "39,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.1"
+                            Name = "39,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 392,
-                            Code = "39.2",
+                            Code = "39,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.2"
+                            Name = "39,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 393,
-                            Code = "39.3",
+                            Code = "39,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.3"
+                            Name = "39,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 394,
-                            Code = "39.4",
+                            Code = "39,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.4"
+                            Name = "39,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 395,
-                            Code = "39.5",
+                            Code = "39,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.5"
+                            Name = "39,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 396,
-                            Code = "39.6",
+                            Code = "39,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.6"
+                            Name = "39,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 397,
-                            Code = "39.7",
+                            Code = "39,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.7"
+                            Name = "39,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 398,
-                            Code = "39.8",
+                            Code = "39,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.8"
+                            Name = "39,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 399,
-                            Code = "39.9",
+                            Code = "39,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "39.9"
+                            Name = "39,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 400,
                             Code = "40",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40"
+                            Name = "40",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 401,
-                            Code = "40.1",
+                            Code = "40,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.1"
+                            Name = "40,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 402,
-                            Code = "40.2",
+                            Code = "40,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.2"
+                            Name = "40,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 403,
-                            Code = "40.3",
+                            Code = "40,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.3"
+                            Name = "40,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 404,
-                            Code = "40.4",
+                            Code = "40,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.4"
+                            Name = "40,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 405,
-                            Code = "40.5",
+                            Code = "40,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.5"
+                            Name = "40,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 406,
-                            Code = "40.6",
+                            Code = "40,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.6"
+                            Name = "40,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 407,
-                            Code = "40.7",
+                            Code = "40,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.7"
+                            Name = "40,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 408,
-                            Code = "40.8",
+                            Code = "40,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.8"
+                            Name = "40,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 409,
-                            Code = "40.9",
+                            Code = "40,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "40.9"
+                            Name = "40,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 410,
                             Code = "41",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41"
+                            Name = "41",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 411,
-                            Code = "41.1",
+                            Code = "41,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.1"
+                            Name = "41,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 412,
-                            Code = "41.2",
+                            Code = "41,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.2"
+                            Name = "41,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 413,
-                            Code = "41.3",
+                            Code = "41,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.3"
+                            Name = "41,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 414,
-                            Code = "41.4",
+                            Code = "41,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.4"
+                            Name = "41,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 415,
-                            Code = "41.5",
+                            Code = "41,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.5"
+                            Name = "41,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 416,
-                            Code = "41.6",
+                            Code = "41,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.6"
+                            Name = "41,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 417,
-                            Code = "41.7",
+                            Code = "41,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.7"
+                            Name = "41,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 418,
-                            Code = "41.8",
+                            Code = "41,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.8"
+                            Name = "41,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 419,
-                            Code = "41.9",
+                            Code = "41,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "41.9"
+                            Name = "41,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 420,
                             Code = "42",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42"
+                            Name = "42",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 421,
-                            Code = "42.1",
+                            Code = "42,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.1"
+                            Name = "42,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 422,
-                            Code = "42.2",
+                            Code = "42,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.2"
+                            Name = "42,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 423,
-                            Code = "42.3",
+                            Code = "42,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.3"
+                            Name = "42,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 424,
-                            Code = "42.4",
+                            Code = "42,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.4"
+                            Name = "42,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 425,
-                            Code = "42.5",
+                            Code = "42,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.5"
+                            Name = "42,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 426,
-                            Code = "42.6",
+                            Code = "42,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.6"
+                            Name = "42,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 427,
-                            Code = "42.7",
+                            Code = "42,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.7"
+                            Name = "42,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 428,
-                            Code = "42.8",
+                            Code = "42,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.8"
+                            Name = "42,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 429,
-                            Code = "42.9",
+                            Code = "42,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "42.9"
+                            Name = "42,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 430,
                             Code = "43",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43"
+                            Name = "43",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 431,
-                            Code = "43.1",
+                            Code = "43,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.1"
+                            Name = "43,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 432,
-                            Code = "43.2",
+                            Code = "43,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.2"
+                            Name = "43,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 433,
-                            Code = "43.3",
+                            Code = "43,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.3"
+                            Name = "43,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 434,
-                            Code = "43.4",
+                            Code = "43,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.4"
+                            Name = "43,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 435,
-                            Code = "43.5",
+                            Code = "43,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.5"
+                            Name = "43,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 436,
-                            Code = "43.6",
+                            Code = "43,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.6"
+                            Name = "43,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 437,
-                            Code = "43.7",
+                            Code = "43,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.7"
+                            Name = "43,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 438,
-                            Code = "43.8",
+                            Code = "43,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.8"
+                            Name = "43,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 439,
-                            Code = "43.9",
+                            Code = "43,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "43.9"
+                            Name = "43,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 440,
                             Code = "44",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44"
+                            Name = "44",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 441,
-                            Code = "44.1",
+                            Code = "44,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.1"
+                            Name = "44,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 442,
-                            Code = "44.2",
+                            Code = "44,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.2"
+                            Name = "44,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 443,
-                            Code = "44.3",
+                            Code = "44,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.3"
+                            Name = "44,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 444,
-                            Code = "44.4",
+                            Code = "44,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.4"
+                            Name = "44,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 445,
-                            Code = "44.5",
+                            Code = "44,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.5"
+                            Name = "44,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 446,
-                            Code = "44.6",
+                            Code = "44,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.6"
+                            Name = "44,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 447,
-                            Code = "44.7",
+                            Code = "44,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.7"
+                            Name = "44,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 448,
-                            Code = "44.8",
+                            Code = "44,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.8"
+                            Name = "44,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 449,
-                            Code = "44.9",
+                            Code = "44,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "44.9"
+                            Name = "44,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 450,
                             Code = "45",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45"
+                            Name = "45",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 451,
-                            Code = "45.1",
+                            Code = "45,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.1"
+                            Name = "45,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 452,
-                            Code = "45.2",
+                            Code = "45,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.2"
+                            Name = "45,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 453,
-                            Code = "45.3",
+                            Code = "45,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.3"
+                            Name = "45,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 454,
-                            Code = "45.4",
+                            Code = "45,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.4"
+                            Name = "45,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 455,
-                            Code = "45.5",
+                            Code = "45,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.5"
+                            Name = "45,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 456,
-                            Code = "45.6",
+                            Code = "45,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.6"
+                            Name = "45,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 457,
-                            Code = "45.7",
+                            Code = "45,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.7"
+                            Name = "45,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 458,
-                            Code = "45.8",
+                            Code = "45,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.8"
+                            Name = "45,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 459,
-                            Code = "45.9",
+                            Code = "45,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "45.9"
+                            Name = "45,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 460,
                             Code = "46",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46"
+                            Name = "46",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 461,
-                            Code = "46.1",
+                            Code = "46,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.1"
+                            Name = "46,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 462,
-                            Code = "46.2",
+                            Code = "46,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.2"
+                            Name = "46,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 463,
-                            Code = "46.3",
+                            Code = "46,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.3"
+                            Name = "46,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 464,
-                            Code = "46.4",
+                            Code = "46,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.4"
+                            Name = "46,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 465,
-                            Code = "46.5",
+                            Code = "46,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.5"
+                            Name = "46,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 466,
-                            Code = "46.6",
+                            Code = "46,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.6"
+                            Name = "46,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 467,
-                            Code = "46.7",
+                            Code = "46,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.7"
+                            Name = "46,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 468,
-                            Code = "46.8",
+                            Code = "46,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.8"
+                            Name = "46,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 469,
-                            Code = "46.9",
+                            Code = "46,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "46.9"
+                            Name = "46,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 470,
                             Code = "47",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47"
+                            Name = "47",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 471,
-                            Code = "47.1",
+                            Code = "47,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.1"
+                            Name = "47,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 472,
-                            Code = "47.2",
+                            Code = "47,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.2"
+                            Name = "47,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 473,
-                            Code = "47.3",
+                            Code = "47,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.3"
+                            Name = "47,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 474,
-                            Code = "47.4",
+                            Code = "47,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.4"
+                            Name = "47,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 475,
-                            Code = "47.5",
+                            Code = "47,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.5"
+                            Name = "47,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 476,
-                            Code = "47.6",
+                            Code = "47,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.6"
+                            Name = "47,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 477,
-                            Code = "47.7",
+                            Code = "47,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.7"
+                            Name = "47,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 478,
-                            Code = "47.8",
+                            Code = "47,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.8"
+                            Name = "47,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 479,
-                            Code = "47.9",
+                            Code = "47,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "47.9"
+                            Name = "47,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 480,
                             Code = "48",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48"
+                            Name = "48",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 481,
-                            Code = "48.1",
+                            Code = "48,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.1"
+                            Name = "48,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 482,
-                            Code = "48.2",
+                            Code = "48,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.2"
+                            Name = "48,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 483,
-                            Code = "48.3",
+                            Code = "48,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.3"
+                            Name = "48,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 484,
-                            Code = "48.4",
+                            Code = "48,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.4"
+                            Name = "48,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 485,
-                            Code = "48.5",
+                            Code = "48,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.5"
+                            Name = "48,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 486,
-                            Code = "48.6",
+                            Code = "48,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.6"
+                            Name = "48,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 487,
-                            Code = "48.7",
+                            Code = "48,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.7"
+                            Name = "48,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 488,
-                            Code = "48.8",
+                            Code = "48,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.8"
+                            Name = "48,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 489,
-                            Code = "48.9",
+                            Code = "48,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "48.9"
+                            Name = "48,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 490,
                             Code = "49",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49"
+                            Name = "49",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 491,
-                            Code = "49.1",
+                            Code = "49,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.1"
+                            Name = "49,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 492,
-                            Code = "49.2",
+                            Code = "49,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.2"
+                            Name = "49,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 493,
-                            Code = "49.3",
+                            Code = "49,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.3"
+                            Name = "49,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 494,
-                            Code = "49.4",
+                            Code = "49,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.4"
+                            Name = "49,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 495,
-                            Code = "49.5",
+                            Code = "49,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.5"
+                            Name = "49,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 496,
-                            Code = "49.6",
+                            Code = "49,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.6"
+                            Name = "49,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 497,
-                            Code = "49.7",
+                            Code = "49,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.7"
+                            Name = "49,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 498,
-                            Code = "49.8",
+                            Code = "49,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.8"
+                            Name = "49,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 499,
-                            Code = "49.9",
+                            Code = "49,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "49.9"
+                            Name = "49,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 500,
                             Code = "50",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50"
+                            Name = "50",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 501,
-                            Code = "50.1",
+                            Code = "50,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.1"
+                            Name = "50,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 502,
-                            Code = "50.2",
+                            Code = "50,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.2"
+                            Name = "50,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 503,
-                            Code = "50.3",
+                            Code = "50,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.3"
+                            Name = "50,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 504,
-                            Code = "50.4",
+                            Code = "50,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.4"
+                            Name = "50,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 505,
-                            Code = "50.5",
+                            Code = "50,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.5"
+                            Name = "50,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 506,
-                            Code = "50.6",
+                            Code = "50,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.6"
+                            Name = "50,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 507,
-                            Code = "50.7",
+                            Code = "50,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.7"
+                            Name = "50,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 508,
-                            Code = "50.8",
+                            Code = "50,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.8"
+                            Name = "50,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 509,
-                            Code = "50.9",
+                            Code = "50,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "50.9"
+                            Name = "50,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 510,
                             Code = "51",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51"
+                            Name = "51",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 511,
-                            Code = "51.1",
+                            Code = "51,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.1"
+                            Name = "51,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 512,
-                            Code = "51.2",
+                            Code = "51,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.2"
+                            Name = "51,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 513,
-                            Code = "51.3",
+                            Code = "51,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.3"
+                            Name = "51,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 514,
-                            Code = "51.4",
+                            Code = "51,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.4"
+                            Name = "51,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 515,
-                            Code = "51.5",
+                            Code = "51,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.5"
+                            Name = "51,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 516,
-                            Code = "51.6",
+                            Code = "51,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.6"
+                            Name = "51,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 517,
-                            Code = "51.7",
+                            Code = "51,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.7"
+                            Name = "51,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 518,
-                            Code = "51.8",
+                            Code = "51,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.8"
+                            Name = "51,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 519,
-                            Code = "51.9",
+                            Code = "51,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "51.9"
+                            Name = "51,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 520,
                             Code = "52",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52"
+                            Name = "52",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 521,
-                            Code = "52.1",
+                            Code = "52,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.1"
+                            Name = "52,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 522,
-                            Code = "52.2",
+                            Code = "52,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.2"
+                            Name = "52,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 523,
-                            Code = "52.3",
+                            Code = "52,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.3"
+                            Name = "52,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 524,
-                            Code = "52.4",
+                            Code = "52,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.4"
+                            Name = "52,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 525,
-                            Code = "52.5",
+                            Code = "52,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.5"
+                            Name = "52,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 526,
-                            Code = "52.6",
+                            Code = "52,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.6"
+                            Name = "52,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 527,
-                            Code = "52.7",
+                            Code = "52,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.7"
+                            Name = "52,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 528,
-                            Code = "52.8",
+                            Code = "52,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.8"
+                            Name = "52,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 529,
-                            Code = "52.9",
+                            Code = "52,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "52.9"
+                            Name = "52,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 530,
                             Code = "53",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53"
+                            Name = "53",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 531,
-                            Code = "53.1",
+                            Code = "53,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.1"
+                            Name = "53,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 532,
-                            Code = "53.2",
+                            Code = "53,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.2"
+                            Name = "53,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 533,
-                            Code = "53.3",
+                            Code = "53,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.3"
+                            Name = "53,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 534,
-                            Code = "53.4",
+                            Code = "53,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.4"
+                            Name = "53,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 535,
-                            Code = "53.5",
+                            Code = "53,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.5"
+                            Name = "53,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 536,
-                            Code = "53.6",
+                            Code = "53,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.6"
+                            Name = "53,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 537,
-                            Code = "53.7",
+                            Code = "53,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.7"
+                            Name = "53,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 538,
-                            Code = "53.8",
+                            Code = "53,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.8"
+                            Name = "53,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 539,
-                            Code = "53.9",
+                            Code = "53,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "53.9"
+                            Name = "53,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 540,
                             Code = "54",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54"
+                            Name = "54",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 541,
-                            Code = "54.1",
+                            Code = "54,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.1"
+                            Name = "54,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 542,
-                            Code = "54.2",
+                            Code = "54,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.2"
+                            Name = "54,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 543,
-                            Code = "54.3",
+                            Code = "54,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.3"
+                            Name = "54,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 544,
-                            Code = "54.4",
+                            Code = "54,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.4"
+                            Name = "54,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 545,
-                            Code = "54.5",
+                            Code = "54,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.5"
+                            Name = "54,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 546,
-                            Code = "54.6",
+                            Code = "54,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.6"
+                            Name = "54,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 547,
-                            Code = "54.7",
+                            Code = "54,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.7"
+                            Name = "54,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 548,
-                            Code = "54.8",
+                            Code = "54,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.8"
+                            Name = "54,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 549,
-                            Code = "54.9",
+                            Code = "54,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "54.9"
+                            Name = "54,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 550,
                             Code = "55",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55"
+                            Name = "55",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 551,
-                            Code = "55.1",
+                            Code = "55,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.1"
+                            Name = "55,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 552,
-                            Code = "55.2",
+                            Code = "55,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.2"
+                            Name = "55,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 553,
-                            Code = "55.3",
+                            Code = "55,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.3"
+                            Name = "55,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 554,
-                            Code = "55.4",
+                            Code = "55,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.4"
+                            Name = "55,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 555,
-                            Code = "55.5",
+                            Code = "55,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.5"
+                            Name = "55,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 556,
-                            Code = "55.6",
+                            Code = "55,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.6"
+                            Name = "55,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 557,
-                            Code = "55.7",
+                            Code = "55,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.7"
+                            Name = "55,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 558,
-                            Code = "55.8",
+                            Code = "55,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.8"
+                            Name = "55,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 559,
-                            Code = "55.9",
+                            Code = "55,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "55.9"
+                            Name = "55,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 560,
                             Code = "56",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56"
+                            Name = "56",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 561,
-                            Code = "56.1",
+                            Code = "56,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.1"
+                            Name = "56,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 562,
-                            Code = "56.2",
+                            Code = "56,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.2"
+                            Name = "56,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 563,
-                            Code = "56.3",
+                            Code = "56,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.3"
+                            Name = "56,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 564,
-                            Code = "56.4",
+                            Code = "56,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.4"
+                            Name = "56,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 565,
-                            Code = "56.5",
+                            Code = "56,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.5"
+                            Name = "56,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 566,
-                            Code = "56.6",
+                            Code = "56,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.6"
+                            Name = "56,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 567,
-                            Code = "56.7",
+                            Code = "56,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.7"
+                            Name = "56,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 568,
-                            Code = "56.8",
+                            Code = "56,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.8"
+                            Name = "56,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 569,
-                            Code = "56.9",
+                            Code = "56,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "56.9"
+                            Name = "56,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 570,
                             Code = "57",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57"
+                            Name = "57",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 571,
-                            Code = "57.1",
+                            Code = "57,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.1"
+                            Name = "57,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 572,
-                            Code = "57.2",
+                            Code = "57,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.2"
+                            Name = "57,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 573,
-                            Code = "57.3",
+                            Code = "57,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.3"
+                            Name = "57,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 574,
-                            Code = "57.4",
+                            Code = "57,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.4"
+                            Name = "57,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 575,
-                            Code = "57.5",
+                            Code = "57,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.5"
+                            Name = "57,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 576,
-                            Code = "57.6",
+                            Code = "57,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.6"
+                            Name = "57,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 577,
-                            Code = "57.7",
+                            Code = "57,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.7"
+                            Name = "57,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 578,
-                            Code = "57.8",
+                            Code = "57,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.8"
+                            Name = "57,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 579,
-                            Code = "57.9",
+                            Code = "57,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "57.9"
+                            Name = "57,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 580,
                             Code = "58",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58"
+                            Name = "58",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 581,
-                            Code = "58.1",
+                            Code = "58,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.1"
+                            Name = "58,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 582,
-                            Code = "58.2",
+                            Code = "58,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.2"
+                            Name = "58,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 583,
-                            Code = "58.3",
+                            Code = "58,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.3"
+                            Name = "58,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 584,
-                            Code = "58.4",
+                            Code = "58,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.4"
+                            Name = "58,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 585,
-                            Code = "58.5",
+                            Code = "58,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.5"
+                            Name = "58,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 586,
-                            Code = "58.6",
+                            Code = "58,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.6"
+                            Name = "58,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 587,
-                            Code = "58.7",
+                            Code = "58,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.7"
+                            Name = "58,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 588,
-                            Code = "58.8",
+                            Code = "58,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.8"
+                            Name = "58,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 589,
-                            Code = "58.9",
+                            Code = "58,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "58.9"
+                            Name = "58,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 590,
                             Code = "59",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59"
+                            Name = "59",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 591,
-                            Code = "59.1",
+                            Code = "59,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.1"
+                            Name = "59,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 592,
-                            Code = "59.2",
+                            Code = "59,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.2"
+                            Name = "59,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 593,
-                            Code = "59.3",
+                            Code = "59,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.3"
+                            Name = "59,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 594,
-                            Code = "59.4",
+                            Code = "59,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.4"
+                            Name = "59,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 595,
-                            Code = "59.5",
+                            Code = "59,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.5"
+                            Name = "59,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 596,
-                            Code = "59.6",
+                            Code = "59,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.6"
+                            Name = "59,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 597,
-                            Code = "59.7",
+                            Code = "59,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.7"
+                            Name = "59,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 598,
-                            Code = "59.8",
+                            Code = "59,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.8"
+                            Name = "59,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 599,
-                            Code = "59.9",
+                            Code = "59,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "59.9"
+                            Name = "59,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 600,
                             Code = "60",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60"
+                            Name = "60",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 601,
-                            Code = "60.1",
+                            Code = "60,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.1"
+                            Name = "60,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 602,
-                            Code = "60.2",
+                            Code = "60,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.2"
+                            Name = "60,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 603,
-                            Code = "60.3",
+                            Code = "60,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.3"
+                            Name = "60,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 604,
-                            Code = "60.4",
+                            Code = "60,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.4"
+                            Name = "60,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 605,
-                            Code = "60.5",
+                            Code = "60,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.5"
+                            Name = "60,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 606,
-                            Code = "60.6",
+                            Code = "60,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.6"
+                            Name = "60,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 607,
-                            Code = "60.7",
+                            Code = "60,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.7"
+                            Name = "60,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 608,
-                            Code = "60.8",
+                            Code = "60,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.8"
+                            Name = "60,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 609,
-                            Code = "60.9",
+                            Code = "60,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "60.9"
+                            Name = "60,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 610,
                             Code = "61",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61"
+                            Name = "61",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 611,
-                            Code = "61.1",
+                            Code = "61,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.1"
+                            Name = "61,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 612,
-                            Code = "61.2",
+                            Code = "61,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.2"
+                            Name = "61,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 613,
-                            Code = "61.3",
+                            Code = "61,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.3"
+                            Name = "61,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 614,
-                            Code = "61.4",
+                            Code = "61,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.4"
+                            Name = "61,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 615,
-                            Code = "61.5",
+                            Code = "61,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.5"
+                            Name = "61,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 616,
-                            Code = "61.6",
+                            Code = "61,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.6"
+                            Name = "61,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 617,
-                            Code = "61.7",
+                            Code = "61,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.7"
+                            Name = "61,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 618,
-                            Code = "61.8",
+                            Code = "61,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.8"
+                            Name = "61,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 619,
-                            Code = "61.9",
+                            Code = "61,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "61.9"
+                            Name = "61,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 620,
                             Code = "62",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62"
+                            Name = "62",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 621,
-                            Code = "62.1",
+                            Code = "62,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.1"
+                            Name = "62,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 622,
-                            Code = "62.2",
+                            Code = "62,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.2"
+                            Name = "62,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 623,
-                            Code = "62.3",
+                            Code = "62,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.3"
+                            Name = "62,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 624,
-                            Code = "62.4",
+                            Code = "62,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.4"
+                            Name = "62,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 625,
-                            Code = "62.5",
+                            Code = "62,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.5"
+                            Name = "62,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 626,
-                            Code = "62.6",
+                            Code = "62,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.6"
+                            Name = "62,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 627,
-                            Code = "62.7",
+                            Code = "62,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.7"
+                            Name = "62,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 628,
-                            Code = "62.8",
+                            Code = "62,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.8"
+                            Name = "62,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 629,
-                            Code = "62.9",
+                            Code = "62,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "62.9"
+                            Name = "62,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 630,
                             Code = "63",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63"
+                            Name = "63",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 631,
-                            Code = "63.1",
+                            Code = "63,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.1"
+                            Name = "63,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 632,
-                            Code = "63.2",
+                            Code = "63,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.2"
+                            Name = "63,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 633,
-                            Code = "63.3",
+                            Code = "63,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.3"
+                            Name = "63,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 634,
-                            Code = "63.4",
+                            Code = "63,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.4"
+                            Name = "63,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 635,
-                            Code = "63.5",
+                            Code = "63,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.5"
+                            Name = "63,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 636,
-                            Code = "63.6",
+                            Code = "63,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.6"
+                            Name = "63,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 637,
-                            Code = "63.7",
+                            Code = "63,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.7"
+                            Name = "63,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 638,
-                            Code = "63.8",
+                            Code = "63,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.8"
+                            Name = "63,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 639,
-                            Code = "63.9",
+                            Code = "63,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "63.9"
+                            Name = "63,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 640,
                             Code = "64",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64"
+                            Name = "64",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 641,
-                            Code = "64.1",
+                            Code = "64,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.1"
+                            Name = "64,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 642,
-                            Code = "64.2",
+                            Code = "64,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.2"
+                            Name = "64,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 643,
-                            Code = "64.3",
+                            Code = "64,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.3"
+                            Name = "64,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 644,
-                            Code = "64.4",
+                            Code = "64,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.4"
+                            Name = "64,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 645,
-                            Code = "64.5",
+                            Code = "64,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.5"
+                            Name = "64,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 646,
-                            Code = "64.6",
+                            Code = "64,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.6"
+                            Name = "64,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 647,
-                            Code = "64.7",
+                            Code = "64,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.7"
+                            Name = "64,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 648,
-                            Code = "64.8",
+                            Code = "64,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.8"
+                            Name = "64,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 649,
-                            Code = "64.9",
+                            Code = "64,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "64.9"
+                            Name = "64,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 650,
                             Code = "65",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65"
+                            Name = "65",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 651,
-                            Code = "65.1",
+                            Code = "65,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.1"
+                            Name = "65,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 652,
-                            Code = "65.2",
+                            Code = "65,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.2"
+                            Name = "65,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 653,
-                            Code = "65.3",
+                            Code = "65,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.3"
+                            Name = "65,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 654,
-                            Code = "65.4",
+                            Code = "65,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.4"
+                            Name = "65,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 655,
-                            Code = "65.5",
+                            Code = "65,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.5"
+                            Name = "65,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 656,
-                            Code = "65.6",
+                            Code = "65,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.6"
+                            Name = "65,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 657,
-                            Code = "65.7",
+                            Code = "65,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.7"
+                            Name = "65,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 658,
-                            Code = "65.8",
+                            Code = "65,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.8"
+                            Name = "65,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 659,
-                            Code = "65.9",
+                            Code = "65,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "65.9"
+                            Name = "65,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 660,
                             Code = "66",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66"
+                            Name = "66",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 661,
-                            Code = "66.1",
+                            Code = "66,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.1"
+                            Name = "66,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 662,
-                            Code = "66.2",
+                            Code = "66,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.2"
+                            Name = "66,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 663,
-                            Code = "66.3",
+                            Code = "66,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.3"
+                            Name = "66,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 664,
-                            Code = "66.4",
+                            Code = "66,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.4"
+                            Name = "66,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 665,
-                            Code = "66.5",
+                            Code = "66,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.5"
+                            Name = "66,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 666,
-                            Code = "66.6",
+                            Code = "66,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.6"
+                            Name = "66,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 667,
-                            Code = "66.7",
+                            Code = "66,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.7"
+                            Name = "66,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 668,
-                            Code = "66.8",
+                            Code = "66,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.8"
+                            Name = "66,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 669,
-                            Code = "66.9",
+                            Code = "66,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "66.9"
+                            Name = "66,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 670,
                             Code = "67",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67"
+                            Name = "67",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 671,
-                            Code = "67.1",
+                            Code = "67,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.1"
+                            Name = "67,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 672,
-                            Code = "67.2",
+                            Code = "67,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.2"
+                            Name = "67,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 673,
-                            Code = "67.3",
+                            Code = "67,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.3"
+                            Name = "67,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 674,
-                            Code = "67.4",
+                            Code = "67,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.4"
+                            Name = "67,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 675,
-                            Code = "67.5",
+                            Code = "67,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.5"
+                            Name = "67,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 676,
-                            Code = "67.6",
+                            Code = "67,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.6"
+                            Name = "67,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 677,
-                            Code = "67.7",
+                            Code = "67,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.7"
+                            Name = "67,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 678,
-                            Code = "67.8",
+                            Code = "67,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.8"
+                            Name = "67,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 679,
-                            Code = "67.9",
+                            Code = "67,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "67.9"
+                            Name = "67,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 680,
                             Code = "68",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68"
+                            Name = "68",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 681,
-                            Code = "68.1",
+                            Code = "68,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.1"
+                            Name = "68,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 682,
-                            Code = "68.2",
+                            Code = "68,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.2"
+                            Name = "68,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 683,
-                            Code = "68.3",
+                            Code = "68,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.3"
+                            Name = "68,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 684,
-                            Code = "68.4",
+                            Code = "68,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.4"
+                            Name = "68,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 685,
-                            Code = "68.5",
+                            Code = "68,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.5"
+                            Name = "68,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 686,
-                            Code = "68.6",
+                            Code = "68,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.6"
+                            Name = "68,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 687,
-                            Code = "68.7",
+                            Code = "68,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.7"
+                            Name = "68,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 688,
-                            Code = "68.8",
+                            Code = "68,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.8"
+                            Name = "68,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 689,
-                            Code = "68.9",
+                            Code = "68,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "68.9"
+                            Name = "68,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 690,
                             Code = "69",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69"
+                            Name = "69",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 691,
-                            Code = "69.1",
+                            Code = "69,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.1"
+                            Name = "69,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 692,
-                            Code = "69.2",
+                            Code = "69,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.2"
+                            Name = "69,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 693,
-                            Code = "69.3",
+                            Code = "69,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.3"
+                            Name = "69,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 694,
-                            Code = "69.4",
+                            Code = "69,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.4"
+                            Name = "69,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 695,
-                            Code = "69.5",
+                            Code = "69,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.5"
+                            Name = "69,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 696,
-                            Code = "69.6",
+                            Code = "69,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.6"
+                            Name = "69,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 697,
-                            Code = "69.7",
+                            Code = "69,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.7"
+                            Name = "69,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 698,
-                            Code = "69.8",
+                            Code = "69,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.8"
+                            Name = "69,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 699,
-                            Code = "69.9",
+                            Code = "69,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "69.9"
+                            Name = "69,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 700,
                             Code = "70",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70"
+                            Name = "70",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 701,
-                            Code = "70.1",
+                            Code = "70,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.1"
+                            Name = "70,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 702,
-                            Code = "70.2",
+                            Code = "70,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.2"
+                            Name = "70,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 703,
-                            Code = "70.3",
+                            Code = "70,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.3"
+                            Name = "70,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 704,
-                            Code = "70.4",
+                            Code = "70,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.4"
+                            Name = "70,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 705,
-                            Code = "70.5",
+                            Code = "70,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.5"
+                            Name = "70,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 706,
-                            Code = "70.6",
+                            Code = "70,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.6"
+                            Name = "70,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 707,
-                            Code = "70.7",
+                            Code = "70,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.7"
+                            Name = "70,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 708,
-                            Code = "70.8",
+                            Code = "70,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.8"
+                            Name = "70,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 709,
-                            Code = "70.9",
+                            Code = "70,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "70.9"
+                            Name = "70,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 710,
                             Code = "71",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71"
+                            Name = "71",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 711,
-                            Code = "71.1",
+                            Code = "71,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.1"
+                            Name = "71,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 712,
-                            Code = "71.2",
+                            Code = "71,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.2"
+                            Name = "71,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 713,
-                            Code = "71.3",
+                            Code = "71,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.3"
+                            Name = "71,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 714,
-                            Code = "71.4",
+                            Code = "71,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.4"
+                            Name = "71,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 715,
-                            Code = "71.5",
+                            Code = "71,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.5"
+                            Name = "71,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 716,
-                            Code = "71.6",
+                            Code = "71,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.6"
+                            Name = "71,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 717,
-                            Code = "71.7",
+                            Code = "71,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.7"
+                            Name = "71,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 718,
-                            Code = "71.8",
+                            Code = "71,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.8"
+                            Name = "71,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 719,
-                            Code = "71.9",
+                            Code = "71,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "71.9"
+                            Name = "71,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 720,
                             Code = "72",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72"
+                            Name = "72",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 721,
-                            Code = "72.1",
+                            Code = "72,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.1"
+                            Name = "72,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 722,
-                            Code = "72.2",
+                            Code = "72,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.2"
+                            Name = "72,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 723,
-                            Code = "72.3",
+                            Code = "72,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.3"
+                            Name = "72,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 724,
-                            Code = "72.4",
+                            Code = "72,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.4"
+                            Name = "72,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 725,
-                            Code = "72.5",
+                            Code = "72,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.5"
+                            Name = "72,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 726,
-                            Code = "72.6",
+                            Code = "72,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.6"
+                            Name = "72,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 727,
-                            Code = "72.7",
+                            Code = "72,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.7"
+                            Name = "72,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 728,
-                            Code = "72.8",
+                            Code = "72,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.8"
+                            Name = "72,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 729,
-                            Code = "72.9",
+                            Code = "72,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "72.9"
+                            Name = "72,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 730,
                             Code = "73",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73"
+                            Name = "73",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 731,
-                            Code = "73.1",
+                            Code = "73,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.1"
+                            Name = "73,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 732,
-                            Code = "73.2",
+                            Code = "73,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.2"
+                            Name = "73,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 733,
-                            Code = "73.3",
+                            Code = "73,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.3"
+                            Name = "73,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 734,
-                            Code = "73.4",
+                            Code = "73,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.4"
+                            Name = "73,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 735,
-                            Code = "73.5",
+                            Code = "73,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.5"
+                            Name = "73,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 736,
-                            Code = "73.6",
+                            Code = "73,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.6"
+                            Name = "73,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 737,
-                            Code = "73.7",
+                            Code = "73,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.7"
+                            Name = "73,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 738,
-                            Code = "73.8",
+                            Code = "73,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.8"
+                            Name = "73,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 739,
-                            Code = "73.9",
+                            Code = "73,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "73.9"
+                            Name = "73,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 740,
                             Code = "74",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74"
+                            Name = "74",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 741,
-                            Code = "74.1",
+                            Code = "74,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.1"
+                            Name = "74,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 742,
-                            Code = "74.2",
+                            Code = "74,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.2"
+                            Name = "74,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 743,
-                            Code = "74.3",
+                            Code = "74,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.3"
+                            Name = "74,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 744,
-                            Code = "74.4",
+                            Code = "74,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.4"
+                            Name = "74,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 745,
-                            Code = "74.5",
+                            Code = "74,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.5"
+                            Name = "74,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 746,
-                            Code = "74.6",
+                            Code = "74,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.6"
+                            Name = "74,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 747,
-                            Code = "74.7",
+                            Code = "74,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.7"
+                            Name = "74,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 748,
-                            Code = "74.8",
+                            Code = "74,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.8"
+                            Name = "74,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 749,
-                            Code = "74.9",
+                            Code = "74,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "74.9"
+                            Name = "74,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 750,
                             Code = "75",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75"
+                            Name = "75",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 751,
-                            Code = "75.1",
+                            Code = "75,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.1"
+                            Name = "75,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 752,
-                            Code = "75.2",
+                            Code = "75,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.2"
+                            Name = "75,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 753,
-                            Code = "75.3",
+                            Code = "75,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.3"
+                            Name = "75,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 754,
-                            Code = "75.4",
+                            Code = "75,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.4"
+                            Name = "75,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 755,
-                            Code = "75.5",
+                            Code = "75,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.5"
+                            Name = "75,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 756,
-                            Code = "75.6",
+                            Code = "75,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.6"
+                            Name = "75,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 757,
-                            Code = "75.7",
+                            Code = "75,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.7"
+                            Name = "75,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 758,
-                            Code = "75.8",
+                            Code = "75,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.8"
+                            Name = "75,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 759,
-                            Code = "75.9",
+                            Code = "75,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "75.9"
+                            Name = "75,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 760,
                             Code = "76",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76"
+                            Name = "76",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 761,
-                            Code = "76.1",
+                            Code = "76,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.1"
+                            Name = "76,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 762,
-                            Code = "76.2",
+                            Code = "76,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.2"
+                            Name = "76,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 763,
-                            Code = "76.3",
+                            Code = "76,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.3"
+                            Name = "76,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 764,
-                            Code = "76.4",
+                            Code = "76,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.4"
+                            Name = "76,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 765,
-                            Code = "76.5",
+                            Code = "76,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.5"
+                            Name = "76,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 766,
-                            Code = "76.6",
+                            Code = "76,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.6"
+                            Name = "76,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 767,
-                            Code = "76.7",
+                            Code = "76,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.7"
+                            Name = "76,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 768,
-                            Code = "76.8",
+                            Code = "76,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.8"
+                            Name = "76,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 769,
-                            Code = "76.9",
+                            Code = "76,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "76.9"
+                            Name = "76,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 770,
                             Code = "77",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77"
+                            Name = "77",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 771,
-                            Code = "77.1",
+                            Code = "77,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.1"
+                            Name = "77,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 772,
-                            Code = "77.2",
+                            Code = "77,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.2"
+                            Name = "77,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 773,
-                            Code = "77.3",
+                            Code = "77,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.3"
+                            Name = "77,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 774,
-                            Code = "77.4",
+                            Code = "77,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.4"
+                            Name = "77,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 775,
-                            Code = "77.5",
+                            Code = "77,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.5"
+                            Name = "77,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 776,
-                            Code = "77.6",
+                            Code = "77,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.6"
+                            Name = "77,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 777,
-                            Code = "77.7",
+                            Code = "77,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.7"
+                            Name = "77,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 778,
-                            Code = "77.8",
+                            Code = "77,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.8"
+                            Name = "77,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 779,
-                            Code = "77.9",
+                            Code = "77,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "77.9"
+                            Name = "77,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 780,
                             Code = "78",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78"
+                            Name = "78",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 781,
-                            Code = "78.1",
+                            Code = "78,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.1"
+                            Name = "78,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 782,
-                            Code = "78.2",
+                            Code = "78,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.2"
+                            Name = "78,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 783,
-                            Code = "78.3",
+                            Code = "78,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.3"
+                            Name = "78,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 784,
-                            Code = "78.4",
+                            Code = "78,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.4"
+                            Name = "78,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 785,
-                            Code = "78.5",
+                            Code = "78,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.5"
+                            Name = "78,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 786,
-                            Code = "78.6",
+                            Code = "78,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.6"
+                            Name = "78,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 787,
-                            Code = "78.7",
+                            Code = "78,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.7"
+                            Name = "78,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 788,
-                            Code = "78.8",
+                            Code = "78,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.8"
+                            Name = "78,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 789,
-                            Code = "78.9",
+                            Code = "78,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "78.9"
+                            Name = "78,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 790,
                             Code = "79",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79"
+                            Name = "79",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 791,
-                            Code = "79.1",
+                            Code = "79,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.1"
+                            Name = "79,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 792,
-                            Code = "79.2",
+                            Code = "79,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.2"
+                            Name = "79,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 793,
-                            Code = "79.3",
+                            Code = "79,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.3"
+                            Name = "79,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 794,
-                            Code = "79.4",
+                            Code = "79,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.4"
+                            Name = "79,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 795,
-                            Code = "79.5",
+                            Code = "79,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.5"
+                            Name = "79,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 796,
-                            Code = "79.6",
+                            Code = "79,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.6"
+                            Name = "79,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 797,
-                            Code = "79.7",
+                            Code = "79,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.7"
+                            Name = "79,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 798,
-                            Code = "79.8",
+                            Code = "79,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.8"
+                            Name = "79,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 799,
-                            Code = "79.9",
+                            Code = "79,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "79.9"
+                            Name = "79,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 800,
                             Code = "80",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80"
+                            Name = "80",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 801,
-                            Code = "80.1",
+                            Code = "80,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.1"
+                            Name = "80,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 802,
-                            Code = "80.2",
+                            Code = "80,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.2"
+                            Name = "80,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 803,
-                            Code = "80.3",
+                            Code = "80,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.3"
+                            Name = "80,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 804,
-                            Code = "80.4",
+                            Code = "80,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.4"
+                            Name = "80,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 805,
-                            Code = "80.5",
+                            Code = "80,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.5"
+                            Name = "80,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 806,
-                            Code = "80.6",
+                            Code = "80,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.6"
+                            Name = "80,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 807,
-                            Code = "80.7",
+                            Code = "80,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.7"
+                            Name = "80,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 808,
-                            Code = "80.8",
+                            Code = "80,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.8"
+                            Name = "80,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 809,
-                            Code = "80.9",
+                            Code = "80,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "80.9"
+                            Name = "80,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 810,
                             Code = "81",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81"
+                            Name = "81",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 811,
-                            Code = "81.1",
+                            Code = "81,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.1"
+                            Name = "81,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 812,
-                            Code = "81.2",
+                            Code = "81,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.2"
+                            Name = "81,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 813,
-                            Code = "81.3",
+                            Code = "81,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.3"
+                            Name = "81,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 814,
-                            Code = "81.4",
+                            Code = "81,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.4"
+                            Name = "81,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 815,
-                            Code = "81.5",
+                            Code = "81,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.5"
+                            Name = "81,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 816,
-                            Code = "81.6",
+                            Code = "81,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.6"
+                            Name = "81,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 817,
-                            Code = "81.7",
+                            Code = "81,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.7"
+                            Name = "81,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 818,
-                            Code = "81.8",
+                            Code = "81,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.8"
+                            Name = "81,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 819,
-                            Code = "81.9",
+                            Code = "81,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "81.9"
+                            Name = "81,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 820,
                             Code = "82",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82"
+                            Name = "82",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 821,
-                            Code = "82.1",
+                            Code = "82,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.1"
+                            Name = "82,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 822,
-                            Code = "82.2",
+                            Code = "82,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.2"
+                            Name = "82,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 823,
-                            Code = "82.3",
+                            Code = "82,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.3"
+                            Name = "82,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 824,
-                            Code = "82.4",
+                            Code = "82,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.4"
+                            Name = "82,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 825,
-                            Code = "82.5",
+                            Code = "82,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.5"
+                            Name = "82,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 826,
-                            Code = "82.6",
+                            Code = "82,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.6"
+                            Name = "82,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 827,
-                            Code = "82.7",
+                            Code = "82,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.7"
+                            Name = "82,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 828,
-                            Code = "82.8",
+                            Code = "82,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.8"
+                            Name = "82,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 829,
-                            Code = "82.9",
+                            Code = "82,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "82.9"
+                            Name = "82,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 830,
                             Code = "83",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83"
+                            Name = "83",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 831,
-                            Code = "83.1",
+                            Code = "83,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.1"
+                            Name = "83,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 832,
-                            Code = "83.2",
+                            Code = "83,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.2"
+                            Name = "83,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 833,
-                            Code = "83.3",
+                            Code = "83,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.3"
+                            Name = "83,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 834,
-                            Code = "83.4",
+                            Code = "83,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.4"
+                            Name = "83,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 835,
-                            Code = "83.5",
+                            Code = "83,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.5"
+                            Name = "83,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 836,
-                            Code = "83.6",
+                            Code = "83,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.6"
+                            Name = "83,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 837,
-                            Code = "83.7",
+                            Code = "83,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.7"
+                            Name = "83,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 838,
-                            Code = "83.8",
+                            Code = "83,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.8"
+                            Name = "83,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 839,
-                            Code = "83.9",
+                            Code = "83,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "83.9"
+                            Name = "83,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 840,
                             Code = "84",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84"
+                            Name = "84",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 841,
-                            Code = "84.1",
+                            Code = "84,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.1"
+                            Name = "84,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 842,
-                            Code = "84.2",
+                            Code = "84,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.2"
+                            Name = "84,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 843,
-                            Code = "84.3",
+                            Code = "84,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.3"
+                            Name = "84,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 844,
-                            Code = "84.4",
+                            Code = "84,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.4"
+                            Name = "84,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 845,
-                            Code = "84.5",
+                            Code = "84,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.5"
+                            Name = "84,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 846,
-                            Code = "84.6",
+                            Code = "84,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.6"
+                            Name = "84,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 847,
-                            Code = "84.7",
+                            Code = "84,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.7"
+                            Name = "84,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 848,
-                            Code = "84.8",
+                            Code = "84,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.8"
+                            Name = "84,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 849,
-                            Code = "84.9",
+                            Code = "84,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "84.9"
+                            Name = "84,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 850,
                             Code = "85",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85"
+                            Name = "85",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 851,
-                            Code = "85.1",
+                            Code = "85,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.1"
+                            Name = "85,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 852,
-                            Code = "85.2",
+                            Code = "85,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.2"
+                            Name = "85,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 853,
-                            Code = "85.3",
+                            Code = "85,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.3"
+                            Name = "85,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 854,
-                            Code = "85.4",
+                            Code = "85,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.4"
+                            Name = "85,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 855,
-                            Code = "85.5",
+                            Code = "85,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.5"
+                            Name = "85,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 856,
-                            Code = "85.6",
+                            Code = "85,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.6"
+                            Name = "85,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 857,
-                            Code = "85.7",
+                            Code = "85,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.7"
+                            Name = "85,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 858,
-                            Code = "85.8",
+                            Code = "85,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.8"
+                            Name = "85,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 859,
-                            Code = "85.9",
+                            Code = "85,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "85.9"
+                            Name = "85,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 860,
                             Code = "86",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86"
+                            Name = "86",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 861,
-                            Code = "86.1",
+                            Code = "86,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.1"
+                            Name = "86,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 862,
-                            Code = "86.2",
+                            Code = "86,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.2"
+                            Name = "86,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 863,
-                            Code = "86.3",
+                            Code = "86,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.3"
+                            Name = "86,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 864,
-                            Code = "86.4",
+                            Code = "86,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.4"
+                            Name = "86,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 865,
-                            Code = "86.5",
+                            Code = "86,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.5"
+                            Name = "86,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 866,
-                            Code = "86.6",
+                            Code = "86,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.6"
+                            Name = "86,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 867,
-                            Code = "86.7",
+                            Code = "86,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.7"
+                            Name = "86,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 868,
-                            Code = "86.8",
+                            Code = "86,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.8"
+                            Name = "86,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 869,
-                            Code = "86.9",
+                            Code = "86,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "86.9"
+                            Name = "86,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 870,
                             Code = "87",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87"
+                            Name = "87",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 871,
-                            Code = "87.1",
+                            Code = "87,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.1"
+                            Name = "87,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 872,
-                            Code = "87.2",
+                            Code = "87,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.2"
+                            Name = "87,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 873,
-                            Code = "87.3",
+                            Code = "87,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.3"
+                            Name = "87,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 874,
-                            Code = "87.4",
+                            Code = "87,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.4"
+                            Name = "87,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 875,
-                            Code = "87.5",
+                            Code = "87,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.5"
+                            Name = "87,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 876,
-                            Code = "87.6",
+                            Code = "87,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.6"
+                            Name = "87,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 877,
-                            Code = "87.7",
+                            Code = "87,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.7"
+                            Name = "87,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 878,
-                            Code = "87.8",
+                            Code = "87,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.8"
+                            Name = "87,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 879,
-                            Code = "87.9",
+                            Code = "87,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "87.9"
+                            Name = "87,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 880,
                             Code = "88",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88"
+                            Name = "88",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 881,
-                            Code = "88.1",
+                            Code = "88,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.1"
+                            Name = "88,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 882,
-                            Code = "88.2",
+                            Code = "88,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.2"
+                            Name = "88,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 883,
-                            Code = "88.3",
+                            Code = "88,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.3"
+                            Name = "88,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 884,
-                            Code = "88.4",
+                            Code = "88,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.4"
+                            Name = "88,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 885,
-                            Code = "88.5",
+                            Code = "88,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.5"
+                            Name = "88,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 886,
-                            Code = "88.6",
+                            Code = "88,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.6"
+                            Name = "88,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 887,
-                            Code = "88.7",
+                            Code = "88,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.7"
+                            Name = "88,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 888,
-                            Code = "88.8",
+                            Code = "88,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.8"
+                            Name = "88,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 889,
-                            Code = "88.9",
+                            Code = "88,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "88.9"
+                            Name = "88,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 890,
                             Code = "89",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89"
+                            Name = "89",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 891,
-                            Code = "89.1",
+                            Code = "89,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.1"
+                            Name = "89,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 892,
-                            Code = "89.2",
+                            Code = "89,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.2"
+                            Name = "89,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 893,
-                            Code = "89.3",
+                            Code = "89,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.3"
+                            Name = "89,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 894,
-                            Code = "89.4",
+                            Code = "89,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.4"
+                            Name = "89,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 895,
-                            Code = "89.5",
+                            Code = "89,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.5"
+                            Name = "89,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 896,
-                            Code = "89.6",
+                            Code = "89,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.6"
+                            Name = "89,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 897,
-                            Code = "89.7",
+                            Code = "89,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.7"
+                            Name = "89,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 898,
-                            Code = "89.8",
+                            Code = "89,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.8"
+                            Name = "89,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 899,
-                            Code = "89.9",
+                            Code = "89,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "89.9"
+                            Name = "89,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 900,
                             Code = "90",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90"
+                            Name = "90",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 901,
-                            Code = "90.1",
+                            Code = "90,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.1"
+                            Name = "90,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 902,
-                            Code = "90.2",
+                            Code = "90,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.2"
+                            Name = "90,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 903,
-                            Code = "90.3",
+                            Code = "90,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.3"
+                            Name = "90,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 904,
-                            Code = "90.4",
+                            Code = "90,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.4"
+                            Name = "90,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 905,
-                            Code = "90.5",
+                            Code = "90,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.5"
+                            Name = "90,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 906,
-                            Code = "90.6",
+                            Code = "90,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.6"
+                            Name = "90,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 907,
-                            Code = "90.7",
+                            Code = "90,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.7"
+                            Name = "90,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 908,
-                            Code = "90.8",
+                            Code = "90,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.8"
+                            Name = "90,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 909,
-                            Code = "90.9",
+                            Code = "90,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "90.9"
+                            Name = "90,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 910,
                             Code = "91",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91"
+                            Name = "91",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 911,
-                            Code = "91.1",
+                            Code = "91,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.1"
+                            Name = "91,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 912,
-                            Code = "91.2",
+                            Code = "91,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.2"
+                            Name = "91,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 913,
-                            Code = "91.3",
+                            Code = "91,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.3"
+                            Name = "91,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 914,
-                            Code = "91.4",
+                            Code = "91,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.4"
+                            Name = "91,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 915,
-                            Code = "91.5",
+                            Code = "91,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.5"
+                            Name = "91,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 916,
-                            Code = "91.6",
+                            Code = "91,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.6"
+                            Name = "91,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 917,
-                            Code = "91.7",
+                            Code = "91,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.7"
+                            Name = "91,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 918,
-                            Code = "91.8",
+                            Code = "91,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.8"
+                            Name = "91,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 919,
-                            Code = "91.9",
+                            Code = "91,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "91.9"
+                            Name = "91,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 920,
                             Code = "92",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92"
+                            Name = "92",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 921,
-                            Code = "92.1",
+                            Code = "92,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.1"
+                            Name = "92,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 922,
-                            Code = "92.2",
+                            Code = "92,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.2"
+                            Name = "92,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 923,
-                            Code = "92.3",
+                            Code = "92,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.3"
+                            Name = "92,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 924,
-                            Code = "92.4",
+                            Code = "92,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.4"
+                            Name = "92,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 925,
-                            Code = "92.5",
+                            Code = "92,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.5"
+                            Name = "92,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 926,
-                            Code = "92.6",
+                            Code = "92,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.6"
+                            Name = "92,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 927,
-                            Code = "92.7",
+                            Code = "92,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.7"
+                            Name = "92,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 928,
-                            Code = "92.8",
+                            Code = "92,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.8"
+                            Name = "92,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 929,
-                            Code = "92.9",
+                            Code = "92,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "92.9"
+                            Name = "92,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 930,
                             Code = "93",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93"
+                            Name = "93",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 931,
-                            Code = "93.1",
+                            Code = "93,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.1"
+                            Name = "93,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 932,
-                            Code = "93.2",
+                            Code = "93,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.2"
+                            Name = "93,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 933,
-                            Code = "93.3",
+                            Code = "93,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.3"
+                            Name = "93,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 934,
-                            Code = "93.4",
+                            Code = "93,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.4"
+                            Name = "93,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 935,
-                            Code = "93.5",
+                            Code = "93,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.5"
+                            Name = "93,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 936,
-                            Code = "93.6",
+                            Code = "93,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.6"
+                            Name = "93,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 937,
-                            Code = "93.7",
+                            Code = "93,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.7"
+                            Name = "93,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 938,
-                            Code = "93.8",
+                            Code = "93,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.8"
+                            Name = "93,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 939,
-                            Code = "93.9",
+                            Code = "93,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "93.9"
+                            Name = "93,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 940,
                             Code = "94",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94"
+                            Name = "94",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 941,
-                            Code = "94.1",
+                            Code = "94,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.1"
+                            Name = "94,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 942,
-                            Code = "94.2",
+                            Code = "94,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.2"
+                            Name = "94,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 943,
-                            Code = "94.3",
+                            Code = "94,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.3"
+                            Name = "94,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 944,
-                            Code = "94.4",
+                            Code = "94,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.4"
+                            Name = "94,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 945,
-                            Code = "94.5",
+                            Code = "94,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.5"
+                            Name = "94,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 946,
-                            Code = "94.6",
+                            Code = "94,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.6"
+                            Name = "94,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 947,
-                            Code = "94.7",
+                            Code = "94,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.7"
+                            Name = "94,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 948,
-                            Code = "94.8",
+                            Code = "94,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.8"
+                            Name = "94,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 949,
-                            Code = "94.9",
+                            Code = "94,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "94.9"
+                            Name = "94,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 950,
                             Code = "95",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95"
+                            Name = "95",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 951,
-                            Code = "95.1",
+                            Code = "95,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.1"
+                            Name = "95,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 952,
-                            Code = "95.2",
+                            Code = "95,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.2"
+                            Name = "95,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 953,
-                            Code = "95.3",
+                            Code = "95,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.3"
+                            Name = "95,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 954,
-                            Code = "95.4",
+                            Code = "95,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.4"
+                            Name = "95,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 955,
-                            Code = "95.5",
+                            Code = "95,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.5"
+                            Name = "95,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 956,
-                            Code = "95.6",
+                            Code = "95,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.6"
+                            Name = "95,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 957,
-                            Code = "95.7",
+                            Code = "95,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.7"
+                            Name = "95,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 958,
-                            Code = "95.8",
+                            Code = "95,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.8"
+                            Name = "95,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 959,
-                            Code = "95.9",
+                            Code = "95,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "95.9"
+                            Name = "95,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 960,
                             Code = "96",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96"
+                            Name = "96",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 961,
-                            Code = "96.1",
+                            Code = "96,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.1"
+                            Name = "96,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 962,
-                            Code = "96.2",
+                            Code = "96,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.2"
+                            Name = "96,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 963,
-                            Code = "96.3",
+                            Code = "96,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.3"
+                            Name = "96,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 964,
-                            Code = "96.4",
+                            Code = "96,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.4"
+                            Name = "96,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 965,
-                            Code = "96.5",
+                            Code = "96,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.5"
+                            Name = "96,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 966,
-                            Code = "96.6",
+                            Code = "96,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.6"
+                            Name = "96,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 967,
-                            Code = "96.7",
+                            Code = "96,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.7"
+                            Name = "96,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 968,
-                            Code = "96.8",
+                            Code = "96,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.8"
+                            Name = "96,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 969,
-                            Code = "96.9",
+                            Code = "96,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "96.9"
+                            Name = "96,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 970,
                             Code = "97",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97"
+                            Name = "97",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 971,
-                            Code = "97.1",
+                            Code = "97,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.1"
+                            Name = "97,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 972,
-                            Code = "97.2",
+                            Code = "97,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.2"
+                            Name = "97,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 973,
-                            Code = "97.3",
+                            Code = "97,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.3"
+                            Name = "97,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 974,
-                            Code = "97.4",
+                            Code = "97,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.4"
+                            Name = "97,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 975,
-                            Code = "97.5",
+                            Code = "97,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.5"
+                            Name = "97,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 976,
-                            Code = "97.6",
+                            Code = "97,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.6"
+                            Name = "97,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 977,
-                            Code = "97.7",
+                            Code = "97,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.7"
+                            Name = "97,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 978,
-                            Code = "97.8",
+                            Code = "97,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.8"
+                            Name = "97,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 979,
-                            Code = "97.9",
+                            Code = "97,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "97.9"
+                            Name = "97,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 980,
                             Code = "98",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98"
+                            Name = "98",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 981,
-                            Code = "98.1",
+                            Code = "98,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.1"
+                            Name = "98,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 982,
-                            Code = "98.2",
+                            Code = "98,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.2"
+                            Name = "98,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 983,
-                            Code = "98.3",
+                            Code = "98,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.3"
+                            Name = "98,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 984,
-                            Code = "98.4",
+                            Code = "98,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.4"
+                            Name = "98,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 985,
-                            Code = "98.5",
+                            Code = "98,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.5"
+                            Name = "98,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 986,
-                            Code = "98.6",
+                            Code = "98,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.6"
+                            Name = "98,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 987,
-                            Code = "98.7",
+                            Code = "98,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.7"
+                            Name = "98,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 988,
-                            Code = "98.8",
+                            Code = "98,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.8"
+                            Name = "98,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 989,
-                            Code = "98.9",
+                            Code = "98,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "98.9"
+                            Name = "98,9",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 990,
                             Code = "99",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99"
+                            Name = "99",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 991,
-                            Code = "99.1",
+                            Code = "99,1",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.1"
+                            Name = "99,1",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 992,
-                            Code = "99.2",
+                            Code = "99,2",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.2"
+                            Name = "99,2",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 993,
-                            Code = "99.3",
+                            Code = "99,3",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.3"
+                            Name = "99,3",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 994,
-                            Code = "99.4",
+                            Code = "99,4",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.4"
+                            Name = "99,4",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 995,
-                            Code = "99.5",
+                            Code = "99,5",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.5"
+                            Name = "99,5",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 996,
-                            Code = "99.6",
+                            Code = "99,6",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.6"
+                            Name = "99,6",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 997,
-                            Code = "99.7",
+                            Code = "99,7",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.7"
+                            Name = "99,7",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 998,
-                            Code = "99.8",
+                            Code = "99,8",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.8"
+                            Name = "99,8",
+                            SceneId = ""
                         },
                         new
                         {
                             Id = 999,
-                            Code = "99.9",
+                            Code = "99,9",
+                            Coin = 0,
                             IsActive = true,
-                            Name = "99.9"
+                            Name = "99,9",
+                            SceneId = ""
                         });
                 });
 
             modelBuilder.Entity("ProgressApi.Entities.Tower", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -6995,58 +9118,91 @@ namespace ProgressApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
+                            Id = 1,
                             IsActive = true,
                             Name = "StandartTower"
                         },
                         new
                         {
-                            Id = 2L,
+                            Id = 2,
                             IsActive = true,
                             Name = "ShortRangeAOETower"
                         },
                         new
                         {
-                            Id = 3L,
+                            Id = 3,
                             IsActive = true,
                             Name = "MeleeTower"
                         },
                         new
                         {
-                            Id = 4L,
+                            Id = 4,
                             IsActive = true,
                             Name = "SlowTower"
                         },
                         new
                         {
-                            Id = 5L,
+                            Id = 5,
                             IsActive = true,
                             Name = "SniperTower"
                         },
                         new
                         {
-                            Id = 6L,
+                            Id = 6,
                             IsActive = true,
                             Name = "LongRangeAOETower"
                         },
                         new
                         {
-                            Id = 7L,
+                            Id = 7,
                             IsActive = true,
                             Name = "ShortRangeAOEStackingDamageTower"
                         },
                         new
                         {
-                            Id = 8L,
+                            Id = 8,
                             IsActive = true,
                             Name = "PiercingMediumRangeTower"
                         },
                         new
                         {
-                            Id = 9L,
+                            Id = 9,
                             IsActive = true,
                             Name = "CommandTower"
                         });
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.TowerLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Damage")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("FireRate")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Range")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TowerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TowerId");
+
+                    b.ToTable("TowerLevel");
                 });
 
             modelBuilder.Entity("ProgressApi.Entities.TowerProgress", b =>
@@ -7072,28 +9228,25 @@ namespace ProgressApi.Migrations
                     b.Property<int>("TowerFireCount")
                         .HasColumnType("integer");
 
-                    b.Property<long>("TowerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TowerName")
-                        .HasColumnType("bigint");
+                    b.Property<int>("TowerId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TowerUpgradeNumber")
                         .HasColumnType("integer");
 
-                    b.Property<long>("UserProgressId")
+                    b.Property<long>("UserProgressHistoryId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TowerId");
 
-                    b.HasIndex("UserProgressId");
+                    b.HasIndex("UserProgressHistoryId");
 
                     b.ToTable("TowerProgress");
                 });
 
-            modelBuilder.Entity("ProgressApi.Entities.UserProgress", b =>
+            modelBuilder.Entity("ProgressApi.Entities.UserProgressHistory", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -7104,146 +9257,152 @@ namespace ProgressApi.Migrations
                     b.Property<double>("BarrierHealth")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("DeviceId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Ip")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("LevelStartTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("Score")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("ScrapValue")
-                        .HasColumnType("double precision");
-
-                    b.Property<int?>("StageId")
+                    b.Property<int>("GainedCoin")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StarCount")
+                    b.Property<int>("SpentCoin")
                         .HasColumnType("integer");
 
-                    b.Property<double>("Time")
-                        .HasColumnType("double precision");
+                    b.Property<int>("TotalCoin")
+                        .HasColumnType("integer");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("text");
+                    b.Property<DateTimeOffset>("WaveEndTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("WaveId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("WaveStartTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StageId");
+                    b.HasIndex("WaveId");
 
-                    b.ToTable("UserProgress");
+                    b.ToTable("UserProgressHistory");
                 });
 
-            modelBuilder.Entity("ProgressApi.Entities.Zombie", b =>
+            modelBuilder.Entity("ProgressApi.Entities.UserTowerPlace", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TowerLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                    b.HasKey("Id");
+
+                    b.HasIndex("TowerLevelId");
+
+                    b.HasIndex("WaveId");
+
+                    b.ToTable("UserTowerPlace");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserWave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BarierHealth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalCoin")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WaveId");
+
+                    b.ToTable("UserWave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.Wave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StageId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Zombie");
+                    b.HasIndex("StageId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            IsActive = true,
-                            Name = "z1"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            IsActive = true,
-                            Name = "z2"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            IsActive = true,
-                            Name = "z3"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            IsActive = true,
-                            Name = "z4"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            IsActive = true,
-                            Name = "z5"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            IsActive = true,
-                            Name = "z6"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            IsActive = true,
-                            Name = "z7"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            IsActive = true,
-                            Name = "z8"
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            IsActive = true,
-                            Name = "z9"
-                        });
+                    b.ToTable("Wave");
                 });
 
-            modelBuilder.Entity("ProgressApi.Entities.ZombieKill", b =>
+            modelBuilder.Entity("ProgressApi.Entities.WaveDetail", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("DeadCount")
-                        .HasColumnType("bigint");
+                    b.Property<int>("EnemyId")
+                        .HasColumnType("integer");
 
-                    b.Property<long>("UserProgressId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("EnemyLevel")
+                        .HasColumnType("integer");
 
-                    b.Property<long>("ZombieId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("EnemyNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("EntryInterval")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("EntryPoint")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("EntryTime")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProgressId");
+                    b.HasIndex("EnemyId");
 
-                    b.HasIndex("ZombieId");
-
-                    b.ToTable("ZombieKill");
+                    b.ToTable("WaveDetail");
                 });
 
             modelBuilder.Entity("SharedLibrary.Entities.Log", b =>
@@ -7364,6 +9523,47 @@ namespace ProgressApi.Migrations
                     b.ToTable("LogAction");
                 });
 
+            modelBuilder.Entity("ProgressApi.Entities.EnemyKill", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.EnemyLevel", "EnemyLevel")
+                        .WithMany()
+                        .HasForeignKey("EnemyLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApi.Entities.UserProgressHistory", "UserProgress")
+                        .WithMany()
+                        .HasForeignKey("UserProgressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EnemyLevel");
+
+                    b.Navigation("UserProgress");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.EnemyLevel", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Enemy", "Enemy")
+                        .WithMany()
+                        .HasForeignKey("EnemyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enemy");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.TowerLevel", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Tower", "Tower")
+                        .WithMany()
+                        .HasForeignKey("TowerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tower");
+                });
+
             modelBuilder.Entity("ProgressApi.Entities.TowerProgress", b =>
                 {
                     b.HasOne("ProgressApi.Entities.Tower", "Tower")
@@ -7372,43 +9572,76 @@ namespace ProgressApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProgressApi.Entities.UserProgress", "UserProgress")
+                    b.HasOne("ProgressApi.Entities.UserProgressHistory", "UserProgressHistory")
                         .WithMany()
-                        .HasForeignKey("UserProgressId")
+                        .HasForeignKey("UserProgressHistoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Tower");
 
-                    b.Navigation("UserProgress");
+                    b.Navigation("UserProgressHistory");
                 });
 
-            modelBuilder.Entity("ProgressApi.Entities.UserProgress", b =>
+            modelBuilder.Entity("ProgressApi.Entities.UserProgressHistory", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId");
+
+                    b.Navigation("Wave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserTowerPlace", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.TowerLevel", "TowerLevel")
+                        .WithMany()
+                        .HasForeignKey("TowerLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TowerLevel");
+
+                    b.Navigation("Wave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserWave", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.Wave", b =>
                 {
                     b.HasOne("ProgressApi.Entities.Stage", "Stage")
                         .WithMany()
-                        .HasForeignKey("StageId");
+                        .HasForeignKey("StageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Stage");
                 });
 
-            modelBuilder.Entity("ProgressApi.Entities.ZombieKill", b =>
+            modelBuilder.Entity("ProgressApi.Entities.WaveDetail", b =>
                 {
-                    b.HasOne("ProgressApi.Entities.UserProgress", "UserProgress")
+                    b.HasOne("ProgressApi.Entities.Enemy", "Enemy")
                         .WithMany()
-                        .HasForeignKey("UserProgressId")
+                        .HasForeignKey("EnemyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProgressApi.Entities.Zombie", "Zombie")
-                        .WithMany()
-                        .HasForeignKey("ZombieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserProgress");
-
-                    b.Navigation("Zombie");
+                    b.Navigation("Enemy");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,11 +16,17 @@ namespace ProgressApi
 
 
         public DbSet<Stage> Stage { get; set; }
+        public DbSet<Wave> Wave { get; set; }
+        public DbSet<WaveDetail> WaveDetail { get; set; }
+        public DbSet<UserWave> UserWave { get; set; }
         public DbSet<Tower> Tower { get; set; }
-        public DbSet<Enemy> Zombie { get; set; }
+        public DbSet<TowerLevel> TowerLevel { get; set; }
+        public DbSet<Enemy> Enemy { get; set; }
+        public DbSet<EnemyLevel> EnemyLevel { get; set; }
         public DbSet<TowerProgress> TowerProgress { get; set; }
-        public DbSet<EnemyKill> ZombieKill { get; set; }
-        public DbSet<UserProgressHistory> UserProgress { get; set; }
+        public DbSet<EnemyKill> EnemyKill { get; set; }
+        public DbSet<UserProgressHistory> UserProgressHistory { get; set; }
+        public DbSet<UserTowerPlace> UserTowerPlace { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<LogAction> LogAction { get; set; }
 

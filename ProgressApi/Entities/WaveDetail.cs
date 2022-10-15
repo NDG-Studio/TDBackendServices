@@ -17,7 +17,10 @@ namespace ProgressApi.Entities
         public int EnemyLevel { get; set; }
 
         [ForeignKey("EnemyId")]
-        public Enemy Enemy { get; set; }
+        public Enemy Enemy { get; set; }        
+        
+        [ForeignKey("WaveId")]
+        public Wave Wave { get; set; }
 
     }
 }

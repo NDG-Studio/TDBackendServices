@@ -9,8 +9,6 @@ namespace ProgressApi.Entities
         public int Id { get; set; }
         public long UserId { get; set; }
         public int WaveId { get; set; }
-        public int SpentCoin { get; set; }
-        public int GainedCoin { get; set; }
         public int TotalCoin { get; set; }
         public int BarierHealth { get; set; }
 

@@ -7,14 +7,14 @@ namespace ProgressApi.Entities
     {
         [Key]
         public long Id { get; set; }
-        public long UserProgressId { get; set; }
-        public int EnemyId { get; set; }
-        public long DeadCount { get; set; }
+        public long UserProgressHistoryId { get; set; }
+        public int EnemyLevelId { get; set; }
+        public int DeadCount { get; set; }
 
-        [ForeignKey("EnemyId")]
-        public Enemy Enemy { get; set; }
+        [ForeignKey("EnemyLevelId")]
+        public EnemyLevel EnemyLevel { get; set; }
 
         [ForeignKey("UserProgressId")]
-        public UserProgressHistory UserProgress { get; set; }
+        public UserProgressHistory UserProgressHistory { get; set; }
     }
 }

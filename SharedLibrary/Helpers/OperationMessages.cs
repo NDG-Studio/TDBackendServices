@@ -30,5 +30,6 @@ namespace SharedLibrary.Helpers
         public const string HealingMustBeDone = "İyileştirme işleminin bitmesini bekleyin!";
         public const string UpgradingMustBeDone = "Bina yükseltme işleminin bitmesini bekleyin!";
         public const string ItemNotUsable = "Bu item kullanılamaz!";
+        public const string MaxLevel = "Tebrikler son seviyedesiniz.";
     }
 }

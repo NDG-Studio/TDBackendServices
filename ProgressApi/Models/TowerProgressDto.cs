@@ -1,8 +1,8 @@
 ﻿namespace ProgressApi.Models
 {
-    public class TowerProgressDto
+    public class TowerProgressDTO
     {
-        public long TowerId { get; set; }
+        public int TowerId { get; set; }
         public int TowerCount { get; set; }
         public int TowerUpgradeNumber { get; set; }
         public int TowerFireCount { get; set; }

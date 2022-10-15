@@ -12,8 +12,8 @@ using ProgressApi;
 namespace ProgressApi.Migrations
 {
     [DbContext(typeof(ProgressContext))]
-    [Migration("20221015145221_changing-to-midcore")]
-    partial class changingtomidcore
+    [Migration("20221015193613_model-bugfixs")]
+    partial class modelbugfixs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,7 +41,7 @@ namespace ProgressApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Zombie");
+                    b.ToTable("Enemy");
 
                     b.HasData(
                         new
@@ -108,22 +108,61 @@ namespace ProgressApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("DeadCount")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("EnemyId")
+                    b.Property<int>("DeadCount")
                         .HasColumnType("integer");
+
+                    b.Property<int>("EnemyLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserProgressHistoryId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("UserProgressId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnemyId");
+                    b.HasIndex("EnemyLevelId");
 
                     b.HasIndex("UserProgressId");
 
-                    b.ToTable("ZombieKill");
+                    b.ToTable("EnemyKill");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.EnemyLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Armor")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("BarierDamageAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Coin")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EnemyId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Health")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Speed")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnemyId");
+
+                    b.ToTable("EnemyLevel");
                 });
 
             modelBuilder.Entity("ProgressApi.Entities.Stage", b =>
@@ -133,6 +172,9 @@ namespace ProgressApi.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BarrierHealth")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -160,6 +202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 11,
+                            BarrierHealth = 0,
                             Code = "01,1",
                             Coin = 0,
                             IsActive = true,
@@ -169,6 +212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 12,
+                            BarrierHealth = 0,
                             Code = "01,2",
                             Coin = 0,
                             IsActive = true,
@@ -178,6 +222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 13,
+                            BarrierHealth = 0,
                             Code = "01,3",
                             Coin = 0,
                             IsActive = true,
@@ -187,6 +232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 14,
+                            BarrierHealth = 0,
                             Code = "01,4",
                             Coin = 0,
                             IsActive = true,
@@ -196,6 +242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 15,
+                            BarrierHealth = 0,
                             Code = "01,5",
                             Coin = 0,
                             IsActive = true,
@@ -205,6 +252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 16,
+                            BarrierHealth = 0,
                             Code = "01,6",
                             Coin = 0,
                             IsActive = true,
@@ -214,6 +262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 17,
+                            BarrierHealth = 0,
                             Code = "01,7",
                             Coin = 0,
                             IsActive = true,
@@ -223,6 +272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 18,
+                            BarrierHealth = 0,
                             Code = "01,8",
                             Coin = 0,
                             IsActive = true,
@@ -232,6 +282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 19,
+                            BarrierHealth = 0,
                             Code = "01,9",
                             Coin = 0,
                             IsActive = true,
@@ -241,6 +292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 20,
+                            BarrierHealth = 0,
                             Code = "02",
                             Coin = 0,
                             IsActive = true,
@@ -250,6 +302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 21,
+                            BarrierHealth = 0,
                             Code = "02,1",
                             Coin = 0,
                             IsActive = true,
@@ -259,6 +312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 22,
+                            BarrierHealth = 0,
                             Code = "02,2",
                             Coin = 0,
                             IsActive = true,
@@ -268,6 +322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 23,
+                            BarrierHealth = 0,
                             Code = "02,3",
                             Coin = 0,
                             IsActive = true,
@@ -277,6 +332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 24,
+                            BarrierHealth = 0,
                             Code = "02,4",
                             Coin = 0,
                             IsActive = true,
@@ -286,6 +342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 25,
+                            BarrierHealth = 0,
                             Code = "02,5",
                             Coin = 0,
                             IsActive = true,
@@ -295,6 +352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 26,
+                            BarrierHealth = 0,
                             Code = "02,6",
                             Coin = 0,
                             IsActive = true,
@@ -304,6 +362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 27,
+                            BarrierHealth = 0,
                             Code = "02,7",
                             Coin = 0,
                             IsActive = true,
@@ -313,6 +372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 28,
+                            BarrierHealth = 0,
                             Code = "02,8",
                             Coin = 0,
                             IsActive = true,
@@ -322,6 +382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 29,
+                            BarrierHealth = 0,
                             Code = "02,9",
                             Coin = 0,
                             IsActive = true,
@@ -331,6 +392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 30,
+                            BarrierHealth = 0,
                             Code = "03",
                             Coin = 0,
                             IsActive = true,
@@ -340,6 +402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 31,
+                            BarrierHealth = 0,
                             Code = "03,1",
                             Coin = 0,
                             IsActive = true,
@@ -349,6 +412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 32,
+                            BarrierHealth = 0,
                             Code = "03,2",
                             Coin = 0,
                             IsActive = true,
@@ -358,6 +422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 33,
+                            BarrierHealth = 0,
                             Code = "03,3",
                             Coin = 0,
                             IsActive = true,
@@ -367,6 +432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 34,
+                            BarrierHealth = 0,
                             Code = "03,4",
                             Coin = 0,
                             IsActive = true,
@@ -376,6 +442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 35,
+                            BarrierHealth = 0,
                             Code = "03,5",
                             Coin = 0,
                             IsActive = true,
@@ -385,6 +452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 36,
+                            BarrierHealth = 0,
                             Code = "03,6",
                             Coin = 0,
                             IsActive = true,
@@ -394,6 +462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 37,
+                            BarrierHealth = 0,
                             Code = "03,7",
                             Coin = 0,
                             IsActive = true,
@@ -403,6 +472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 38,
+                            BarrierHealth = 0,
                             Code = "03,8",
                             Coin = 0,
                             IsActive = true,
@@ -412,6 +482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 39,
+                            BarrierHealth = 0,
                             Code = "03,9",
                             Coin = 0,
                             IsActive = true,
@@ -421,6 +492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 40,
+                            BarrierHealth = 0,
                             Code = "04",
                             Coin = 0,
                             IsActive = true,
@@ -430,6 +502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 41,
+                            BarrierHealth = 0,
                             Code = "04,1",
                             Coin = 0,
                             IsActive = true,
@@ -439,6 +512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 42,
+                            BarrierHealth = 0,
                             Code = "04,2",
                             Coin = 0,
                             IsActive = true,
@@ -448,6 +522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 43,
+                            BarrierHealth = 0,
                             Code = "04,3",
                             Coin = 0,
                             IsActive = true,
@@ -457,6 +532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 44,
+                            BarrierHealth = 0,
                             Code = "04,4",
                             Coin = 0,
                             IsActive = true,
@@ -466,6 +542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 45,
+                            BarrierHealth = 0,
                             Code = "04,5",
                             Coin = 0,
                             IsActive = true,
@@ -475,6 +552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 46,
+                            BarrierHealth = 0,
                             Code = "04,6",
                             Coin = 0,
                             IsActive = true,
@@ -484,6 +562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 47,
+                            BarrierHealth = 0,
                             Code = "04,7",
                             Coin = 0,
                             IsActive = true,
@@ -493,6 +572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 48,
+                            BarrierHealth = 0,
                             Code = "04,8",
                             Coin = 0,
                             IsActive = true,
@@ -502,6 +582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 49,
+                            BarrierHealth = 0,
                             Code = "04,9",
                             Coin = 0,
                             IsActive = true,
@@ -511,6 +592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 50,
+                            BarrierHealth = 0,
                             Code = "05",
                             Coin = 0,
                             IsActive = true,
@@ -520,6 +602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 51,
+                            BarrierHealth = 0,
                             Code = "05,1",
                             Coin = 0,
                             IsActive = true,
@@ -529,6 +612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 52,
+                            BarrierHealth = 0,
                             Code = "05,2",
                             Coin = 0,
                             IsActive = true,
@@ -538,6 +622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 53,
+                            BarrierHealth = 0,
                             Code = "05,3",
                             Coin = 0,
                             IsActive = true,
@@ -547,6 +632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 54,
+                            BarrierHealth = 0,
                             Code = "05,4",
                             Coin = 0,
                             IsActive = true,
@@ -556,6 +642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 55,
+                            BarrierHealth = 0,
                             Code = "05,5",
                             Coin = 0,
                             IsActive = true,
@@ -565,6 +652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 56,
+                            BarrierHealth = 0,
                             Code = "05,6",
                             Coin = 0,
                             IsActive = true,
@@ -574,6 +662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 57,
+                            BarrierHealth = 0,
                             Code = "05,7",
                             Coin = 0,
                             IsActive = true,
@@ -583,6 +672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 58,
+                            BarrierHealth = 0,
                             Code = "05,8",
                             Coin = 0,
                             IsActive = true,
@@ -592,6 +682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 59,
+                            BarrierHealth = 0,
                             Code = "05,9",
                             Coin = 0,
                             IsActive = true,
@@ -601,6 +692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 60,
+                            BarrierHealth = 0,
                             Code = "06",
                             Coin = 0,
                             IsActive = true,
@@ -610,6 +702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 61,
+                            BarrierHealth = 0,
                             Code = "06,1",
                             Coin = 0,
                             IsActive = true,
@@ -619,6 +712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 62,
+                            BarrierHealth = 0,
                             Code = "06,2",
                             Coin = 0,
                             IsActive = true,
@@ -628,6 +722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 63,
+                            BarrierHealth = 0,
                             Code = "06,3",
                             Coin = 0,
                             IsActive = true,
@@ -637,6 +732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 64,
+                            BarrierHealth = 0,
                             Code = "06,4",
                             Coin = 0,
                             IsActive = true,
@@ -646,6 +742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 65,
+                            BarrierHealth = 0,
                             Code = "06,5",
                             Coin = 0,
                             IsActive = true,
@@ -655,6 +752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 66,
+                            BarrierHealth = 0,
                             Code = "06,6",
                             Coin = 0,
                             IsActive = true,
@@ -664,6 +762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 67,
+                            BarrierHealth = 0,
                             Code = "06,7",
                             Coin = 0,
                             IsActive = true,
@@ -673,6 +772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 68,
+                            BarrierHealth = 0,
                             Code = "06,8",
                             Coin = 0,
                             IsActive = true,
@@ -682,6 +782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 69,
+                            BarrierHealth = 0,
                             Code = "06,9",
                             Coin = 0,
                             IsActive = true,
@@ -691,6 +792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 70,
+                            BarrierHealth = 0,
                             Code = "07",
                             Coin = 0,
                             IsActive = true,
@@ -700,6 +802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 71,
+                            BarrierHealth = 0,
                             Code = "07,1",
                             Coin = 0,
                             IsActive = true,
@@ -709,6 +812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 72,
+                            BarrierHealth = 0,
                             Code = "07,2",
                             Coin = 0,
                             IsActive = true,
@@ -718,6 +822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 73,
+                            BarrierHealth = 0,
                             Code = "07,3",
                             Coin = 0,
                             IsActive = true,
@@ -727,6 +832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 74,
+                            BarrierHealth = 0,
                             Code = "07,4",
                             Coin = 0,
                             IsActive = true,
@@ -736,6 +842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 75,
+                            BarrierHealth = 0,
                             Code = "07,5",
                             Coin = 0,
                             IsActive = true,
@@ -745,6 +852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 76,
+                            BarrierHealth = 0,
                             Code = "07,6",
                             Coin = 0,
                             IsActive = true,
@@ -754,6 +862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 77,
+                            BarrierHealth = 0,
                             Code = "07,7",
                             Coin = 0,
                             IsActive = true,
@@ -763,6 +872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 78,
+                            BarrierHealth = 0,
                             Code = "07,8",
                             Coin = 0,
                             IsActive = true,
@@ -772,6 +882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 79,
+                            BarrierHealth = 0,
                             Code = "07,9",
                             Coin = 0,
                             IsActive = true,
@@ -781,6 +892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 80,
+                            BarrierHealth = 0,
                             Code = "08",
                             Coin = 0,
                             IsActive = true,
@@ -790,6 +902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 81,
+                            BarrierHealth = 0,
                             Code = "08,1",
                             Coin = 0,
                             IsActive = true,
@@ -799,6 +912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 82,
+                            BarrierHealth = 0,
                             Code = "08,2",
                             Coin = 0,
                             IsActive = true,
@@ -808,6 +922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 83,
+                            BarrierHealth = 0,
                             Code = "08,3",
                             Coin = 0,
                             IsActive = true,
@@ -817,6 +932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 84,
+                            BarrierHealth = 0,
                             Code = "08,4",
                             Coin = 0,
                             IsActive = true,
@@ -826,6 +942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 85,
+                            BarrierHealth = 0,
                             Code = "08,5",
                             Coin = 0,
                             IsActive = true,
@@ -835,6 +952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 86,
+                            BarrierHealth = 0,
                             Code = "08,6",
                             Coin = 0,
                             IsActive = true,
@@ -844,6 +962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 87,
+                            BarrierHealth = 0,
                             Code = "08,7",
                             Coin = 0,
                             IsActive = true,
@@ -853,6 +972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 88,
+                            BarrierHealth = 0,
                             Code = "08,8",
                             Coin = 0,
                             IsActive = true,
@@ -862,6 +982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 89,
+                            BarrierHealth = 0,
                             Code = "08,9",
                             Coin = 0,
                             IsActive = true,
@@ -871,6 +992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 90,
+                            BarrierHealth = 0,
                             Code = "09",
                             Coin = 0,
                             IsActive = true,
@@ -880,6 +1002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 91,
+                            BarrierHealth = 0,
                             Code = "09,1",
                             Coin = 0,
                             IsActive = true,
@@ -889,6 +1012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 92,
+                            BarrierHealth = 0,
                             Code = "09,2",
                             Coin = 0,
                             IsActive = true,
@@ -898,6 +1022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 93,
+                            BarrierHealth = 0,
                             Code = "09,3",
                             Coin = 0,
                             IsActive = true,
@@ -907,6 +1032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 94,
+                            BarrierHealth = 0,
                             Code = "09,4",
                             Coin = 0,
                             IsActive = true,
@@ -916,6 +1042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 95,
+                            BarrierHealth = 0,
                             Code = "09,5",
                             Coin = 0,
                             IsActive = true,
@@ -925,6 +1052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 96,
+                            BarrierHealth = 0,
                             Code = "09,6",
                             Coin = 0,
                             IsActive = true,
@@ -934,6 +1062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 97,
+                            BarrierHealth = 0,
                             Code = "09,7",
                             Coin = 0,
                             IsActive = true,
@@ -943,6 +1072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 98,
+                            BarrierHealth = 0,
                             Code = "09,8",
                             Coin = 0,
                             IsActive = true,
@@ -952,6 +1082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 99,
+                            BarrierHealth = 0,
                             Code = "09,9",
                             Coin = 0,
                             IsActive = true,
@@ -961,6 +1092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 100,
+                            BarrierHealth = 0,
                             Code = "10",
                             Coin = 0,
                             IsActive = true,
@@ -970,6 +1102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 101,
+                            BarrierHealth = 0,
                             Code = "10,1",
                             Coin = 0,
                             IsActive = true,
@@ -979,6 +1112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 102,
+                            BarrierHealth = 0,
                             Code = "10,2",
                             Coin = 0,
                             IsActive = true,
@@ -988,6 +1122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 103,
+                            BarrierHealth = 0,
                             Code = "10,3",
                             Coin = 0,
                             IsActive = true,
@@ -997,6 +1132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 104,
+                            BarrierHealth = 0,
                             Code = "10,4",
                             Coin = 0,
                             IsActive = true,
@@ -1006,6 +1142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 105,
+                            BarrierHealth = 0,
                             Code = "10,5",
                             Coin = 0,
                             IsActive = true,
@@ -1015,6 +1152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 106,
+                            BarrierHealth = 0,
                             Code = "10,6",
                             Coin = 0,
                             IsActive = true,
@@ -1024,6 +1162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 107,
+                            BarrierHealth = 0,
                             Code = "10,7",
                             Coin = 0,
                             IsActive = true,
@@ -1033,6 +1172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 108,
+                            BarrierHealth = 0,
                             Code = "10,8",
                             Coin = 0,
                             IsActive = true,
@@ -1042,6 +1182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 109,
+                            BarrierHealth = 0,
                             Code = "10,9",
                             Coin = 0,
                             IsActive = true,
@@ -1051,6 +1192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 110,
+                            BarrierHealth = 0,
                             Code = "11",
                             Coin = 0,
                             IsActive = true,
@@ -1060,6 +1202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 111,
+                            BarrierHealth = 0,
                             Code = "11,1",
                             Coin = 0,
                             IsActive = true,
@@ -1069,6 +1212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 112,
+                            BarrierHealth = 0,
                             Code = "11,2",
                             Coin = 0,
                             IsActive = true,
@@ -1078,6 +1222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 113,
+                            BarrierHealth = 0,
                             Code = "11,3",
                             Coin = 0,
                             IsActive = true,
@@ -1087,6 +1232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 114,
+                            BarrierHealth = 0,
                             Code = "11,4",
                             Coin = 0,
                             IsActive = true,
@@ -1096,6 +1242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 115,
+                            BarrierHealth = 0,
                             Code = "11,5",
                             Coin = 0,
                             IsActive = true,
@@ -1105,6 +1252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 116,
+                            BarrierHealth = 0,
                             Code = "11,6",
                             Coin = 0,
                             IsActive = true,
@@ -1114,6 +1262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 117,
+                            BarrierHealth = 0,
                             Code = "11,7",
                             Coin = 0,
                             IsActive = true,
@@ -1123,6 +1272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 118,
+                            BarrierHealth = 0,
                             Code = "11,8",
                             Coin = 0,
                             IsActive = true,
@@ -1132,6 +1282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 119,
+                            BarrierHealth = 0,
                             Code = "11,9",
                             Coin = 0,
                             IsActive = true,
@@ -1141,6 +1292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 120,
+                            BarrierHealth = 0,
                             Code = "12",
                             Coin = 0,
                             IsActive = true,
@@ -1150,6 +1302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 121,
+                            BarrierHealth = 0,
                             Code = "12,1",
                             Coin = 0,
                             IsActive = true,
@@ -1159,6 +1312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 122,
+                            BarrierHealth = 0,
                             Code = "12,2",
                             Coin = 0,
                             IsActive = true,
@@ -1168,6 +1322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 123,
+                            BarrierHealth = 0,
                             Code = "12,3",
                             Coin = 0,
                             IsActive = true,
@@ -1177,6 +1332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 124,
+                            BarrierHealth = 0,
                             Code = "12,4",
                             Coin = 0,
                             IsActive = true,
@@ -1186,6 +1342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 125,
+                            BarrierHealth = 0,
                             Code = "12,5",
                             Coin = 0,
                             IsActive = true,
@@ -1195,6 +1352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 126,
+                            BarrierHealth = 0,
                             Code = "12,6",
                             Coin = 0,
                             IsActive = true,
@@ -1204,6 +1362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 127,
+                            BarrierHealth = 0,
                             Code = "12,7",
                             Coin = 0,
                             IsActive = true,
@@ -1213,6 +1372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 128,
+                            BarrierHealth = 0,
                             Code = "12,8",
                             Coin = 0,
                             IsActive = true,
@@ -1222,6 +1382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 129,
+                            BarrierHealth = 0,
                             Code = "12,9",
                             Coin = 0,
                             IsActive = true,
@@ -1231,6 +1392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 130,
+                            BarrierHealth = 0,
                             Code = "13",
                             Coin = 0,
                             IsActive = true,
@@ -1240,6 +1402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 131,
+                            BarrierHealth = 0,
                             Code = "13,1",
                             Coin = 0,
                             IsActive = true,
@@ -1249,6 +1412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 132,
+                            BarrierHealth = 0,
                             Code = "13,2",
                             Coin = 0,
                             IsActive = true,
@@ -1258,6 +1422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 133,
+                            BarrierHealth = 0,
                             Code = "13,3",
                             Coin = 0,
                             IsActive = true,
@@ -1267,6 +1432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 134,
+                            BarrierHealth = 0,
                             Code = "13,4",
                             Coin = 0,
                             IsActive = true,
@@ -1276,6 +1442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 135,
+                            BarrierHealth = 0,
                             Code = "13,5",
                             Coin = 0,
                             IsActive = true,
@@ -1285,6 +1452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 136,
+                            BarrierHealth = 0,
                             Code = "13,6",
                             Coin = 0,
                             IsActive = true,
@@ -1294,6 +1462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 137,
+                            BarrierHealth = 0,
                             Code = "13,7",
                             Coin = 0,
                             IsActive = true,
@@ -1303,6 +1472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 138,
+                            BarrierHealth = 0,
                             Code = "13,8",
                             Coin = 0,
                             IsActive = true,
@@ -1312,6 +1482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 139,
+                            BarrierHealth = 0,
                             Code = "13,9",
                             Coin = 0,
                             IsActive = true,
@@ -1321,6 +1492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 140,
+                            BarrierHealth = 0,
                             Code = "14",
                             Coin = 0,
                             IsActive = true,
@@ -1330,6 +1502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 141,
+                            BarrierHealth = 0,
                             Code = "14,1",
                             Coin = 0,
                             IsActive = true,
@@ -1339,6 +1512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 142,
+                            BarrierHealth = 0,
                             Code = "14,2",
                             Coin = 0,
                             IsActive = true,
@@ -1348,6 +1522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 143,
+                            BarrierHealth = 0,
                             Code = "14,3",
                             Coin = 0,
                             IsActive = true,
@@ -1357,6 +1532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 144,
+                            BarrierHealth = 0,
                             Code = "14,4",
                             Coin = 0,
                             IsActive = true,
@@ -1366,6 +1542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 145,
+                            BarrierHealth = 0,
                             Code = "14,5",
                             Coin = 0,
                             IsActive = true,
@@ -1375,6 +1552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 146,
+                            BarrierHealth = 0,
                             Code = "14,6",
                             Coin = 0,
                             IsActive = true,
@@ -1384,6 +1562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 147,
+                            BarrierHealth = 0,
                             Code = "14,7",
                             Coin = 0,
                             IsActive = true,
@@ -1393,6 +1572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 148,
+                            BarrierHealth = 0,
                             Code = "14,8",
                             Coin = 0,
                             IsActive = true,
@@ -1402,6 +1582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 149,
+                            BarrierHealth = 0,
                             Code = "14,9",
                             Coin = 0,
                             IsActive = true,
@@ -1411,6 +1592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 150,
+                            BarrierHealth = 0,
                             Code = "15",
                             Coin = 0,
                             IsActive = true,
@@ -1420,6 +1602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 151,
+                            BarrierHealth = 0,
                             Code = "15,1",
                             Coin = 0,
                             IsActive = true,
@@ -1429,6 +1612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 152,
+                            BarrierHealth = 0,
                             Code = "15,2",
                             Coin = 0,
                             IsActive = true,
@@ -1438,6 +1622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 153,
+                            BarrierHealth = 0,
                             Code = "15,3",
                             Coin = 0,
                             IsActive = true,
@@ -1447,6 +1632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 154,
+                            BarrierHealth = 0,
                             Code = "15,4",
                             Coin = 0,
                             IsActive = true,
@@ -1456,6 +1642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 155,
+                            BarrierHealth = 0,
                             Code = "15,5",
                             Coin = 0,
                             IsActive = true,
@@ -1465,6 +1652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 156,
+                            BarrierHealth = 0,
                             Code = "15,6",
                             Coin = 0,
                             IsActive = true,
@@ -1474,6 +1662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 157,
+                            BarrierHealth = 0,
                             Code = "15,7",
                             Coin = 0,
                             IsActive = true,
@@ -1483,6 +1672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 158,
+                            BarrierHealth = 0,
                             Code = "15,8",
                             Coin = 0,
                             IsActive = true,
@@ -1492,6 +1682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 159,
+                            BarrierHealth = 0,
                             Code = "15,9",
                             Coin = 0,
                             IsActive = true,
@@ -1501,6 +1692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 160,
+                            BarrierHealth = 0,
                             Code = "16",
                             Coin = 0,
                             IsActive = true,
@@ -1510,6 +1702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 161,
+                            BarrierHealth = 0,
                             Code = "16,1",
                             Coin = 0,
                             IsActive = true,
@@ -1519,6 +1712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 162,
+                            BarrierHealth = 0,
                             Code = "16,2",
                             Coin = 0,
                             IsActive = true,
@@ -1528,6 +1722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 163,
+                            BarrierHealth = 0,
                             Code = "16,3",
                             Coin = 0,
                             IsActive = true,
@@ -1537,6 +1732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 164,
+                            BarrierHealth = 0,
                             Code = "16,4",
                             Coin = 0,
                             IsActive = true,
@@ -1546,6 +1742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 165,
+                            BarrierHealth = 0,
                             Code = "16,5",
                             Coin = 0,
                             IsActive = true,
@@ -1555,6 +1752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 166,
+                            BarrierHealth = 0,
                             Code = "16,6",
                             Coin = 0,
                             IsActive = true,
@@ -1564,6 +1762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 167,
+                            BarrierHealth = 0,
                             Code = "16,7",
                             Coin = 0,
                             IsActive = true,
@@ -1573,6 +1772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 168,
+                            BarrierHealth = 0,
                             Code = "16,8",
                             Coin = 0,
                             IsActive = true,
@@ -1582,6 +1782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 169,
+                            BarrierHealth = 0,
                             Code = "16,9",
                             Coin = 0,
                             IsActive = true,
@@ -1591,6 +1792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 170,
+                            BarrierHealth = 0,
                             Code = "17",
                             Coin = 0,
                             IsActive = true,
@@ -1600,6 +1802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 171,
+                            BarrierHealth = 0,
                             Code = "17,1",
                             Coin = 0,
                             IsActive = true,
@@ -1609,6 +1812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 172,
+                            BarrierHealth = 0,
                             Code = "17,2",
                             Coin = 0,
                             IsActive = true,
@@ -1618,6 +1822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 173,
+                            BarrierHealth = 0,
                             Code = "17,3",
                             Coin = 0,
                             IsActive = true,
@@ -1627,6 +1832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 174,
+                            BarrierHealth = 0,
                             Code = "17,4",
                             Coin = 0,
                             IsActive = true,
@@ -1636,6 +1842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 175,
+                            BarrierHealth = 0,
                             Code = "17,5",
                             Coin = 0,
                             IsActive = true,
@@ -1645,6 +1852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 176,
+                            BarrierHealth = 0,
                             Code = "17,6",
                             Coin = 0,
                             IsActive = true,
@@ -1654,6 +1862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 177,
+                            BarrierHealth = 0,
                             Code = "17,7",
                             Coin = 0,
                             IsActive = true,
@@ -1663,6 +1872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 178,
+                            BarrierHealth = 0,
                             Code = "17,8",
                             Coin = 0,
                             IsActive = true,
@@ -1672,6 +1882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 179,
+                            BarrierHealth = 0,
                             Code = "17,9",
                             Coin = 0,
                             IsActive = true,
@@ -1681,6 +1892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 180,
+                            BarrierHealth = 0,
                             Code = "18",
                             Coin = 0,
                             IsActive = true,
@@ -1690,6 +1902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 181,
+                            BarrierHealth = 0,
                             Code = "18,1",
                             Coin = 0,
                             IsActive = true,
@@ -1699,6 +1912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 182,
+                            BarrierHealth = 0,
                             Code = "18,2",
                             Coin = 0,
                             IsActive = true,
@@ -1708,6 +1922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 183,
+                            BarrierHealth = 0,
                             Code = "18,3",
                             Coin = 0,
                             IsActive = true,
@@ -1717,6 +1932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 184,
+                            BarrierHealth = 0,
                             Code = "18,4",
                             Coin = 0,
                             IsActive = true,
@@ -1726,6 +1942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 185,
+                            BarrierHealth = 0,
                             Code = "18,5",
                             Coin = 0,
                             IsActive = true,
@@ -1735,6 +1952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 186,
+                            BarrierHealth = 0,
                             Code = "18,6",
                             Coin = 0,
                             IsActive = true,
@@ -1744,6 +1962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 187,
+                            BarrierHealth = 0,
                             Code = "18,7",
                             Coin = 0,
                             IsActive = true,
@@ -1753,6 +1972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 188,
+                            BarrierHealth = 0,
                             Code = "18,8",
                             Coin = 0,
                             IsActive = true,
@@ -1762,6 +1982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 189,
+                            BarrierHealth = 0,
                             Code = "18,9",
                             Coin = 0,
                             IsActive = true,
@@ -1771,6 +1992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 190,
+                            BarrierHealth = 0,
                             Code = "19",
                             Coin = 0,
                             IsActive = true,
@@ -1780,6 +2002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 191,
+                            BarrierHealth = 0,
                             Code = "19,1",
                             Coin = 0,
                             IsActive = true,
@@ -1789,6 +2012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 192,
+                            BarrierHealth = 0,
                             Code = "19,2",
                             Coin = 0,
                             IsActive = true,
@@ -1798,6 +2022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 193,
+                            BarrierHealth = 0,
                             Code = "19,3",
                             Coin = 0,
                             IsActive = true,
@@ -1807,6 +2032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 194,
+                            BarrierHealth = 0,
                             Code = "19,4",
                             Coin = 0,
                             IsActive = true,
@@ -1816,6 +2042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 195,
+                            BarrierHealth = 0,
                             Code = "19,5",
                             Coin = 0,
                             IsActive = true,
@@ -1825,6 +2052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 196,
+                            BarrierHealth = 0,
                             Code = "19,6",
                             Coin = 0,
                             IsActive = true,
@@ -1834,6 +2062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 197,
+                            BarrierHealth = 0,
                             Code = "19,7",
                             Coin = 0,
                             IsActive = true,
@@ -1843,6 +2072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 198,
+                            BarrierHealth = 0,
                             Code = "19,8",
                             Coin = 0,
                             IsActive = true,
@@ -1852,6 +2082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 199,
+                            BarrierHealth = 0,
                             Code = "19,9",
                             Coin = 0,
                             IsActive = true,
@@ -1861,6 +2092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 200,
+                            BarrierHealth = 0,
                             Code = "20",
                             Coin = 0,
                             IsActive = true,
@@ -1870,6 +2102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 201,
+                            BarrierHealth = 0,
                             Code = "20,1",
                             Coin = 0,
                             IsActive = true,
@@ -1879,6 +2112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 202,
+                            BarrierHealth = 0,
                             Code = "20,2",
                             Coin = 0,
                             IsActive = true,
@@ -1888,6 +2122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 203,
+                            BarrierHealth = 0,
                             Code = "20,3",
                             Coin = 0,
                             IsActive = true,
@@ -1897,6 +2132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 204,
+                            BarrierHealth = 0,
                             Code = "20,4",
                             Coin = 0,
                             IsActive = true,
@@ -1906,6 +2142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 205,
+                            BarrierHealth = 0,
                             Code = "20,5",
                             Coin = 0,
                             IsActive = true,
@@ -1915,6 +2152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 206,
+                            BarrierHealth = 0,
                             Code = "20,6",
                             Coin = 0,
                             IsActive = true,
@@ -1924,6 +2162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 207,
+                            BarrierHealth = 0,
                             Code = "20,7",
                             Coin = 0,
                             IsActive = true,
@@ -1933,6 +2172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 208,
+                            BarrierHealth = 0,
                             Code = "20,8",
                             Coin = 0,
                             IsActive = true,
@@ -1942,6 +2182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 209,
+                            BarrierHealth = 0,
                             Code = "20,9",
                             Coin = 0,
                             IsActive = true,
@@ -1951,6 +2192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 210,
+                            BarrierHealth = 0,
                             Code = "21",
                             Coin = 0,
                             IsActive = true,
@@ -1960,6 +2202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 211,
+                            BarrierHealth = 0,
                             Code = "21,1",
                             Coin = 0,
                             IsActive = true,
@@ -1969,6 +2212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 212,
+                            BarrierHealth = 0,
                             Code = "21,2",
                             Coin = 0,
                             IsActive = true,
@@ -1978,6 +2222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 213,
+                            BarrierHealth = 0,
                             Code = "21,3",
                             Coin = 0,
                             IsActive = true,
@@ -1987,6 +2232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 214,
+                            BarrierHealth = 0,
                             Code = "21,4",
                             Coin = 0,
                             IsActive = true,
@@ -1996,6 +2242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 215,
+                            BarrierHealth = 0,
                             Code = "21,5",
                             Coin = 0,
                             IsActive = true,
@@ -2005,6 +2252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 216,
+                            BarrierHealth = 0,
                             Code = "21,6",
                             Coin = 0,
                             IsActive = true,
@@ -2014,6 +2262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 217,
+                            BarrierHealth = 0,
                             Code = "21,7",
                             Coin = 0,
                             IsActive = true,
@@ -2023,6 +2272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 218,
+                            BarrierHealth = 0,
                             Code = "21,8",
                             Coin = 0,
                             IsActive = true,
@@ -2032,6 +2282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 219,
+                            BarrierHealth = 0,
                             Code = "21,9",
                             Coin = 0,
                             IsActive = true,
@@ -2041,6 +2292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 220,
+                            BarrierHealth = 0,
                             Code = "22",
                             Coin = 0,
                             IsActive = true,
@@ -2050,6 +2302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 221,
+                            BarrierHealth = 0,
                             Code = "22,1",
                             Coin = 0,
                             IsActive = true,
@@ -2059,6 +2312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 222,
+                            BarrierHealth = 0,
                             Code = "22,2",
                             Coin = 0,
                             IsActive = true,
@@ -2068,6 +2322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 223,
+                            BarrierHealth = 0,
                             Code = "22,3",
                             Coin = 0,
                             IsActive = true,
@@ -2077,6 +2332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 224,
+                            BarrierHealth = 0,
                             Code = "22,4",
                             Coin = 0,
                             IsActive = true,
@@ -2086,6 +2342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 225,
+                            BarrierHealth = 0,
                             Code = "22,5",
                             Coin = 0,
                             IsActive = true,
@@ -2095,6 +2352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 226,
+                            BarrierHealth = 0,
                             Code = "22,6",
                             Coin = 0,
                             IsActive = true,
@@ -2104,6 +2362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 227,
+                            BarrierHealth = 0,
                             Code = "22,7",
                             Coin = 0,
                             IsActive = true,
@@ -2113,6 +2372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 228,
+                            BarrierHealth = 0,
                             Code = "22,8",
                             Coin = 0,
                             IsActive = true,
@@ -2122,6 +2382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 229,
+                            BarrierHealth = 0,
                             Code = "22,9",
                             Coin = 0,
                             IsActive = true,
@@ -2131,6 +2392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 230,
+                            BarrierHealth = 0,
                             Code = "23",
                             Coin = 0,
                             IsActive = true,
@@ -2140,6 +2402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 231,
+                            BarrierHealth = 0,
                             Code = "23,1",
                             Coin = 0,
                             IsActive = true,
@@ -2149,6 +2412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 232,
+                            BarrierHealth = 0,
                             Code = "23,2",
                             Coin = 0,
                             IsActive = true,
@@ -2158,6 +2422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 233,
+                            BarrierHealth = 0,
                             Code = "23,3",
                             Coin = 0,
                             IsActive = true,
@@ -2167,6 +2432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 234,
+                            BarrierHealth = 0,
                             Code = "23,4",
                             Coin = 0,
                             IsActive = true,
@@ -2176,6 +2442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 235,
+                            BarrierHealth = 0,
                             Code = "23,5",
                             Coin = 0,
                             IsActive = true,
@@ -2185,6 +2452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 236,
+                            BarrierHealth = 0,
                             Code = "23,6",
                             Coin = 0,
                             IsActive = true,
@@ -2194,6 +2462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 237,
+                            BarrierHealth = 0,
                             Code = "23,7",
                             Coin = 0,
                             IsActive = true,
@@ -2203,6 +2472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 238,
+                            BarrierHealth = 0,
                             Code = "23,8",
                             Coin = 0,
                             IsActive = true,
@@ -2212,6 +2482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 239,
+                            BarrierHealth = 0,
                             Code = "23,9",
                             Coin = 0,
                             IsActive = true,
@@ -2221,6 +2492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 240,
+                            BarrierHealth = 0,
                             Code = "24",
                             Coin = 0,
                             IsActive = true,
@@ -2230,6 +2502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 241,
+                            BarrierHealth = 0,
                             Code = "24,1",
                             Coin = 0,
                             IsActive = true,
@@ -2239,6 +2512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 242,
+                            BarrierHealth = 0,
                             Code = "24,2",
                             Coin = 0,
                             IsActive = true,
@@ -2248,6 +2522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 243,
+                            BarrierHealth = 0,
                             Code = "24,3",
                             Coin = 0,
                             IsActive = true,
@@ -2257,6 +2532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 244,
+                            BarrierHealth = 0,
                             Code = "24,4",
                             Coin = 0,
                             IsActive = true,
@@ -2266,6 +2542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 245,
+                            BarrierHealth = 0,
                             Code = "24,5",
                             Coin = 0,
                             IsActive = true,
@@ -2275,6 +2552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 246,
+                            BarrierHealth = 0,
                             Code = "24,6",
                             Coin = 0,
                             IsActive = true,
@@ -2284,6 +2562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 247,
+                            BarrierHealth = 0,
                             Code = "24,7",
                             Coin = 0,
                             IsActive = true,
@@ -2293,6 +2572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 248,
+                            BarrierHealth = 0,
                             Code = "24,8",
                             Coin = 0,
                             IsActive = true,
@@ -2302,6 +2582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 249,
+                            BarrierHealth = 0,
                             Code = "24,9",
                             Coin = 0,
                             IsActive = true,
@@ -2311,6 +2592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 250,
+                            BarrierHealth = 0,
                             Code = "25",
                             Coin = 0,
                             IsActive = true,
@@ -2320,6 +2602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 251,
+                            BarrierHealth = 0,
                             Code = "25,1",
                             Coin = 0,
                             IsActive = true,
@@ -2329,6 +2612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 252,
+                            BarrierHealth = 0,
                             Code = "25,2",
                             Coin = 0,
                             IsActive = true,
@@ -2338,6 +2622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 253,
+                            BarrierHealth = 0,
                             Code = "25,3",
                             Coin = 0,
                             IsActive = true,
@@ -2347,6 +2632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 254,
+                            BarrierHealth = 0,
                             Code = "25,4",
                             Coin = 0,
                             IsActive = true,
@@ -2356,6 +2642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 255,
+                            BarrierHealth = 0,
                             Code = "25,5",
                             Coin = 0,
                             IsActive = true,
@@ -2365,6 +2652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 256,
+                            BarrierHealth = 0,
                             Code = "25,6",
                             Coin = 0,
                             IsActive = true,
@@ -2374,6 +2662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 257,
+                            BarrierHealth = 0,
                             Code = "25,7",
                             Coin = 0,
                             IsActive = true,
@@ -2383,6 +2672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 258,
+                            BarrierHealth = 0,
                             Code = "25,8",
                             Coin = 0,
                             IsActive = true,
@@ -2392,6 +2682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 259,
+                            BarrierHealth = 0,
                             Code = "25,9",
                             Coin = 0,
                             IsActive = true,
@@ -2401,6 +2692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 260,
+                            BarrierHealth = 0,
                             Code = "26",
                             Coin = 0,
                             IsActive = true,
@@ -2410,6 +2702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 261,
+                            BarrierHealth = 0,
                             Code = "26,1",
                             Coin = 0,
                             IsActive = true,
@@ -2419,6 +2712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 262,
+                            BarrierHealth = 0,
                             Code = "26,2",
                             Coin = 0,
                             IsActive = true,
@@ -2428,6 +2722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 263,
+                            BarrierHealth = 0,
                             Code = "26,3",
                             Coin = 0,
                             IsActive = true,
@@ -2437,6 +2732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 264,
+                            BarrierHealth = 0,
                             Code = "26,4",
                             Coin = 0,
                             IsActive = true,
@@ -2446,6 +2742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 265,
+                            BarrierHealth = 0,
                             Code = "26,5",
                             Coin = 0,
                             IsActive = true,
@@ -2455,6 +2752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 266,
+                            BarrierHealth = 0,
                             Code = "26,6",
                             Coin = 0,
                             IsActive = true,
@@ -2464,6 +2762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 267,
+                            BarrierHealth = 0,
                             Code = "26,7",
                             Coin = 0,
                             IsActive = true,
@@ -2473,6 +2772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 268,
+                            BarrierHealth = 0,
                             Code = "26,8",
                             Coin = 0,
                             IsActive = true,
@@ -2482,6 +2782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 269,
+                            BarrierHealth = 0,
                             Code = "26,9",
                             Coin = 0,
                             IsActive = true,
@@ -2491,6 +2792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 270,
+                            BarrierHealth = 0,
                             Code = "27",
                             Coin = 0,
                             IsActive = true,
@@ -2500,6 +2802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 271,
+                            BarrierHealth = 0,
                             Code = "27,1",
                             Coin = 0,
                             IsActive = true,
@@ -2509,6 +2812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 272,
+                            BarrierHealth = 0,
                             Code = "27,2",
                             Coin = 0,
                             IsActive = true,
@@ -2518,6 +2822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 273,
+                            BarrierHealth = 0,
                             Code = "27,3",
                             Coin = 0,
                             IsActive = true,
@@ -2527,6 +2832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 274,
+                            BarrierHealth = 0,
                             Code = "27,4",
                             Coin = 0,
                             IsActive = true,
@@ -2536,6 +2842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 275,
+                            BarrierHealth = 0,
                             Code = "27,5",
                             Coin = 0,
                             IsActive = true,
@@ -2545,6 +2852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 276,
+                            BarrierHealth = 0,
                             Code = "27,6",
                             Coin = 0,
                             IsActive = true,
@@ -2554,6 +2862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 277,
+                            BarrierHealth = 0,
                             Code = "27,7",
                             Coin = 0,
                             IsActive = true,
@@ -2563,6 +2872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 278,
+                            BarrierHealth = 0,
                             Code = "27,8",
                             Coin = 0,
                             IsActive = true,
@@ -2572,6 +2882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 279,
+                            BarrierHealth = 0,
                             Code = "27,9",
                             Coin = 0,
                             IsActive = true,
@@ -2581,6 +2892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 280,
+                            BarrierHealth = 0,
                             Code = "28",
                             Coin = 0,
                             IsActive = true,
@@ -2590,6 +2902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 281,
+                            BarrierHealth = 0,
                             Code = "28,1",
                             Coin = 0,
                             IsActive = true,
@@ -2599,6 +2912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 282,
+                            BarrierHealth = 0,
                             Code = "28,2",
                             Coin = 0,
                             IsActive = true,
@@ -2608,6 +2922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 283,
+                            BarrierHealth = 0,
                             Code = "28,3",
                             Coin = 0,
                             IsActive = true,
@@ -2617,6 +2932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 284,
+                            BarrierHealth = 0,
                             Code = "28,4",
                             Coin = 0,
                             IsActive = true,
@@ -2626,6 +2942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 285,
+                            BarrierHealth = 0,
                             Code = "28,5",
                             Coin = 0,
                             IsActive = true,
@@ -2635,6 +2952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 286,
+                            BarrierHealth = 0,
                             Code = "28,6",
                             Coin = 0,
                             IsActive = true,
@@ -2644,6 +2962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 287,
+                            BarrierHealth = 0,
                             Code = "28,7",
                             Coin = 0,
                             IsActive = true,
@@ -2653,6 +2972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 288,
+                            BarrierHealth = 0,
                             Code = "28,8",
                             Coin = 0,
                             IsActive = true,
@@ -2662,6 +2982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 289,
+                            BarrierHealth = 0,
                             Code = "28,9",
                             Coin = 0,
                             IsActive = true,
@@ -2671,6 +2992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 290,
+                            BarrierHealth = 0,
                             Code = "29",
                             Coin = 0,
                             IsActive = true,
@@ -2680,6 +3002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 291,
+                            BarrierHealth = 0,
                             Code = "29,1",
                             Coin = 0,
                             IsActive = true,
@@ -2689,6 +3012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 292,
+                            BarrierHealth = 0,
                             Code = "29,2",
                             Coin = 0,
                             IsActive = true,
@@ -2698,6 +3022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 293,
+                            BarrierHealth = 0,
                             Code = "29,3",
                             Coin = 0,
                             IsActive = true,
@@ -2707,6 +3032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 294,
+                            BarrierHealth = 0,
                             Code = "29,4",
                             Coin = 0,
                             IsActive = true,
@@ -2716,6 +3042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 295,
+                            BarrierHealth = 0,
                             Code = "29,5",
                             Coin = 0,
                             IsActive = true,
@@ -2725,6 +3052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 296,
+                            BarrierHealth = 0,
                             Code = "29,6",
                             Coin = 0,
                             IsActive = true,
@@ -2734,6 +3062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 297,
+                            BarrierHealth = 0,
                             Code = "29,7",
                             Coin = 0,
                             IsActive = true,
@@ -2743,6 +3072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 298,
+                            BarrierHealth = 0,
                             Code = "29,8",
                             Coin = 0,
                             IsActive = true,
@@ -2752,6 +3082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 299,
+                            BarrierHealth = 0,
                             Code = "29,9",
                             Coin = 0,
                             IsActive = true,
@@ -2761,6 +3092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 300,
+                            BarrierHealth = 0,
                             Code = "30",
                             Coin = 0,
                             IsActive = true,
@@ -2770,6 +3102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 301,
+                            BarrierHealth = 0,
                             Code = "30,1",
                             Coin = 0,
                             IsActive = true,
@@ -2779,6 +3112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 302,
+                            BarrierHealth = 0,
                             Code = "30,2",
                             Coin = 0,
                             IsActive = true,
@@ -2788,6 +3122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 303,
+                            BarrierHealth = 0,
                             Code = "30,3",
                             Coin = 0,
                             IsActive = true,
@@ -2797,6 +3132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 304,
+                            BarrierHealth = 0,
                             Code = "30,4",
                             Coin = 0,
                             IsActive = true,
@@ -2806,6 +3142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 305,
+                            BarrierHealth = 0,
                             Code = "30,5",
                             Coin = 0,
                             IsActive = true,
@@ -2815,6 +3152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 306,
+                            BarrierHealth = 0,
                             Code = "30,6",
                             Coin = 0,
                             IsActive = true,
@@ -2824,6 +3162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 307,
+                            BarrierHealth = 0,
                             Code = "30,7",
                             Coin = 0,
                             IsActive = true,
@@ -2833,6 +3172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 308,
+                            BarrierHealth = 0,
                             Code = "30,8",
                             Coin = 0,
                             IsActive = true,
@@ -2842,6 +3182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 309,
+                            BarrierHealth = 0,
                             Code = "30,9",
                             Coin = 0,
                             IsActive = true,
@@ -2851,6 +3192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 310,
+                            BarrierHealth = 0,
                             Code = "31",
                             Coin = 0,
                             IsActive = true,
@@ -2860,6 +3202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 311,
+                            BarrierHealth = 0,
                             Code = "31,1",
                             Coin = 0,
                             IsActive = true,
@@ -2869,6 +3212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 312,
+                            BarrierHealth = 0,
                             Code = "31,2",
                             Coin = 0,
                             IsActive = true,
@@ -2878,6 +3222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 313,
+                            BarrierHealth = 0,
                             Code = "31,3",
                             Coin = 0,
                             IsActive = true,
@@ -2887,6 +3232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 314,
+                            BarrierHealth = 0,
                             Code = "31,4",
                             Coin = 0,
                             IsActive = true,
@@ -2896,6 +3242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 315,
+                            BarrierHealth = 0,
                             Code = "31,5",
                             Coin = 0,
                             IsActive = true,
@@ -2905,6 +3252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 316,
+                            BarrierHealth = 0,
                             Code = "31,6",
                             Coin = 0,
                             IsActive = true,
@@ -2914,6 +3262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 317,
+                            BarrierHealth = 0,
                             Code = "31,7",
                             Coin = 0,
                             IsActive = true,
@@ -2923,6 +3272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 318,
+                            BarrierHealth = 0,
                             Code = "31,8",
                             Coin = 0,
                             IsActive = true,
@@ -2932,6 +3282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 319,
+                            BarrierHealth = 0,
                             Code = "31,9",
                             Coin = 0,
                             IsActive = true,
@@ -2941,6 +3292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 320,
+                            BarrierHealth = 0,
                             Code = "32",
                             Coin = 0,
                             IsActive = true,
@@ -2950,6 +3302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 321,
+                            BarrierHealth = 0,
                             Code = "32,1",
                             Coin = 0,
                             IsActive = true,
@@ -2959,6 +3312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 322,
+                            BarrierHealth = 0,
                             Code = "32,2",
                             Coin = 0,
                             IsActive = true,
@@ -2968,6 +3322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 323,
+                            BarrierHealth = 0,
                             Code = "32,3",
                             Coin = 0,
                             IsActive = true,
@@ -2977,6 +3332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 324,
+                            BarrierHealth = 0,
                             Code = "32,4",
                             Coin = 0,
                             IsActive = true,
@@ -2986,6 +3342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 325,
+                            BarrierHealth = 0,
                             Code = "32,5",
                             Coin = 0,
                             IsActive = true,
@@ -2995,6 +3352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 326,
+                            BarrierHealth = 0,
                             Code = "32,6",
                             Coin = 0,
                             IsActive = true,
@@ -3004,6 +3362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 327,
+                            BarrierHealth = 0,
                             Code = "32,7",
                             Coin = 0,
                             IsActive = true,
@@ -3013,6 +3372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 328,
+                            BarrierHealth = 0,
                             Code = "32,8",
                             Coin = 0,
                             IsActive = true,
@@ -3022,6 +3382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 329,
+                            BarrierHealth = 0,
                             Code = "32,9",
                             Coin = 0,
                             IsActive = true,
@@ -3031,6 +3392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 330,
+                            BarrierHealth = 0,
                             Code = "33",
                             Coin = 0,
                             IsActive = true,
@@ -3040,6 +3402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 331,
+                            BarrierHealth = 0,
                             Code = "33,1",
                             Coin = 0,
                             IsActive = true,
@@ -3049,6 +3412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 332,
+                            BarrierHealth = 0,
                             Code = "33,2",
                             Coin = 0,
                             IsActive = true,
@@ -3058,6 +3422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 333,
+                            BarrierHealth = 0,
                             Code = "33,3",
                             Coin = 0,
                             IsActive = true,
@@ -3067,6 +3432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 334,
+                            BarrierHealth = 0,
                             Code = "33,4",
                             Coin = 0,
                             IsActive = true,
@@ -3076,6 +3442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 335,
+                            BarrierHealth = 0,
                             Code = "33,5",
                             Coin = 0,
                             IsActive = true,
@@ -3085,6 +3452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 336,
+                            BarrierHealth = 0,
                             Code = "33,6",
                             Coin = 0,
                             IsActive = true,
@@ -3094,6 +3462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 337,
+                            BarrierHealth = 0,
                             Code = "33,7",
                             Coin = 0,
                             IsActive = true,
@@ -3103,6 +3472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 338,
+                            BarrierHealth = 0,
                             Code = "33,8",
                             Coin = 0,
                             IsActive = true,
@@ -3112,6 +3482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 339,
+                            BarrierHealth = 0,
                             Code = "33,9",
                             Coin = 0,
                             IsActive = true,
@@ -3121,6 +3492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 340,
+                            BarrierHealth = 0,
                             Code = "34",
                             Coin = 0,
                             IsActive = true,
@@ -3130,6 +3502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 341,
+                            BarrierHealth = 0,
                             Code = "34,1",
                             Coin = 0,
                             IsActive = true,
@@ -3139,6 +3512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 342,
+                            BarrierHealth = 0,
                             Code = "34,2",
                             Coin = 0,
                             IsActive = true,
@@ -3148,6 +3522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 343,
+                            BarrierHealth = 0,
                             Code = "34,3",
                             Coin = 0,
                             IsActive = true,
@@ -3157,6 +3532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 344,
+                            BarrierHealth = 0,
                             Code = "34,4",
                             Coin = 0,
                             IsActive = true,
@@ -3166,6 +3542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 345,
+                            BarrierHealth = 0,
                             Code = "34,5",
                             Coin = 0,
                             IsActive = true,
@@ -3175,6 +3552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 346,
+                            BarrierHealth = 0,
                             Code = "34,6",
                             Coin = 0,
                             IsActive = true,
@@ -3184,6 +3562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 347,
+                            BarrierHealth = 0,
                             Code = "34,7",
                             Coin = 0,
                             IsActive = true,
@@ -3193,6 +3572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 348,
+                            BarrierHealth = 0,
                             Code = "34,8",
                             Coin = 0,
                             IsActive = true,
@@ -3202,6 +3582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 349,
+                            BarrierHealth = 0,
                             Code = "34,9",
                             Coin = 0,
                             IsActive = true,
@@ -3211,6 +3592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 350,
+                            BarrierHealth = 0,
                             Code = "35",
                             Coin = 0,
                             IsActive = true,
@@ -3220,6 +3602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 351,
+                            BarrierHealth = 0,
                             Code = "35,1",
                             Coin = 0,
                             IsActive = true,
@@ -3229,6 +3612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 352,
+                            BarrierHealth = 0,
                             Code = "35,2",
                             Coin = 0,
                             IsActive = true,
@@ -3238,6 +3622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 353,
+                            BarrierHealth = 0,
                             Code = "35,3",
                             Coin = 0,
                             IsActive = true,
@@ -3247,6 +3632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 354,
+                            BarrierHealth = 0,
                             Code = "35,4",
                             Coin = 0,
                             IsActive = true,
@@ -3256,6 +3642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 355,
+                            BarrierHealth = 0,
                             Code = "35,5",
                             Coin = 0,
                             IsActive = true,
@@ -3265,6 +3652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 356,
+                            BarrierHealth = 0,
                             Code = "35,6",
                             Coin = 0,
                             IsActive = true,
@@ -3274,6 +3662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 357,
+                            BarrierHealth = 0,
                             Code = "35,7",
                             Coin = 0,
                             IsActive = true,
@@ -3283,6 +3672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 358,
+                            BarrierHealth = 0,
                             Code = "35,8",
                             Coin = 0,
                             IsActive = true,
@@ -3292,6 +3682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 359,
+                            BarrierHealth = 0,
                             Code = "35,9",
                             Coin = 0,
                             IsActive = true,
@@ -3301,6 +3692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 360,
+                            BarrierHealth = 0,
                             Code = "36",
                             Coin = 0,
                             IsActive = true,
@@ -3310,6 +3702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 361,
+                            BarrierHealth = 0,
                             Code = "36,1",
                             Coin = 0,
                             IsActive = true,
@@ -3319,6 +3712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 362,
+                            BarrierHealth = 0,
                             Code = "36,2",
                             Coin = 0,
                             IsActive = true,
@@ -3328,6 +3722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 363,
+                            BarrierHealth = 0,
                             Code = "36,3",
                             Coin = 0,
                             IsActive = true,
@@ -3337,6 +3732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 364,
+                            BarrierHealth = 0,
                             Code = "36,4",
                             Coin = 0,
                             IsActive = true,
@@ -3346,6 +3742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 365,
+                            BarrierHealth = 0,
                             Code = "36,5",
                             Coin = 0,
                             IsActive = true,
@@ -3355,6 +3752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 366,
+                            BarrierHealth = 0,
                             Code = "36,6",
                             Coin = 0,
                             IsActive = true,
@@ -3364,6 +3762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 367,
+                            BarrierHealth = 0,
                             Code = "36,7",
                             Coin = 0,
                             IsActive = true,
@@ -3373,6 +3772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 368,
+                            BarrierHealth = 0,
                             Code = "36,8",
                             Coin = 0,
                             IsActive = true,
@@ -3382,6 +3782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 369,
+                            BarrierHealth = 0,
                             Code = "36,9",
                             Coin = 0,
                             IsActive = true,
@@ -3391,6 +3792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 370,
+                            BarrierHealth = 0,
                             Code = "37",
                             Coin = 0,
                             IsActive = true,
@@ -3400,6 +3802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 371,
+                            BarrierHealth = 0,
                             Code = "37,1",
                             Coin = 0,
                             IsActive = true,
@@ -3409,6 +3812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 372,
+                            BarrierHealth = 0,
                             Code = "37,2",
                             Coin = 0,
                             IsActive = true,
@@ -3418,6 +3822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 373,
+                            BarrierHealth = 0,
                             Code = "37,3",
                             Coin = 0,
                             IsActive = true,
@@ -3427,6 +3832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 374,
+                            BarrierHealth = 0,
                             Code = "37,4",
                             Coin = 0,
                             IsActive = true,
@@ -3436,6 +3842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 375,
+                            BarrierHealth = 0,
                             Code = "37,5",
                             Coin = 0,
                             IsActive = true,
@@ -3445,6 +3852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 376,
+                            BarrierHealth = 0,
                             Code = "37,6",
                             Coin = 0,
                             IsActive = true,
@@ -3454,6 +3862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 377,
+                            BarrierHealth = 0,
                             Code = "37,7",
                             Coin = 0,
                             IsActive = true,
@@ -3463,6 +3872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 378,
+                            BarrierHealth = 0,
                             Code = "37,8",
                             Coin = 0,
                             IsActive = true,
@@ -3472,6 +3882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 379,
+                            BarrierHealth = 0,
                             Code = "37,9",
                             Coin = 0,
                             IsActive = true,
@@ -3481,6 +3892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 380,
+                            BarrierHealth = 0,
                             Code = "38",
                             Coin = 0,
                             IsActive = true,
@@ -3490,6 +3902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 381,
+                            BarrierHealth = 0,
                             Code = "38,1",
                             Coin = 0,
                             IsActive = true,
@@ -3499,6 +3912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 382,
+                            BarrierHealth = 0,
                             Code = "38,2",
                             Coin = 0,
                             IsActive = true,
@@ -3508,6 +3922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 383,
+                            BarrierHealth = 0,
                             Code = "38,3",
                             Coin = 0,
                             IsActive = true,
@@ -3517,6 +3932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 384,
+                            BarrierHealth = 0,
                             Code = "38,4",
                             Coin = 0,
                             IsActive = true,
@@ -3526,6 +3942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 385,
+                            BarrierHealth = 0,
                             Code = "38,5",
                             Coin = 0,
                             IsActive = true,
@@ -3535,6 +3952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 386,
+                            BarrierHealth = 0,
                             Code = "38,6",
                             Coin = 0,
                             IsActive = true,
@@ -3544,6 +3962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 387,
+                            BarrierHealth = 0,
                             Code = "38,7",
                             Coin = 0,
                             IsActive = true,
@@ -3553,6 +3972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 388,
+                            BarrierHealth = 0,
                             Code = "38,8",
                             Coin = 0,
                             IsActive = true,
@@ -3562,6 +3982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 389,
+                            BarrierHealth = 0,
                             Code = "38,9",
                             Coin = 0,
                             IsActive = true,
@@ -3571,6 +3992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 390,
+                            BarrierHealth = 0,
                             Code = "39",
                             Coin = 0,
                             IsActive = true,
@@ -3580,6 +4002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 391,
+                            BarrierHealth = 0,
                             Code = "39,1",
                             Coin = 0,
                             IsActive = true,
@@ -3589,6 +4012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 392,
+                            BarrierHealth = 0,
                             Code = "39,2",
                             Coin = 0,
                             IsActive = true,
@@ -3598,6 +4022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 393,
+                            BarrierHealth = 0,
                             Code = "39,3",
                             Coin = 0,
                             IsActive = true,
@@ -3607,6 +4032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 394,
+                            BarrierHealth = 0,
                             Code = "39,4",
                             Coin = 0,
                             IsActive = true,
@@ -3616,6 +4042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 395,
+                            BarrierHealth = 0,
                             Code = "39,5",
                             Coin = 0,
                             IsActive = true,
@@ -3625,6 +4052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 396,
+                            BarrierHealth = 0,
                             Code = "39,6",
                             Coin = 0,
                             IsActive = true,
@@ -3634,6 +4062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 397,
+                            BarrierHealth = 0,
                             Code = "39,7",
                             Coin = 0,
                             IsActive = true,
@@ -3643,6 +4072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 398,
+                            BarrierHealth = 0,
                             Code = "39,8",
                             Coin = 0,
                             IsActive = true,
@@ -3652,6 +4082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 399,
+                            BarrierHealth = 0,
                             Code = "39,9",
                             Coin = 0,
                             IsActive = true,
@@ -3661,6 +4092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 400,
+                            BarrierHealth = 0,
                             Code = "40",
                             Coin = 0,
                             IsActive = true,
@@ -3670,6 +4102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 401,
+                            BarrierHealth = 0,
                             Code = "40,1",
                             Coin = 0,
                             IsActive = true,
@@ -3679,6 +4112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 402,
+                            BarrierHealth = 0,
                             Code = "40,2",
                             Coin = 0,
                             IsActive = true,
@@ -3688,6 +4122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 403,
+                            BarrierHealth = 0,
                             Code = "40,3",
                             Coin = 0,
                             IsActive = true,
@@ -3697,6 +4132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 404,
+                            BarrierHealth = 0,
                             Code = "40,4",
                             Coin = 0,
                             IsActive = true,
@@ -3706,6 +4142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 405,
+                            BarrierHealth = 0,
                             Code = "40,5",
                             Coin = 0,
                             IsActive = true,
@@ -3715,6 +4152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 406,
+                            BarrierHealth = 0,
                             Code = "40,6",
                             Coin = 0,
                             IsActive = true,
@@ -3724,6 +4162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 407,
+                            BarrierHealth = 0,
                             Code = "40,7",
                             Coin = 0,
                             IsActive = true,
@@ -3733,6 +4172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 408,
+                            BarrierHealth = 0,
                             Code = "40,8",
                             Coin = 0,
                             IsActive = true,
@@ -3742,6 +4182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 409,
+                            BarrierHealth = 0,
                             Code = "40,9",
                             Coin = 0,
                             IsActive = true,
@@ -3751,6 +4192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 410,
+                            BarrierHealth = 0,
                             Code = "41",
                             Coin = 0,
                             IsActive = true,
@@ -3760,6 +4202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 411,
+                            BarrierHealth = 0,
                             Code = "41,1",
                             Coin = 0,
                             IsActive = true,
@@ -3769,6 +4212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 412,
+                            BarrierHealth = 0,
                             Code = "41,2",
                             Coin = 0,
                             IsActive = true,
@@ -3778,6 +4222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 413,
+                            BarrierHealth = 0,
                             Code = "41,3",
                             Coin = 0,
                             IsActive = true,
@@ -3787,6 +4232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 414,
+                            BarrierHealth = 0,
                             Code = "41,4",
                             Coin = 0,
                             IsActive = true,
@@ -3796,6 +4242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 415,
+                            BarrierHealth = 0,
                             Code = "41,5",
                             Coin = 0,
                             IsActive = true,
@@ -3805,6 +4252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 416,
+                            BarrierHealth = 0,
                             Code = "41,6",
                             Coin = 0,
                             IsActive = true,
@@ -3814,6 +4262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 417,
+                            BarrierHealth = 0,
                             Code = "41,7",
                             Coin = 0,
                             IsActive = true,
@@ -3823,6 +4272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 418,
+                            BarrierHealth = 0,
                             Code = "41,8",
                             Coin = 0,
                             IsActive = true,
@@ -3832,6 +4282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 419,
+                            BarrierHealth = 0,
                             Code = "41,9",
                             Coin = 0,
                             IsActive = true,
@@ -3841,6 +4292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 420,
+                            BarrierHealth = 0,
                             Code = "42",
                             Coin = 0,
                             IsActive = true,
@@ -3850,6 +4302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 421,
+                            BarrierHealth = 0,
                             Code = "42,1",
                             Coin = 0,
                             IsActive = true,
@@ -3859,6 +4312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 422,
+                            BarrierHealth = 0,
                             Code = "42,2",
                             Coin = 0,
                             IsActive = true,
@@ -3868,6 +4322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 423,
+                            BarrierHealth = 0,
                             Code = "42,3",
                             Coin = 0,
                             IsActive = true,
@@ -3877,6 +4332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 424,
+                            BarrierHealth = 0,
                             Code = "42,4",
                             Coin = 0,
                             IsActive = true,
@@ -3886,6 +4342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 425,
+                            BarrierHealth = 0,
                             Code = "42,5",
                             Coin = 0,
                             IsActive = true,
@@ -3895,6 +4352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 426,
+                            BarrierHealth = 0,
                             Code = "42,6",
                             Coin = 0,
                             IsActive = true,
@@ -3904,6 +4362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 427,
+                            BarrierHealth = 0,
                             Code = "42,7",
                             Coin = 0,
                             IsActive = true,
@@ -3913,6 +4372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 428,
+                            BarrierHealth = 0,
                             Code = "42,8",
                             Coin = 0,
                             IsActive = true,
@@ -3922,6 +4382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 429,
+                            BarrierHealth = 0,
                             Code = "42,9",
                             Coin = 0,
                             IsActive = true,
@@ -3931,6 +4392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 430,
+                            BarrierHealth = 0,
                             Code = "43",
                             Coin = 0,
                             IsActive = true,
@@ -3940,6 +4402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 431,
+                            BarrierHealth = 0,
                             Code = "43,1",
                             Coin = 0,
                             IsActive = true,
@@ -3949,6 +4412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 432,
+                            BarrierHealth = 0,
                             Code = "43,2",
                             Coin = 0,
                             IsActive = true,
@@ -3958,6 +4422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 433,
+                            BarrierHealth = 0,
                             Code = "43,3",
                             Coin = 0,
                             IsActive = true,
@@ -3967,6 +4432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 434,
+                            BarrierHealth = 0,
                             Code = "43,4",
                             Coin = 0,
                             IsActive = true,
@@ -3976,6 +4442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 435,
+                            BarrierHealth = 0,
                             Code = "43,5",
                             Coin = 0,
                             IsActive = true,
@@ -3985,6 +4452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 436,
+                            BarrierHealth = 0,
                             Code = "43,6",
                             Coin = 0,
                             IsActive = true,
@@ -3994,6 +4462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 437,
+                            BarrierHealth = 0,
                             Code = "43,7",
                             Coin = 0,
                             IsActive = true,
@@ -4003,6 +4472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 438,
+                            BarrierHealth = 0,
                             Code = "43,8",
                             Coin = 0,
                             IsActive = true,
@@ -4012,6 +4482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 439,
+                            BarrierHealth = 0,
                             Code = "43,9",
                             Coin = 0,
                             IsActive = true,
@@ -4021,6 +4492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 440,
+                            BarrierHealth = 0,
                             Code = "44",
                             Coin = 0,
                             IsActive = true,
@@ -4030,6 +4502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 441,
+                            BarrierHealth = 0,
                             Code = "44,1",
                             Coin = 0,
                             IsActive = true,
@@ -4039,6 +4512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 442,
+                            BarrierHealth = 0,
                             Code = "44,2",
                             Coin = 0,
                             IsActive = true,
@@ -4048,6 +4522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 443,
+                            BarrierHealth = 0,
                             Code = "44,3",
                             Coin = 0,
                             IsActive = true,
@@ -4057,6 +4532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 444,
+                            BarrierHealth = 0,
                             Code = "44,4",
                             Coin = 0,
                             IsActive = true,
@@ -4066,6 +4542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 445,
+                            BarrierHealth = 0,
                             Code = "44,5",
                             Coin = 0,
                             IsActive = true,
@@ -4075,6 +4552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 446,
+                            BarrierHealth = 0,
                             Code = "44,6",
                             Coin = 0,
                             IsActive = true,
@@ -4084,6 +4562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 447,
+                            BarrierHealth = 0,
                             Code = "44,7",
                             Coin = 0,
                             IsActive = true,
@@ -4093,6 +4572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 448,
+                            BarrierHealth = 0,
                             Code = "44,8",
                             Coin = 0,
                             IsActive = true,
@@ -4102,6 +4582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 449,
+                            BarrierHealth = 0,
                             Code = "44,9",
                             Coin = 0,
                             IsActive = true,
@@ -4111,6 +4592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 450,
+                            BarrierHealth = 0,
                             Code = "45",
                             Coin = 0,
                             IsActive = true,
@@ -4120,6 +4602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 451,
+                            BarrierHealth = 0,
                             Code = "45,1",
                             Coin = 0,
                             IsActive = true,
@@ -4129,6 +4612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 452,
+                            BarrierHealth = 0,
                             Code = "45,2",
                             Coin = 0,
                             IsActive = true,
@@ -4138,6 +4622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 453,
+                            BarrierHealth = 0,
                             Code = "45,3",
                             Coin = 0,
                             IsActive = true,
@@ -4147,6 +4632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 454,
+                            BarrierHealth = 0,
                             Code = "45,4",
                             Coin = 0,
                             IsActive = true,
@@ -4156,6 +4642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 455,
+                            BarrierHealth = 0,
                             Code = "45,5",
                             Coin = 0,
                             IsActive = true,
@@ -4165,6 +4652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 456,
+                            BarrierHealth = 0,
                             Code = "45,6",
                             Coin = 0,
                             IsActive = true,
@@ -4174,6 +4662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 457,
+                            BarrierHealth = 0,
                             Code = "45,7",
                             Coin = 0,
                             IsActive = true,
@@ -4183,6 +4672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 458,
+                            BarrierHealth = 0,
                             Code = "45,8",
                             Coin = 0,
                             IsActive = true,
@@ -4192,6 +4682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 459,
+                            BarrierHealth = 0,
                             Code = "45,9",
                             Coin = 0,
                             IsActive = true,
@@ -4201,6 +4692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 460,
+                            BarrierHealth = 0,
                             Code = "46",
                             Coin = 0,
                             IsActive = true,
@@ -4210,6 +4702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 461,
+                            BarrierHealth = 0,
                             Code = "46,1",
                             Coin = 0,
                             IsActive = true,
@@ -4219,6 +4712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 462,
+                            BarrierHealth = 0,
                             Code = "46,2",
                             Coin = 0,
                             IsActive = true,
@@ -4228,6 +4722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 463,
+                            BarrierHealth = 0,
                             Code = "46,3",
                             Coin = 0,
                             IsActive = true,
@@ -4237,6 +4732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 464,
+                            BarrierHealth = 0,
                             Code = "46,4",
                             Coin = 0,
                             IsActive = true,
@@ -4246,6 +4742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 465,
+                            BarrierHealth = 0,
                             Code = "46,5",
                             Coin = 0,
                             IsActive = true,
@@ -4255,6 +4752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 466,
+                            BarrierHealth = 0,
                             Code = "46,6",
                             Coin = 0,
                             IsActive = true,
@@ -4264,6 +4762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 467,
+                            BarrierHealth = 0,
                             Code = "46,7",
                             Coin = 0,
                             IsActive = true,
@@ -4273,6 +4772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 468,
+                            BarrierHealth = 0,
                             Code = "46,8",
                             Coin = 0,
                             IsActive = true,
@@ -4282,6 +4782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 469,
+                            BarrierHealth = 0,
                             Code = "46,9",
                             Coin = 0,
                             IsActive = true,
@@ -4291,6 +4792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 470,
+                            BarrierHealth = 0,
                             Code = "47",
                             Coin = 0,
                             IsActive = true,
@@ -4300,6 +4802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 471,
+                            BarrierHealth = 0,
                             Code = "47,1",
                             Coin = 0,
                             IsActive = true,
@@ -4309,6 +4812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 472,
+                            BarrierHealth = 0,
                             Code = "47,2",
                             Coin = 0,
                             IsActive = true,
@@ -4318,6 +4822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 473,
+                            BarrierHealth = 0,
                             Code = "47,3",
                             Coin = 0,
                             IsActive = true,
@@ -4327,6 +4832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 474,
+                            BarrierHealth = 0,
                             Code = "47,4",
                             Coin = 0,
                             IsActive = true,
@@ -4336,6 +4842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 475,
+                            BarrierHealth = 0,
                             Code = "47,5",
                             Coin = 0,
                             IsActive = true,
@@ -4345,6 +4852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 476,
+                            BarrierHealth = 0,
                             Code = "47,6",
                             Coin = 0,
                             IsActive = true,
@@ -4354,6 +4862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 477,
+                            BarrierHealth = 0,
                             Code = "47,7",
                             Coin = 0,
                             IsActive = true,
@@ -4363,6 +4872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 478,
+                            BarrierHealth = 0,
                             Code = "47,8",
                             Coin = 0,
                             IsActive = true,
@@ -4372,6 +4882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 479,
+                            BarrierHealth = 0,
                             Code = "47,9",
                             Coin = 0,
                             IsActive = true,
@@ -4381,6 +4892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 480,
+                            BarrierHealth = 0,
                             Code = "48",
                             Coin = 0,
                             IsActive = true,
@@ -4390,6 +4902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 481,
+                            BarrierHealth = 0,
                             Code = "48,1",
                             Coin = 0,
                             IsActive = true,
@@ -4399,6 +4912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 482,
+                            BarrierHealth = 0,
                             Code = "48,2",
                             Coin = 0,
                             IsActive = true,
@@ -4408,6 +4922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 483,
+                            BarrierHealth = 0,
                             Code = "48,3",
                             Coin = 0,
                             IsActive = true,
@@ -4417,6 +4932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 484,
+                            BarrierHealth = 0,
                             Code = "48,4",
                             Coin = 0,
                             IsActive = true,
@@ -4426,6 +4942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 485,
+                            BarrierHealth = 0,
                             Code = "48,5",
                             Coin = 0,
                             IsActive = true,
@@ -4435,6 +4952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 486,
+                            BarrierHealth = 0,
                             Code = "48,6",
                             Coin = 0,
                             IsActive = true,
@@ -4444,6 +4962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 487,
+                            BarrierHealth = 0,
                             Code = "48,7",
                             Coin = 0,
                             IsActive = true,
@@ -4453,6 +4972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 488,
+                            BarrierHealth = 0,
                             Code = "48,8",
                             Coin = 0,
                             IsActive = true,
@@ -4462,6 +4982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 489,
+                            BarrierHealth = 0,
                             Code = "48,9",
                             Coin = 0,
                             IsActive = true,
@@ -4471,6 +4992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 490,
+                            BarrierHealth = 0,
                             Code = "49",
                             Coin = 0,
                             IsActive = true,
@@ -4480,6 +5002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 491,
+                            BarrierHealth = 0,
                             Code = "49,1",
                             Coin = 0,
                             IsActive = true,
@@ -4489,6 +5012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 492,
+                            BarrierHealth = 0,
                             Code = "49,2",
                             Coin = 0,
                             IsActive = true,
@@ -4498,6 +5022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 493,
+                            BarrierHealth = 0,
                             Code = "49,3",
                             Coin = 0,
                             IsActive = true,
@@ -4507,6 +5032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 494,
+                            BarrierHealth = 0,
                             Code = "49,4",
                             Coin = 0,
                             IsActive = true,
@@ -4516,6 +5042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 495,
+                            BarrierHealth = 0,
                             Code = "49,5",
                             Coin = 0,
                             IsActive = true,
@@ -4525,6 +5052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 496,
+                            BarrierHealth = 0,
                             Code = "49,6",
                             Coin = 0,
                             IsActive = true,
@@ -4534,6 +5062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 497,
+                            BarrierHealth = 0,
                             Code = "49,7",
                             Coin = 0,
                             IsActive = true,
@@ -4543,6 +5072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 498,
+                            BarrierHealth = 0,
                             Code = "49,8",
                             Coin = 0,
                             IsActive = true,
@@ -4552,6 +5082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 499,
+                            BarrierHealth = 0,
                             Code = "49,9",
                             Coin = 0,
                             IsActive = true,
@@ -4561,6 +5092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 500,
+                            BarrierHealth = 0,
                             Code = "50",
                             Coin = 0,
                             IsActive = true,
@@ -4570,6 +5102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 501,
+                            BarrierHealth = 0,
                             Code = "50,1",
                             Coin = 0,
                             IsActive = true,
@@ -4579,6 +5112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 502,
+                            BarrierHealth = 0,
                             Code = "50,2",
                             Coin = 0,
                             IsActive = true,
@@ -4588,6 +5122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 503,
+                            BarrierHealth = 0,
                             Code = "50,3",
                             Coin = 0,
                             IsActive = true,
@@ -4597,6 +5132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 504,
+                            BarrierHealth = 0,
                             Code = "50,4",
                             Coin = 0,
                             IsActive = true,
@@ -4606,6 +5142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 505,
+                            BarrierHealth = 0,
                             Code = "50,5",
                             Coin = 0,
                             IsActive = true,
@@ -4615,6 +5152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 506,
+                            BarrierHealth = 0,
                             Code = "50,6",
                             Coin = 0,
                             IsActive = true,
@@ -4624,6 +5162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 507,
+                            BarrierHealth = 0,
                             Code = "50,7",
                             Coin = 0,
                             IsActive = true,
@@ -4633,6 +5172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 508,
+                            BarrierHealth = 0,
                             Code = "50,8",
                             Coin = 0,
                             IsActive = true,
@@ -4642,6 +5182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 509,
+                            BarrierHealth = 0,
                             Code = "50,9",
                             Coin = 0,
                             IsActive = true,
@@ -4651,6 +5192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 510,
+                            BarrierHealth = 0,
                             Code = "51",
                             Coin = 0,
                             IsActive = true,
@@ -4660,6 +5202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 511,
+                            BarrierHealth = 0,
                             Code = "51,1",
                             Coin = 0,
                             IsActive = true,
@@ -4669,6 +5212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 512,
+                            BarrierHealth = 0,
                             Code = "51,2",
                             Coin = 0,
                             IsActive = true,
@@ -4678,6 +5222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 513,
+                            BarrierHealth = 0,
                             Code = "51,3",
                             Coin = 0,
                             IsActive = true,
@@ -4687,6 +5232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 514,
+                            BarrierHealth = 0,
                             Code = "51,4",
                             Coin = 0,
                             IsActive = true,
@@ -4696,6 +5242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 515,
+                            BarrierHealth = 0,
                             Code = "51,5",
                             Coin = 0,
                             IsActive = true,
@@ -4705,6 +5252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 516,
+                            BarrierHealth = 0,
                             Code = "51,6",
                             Coin = 0,
                             IsActive = true,
@@ -4714,6 +5262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 517,
+                            BarrierHealth = 0,
                             Code = "51,7",
                             Coin = 0,
                             IsActive = true,
@@ -4723,6 +5272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 518,
+                            BarrierHealth = 0,
                             Code = "51,8",
                             Coin = 0,
                             IsActive = true,
@@ -4732,6 +5282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 519,
+                            BarrierHealth = 0,
                             Code = "51,9",
                             Coin = 0,
                             IsActive = true,
@@ -4741,6 +5292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 520,
+                            BarrierHealth = 0,
                             Code = "52",
                             Coin = 0,
                             IsActive = true,
@@ -4750,6 +5302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 521,
+                            BarrierHealth = 0,
                             Code = "52,1",
                             Coin = 0,
                             IsActive = true,
@@ -4759,6 +5312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 522,
+                            BarrierHealth = 0,
                             Code = "52,2",
                             Coin = 0,
                             IsActive = true,
@@ -4768,6 +5322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 523,
+                            BarrierHealth = 0,
                             Code = "52,3",
                             Coin = 0,
                             IsActive = true,
@@ -4777,6 +5332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 524,
+                            BarrierHealth = 0,
                             Code = "52,4",
                             Coin = 0,
                             IsActive = true,
@@ -4786,6 +5342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 525,
+                            BarrierHealth = 0,
                             Code = "52,5",
                             Coin = 0,
                             IsActive = true,
@@ -4795,6 +5352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 526,
+                            BarrierHealth = 0,
                             Code = "52,6",
                             Coin = 0,
                             IsActive = true,
@@ -4804,6 +5362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 527,
+                            BarrierHealth = 0,
                             Code = "52,7",
                             Coin = 0,
                             IsActive = true,
@@ -4813,6 +5372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 528,
+                            BarrierHealth = 0,
                             Code = "52,8",
                             Coin = 0,
                             IsActive = true,
@@ -4822,6 +5382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 529,
+                            BarrierHealth = 0,
                             Code = "52,9",
                             Coin = 0,
                             IsActive = true,
@@ -4831,6 +5392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 530,
+                            BarrierHealth = 0,
                             Code = "53",
                             Coin = 0,
                             IsActive = true,
@@ -4840,6 +5402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 531,
+                            BarrierHealth = 0,
                             Code = "53,1",
                             Coin = 0,
                             IsActive = true,
@@ -4849,6 +5412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 532,
+                            BarrierHealth = 0,
                             Code = "53,2",
                             Coin = 0,
                             IsActive = true,
@@ -4858,6 +5422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 533,
+                            BarrierHealth = 0,
                             Code = "53,3",
                             Coin = 0,
                             IsActive = true,
@@ -4867,6 +5432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 534,
+                            BarrierHealth = 0,
                             Code = "53,4",
                             Coin = 0,
                             IsActive = true,
@@ -4876,6 +5442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 535,
+                            BarrierHealth = 0,
                             Code = "53,5",
                             Coin = 0,
                             IsActive = true,
@@ -4885,6 +5452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 536,
+                            BarrierHealth = 0,
                             Code = "53,6",
                             Coin = 0,
                             IsActive = true,
@@ -4894,6 +5462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 537,
+                            BarrierHealth = 0,
                             Code = "53,7",
                             Coin = 0,
                             IsActive = true,
@@ -4903,6 +5472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 538,
+                            BarrierHealth = 0,
                             Code = "53,8",
                             Coin = 0,
                             IsActive = true,
@@ -4912,6 +5482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 539,
+                            BarrierHealth = 0,
                             Code = "53,9",
                             Coin = 0,
                             IsActive = true,
@@ -4921,6 +5492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 540,
+                            BarrierHealth = 0,
                             Code = "54",
                             Coin = 0,
                             IsActive = true,
@@ -4930,6 +5502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 541,
+                            BarrierHealth = 0,
                             Code = "54,1",
                             Coin = 0,
                             IsActive = true,
@@ -4939,6 +5512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 542,
+                            BarrierHealth = 0,
                             Code = "54,2",
                             Coin = 0,
                             IsActive = true,
@@ -4948,6 +5522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 543,
+                            BarrierHealth = 0,
                             Code = "54,3",
                             Coin = 0,
                             IsActive = true,
@@ -4957,6 +5532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 544,
+                            BarrierHealth = 0,
                             Code = "54,4",
                             Coin = 0,
                             IsActive = true,
@@ -4966,6 +5542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 545,
+                            BarrierHealth = 0,
                             Code = "54,5",
                             Coin = 0,
                             IsActive = true,
@@ -4975,6 +5552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 546,
+                            BarrierHealth = 0,
                             Code = "54,6",
                             Coin = 0,
                             IsActive = true,
@@ -4984,6 +5562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 547,
+                            BarrierHealth = 0,
                             Code = "54,7",
                             Coin = 0,
                             IsActive = true,
@@ -4993,6 +5572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 548,
+                            BarrierHealth = 0,
                             Code = "54,8",
                             Coin = 0,
                             IsActive = true,
@@ -5002,6 +5582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 549,
+                            BarrierHealth = 0,
                             Code = "54,9",
                             Coin = 0,
                             IsActive = true,
@@ -5011,6 +5592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 550,
+                            BarrierHealth = 0,
                             Code = "55",
                             Coin = 0,
                             IsActive = true,
@@ -5020,6 +5602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 551,
+                            BarrierHealth = 0,
                             Code = "55,1",
                             Coin = 0,
                             IsActive = true,
@@ -5029,6 +5612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 552,
+                            BarrierHealth = 0,
                             Code = "55,2",
                             Coin = 0,
                             IsActive = true,
@@ -5038,6 +5622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 553,
+                            BarrierHealth = 0,
                             Code = "55,3",
                             Coin = 0,
                             IsActive = true,
@@ -5047,6 +5632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 554,
+                            BarrierHealth = 0,
                             Code = "55,4",
                             Coin = 0,
                             IsActive = true,
@@ -5056,6 +5642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 555,
+                            BarrierHealth = 0,
                             Code = "55,5",
                             Coin = 0,
                             IsActive = true,
@@ -5065,6 +5652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 556,
+                            BarrierHealth = 0,
                             Code = "55,6",
                             Coin = 0,
                             IsActive = true,
@@ -5074,6 +5662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 557,
+                            BarrierHealth = 0,
                             Code = "55,7",
                             Coin = 0,
                             IsActive = true,
@@ -5083,6 +5672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 558,
+                            BarrierHealth = 0,
                             Code = "55,8",
                             Coin = 0,
                             IsActive = true,
@@ -5092,6 +5682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 559,
+                            BarrierHealth = 0,
                             Code = "55,9",
                             Coin = 0,
                             IsActive = true,
@@ -5101,6 +5692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 560,
+                            BarrierHealth = 0,
                             Code = "56",
                             Coin = 0,
                             IsActive = true,
@@ -5110,6 +5702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 561,
+                            BarrierHealth = 0,
                             Code = "56,1",
                             Coin = 0,
                             IsActive = true,
@@ -5119,6 +5712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 562,
+                            BarrierHealth = 0,
                             Code = "56,2",
                             Coin = 0,
                             IsActive = true,
@@ -5128,6 +5722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 563,
+                            BarrierHealth = 0,
                             Code = "56,3",
                             Coin = 0,
                             IsActive = true,
@@ -5137,6 +5732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 564,
+                            BarrierHealth = 0,
                             Code = "56,4",
                             Coin = 0,
                             IsActive = true,
@@ -5146,6 +5742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 565,
+                            BarrierHealth = 0,
                             Code = "56,5",
                             Coin = 0,
                             IsActive = true,
@@ -5155,6 +5752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 566,
+                            BarrierHealth = 0,
                             Code = "56,6",
                             Coin = 0,
                             IsActive = true,
@@ -5164,6 +5762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 567,
+                            BarrierHealth = 0,
                             Code = "56,7",
                             Coin = 0,
                             IsActive = true,
@@ -5173,6 +5772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 568,
+                            BarrierHealth = 0,
                             Code = "56,8",
                             Coin = 0,
                             IsActive = true,
@@ -5182,6 +5782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 569,
+                            BarrierHealth = 0,
                             Code = "56,9",
                             Coin = 0,
                             IsActive = true,
@@ -5191,6 +5792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 570,
+                            BarrierHealth = 0,
                             Code = "57",
                             Coin = 0,
                             IsActive = true,
@@ -5200,6 +5802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 571,
+                            BarrierHealth = 0,
                             Code = "57,1",
                             Coin = 0,
                             IsActive = true,
@@ -5209,6 +5812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 572,
+                            BarrierHealth = 0,
                             Code = "57,2",
                             Coin = 0,
                             IsActive = true,
@@ -5218,6 +5822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 573,
+                            BarrierHealth = 0,
                             Code = "57,3",
                             Coin = 0,
                             IsActive = true,
@@ -5227,6 +5832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 574,
+                            BarrierHealth = 0,
                             Code = "57,4",
                             Coin = 0,
                             IsActive = true,
@@ -5236,6 +5842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 575,
+                            BarrierHealth = 0,
                             Code = "57,5",
                             Coin = 0,
                             IsActive = true,
@@ -5245,6 +5852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 576,
+                            BarrierHealth = 0,
                             Code = "57,6",
                             Coin = 0,
                             IsActive = true,
@@ -5254,6 +5862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 577,
+                            BarrierHealth = 0,
                             Code = "57,7",
                             Coin = 0,
                             IsActive = true,
@@ -5263,6 +5872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 578,
+                            BarrierHealth = 0,
                             Code = "57,8",
                             Coin = 0,
                             IsActive = true,
@@ -5272,6 +5882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 579,
+                            BarrierHealth = 0,
                             Code = "57,9",
                             Coin = 0,
                             IsActive = true,
@@ -5281,6 +5892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 580,
+                            BarrierHealth = 0,
                             Code = "58",
                             Coin = 0,
                             IsActive = true,
@@ -5290,6 +5902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 581,
+                            BarrierHealth = 0,
                             Code = "58,1",
                             Coin = 0,
                             IsActive = true,
@@ -5299,6 +5912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 582,
+                            BarrierHealth = 0,
                             Code = "58,2",
                             Coin = 0,
                             IsActive = true,
@@ -5308,6 +5922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 583,
+                            BarrierHealth = 0,
                             Code = "58,3",
                             Coin = 0,
                             IsActive = true,
@@ -5317,6 +5932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 584,
+                            BarrierHealth = 0,
                             Code = "58,4",
                             Coin = 0,
                             IsActive = true,
@@ -5326,6 +5942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 585,
+                            BarrierHealth = 0,
                             Code = "58,5",
                             Coin = 0,
                             IsActive = true,
@@ -5335,6 +5952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 586,
+                            BarrierHealth = 0,
                             Code = "58,6",
                             Coin = 0,
                             IsActive = true,
@@ -5344,6 +5962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 587,
+                            BarrierHealth = 0,
                             Code = "58,7",
                             Coin = 0,
                             IsActive = true,
@@ -5353,6 +5972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 588,
+                            BarrierHealth = 0,
                             Code = "58,8",
                             Coin = 0,
                             IsActive = true,
@@ -5362,6 +5982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 589,
+                            BarrierHealth = 0,
                             Code = "58,9",
                             Coin = 0,
                             IsActive = true,
@@ -5371,6 +5992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 590,
+                            BarrierHealth = 0,
                             Code = "59",
                             Coin = 0,
                             IsActive = true,
@@ -5380,6 +6002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 591,
+                            BarrierHealth = 0,
                             Code = "59,1",
                             Coin = 0,
                             IsActive = true,
@@ -5389,6 +6012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 592,
+                            BarrierHealth = 0,
                             Code = "59,2",
                             Coin = 0,
                             IsActive = true,
@@ -5398,6 +6022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 593,
+                            BarrierHealth = 0,
                             Code = "59,3",
                             Coin = 0,
                             IsActive = true,
@@ -5407,6 +6032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 594,
+                            BarrierHealth = 0,
                             Code = "59,4",
                             Coin = 0,
                             IsActive = true,
@@ -5416,6 +6042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 595,
+                            BarrierHealth = 0,
                             Code = "59,5",
                             Coin = 0,
                             IsActive = true,
@@ -5425,6 +6052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 596,
+                            BarrierHealth = 0,
                             Code = "59,6",
                             Coin = 0,
                             IsActive = true,
@@ -5434,6 +6062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 597,
+                            BarrierHealth = 0,
                             Code = "59,7",
                             Coin = 0,
                             IsActive = true,
@@ -5443,6 +6072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 598,
+                            BarrierHealth = 0,
                             Code = "59,8",
                             Coin = 0,
                             IsActive = true,
@@ -5452,6 +6082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 599,
+                            BarrierHealth = 0,
                             Code = "59,9",
                             Coin = 0,
                             IsActive = true,
@@ -5461,6 +6092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 600,
+                            BarrierHealth = 0,
                             Code = "60",
                             Coin = 0,
                             IsActive = true,
@@ -5470,6 +6102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 601,
+                            BarrierHealth = 0,
                             Code = "60,1",
                             Coin = 0,
                             IsActive = true,
@@ -5479,6 +6112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 602,
+                            BarrierHealth = 0,
                             Code = "60,2",
                             Coin = 0,
                             IsActive = true,
@@ -5488,6 +6122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 603,
+                            BarrierHealth = 0,
                             Code = "60,3",
                             Coin = 0,
                             IsActive = true,
@@ -5497,6 +6132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 604,
+                            BarrierHealth = 0,
                             Code = "60,4",
                             Coin = 0,
                             IsActive = true,
@@ -5506,6 +6142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 605,
+                            BarrierHealth = 0,
                             Code = "60,5",
                             Coin = 0,
                             IsActive = true,
@@ -5515,6 +6152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 606,
+                            BarrierHealth = 0,
                             Code = "60,6",
                             Coin = 0,
                             IsActive = true,
@@ -5524,6 +6162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 607,
+                            BarrierHealth = 0,
                             Code = "60,7",
                             Coin = 0,
                             IsActive = true,
@@ -5533,6 +6172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 608,
+                            BarrierHealth = 0,
                             Code = "60,8",
                             Coin = 0,
                             IsActive = true,
@@ -5542,6 +6182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 609,
+                            BarrierHealth = 0,
                             Code = "60,9",
                             Coin = 0,
                             IsActive = true,
@@ -5551,6 +6192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 610,
+                            BarrierHealth = 0,
                             Code = "61",
                             Coin = 0,
                             IsActive = true,
@@ -5560,6 +6202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 611,
+                            BarrierHealth = 0,
                             Code = "61,1",
                             Coin = 0,
                             IsActive = true,
@@ -5569,6 +6212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 612,
+                            BarrierHealth = 0,
                             Code = "61,2",
                             Coin = 0,
                             IsActive = true,
@@ -5578,6 +6222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 613,
+                            BarrierHealth = 0,
                             Code = "61,3",
                             Coin = 0,
                             IsActive = true,
@@ -5587,6 +6232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 614,
+                            BarrierHealth = 0,
                             Code = "61,4",
                             Coin = 0,
                             IsActive = true,
@@ -5596,6 +6242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 615,
+                            BarrierHealth = 0,
                             Code = "61,5",
                             Coin = 0,
                             IsActive = true,
@@ -5605,6 +6252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 616,
+                            BarrierHealth = 0,
                             Code = "61,6",
                             Coin = 0,
                             IsActive = true,
@@ -5614,6 +6262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 617,
+                            BarrierHealth = 0,
                             Code = "61,7",
                             Coin = 0,
                             IsActive = true,
@@ -5623,6 +6272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 618,
+                            BarrierHealth = 0,
                             Code = "61,8",
                             Coin = 0,
                             IsActive = true,
@@ -5632,6 +6282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 619,
+                            BarrierHealth = 0,
                             Code = "61,9",
                             Coin = 0,
                             IsActive = true,
@@ -5641,6 +6292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 620,
+                            BarrierHealth = 0,
                             Code = "62",
                             Coin = 0,
                             IsActive = true,
@@ -5650,6 +6302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 621,
+                            BarrierHealth = 0,
                             Code = "62,1",
                             Coin = 0,
                             IsActive = true,
@@ -5659,6 +6312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 622,
+                            BarrierHealth = 0,
                             Code = "62,2",
                             Coin = 0,
                             IsActive = true,
@@ -5668,6 +6322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 623,
+                            BarrierHealth = 0,
                             Code = "62,3",
                             Coin = 0,
                             IsActive = true,
@@ -5677,6 +6332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 624,
+                            BarrierHealth = 0,
                             Code = "62,4",
                             Coin = 0,
                             IsActive = true,
@@ -5686,6 +6342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 625,
+                            BarrierHealth = 0,
                             Code = "62,5",
                             Coin = 0,
                             IsActive = true,
@@ -5695,6 +6352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 626,
+                            BarrierHealth = 0,
                             Code = "62,6",
                             Coin = 0,
                             IsActive = true,
@@ -5704,6 +6362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 627,
+                            BarrierHealth = 0,
                             Code = "62,7",
                             Coin = 0,
                             IsActive = true,
@@ -5713,6 +6372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 628,
+                            BarrierHealth = 0,
                             Code = "62,8",
                             Coin = 0,
                             IsActive = true,
@@ -5722,6 +6382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 629,
+                            BarrierHealth = 0,
                             Code = "62,9",
                             Coin = 0,
                             IsActive = true,
@@ -5731,6 +6392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 630,
+                            BarrierHealth = 0,
                             Code = "63",
                             Coin = 0,
                             IsActive = true,
@@ -5740,6 +6402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 631,
+                            BarrierHealth = 0,
                             Code = "63,1",
                             Coin = 0,
                             IsActive = true,
@@ -5749,6 +6412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 632,
+                            BarrierHealth = 0,
                             Code = "63,2",
                             Coin = 0,
                             IsActive = true,
@@ -5758,6 +6422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 633,
+                            BarrierHealth = 0,
                             Code = "63,3",
                             Coin = 0,
                             IsActive = true,
@@ -5767,6 +6432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 634,
+                            BarrierHealth = 0,
                             Code = "63,4",
                             Coin = 0,
                             IsActive = true,
@@ -5776,6 +6442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 635,
+                            BarrierHealth = 0,
                             Code = "63,5",
                             Coin = 0,
                             IsActive = true,
@@ -5785,6 +6452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 636,
+                            BarrierHealth = 0,
                             Code = "63,6",
                             Coin = 0,
                             IsActive = true,
@@ -5794,6 +6462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 637,
+                            BarrierHealth = 0,
                             Code = "63,7",
                             Coin = 0,
                             IsActive = true,
@@ -5803,6 +6472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 638,
+                            BarrierHealth = 0,
                             Code = "63,8",
                             Coin = 0,
                             IsActive = true,
@@ -5812,6 +6482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 639,
+                            BarrierHealth = 0,
                             Code = "63,9",
                             Coin = 0,
                             IsActive = true,
@@ -5821,6 +6492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 640,
+                            BarrierHealth = 0,
                             Code = "64",
                             Coin = 0,
                             IsActive = true,
@@ -5830,6 +6502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 641,
+                            BarrierHealth = 0,
                             Code = "64,1",
                             Coin = 0,
                             IsActive = true,
@@ -5839,6 +6512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 642,
+                            BarrierHealth = 0,
                             Code = "64,2",
                             Coin = 0,
                             IsActive = true,
@@ -5848,6 +6522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 643,
+                            BarrierHealth = 0,
                             Code = "64,3",
                             Coin = 0,
                             IsActive = true,
@@ -5857,6 +6532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 644,
+                            BarrierHealth = 0,
                             Code = "64,4",
                             Coin = 0,
                             IsActive = true,
@@ -5866,6 +6542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 645,
+                            BarrierHealth = 0,
                             Code = "64,5",
                             Coin = 0,
                             IsActive = true,
@@ -5875,6 +6552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 646,
+                            BarrierHealth = 0,
                             Code = "64,6",
                             Coin = 0,
                             IsActive = true,
@@ -5884,6 +6562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 647,
+                            BarrierHealth = 0,
                             Code = "64,7",
                             Coin = 0,
                             IsActive = true,
@@ -5893,6 +6572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 648,
+                            BarrierHealth = 0,
                             Code = "64,8",
                             Coin = 0,
                             IsActive = true,
@@ -5902,6 +6582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 649,
+                            BarrierHealth = 0,
                             Code = "64,9",
                             Coin = 0,
                             IsActive = true,
@@ -5911,6 +6592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 650,
+                            BarrierHealth = 0,
                             Code = "65",
                             Coin = 0,
                             IsActive = true,
@@ -5920,6 +6602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 651,
+                            BarrierHealth = 0,
                             Code = "65,1",
                             Coin = 0,
                             IsActive = true,
@@ -5929,6 +6612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 652,
+                            BarrierHealth = 0,
                             Code = "65,2",
                             Coin = 0,
                             IsActive = true,
@@ -5938,6 +6622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 653,
+                            BarrierHealth = 0,
                             Code = "65,3",
                             Coin = 0,
                             IsActive = true,
@@ -5947,6 +6632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 654,
+                            BarrierHealth = 0,
                             Code = "65,4",
                             Coin = 0,
                             IsActive = true,
@@ -5956,6 +6642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 655,
+                            BarrierHealth = 0,
                             Code = "65,5",
                             Coin = 0,
                             IsActive = true,
@@ -5965,6 +6652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 656,
+                            BarrierHealth = 0,
                             Code = "65,6",
                             Coin = 0,
                             IsActive = true,
@@ -5974,6 +6662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 657,
+                            BarrierHealth = 0,
                             Code = "65,7",
                             Coin = 0,
                             IsActive = true,
@@ -5983,6 +6672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 658,
+                            BarrierHealth = 0,
                             Code = "65,8",
                             Coin = 0,
                             IsActive = true,
@@ -5992,6 +6682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 659,
+                            BarrierHealth = 0,
                             Code = "65,9",
                             Coin = 0,
                             IsActive = true,
@@ -6001,6 +6692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 660,
+                            BarrierHealth = 0,
                             Code = "66",
                             Coin = 0,
                             IsActive = true,
@@ -6010,6 +6702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 661,
+                            BarrierHealth = 0,
                             Code = "66,1",
                             Coin = 0,
                             IsActive = true,
@@ -6019,6 +6712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 662,
+                            BarrierHealth = 0,
                             Code = "66,2",
                             Coin = 0,
                             IsActive = true,
@@ -6028,6 +6722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 663,
+                            BarrierHealth = 0,
                             Code = "66,3",
                             Coin = 0,
                             IsActive = true,
@@ -6037,6 +6732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 664,
+                            BarrierHealth = 0,
                             Code = "66,4",
                             Coin = 0,
                             IsActive = true,
@@ -6046,6 +6742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 665,
+                            BarrierHealth = 0,
                             Code = "66,5",
                             Coin = 0,
                             IsActive = true,
@@ -6055,6 +6752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 666,
+                            BarrierHealth = 0,
                             Code = "66,6",
                             Coin = 0,
                             IsActive = true,
@@ -6064,6 +6762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 667,
+                            BarrierHealth = 0,
                             Code = "66,7",
                             Coin = 0,
                             IsActive = true,
@@ -6073,6 +6772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 668,
+                            BarrierHealth = 0,
                             Code = "66,8",
                             Coin = 0,
                             IsActive = true,
@@ -6082,6 +6782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 669,
+                            BarrierHealth = 0,
                             Code = "66,9",
                             Coin = 0,
                             IsActive = true,
@@ -6091,6 +6792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 670,
+                            BarrierHealth = 0,
                             Code = "67",
                             Coin = 0,
                             IsActive = true,
@@ -6100,6 +6802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 671,
+                            BarrierHealth = 0,
                             Code = "67,1",
                             Coin = 0,
                             IsActive = true,
@@ -6109,6 +6812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 672,
+                            BarrierHealth = 0,
                             Code = "67,2",
                             Coin = 0,
                             IsActive = true,
@@ -6118,6 +6822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 673,
+                            BarrierHealth = 0,
                             Code = "67,3",
                             Coin = 0,
                             IsActive = true,
@@ -6127,6 +6832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 674,
+                            BarrierHealth = 0,
                             Code = "67,4",
                             Coin = 0,
                             IsActive = true,
@@ -6136,6 +6842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 675,
+                            BarrierHealth = 0,
                             Code = "67,5",
                             Coin = 0,
                             IsActive = true,
@@ -6145,6 +6852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 676,
+                            BarrierHealth = 0,
                             Code = "67,6",
                             Coin = 0,
                             IsActive = true,
@@ -6154,6 +6862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 677,
+                            BarrierHealth = 0,
                             Code = "67,7",
                             Coin = 0,
                             IsActive = true,
@@ -6163,6 +6872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 678,
+                            BarrierHealth = 0,
                             Code = "67,8",
                             Coin = 0,
                             IsActive = true,
@@ -6172,6 +6882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 679,
+                            BarrierHealth = 0,
                             Code = "67,9",
                             Coin = 0,
                             IsActive = true,
@@ -6181,6 +6892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 680,
+                            BarrierHealth = 0,
                             Code = "68",
                             Coin = 0,
                             IsActive = true,
@@ -6190,6 +6902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 681,
+                            BarrierHealth = 0,
                             Code = "68,1",
                             Coin = 0,
                             IsActive = true,
@@ -6199,6 +6912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 682,
+                            BarrierHealth = 0,
                             Code = "68,2",
                             Coin = 0,
                             IsActive = true,
@@ -6208,6 +6922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 683,
+                            BarrierHealth = 0,
                             Code = "68,3",
                             Coin = 0,
                             IsActive = true,
@@ -6217,6 +6932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 684,
+                            BarrierHealth = 0,
                             Code = "68,4",
                             Coin = 0,
                             IsActive = true,
@@ -6226,6 +6942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 685,
+                            BarrierHealth = 0,
                             Code = "68,5",
                             Coin = 0,
                             IsActive = true,
@@ -6235,6 +6952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 686,
+                            BarrierHealth = 0,
                             Code = "68,6",
                             Coin = 0,
                             IsActive = true,
@@ -6244,6 +6962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 687,
+                            BarrierHealth = 0,
                             Code = "68,7",
                             Coin = 0,
                             IsActive = true,
@@ -6253,6 +6972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 688,
+                            BarrierHealth = 0,
                             Code = "68,8",
                             Coin = 0,
                             IsActive = true,
@@ -6262,6 +6982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 689,
+                            BarrierHealth = 0,
                             Code = "68,9",
                             Coin = 0,
                             IsActive = true,
@@ -6271,6 +6992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 690,
+                            BarrierHealth = 0,
                             Code = "69",
                             Coin = 0,
                             IsActive = true,
@@ -6280,6 +7002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 691,
+                            BarrierHealth = 0,
                             Code = "69,1",
                             Coin = 0,
                             IsActive = true,
@@ -6289,6 +7012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 692,
+                            BarrierHealth = 0,
                             Code = "69,2",
                             Coin = 0,
                             IsActive = true,
@@ -6298,6 +7022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 693,
+                            BarrierHealth = 0,
                             Code = "69,3",
                             Coin = 0,
                             IsActive = true,
@@ -6307,6 +7032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 694,
+                            BarrierHealth = 0,
                             Code = "69,4",
                             Coin = 0,
                             IsActive = true,
@@ -6316,6 +7042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 695,
+                            BarrierHealth = 0,
                             Code = "69,5",
                             Coin = 0,
                             IsActive = true,
@@ -6325,6 +7052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 696,
+                            BarrierHealth = 0,
                             Code = "69,6",
                             Coin = 0,
                             IsActive = true,
@@ -6334,6 +7062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 697,
+                            BarrierHealth = 0,
                             Code = "69,7",
                             Coin = 0,
                             IsActive = true,
@@ -6343,6 +7072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 698,
+                            BarrierHealth = 0,
                             Code = "69,8",
                             Coin = 0,
                             IsActive = true,
@@ -6352,6 +7082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 699,
+                            BarrierHealth = 0,
                             Code = "69,9",
                             Coin = 0,
                             IsActive = true,
@@ -6361,6 +7092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 700,
+                            BarrierHealth = 0,
                             Code = "70",
                             Coin = 0,
                             IsActive = true,
@@ -6370,6 +7102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 701,
+                            BarrierHealth = 0,
                             Code = "70,1",
                             Coin = 0,
                             IsActive = true,
@@ -6379,6 +7112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 702,
+                            BarrierHealth = 0,
                             Code = "70,2",
                             Coin = 0,
                             IsActive = true,
@@ -6388,6 +7122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 703,
+                            BarrierHealth = 0,
                             Code = "70,3",
                             Coin = 0,
                             IsActive = true,
@@ -6397,6 +7132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 704,
+                            BarrierHealth = 0,
                             Code = "70,4",
                             Coin = 0,
                             IsActive = true,
@@ -6406,6 +7142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 705,
+                            BarrierHealth = 0,
                             Code = "70,5",
                             Coin = 0,
                             IsActive = true,
@@ -6415,6 +7152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 706,
+                            BarrierHealth = 0,
                             Code = "70,6",
                             Coin = 0,
                             IsActive = true,
@@ -6424,6 +7162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 707,
+                            BarrierHealth = 0,
                             Code = "70,7",
                             Coin = 0,
                             IsActive = true,
@@ -6433,6 +7172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 708,
+                            BarrierHealth = 0,
                             Code = "70,8",
                             Coin = 0,
                             IsActive = true,
@@ -6442,6 +7182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 709,
+                            BarrierHealth = 0,
                             Code = "70,9",
                             Coin = 0,
                             IsActive = true,
@@ -6451,6 +7192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 710,
+                            BarrierHealth = 0,
                             Code = "71",
                             Coin = 0,
                             IsActive = true,
@@ -6460,6 +7202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 711,
+                            BarrierHealth = 0,
                             Code = "71,1",
                             Coin = 0,
                             IsActive = true,
@@ -6469,6 +7212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 712,
+                            BarrierHealth = 0,
                             Code = "71,2",
                             Coin = 0,
                             IsActive = true,
@@ -6478,6 +7222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 713,
+                            BarrierHealth = 0,
                             Code = "71,3",
                             Coin = 0,
                             IsActive = true,
@@ -6487,6 +7232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 714,
+                            BarrierHealth = 0,
                             Code = "71,4",
                             Coin = 0,
                             IsActive = true,
@@ -6496,6 +7242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 715,
+                            BarrierHealth = 0,
                             Code = "71,5",
                             Coin = 0,
                             IsActive = true,
@@ -6505,6 +7252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 716,
+                            BarrierHealth = 0,
                             Code = "71,6",
                             Coin = 0,
                             IsActive = true,
@@ -6514,6 +7262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 717,
+                            BarrierHealth = 0,
                             Code = "71,7",
                             Coin = 0,
                             IsActive = true,
@@ -6523,6 +7272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 718,
+                            BarrierHealth = 0,
                             Code = "71,8",
                             Coin = 0,
                             IsActive = true,
@@ -6532,6 +7282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 719,
+                            BarrierHealth = 0,
                             Code = "71,9",
                             Coin = 0,
                             IsActive = true,
@@ -6541,6 +7292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 720,
+                            BarrierHealth = 0,
                             Code = "72",
                             Coin = 0,
                             IsActive = true,
@@ -6550,6 +7302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 721,
+                            BarrierHealth = 0,
                             Code = "72,1",
                             Coin = 0,
                             IsActive = true,
@@ -6559,6 +7312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 722,
+                            BarrierHealth = 0,
                             Code = "72,2",
                             Coin = 0,
                             IsActive = true,
@@ -6568,6 +7322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 723,
+                            BarrierHealth = 0,
                             Code = "72,3",
                             Coin = 0,
                             IsActive = true,
@@ -6577,6 +7332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 724,
+                            BarrierHealth = 0,
                             Code = "72,4",
                             Coin = 0,
                             IsActive = true,
@@ -6586,6 +7342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 725,
+                            BarrierHealth = 0,
                             Code = "72,5",
                             Coin = 0,
                             IsActive = true,
@@ -6595,6 +7352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 726,
+                            BarrierHealth = 0,
                             Code = "72,6",
                             Coin = 0,
                             IsActive = true,
@@ -6604,6 +7362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 727,
+                            BarrierHealth = 0,
                             Code = "72,7",
                             Coin = 0,
                             IsActive = true,
@@ -6613,6 +7372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 728,
+                            BarrierHealth = 0,
                             Code = "72,8",
                             Coin = 0,
                             IsActive = true,
@@ -6622,6 +7382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 729,
+                            BarrierHealth = 0,
                             Code = "72,9",
                             Coin = 0,
                             IsActive = true,
@@ -6631,6 +7392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 730,
+                            BarrierHealth = 0,
                             Code = "73",
                             Coin = 0,
                             IsActive = true,
@@ -6640,6 +7402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 731,
+                            BarrierHealth = 0,
                             Code = "73,1",
                             Coin = 0,
                             IsActive = true,
@@ -6649,6 +7412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 732,
+                            BarrierHealth = 0,
                             Code = "73,2",
                             Coin = 0,
                             IsActive = true,
@@ -6658,6 +7422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 733,
+                            BarrierHealth = 0,
                             Code = "73,3",
                             Coin = 0,
                             IsActive = true,
@@ -6667,6 +7432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 734,
+                            BarrierHealth = 0,
                             Code = "73,4",
                             Coin = 0,
                             IsActive = true,
@@ -6676,6 +7442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 735,
+                            BarrierHealth = 0,
                             Code = "73,5",
                             Coin = 0,
                             IsActive = true,
@@ -6685,6 +7452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 736,
+                            BarrierHealth = 0,
                             Code = "73,6",
                             Coin = 0,
                             IsActive = true,
@@ -6694,6 +7462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 737,
+                            BarrierHealth = 0,
                             Code = "73,7",
                             Coin = 0,
                             IsActive = true,
@@ -6703,6 +7472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 738,
+                            BarrierHealth = 0,
                             Code = "73,8",
                             Coin = 0,
                             IsActive = true,
@@ -6712,6 +7482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 739,
+                            BarrierHealth = 0,
                             Code = "73,9",
                             Coin = 0,
                             IsActive = true,
@@ -6721,6 +7492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 740,
+                            BarrierHealth = 0,
                             Code = "74",
                             Coin = 0,
                             IsActive = true,
@@ -6730,6 +7502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 741,
+                            BarrierHealth = 0,
                             Code = "74,1",
                             Coin = 0,
                             IsActive = true,
@@ -6739,6 +7512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 742,
+                            BarrierHealth = 0,
                             Code = "74,2",
                             Coin = 0,
                             IsActive = true,
@@ -6748,6 +7522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 743,
+                            BarrierHealth = 0,
                             Code = "74,3",
                             Coin = 0,
                             IsActive = true,
@@ -6757,6 +7532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 744,
+                            BarrierHealth = 0,
                             Code = "74,4",
                             Coin = 0,
                             IsActive = true,
@@ -6766,6 +7542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 745,
+                            BarrierHealth = 0,
                             Code = "74,5",
                             Coin = 0,
                             IsActive = true,
@@ -6775,6 +7552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 746,
+                            BarrierHealth = 0,
                             Code = "74,6",
                             Coin = 0,
                             IsActive = true,
@@ -6784,6 +7562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 747,
+                            BarrierHealth = 0,
                             Code = "74,7",
                             Coin = 0,
                             IsActive = true,
@@ -6793,6 +7572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 748,
+                            BarrierHealth = 0,
                             Code = "74,8",
                             Coin = 0,
                             IsActive = true,
@@ -6802,6 +7582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 749,
+                            BarrierHealth = 0,
                             Code = "74,9",
                             Coin = 0,
                             IsActive = true,
@@ -6811,6 +7592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 750,
+                            BarrierHealth = 0,
                             Code = "75",
                             Coin = 0,
                             IsActive = true,
@@ -6820,6 +7602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 751,
+                            BarrierHealth = 0,
                             Code = "75,1",
                             Coin = 0,
                             IsActive = true,
@@ -6829,6 +7612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 752,
+                            BarrierHealth = 0,
                             Code = "75,2",
                             Coin = 0,
                             IsActive = true,
@@ -6838,6 +7622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 753,
+                            BarrierHealth = 0,
                             Code = "75,3",
                             Coin = 0,
                             IsActive = true,
@@ -6847,6 +7632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 754,
+                            BarrierHealth = 0,
                             Code = "75,4",
                             Coin = 0,
                             IsActive = true,
@@ -6856,6 +7642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 755,
+                            BarrierHealth = 0,
                             Code = "75,5",
                             Coin = 0,
                             IsActive = true,
@@ -6865,6 +7652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 756,
+                            BarrierHealth = 0,
                             Code = "75,6",
                             Coin = 0,
                             IsActive = true,
@@ -6874,6 +7662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 757,
+                            BarrierHealth = 0,
                             Code = "75,7",
                             Coin = 0,
                             IsActive = true,
@@ -6883,6 +7672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 758,
+                            BarrierHealth = 0,
                             Code = "75,8",
                             Coin = 0,
                             IsActive = true,
@@ -6892,6 +7682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 759,
+                            BarrierHealth = 0,
                             Code = "75,9",
                             Coin = 0,
                             IsActive = true,
@@ -6901,6 +7692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 760,
+                            BarrierHealth = 0,
                             Code = "76",
                             Coin = 0,
                             IsActive = true,
@@ -6910,6 +7702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 761,
+                            BarrierHealth = 0,
                             Code = "76,1",
                             Coin = 0,
                             IsActive = true,
@@ -6919,6 +7712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 762,
+                            BarrierHealth = 0,
                             Code = "76,2",
                             Coin = 0,
                             IsActive = true,
@@ -6928,6 +7722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 763,
+                            BarrierHealth = 0,
                             Code = "76,3",
                             Coin = 0,
                             IsActive = true,
@@ -6937,6 +7732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 764,
+                            BarrierHealth = 0,
                             Code = "76,4",
                             Coin = 0,
                             IsActive = true,
@@ -6946,6 +7742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 765,
+                            BarrierHealth = 0,
                             Code = "76,5",
                             Coin = 0,
                             IsActive = true,
@@ -6955,6 +7752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 766,
+                            BarrierHealth = 0,
                             Code = "76,6",
                             Coin = 0,
                             IsActive = true,
@@ -6964,6 +7762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 767,
+                            BarrierHealth = 0,
                             Code = "76,7",
                             Coin = 0,
                             IsActive = true,
@@ -6973,6 +7772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 768,
+                            BarrierHealth = 0,
                             Code = "76,8",
                             Coin = 0,
                             IsActive = true,
@@ -6982,6 +7782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 769,
+                            BarrierHealth = 0,
                             Code = "76,9",
                             Coin = 0,
                             IsActive = true,
@@ -6991,6 +7792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 770,
+                            BarrierHealth = 0,
                             Code = "77",
                             Coin = 0,
                             IsActive = true,
@@ -7000,6 +7802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 771,
+                            BarrierHealth = 0,
                             Code = "77,1",
                             Coin = 0,
                             IsActive = true,
@@ -7009,6 +7812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 772,
+                            BarrierHealth = 0,
                             Code = "77,2",
                             Coin = 0,
                             IsActive = true,
@@ -7018,6 +7822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 773,
+                            BarrierHealth = 0,
                             Code = "77,3",
                             Coin = 0,
                             IsActive = true,
@@ -7027,6 +7832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 774,
+                            BarrierHealth = 0,
                             Code = "77,4",
                             Coin = 0,
                             IsActive = true,
@@ -7036,6 +7842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 775,
+                            BarrierHealth = 0,
                             Code = "77,5",
                             Coin = 0,
                             IsActive = true,
@@ -7045,6 +7852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 776,
+                            BarrierHealth = 0,
                             Code = "77,6",
                             Coin = 0,
                             IsActive = true,
@@ -7054,6 +7862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 777,
+                            BarrierHealth = 0,
                             Code = "77,7",
                             Coin = 0,
                             IsActive = true,
@@ -7063,6 +7872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 778,
+                            BarrierHealth = 0,
                             Code = "77,8",
                             Coin = 0,
                             IsActive = true,
@@ -7072,6 +7882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 779,
+                            BarrierHealth = 0,
                             Code = "77,9",
                             Coin = 0,
                             IsActive = true,
@@ -7081,6 +7892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 780,
+                            BarrierHealth = 0,
                             Code = "78",
                             Coin = 0,
                             IsActive = true,
@@ -7090,6 +7902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 781,
+                            BarrierHealth = 0,
                             Code = "78,1",
                             Coin = 0,
                             IsActive = true,
@@ -7099,6 +7912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 782,
+                            BarrierHealth = 0,
                             Code = "78,2",
                             Coin = 0,
                             IsActive = true,
@@ -7108,6 +7922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 783,
+                            BarrierHealth = 0,
                             Code = "78,3",
                             Coin = 0,
                             IsActive = true,
@@ -7117,6 +7932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 784,
+                            BarrierHealth = 0,
                             Code = "78,4",
                             Coin = 0,
                             IsActive = true,
@@ -7126,6 +7942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 785,
+                            BarrierHealth = 0,
                             Code = "78,5",
                             Coin = 0,
                             IsActive = true,
@@ -7135,6 +7952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 786,
+                            BarrierHealth = 0,
                             Code = "78,6",
                             Coin = 0,
                             IsActive = true,
@@ -7144,6 +7962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 787,
+                            BarrierHealth = 0,
                             Code = "78,7",
                             Coin = 0,
                             IsActive = true,
@@ -7153,6 +7972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 788,
+                            BarrierHealth = 0,
                             Code = "78,8",
                             Coin = 0,
                             IsActive = true,
@@ -7162,6 +7982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 789,
+                            BarrierHealth = 0,
                             Code = "78,9",
                             Coin = 0,
                             IsActive = true,
@@ -7171,6 +7992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 790,
+                            BarrierHealth = 0,
                             Code = "79",
                             Coin = 0,
                             IsActive = true,
@@ -7180,6 +8002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 791,
+                            BarrierHealth = 0,
                             Code = "79,1",
                             Coin = 0,
                             IsActive = true,
@@ -7189,6 +8012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 792,
+                            BarrierHealth = 0,
                             Code = "79,2",
                             Coin = 0,
                             IsActive = true,
@@ -7198,6 +8022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 793,
+                            BarrierHealth = 0,
                             Code = "79,3",
                             Coin = 0,
                             IsActive = true,
@@ -7207,6 +8032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 794,
+                            BarrierHealth = 0,
                             Code = "79,4",
                             Coin = 0,
                             IsActive = true,
@@ -7216,6 +8042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 795,
+                            BarrierHealth = 0,
                             Code = "79,5",
                             Coin = 0,
                             IsActive = true,
@@ -7225,6 +8052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 796,
+                            BarrierHealth = 0,
                             Code = "79,6",
                             Coin = 0,
                             IsActive = true,
@@ -7234,6 +8062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 797,
+                            BarrierHealth = 0,
                             Code = "79,7",
                             Coin = 0,
                             IsActive = true,
@@ -7243,6 +8072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 798,
+                            BarrierHealth = 0,
                             Code = "79,8",
                             Coin = 0,
                             IsActive = true,
@@ -7252,6 +8082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 799,
+                            BarrierHealth = 0,
                             Code = "79,9",
                             Coin = 0,
                             IsActive = true,
@@ -7261,6 +8092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 800,
+                            BarrierHealth = 0,
                             Code = "80",
                             Coin = 0,
                             IsActive = true,
@@ -7270,6 +8102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 801,
+                            BarrierHealth = 0,
                             Code = "80,1",
                             Coin = 0,
                             IsActive = true,
@@ -7279,6 +8112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 802,
+                            BarrierHealth = 0,
                             Code = "80,2",
                             Coin = 0,
                             IsActive = true,
@@ -7288,6 +8122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 803,
+                            BarrierHealth = 0,
                             Code = "80,3",
                             Coin = 0,
                             IsActive = true,
@@ -7297,6 +8132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 804,
+                            BarrierHealth = 0,
                             Code = "80,4",
                             Coin = 0,
                             IsActive = true,
@@ -7306,6 +8142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 805,
+                            BarrierHealth = 0,
                             Code = "80,5",
                             Coin = 0,
                             IsActive = true,
@@ -7315,6 +8152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 806,
+                            BarrierHealth = 0,
                             Code = "80,6",
                             Coin = 0,
                             IsActive = true,
@@ -7324,6 +8162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 807,
+                            BarrierHealth = 0,
                             Code = "80,7",
                             Coin = 0,
                             IsActive = true,
@@ -7333,6 +8172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 808,
+                            BarrierHealth = 0,
                             Code = "80,8",
                             Coin = 0,
                             IsActive = true,
@@ -7342,6 +8182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 809,
+                            BarrierHealth = 0,
                             Code = "80,9",
                             Coin = 0,
                             IsActive = true,
@@ -7351,6 +8192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 810,
+                            BarrierHealth = 0,
                             Code = "81",
                             Coin = 0,
                             IsActive = true,
@@ -7360,6 +8202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 811,
+                            BarrierHealth = 0,
                             Code = "81,1",
                             Coin = 0,
                             IsActive = true,
@@ -7369,6 +8212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 812,
+                            BarrierHealth = 0,
                             Code = "81,2",
                             Coin = 0,
                             IsActive = true,
@@ -7378,6 +8222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 813,
+                            BarrierHealth = 0,
                             Code = "81,3",
                             Coin = 0,
                             IsActive = true,
@@ -7387,6 +8232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 814,
+                            BarrierHealth = 0,
                             Code = "81,4",
                             Coin = 0,
                             IsActive = true,
@@ -7396,6 +8242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 815,
+                            BarrierHealth = 0,
                             Code = "81,5",
                             Coin = 0,
                             IsActive = true,
@@ -7405,6 +8252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 816,
+                            BarrierHealth = 0,
                             Code = "81,6",
                             Coin = 0,
                             IsActive = true,
@@ -7414,6 +8262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 817,
+                            BarrierHealth = 0,
                             Code = "81,7",
                             Coin = 0,
                             IsActive = true,
@@ -7423,6 +8272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 818,
+                            BarrierHealth = 0,
                             Code = "81,8",
                             Coin = 0,
                             IsActive = true,
@@ -7432,6 +8282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 819,
+                            BarrierHealth = 0,
                             Code = "81,9",
                             Coin = 0,
                             IsActive = true,
@@ -7441,6 +8292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 820,
+                            BarrierHealth = 0,
                             Code = "82",
                             Coin = 0,
                             IsActive = true,
@@ -7450,6 +8302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 821,
+                            BarrierHealth = 0,
                             Code = "82,1",
                             Coin = 0,
                             IsActive = true,
@@ -7459,6 +8312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 822,
+                            BarrierHealth = 0,
                             Code = "82,2",
                             Coin = 0,
                             IsActive = true,
@@ -7468,6 +8322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 823,
+                            BarrierHealth = 0,
                             Code = "82,3",
                             Coin = 0,
                             IsActive = true,
@@ -7477,6 +8332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 824,
+                            BarrierHealth = 0,
                             Code = "82,4",
                             Coin = 0,
                             IsActive = true,
@@ -7486,6 +8342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 825,
+                            BarrierHealth = 0,
                             Code = "82,5",
                             Coin = 0,
                             IsActive = true,
@@ -7495,6 +8352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 826,
+                            BarrierHealth = 0,
                             Code = "82,6",
                             Coin = 0,
                             IsActive = true,
@@ -7504,6 +8362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 827,
+                            BarrierHealth = 0,
                             Code = "82,7",
                             Coin = 0,
                             IsActive = true,
@@ -7513,6 +8372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 828,
+                            BarrierHealth = 0,
                             Code = "82,8",
                             Coin = 0,
                             IsActive = true,
@@ -7522,6 +8382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 829,
+                            BarrierHealth = 0,
                             Code = "82,9",
                             Coin = 0,
                             IsActive = true,
@@ -7531,6 +8392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 830,
+                            BarrierHealth = 0,
                             Code = "83",
                             Coin = 0,
                             IsActive = true,
@@ -7540,6 +8402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 831,
+                            BarrierHealth = 0,
                             Code = "83,1",
                             Coin = 0,
                             IsActive = true,
@@ -7549,6 +8412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 832,
+                            BarrierHealth = 0,
                             Code = "83,2",
                             Coin = 0,
                             IsActive = true,
@@ -7558,6 +8422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 833,
+                            BarrierHealth = 0,
                             Code = "83,3",
                             Coin = 0,
                             IsActive = true,
@@ -7567,6 +8432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 834,
+                            BarrierHealth = 0,
                             Code = "83,4",
                             Coin = 0,
                             IsActive = true,
@@ -7576,6 +8442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 835,
+                            BarrierHealth = 0,
                             Code = "83,5",
                             Coin = 0,
                             IsActive = true,
@@ -7585,6 +8452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 836,
+                            BarrierHealth = 0,
                             Code = "83,6",
                             Coin = 0,
                             IsActive = true,
@@ -7594,6 +8462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 837,
+                            BarrierHealth = 0,
                             Code = "83,7",
                             Coin = 0,
                             IsActive = true,
@@ -7603,6 +8472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 838,
+                            BarrierHealth = 0,
                             Code = "83,8",
                             Coin = 0,
                             IsActive = true,
@@ -7612,6 +8482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 839,
+                            BarrierHealth = 0,
                             Code = "83,9",
                             Coin = 0,
                             IsActive = true,
@@ -7621,6 +8492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 840,
+                            BarrierHealth = 0,
                             Code = "84",
                             Coin = 0,
                             IsActive = true,
@@ -7630,6 +8502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 841,
+                            BarrierHealth = 0,
                             Code = "84,1",
                             Coin = 0,
                             IsActive = true,
@@ -7639,6 +8512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 842,
+                            BarrierHealth = 0,
                             Code = "84,2",
                             Coin = 0,
                             IsActive = true,
@@ -7648,6 +8522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 843,
+                            BarrierHealth = 0,
                             Code = "84,3",
                             Coin = 0,
                             IsActive = true,
@@ -7657,6 +8532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 844,
+                            BarrierHealth = 0,
                             Code = "84,4",
                             Coin = 0,
                             IsActive = true,
@@ -7666,6 +8542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 845,
+                            BarrierHealth = 0,
                             Code = "84,5",
                             Coin = 0,
                             IsActive = true,
@@ -7675,6 +8552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 846,
+                            BarrierHealth = 0,
                             Code = "84,6",
                             Coin = 0,
                             IsActive = true,
@@ -7684,6 +8562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 847,
+                            BarrierHealth = 0,
                             Code = "84,7",
                             Coin = 0,
                             IsActive = true,
@@ -7693,6 +8572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 848,
+                            BarrierHealth = 0,
                             Code = "84,8",
                             Coin = 0,
                             IsActive = true,
@@ -7702,6 +8582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 849,
+                            BarrierHealth = 0,
                             Code = "84,9",
                             Coin = 0,
                             IsActive = true,
@@ -7711,6 +8592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 850,
+                            BarrierHealth = 0,
                             Code = "85",
                             Coin = 0,
                             IsActive = true,
@@ -7720,6 +8602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 851,
+                            BarrierHealth = 0,
                             Code = "85,1",
                             Coin = 0,
                             IsActive = true,
@@ -7729,6 +8612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 852,
+                            BarrierHealth = 0,
                             Code = "85,2",
                             Coin = 0,
                             IsActive = true,
@@ -7738,6 +8622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 853,
+                            BarrierHealth = 0,
                             Code = "85,3",
                             Coin = 0,
                             IsActive = true,
@@ -7747,6 +8632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 854,
+                            BarrierHealth = 0,
                             Code = "85,4",
                             Coin = 0,
                             IsActive = true,
@@ -7756,6 +8642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 855,
+                            BarrierHealth = 0,
                             Code = "85,5",
                             Coin = 0,
                             IsActive = true,
@@ -7765,6 +8652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 856,
+                            BarrierHealth = 0,
                             Code = "85,6",
                             Coin = 0,
                             IsActive = true,
@@ -7774,6 +8662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 857,
+                            BarrierHealth = 0,
                             Code = "85,7",
                             Coin = 0,
                             IsActive = true,
@@ -7783,6 +8672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 858,
+                            BarrierHealth = 0,
                             Code = "85,8",
                             Coin = 0,
                             IsActive = true,
@@ -7792,6 +8682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 859,
+                            BarrierHealth = 0,
                             Code = "85,9",
                             Coin = 0,
                             IsActive = true,
@@ -7801,6 +8692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 860,
+                            BarrierHealth = 0,
                             Code = "86",
                             Coin = 0,
                             IsActive = true,
@@ -7810,6 +8702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 861,
+                            BarrierHealth = 0,
                             Code = "86,1",
                             Coin = 0,
                             IsActive = true,
@@ -7819,6 +8712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 862,
+                            BarrierHealth = 0,
                             Code = "86,2",
                             Coin = 0,
                             IsActive = true,
@@ -7828,6 +8722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 863,
+                            BarrierHealth = 0,
                             Code = "86,3",
                             Coin = 0,
                             IsActive = true,
@@ -7837,6 +8732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 864,
+                            BarrierHealth = 0,
                             Code = "86,4",
                             Coin = 0,
                             IsActive = true,
@@ -7846,6 +8742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 865,
+                            BarrierHealth = 0,
                             Code = "86,5",
                             Coin = 0,
                             IsActive = true,
@@ -7855,6 +8752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 866,
+                            BarrierHealth = 0,
                             Code = "86,6",
                             Coin = 0,
                             IsActive = true,
@@ -7864,6 +8762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 867,
+                            BarrierHealth = 0,
                             Code = "86,7",
                             Coin = 0,
                             IsActive = true,
@@ -7873,6 +8772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 868,
+                            BarrierHealth = 0,
                             Code = "86,8",
                             Coin = 0,
                             IsActive = true,
@@ -7882,6 +8782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 869,
+                            BarrierHealth = 0,
                             Code = "86,9",
                             Coin = 0,
                             IsActive = true,
@@ -7891,6 +8792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 870,
+                            BarrierHealth = 0,
                             Code = "87",
                             Coin = 0,
                             IsActive = true,
@@ -7900,6 +8802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 871,
+                            BarrierHealth = 0,
                             Code = "87,1",
                             Coin = 0,
                             IsActive = true,
@@ -7909,6 +8812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 872,
+                            BarrierHealth = 0,
                             Code = "87,2",
                             Coin = 0,
                             IsActive = true,
@@ -7918,6 +8822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 873,
+                            BarrierHealth = 0,
                             Code = "87,3",
                             Coin = 0,
                             IsActive = true,
@@ -7927,6 +8832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 874,
+                            BarrierHealth = 0,
                             Code = "87,4",
                             Coin = 0,
                             IsActive = true,
@@ -7936,6 +8842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 875,
+                            BarrierHealth = 0,
                             Code = "87,5",
                             Coin = 0,
                             IsActive = true,
@@ -7945,6 +8852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 876,
+                            BarrierHealth = 0,
                             Code = "87,6",
                             Coin = 0,
                             IsActive = true,
@@ -7954,6 +8862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 877,
+                            BarrierHealth = 0,
                             Code = "87,7",
                             Coin = 0,
                             IsActive = true,
@@ -7963,6 +8872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 878,
+                            BarrierHealth = 0,
                             Code = "87,8",
                             Coin = 0,
                             IsActive = true,
@@ -7972,6 +8882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 879,
+                            BarrierHealth = 0,
                             Code = "87,9",
                             Coin = 0,
                             IsActive = true,
@@ -7981,6 +8892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 880,
+                            BarrierHealth = 0,
                             Code = "88",
                             Coin = 0,
                             IsActive = true,
@@ -7990,6 +8902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 881,
+                            BarrierHealth = 0,
                             Code = "88,1",
                             Coin = 0,
                             IsActive = true,
@@ -7999,6 +8912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 882,
+                            BarrierHealth = 0,
                             Code = "88,2",
                             Coin = 0,
                             IsActive = true,
@@ -8008,6 +8922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 883,
+                            BarrierHealth = 0,
                             Code = "88,3",
                             Coin = 0,
                             IsActive = true,
@@ -8017,6 +8932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 884,
+                            BarrierHealth = 0,
                             Code = "88,4",
                             Coin = 0,
                             IsActive = true,
@@ -8026,6 +8942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 885,
+                            BarrierHealth = 0,
                             Code = "88,5",
                             Coin = 0,
                             IsActive = true,
@@ -8035,6 +8952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 886,
+                            BarrierHealth = 0,
                             Code = "88,6",
                             Coin = 0,
                             IsActive = true,
@@ -8044,6 +8962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 887,
+                            BarrierHealth = 0,
                             Code = "88,7",
                             Coin = 0,
                             IsActive = true,
@@ -8053,6 +8972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 888,
+                            BarrierHealth = 0,
                             Code = "88,8",
                             Coin = 0,
                             IsActive = true,
@@ -8062,6 +8982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 889,
+                            BarrierHealth = 0,
                             Code = "88,9",
                             Coin = 0,
                             IsActive = true,
@@ -8071,6 +8992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 890,
+                            BarrierHealth = 0,
                             Code = "89",
                             Coin = 0,
                             IsActive = true,
@@ -8080,6 +9002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 891,
+                            BarrierHealth = 0,
                             Code = "89,1",
                             Coin = 0,
                             IsActive = true,
@@ -8089,6 +9012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 892,
+                            BarrierHealth = 0,
                             Code = "89,2",
                             Coin = 0,
                             IsActive = true,
@@ -8098,6 +9022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 893,
+                            BarrierHealth = 0,
                             Code = "89,3",
                             Coin = 0,
                             IsActive = true,
@@ -8107,6 +9032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 894,
+                            BarrierHealth = 0,
                             Code = "89,4",
                             Coin = 0,
                             IsActive = true,
@@ -8116,6 +9042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 895,
+                            BarrierHealth = 0,
                             Code = "89,5",
                             Coin = 0,
                             IsActive = true,
@@ -8125,6 +9052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 896,
+                            BarrierHealth = 0,
                             Code = "89,6",
                             Coin = 0,
                             IsActive = true,
@@ -8134,6 +9062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 897,
+                            BarrierHealth = 0,
                             Code = "89,7",
                             Coin = 0,
                             IsActive = true,
@@ -8143,6 +9072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 898,
+                            BarrierHealth = 0,
                             Code = "89,8",
                             Coin = 0,
                             IsActive = true,
@@ -8152,6 +9082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 899,
+                            BarrierHealth = 0,
                             Code = "89,9",
                             Coin = 0,
                             IsActive = true,
@@ -8161,6 +9092,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 900,
+                            BarrierHealth = 0,
                             Code = "90",
                             Coin = 0,
                             IsActive = true,
@@ -8170,6 +9102,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 901,
+                            BarrierHealth = 0,
                             Code = "90,1",
                             Coin = 0,
                             IsActive = true,
@@ -8179,6 +9112,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 902,
+                            BarrierHealth = 0,
                             Code = "90,2",
                             Coin = 0,
                             IsActive = true,
@@ -8188,6 +9122,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 903,
+                            BarrierHealth = 0,
                             Code = "90,3",
                             Coin = 0,
                             IsActive = true,
@@ -8197,6 +9132,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 904,
+                            BarrierHealth = 0,
                             Code = "90,4",
                             Coin = 0,
                             IsActive = true,
@@ -8206,6 +9142,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 905,
+                            BarrierHealth = 0,
                             Code = "90,5",
                             Coin = 0,
                             IsActive = true,
@@ -8215,6 +9152,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 906,
+                            BarrierHealth = 0,
                             Code = "90,6",
                             Coin = 0,
                             IsActive = true,
@@ -8224,6 +9162,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 907,
+                            BarrierHealth = 0,
                             Code = "90,7",
                             Coin = 0,
                             IsActive = true,
@@ -8233,6 +9172,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 908,
+                            BarrierHealth = 0,
                             Code = "90,8",
                             Coin = 0,
                             IsActive = true,
@@ -8242,6 +9182,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 909,
+                            BarrierHealth = 0,
                             Code = "90,9",
                             Coin = 0,
                             IsActive = true,
@@ -8251,6 +9192,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 910,
+                            BarrierHealth = 0,
                             Code = "91",
                             Coin = 0,
                             IsActive = true,
@@ -8260,6 +9202,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 911,
+                            BarrierHealth = 0,
                             Code = "91,1",
                             Coin = 0,
                             IsActive = true,
@@ -8269,6 +9212,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 912,
+                            BarrierHealth = 0,
                             Code = "91,2",
                             Coin = 0,
                             IsActive = true,
@@ -8278,6 +9222,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 913,
+                            BarrierHealth = 0,
                             Code = "91,3",
                             Coin = 0,
                             IsActive = true,
@@ -8287,6 +9232,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 914,
+                            BarrierHealth = 0,
                             Code = "91,4",
                             Coin = 0,
                             IsActive = true,
@@ -8296,6 +9242,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 915,
+                            BarrierHealth = 0,
                             Code = "91,5",
                             Coin = 0,
                             IsActive = true,
@@ -8305,6 +9252,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 916,
+                            BarrierHealth = 0,
                             Code = "91,6",
                             Coin = 0,
                             IsActive = true,
@@ -8314,6 +9262,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 917,
+                            BarrierHealth = 0,
                             Code = "91,7",
                             Coin = 0,
                             IsActive = true,
@@ -8323,6 +9272,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 918,
+                            BarrierHealth = 0,
                             Code = "91,8",
                             Coin = 0,
                             IsActive = true,
@@ -8332,6 +9282,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 919,
+                            BarrierHealth = 0,
                             Code = "91,9",
                             Coin = 0,
                             IsActive = true,
@@ -8341,6 +9292,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 920,
+                            BarrierHealth = 0,
                             Code = "92",
                             Coin = 0,
                             IsActive = true,
@@ -8350,6 +9302,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 921,
+                            BarrierHealth = 0,
                             Code = "92,1",
                             Coin = 0,
                             IsActive = true,
@@ -8359,6 +9312,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 922,
+                            BarrierHealth = 0,
                             Code = "92,2",
                             Coin = 0,
                             IsActive = true,
@@ -8368,6 +9322,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 923,
+                            BarrierHealth = 0,
                             Code = "92,3",
                             Coin = 0,
                             IsActive = true,
@@ -8377,6 +9332,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 924,
+                            BarrierHealth = 0,
                             Code = "92,4",
                             Coin = 0,
                             IsActive = true,
@@ -8386,6 +9342,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 925,
+                            BarrierHealth = 0,
                             Code = "92,5",
                             Coin = 0,
                             IsActive = true,
@@ -8395,6 +9352,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 926,
+                            BarrierHealth = 0,
                             Code = "92,6",
                             Coin = 0,
                             IsActive = true,
@@ -8404,6 +9362,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 927,
+                            BarrierHealth = 0,
                             Code = "92,7",
                             Coin = 0,
                             IsActive = true,
@@ -8413,6 +9372,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 928,
+                            BarrierHealth = 0,
                             Code = "92,8",
                             Coin = 0,
                             IsActive = true,
@@ -8422,6 +9382,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 929,
+                            BarrierHealth = 0,
                             Code = "92,9",
                             Coin = 0,
                             IsActive = true,
@@ -8431,6 +9392,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 930,
+                            BarrierHealth = 0,
                             Code = "93",
                             Coin = 0,
                             IsActive = true,
@@ -8440,6 +9402,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 931,
+                            BarrierHealth = 0,
                             Code = "93,1",
                             Coin = 0,
                             IsActive = true,
@@ -8449,6 +9412,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 932,
+                            BarrierHealth = 0,
                             Code = "93,2",
                             Coin = 0,
                             IsActive = true,
@@ -8458,6 +9422,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 933,
+                            BarrierHealth = 0,
                             Code = "93,3",
                             Coin = 0,
                             IsActive = true,
@@ -8467,6 +9432,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 934,
+                            BarrierHealth = 0,
                             Code = "93,4",
                             Coin = 0,
                             IsActive = true,
@@ -8476,6 +9442,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 935,
+                            BarrierHealth = 0,
                             Code = "93,5",
                             Coin = 0,
                             IsActive = true,
@@ -8485,6 +9452,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 936,
+                            BarrierHealth = 0,
                             Code = "93,6",
                             Coin = 0,
                             IsActive = true,
@@ -8494,6 +9462,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 937,
+                            BarrierHealth = 0,
                             Code = "93,7",
                             Coin = 0,
                             IsActive = true,
@@ -8503,6 +9472,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 938,
+                            BarrierHealth = 0,
                             Code = "93,8",
                             Coin = 0,
                             IsActive = true,
@@ -8512,6 +9482,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 939,
+                            BarrierHealth = 0,
                             Code = "93,9",
                             Coin = 0,
                             IsActive = true,
@@ -8521,6 +9492,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 940,
+                            BarrierHealth = 0,
                             Code = "94",
                             Coin = 0,
                             IsActive = true,
@@ -8530,6 +9502,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 941,
+                            BarrierHealth = 0,
                             Code = "94,1",
                             Coin = 0,
                             IsActive = true,
@@ -8539,6 +9512,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 942,
+                            BarrierHealth = 0,
                             Code = "94,2",
                             Coin = 0,
                             IsActive = true,
@@ -8548,6 +9522,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 943,
+                            BarrierHealth = 0,
                             Code = "94,3",
                             Coin = 0,
                             IsActive = true,
@@ -8557,6 +9532,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 944,
+                            BarrierHealth = 0,
                             Code = "94,4",
                             Coin = 0,
                             IsActive = true,
@@ -8566,6 +9542,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 945,
+                            BarrierHealth = 0,
                             Code = "94,5",
                             Coin = 0,
                             IsActive = true,
@@ -8575,6 +9552,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 946,
+                            BarrierHealth = 0,
                             Code = "94,6",
                             Coin = 0,
                             IsActive = true,
@@ -8584,6 +9562,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 947,
+                            BarrierHealth = 0,
                             Code = "94,7",
                             Coin = 0,
                             IsActive = true,
@@ -8593,6 +9572,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 948,
+                            BarrierHealth = 0,
                             Code = "94,8",
                             Coin = 0,
                             IsActive = true,
@@ -8602,6 +9582,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 949,
+                            BarrierHealth = 0,
                             Code = "94,9",
                             Coin = 0,
                             IsActive = true,
@@ -8611,6 +9592,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 950,
+                            BarrierHealth = 0,
                             Code = "95",
                             Coin = 0,
                             IsActive = true,
@@ -8620,6 +9602,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 951,
+                            BarrierHealth = 0,
                             Code = "95,1",
                             Coin = 0,
                             IsActive = true,
@@ -8629,6 +9612,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 952,
+                            BarrierHealth = 0,
                             Code = "95,2",
                             Coin = 0,
                             IsActive = true,
@@ -8638,6 +9622,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 953,
+                            BarrierHealth = 0,
                             Code = "95,3",
                             Coin = 0,
                             IsActive = true,
@@ -8647,6 +9632,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 954,
+                            BarrierHealth = 0,
                             Code = "95,4",
                             Coin = 0,
                             IsActive = true,
@@ -8656,6 +9642,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 955,
+                            BarrierHealth = 0,
                             Code = "95,5",
                             Coin = 0,
                             IsActive = true,
@@ -8665,6 +9652,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 956,
+                            BarrierHealth = 0,
                             Code = "95,6",
                             Coin = 0,
                             IsActive = true,
@@ -8674,6 +9662,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 957,
+                            BarrierHealth = 0,
                             Code = "95,7",
                             Coin = 0,
                             IsActive = true,
@@ -8683,6 +9672,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 958,
+                            BarrierHealth = 0,
                             Code = "95,8",
                             Coin = 0,
                             IsActive = true,
@@ -8692,6 +9682,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 959,
+                            BarrierHealth = 0,
                             Code = "95,9",
                             Coin = 0,
                             IsActive = true,
@@ -8701,6 +9692,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 960,
+                            BarrierHealth = 0,
                             Code = "96",
                             Coin = 0,
                             IsActive = true,
@@ -8710,6 +9702,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 961,
+                            BarrierHealth = 0,
                             Code = "96,1",
                             Coin = 0,
                             IsActive = true,
@@ -8719,6 +9712,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 962,
+                            BarrierHealth = 0,
                             Code = "96,2",
                             Coin = 0,
                             IsActive = true,
@@ -8728,6 +9722,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 963,
+                            BarrierHealth = 0,
                             Code = "96,3",
                             Coin = 0,
                             IsActive = true,
@@ -8737,6 +9732,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 964,
+                            BarrierHealth = 0,
                             Code = "96,4",
                             Coin = 0,
                             IsActive = true,
@@ -8746,6 +9742,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 965,
+                            BarrierHealth = 0,
                             Code = "96,5",
                             Coin = 0,
                             IsActive = true,
@@ -8755,6 +9752,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 966,
+                            BarrierHealth = 0,
                             Code = "96,6",
                             Coin = 0,
                             IsActive = true,
@@ -8764,6 +9762,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 967,
+                            BarrierHealth = 0,
                             Code = "96,7",
                             Coin = 0,
                             IsActive = true,
@@ -8773,6 +9772,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 968,
+                            BarrierHealth = 0,
                             Code = "96,8",
                             Coin = 0,
                             IsActive = true,
@@ -8782,6 +9782,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 969,
+                            BarrierHealth = 0,
                             Code = "96,9",
                             Coin = 0,
                             IsActive = true,
@@ -8791,6 +9792,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 970,
+                            BarrierHealth = 0,
                             Code = "97",
                             Coin = 0,
                             IsActive = true,
@@ -8800,6 +9802,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 971,
+                            BarrierHealth = 0,
                             Code = "97,1",
                             Coin = 0,
                             IsActive = true,
@@ -8809,6 +9812,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 972,
+                            BarrierHealth = 0,
                             Code = "97,2",
                             Coin = 0,
                             IsActive = true,
@@ -8818,6 +9822,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 973,
+                            BarrierHealth = 0,
                             Code = "97,3",
                             Coin = 0,
                             IsActive = true,
@@ -8827,6 +9832,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 974,
+                            BarrierHealth = 0,
                             Code = "97,4",
                             Coin = 0,
                             IsActive = true,
@@ -8836,6 +9842,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 975,
+                            BarrierHealth = 0,
                             Code = "97,5",
                             Coin = 0,
                             IsActive = true,
@@ -8845,6 +9852,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 976,
+                            BarrierHealth = 0,
                             Code = "97,6",
                             Coin = 0,
                             IsActive = true,
@@ -8854,6 +9862,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 977,
+                            BarrierHealth = 0,
                             Code = "97,7",
                             Coin = 0,
                             IsActive = true,
@@ -8863,6 +9872,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 978,
+                            BarrierHealth = 0,
                             Code = "97,8",
                             Coin = 0,
                             IsActive = true,
@@ -8872,6 +9882,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 979,
+                            BarrierHealth = 0,
                             Code = "97,9",
                             Coin = 0,
                             IsActive = true,
@@ -8881,6 +9892,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 980,
+                            BarrierHealth = 0,
                             Code = "98",
                             Coin = 0,
                             IsActive = true,
@@ -8890,6 +9902,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 981,
+                            BarrierHealth = 0,
                             Code = "98,1",
                             Coin = 0,
                             IsActive = true,
@@ -8899,6 +9912,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 982,
+                            BarrierHealth = 0,
                             Code = "98,2",
                             Coin = 0,
                             IsActive = true,
@@ -8908,6 +9922,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 983,
+                            BarrierHealth = 0,
                             Code = "98,3",
                             Coin = 0,
                             IsActive = true,
@@ -8917,6 +9932,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 984,
+                            BarrierHealth = 0,
                             Code = "98,4",
                             Coin = 0,
                             IsActive = true,
@@ -8926,6 +9942,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 985,
+                            BarrierHealth = 0,
                             Code = "98,5",
                             Coin = 0,
                             IsActive = true,
@@ -8935,6 +9952,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 986,
+                            BarrierHealth = 0,
                             Code = "98,6",
                             Coin = 0,
                             IsActive = true,
@@ -8944,6 +9962,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 987,
+                            BarrierHealth = 0,
                             Code = "98,7",
                             Coin = 0,
                             IsActive = true,
@@ -8953,6 +9972,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 988,
+                            BarrierHealth = 0,
                             Code = "98,8",
                             Coin = 0,
                             IsActive = true,
@@ -8962,6 +9982,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 989,
+                            BarrierHealth = 0,
                             Code = "98,9",
                             Coin = 0,
                             IsActive = true,
@@ -8971,6 +9992,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 990,
+                            BarrierHealth = 0,
                             Code = "99",
                             Coin = 0,
                             IsActive = true,
@@ -8980,6 +10002,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 991,
+                            BarrierHealth = 0,
                             Code = "99,1",
                             Coin = 0,
                             IsActive = true,
@@ -8989,6 +10012,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 992,
+                            BarrierHealth = 0,
                             Code = "99,2",
                             Coin = 0,
                             IsActive = true,
@@ -8998,6 +10022,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 993,
+                            BarrierHealth = 0,
                             Code = "99,3",
                             Coin = 0,
                             IsActive = true,
@@ -9007,6 +10032,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 994,
+                            BarrierHealth = 0,
                             Code = "99,4",
                             Coin = 0,
                             IsActive = true,
@@ -9016,6 +10042,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 995,
+                            BarrierHealth = 0,
                             Code = "99,5",
                             Coin = 0,
                             IsActive = true,
@@ -9025,6 +10052,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 996,
+                            BarrierHealth = 0,
                             Code = "99,6",
                             Coin = 0,
                             IsActive = true,
@@ -9034,6 +10062,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 997,
+                            BarrierHealth = 0,
                             Code = "99,7",
                             Coin = 0,
                             IsActive = true,
@@ -9043,6 +10072,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 998,
+                            BarrierHealth = 0,
                             Code = "99,8",
                             Coin = 0,
                             IsActive = true,
@@ -9052,6 +10082,7 @@ namespace ProgressApi.Migrations
                         new
                         {
                             Id = 999,
+                            BarrierHealth = 0,
                             Code = "99,9",
                             Coin = 0,
                             IsActive = true,
@@ -9136,6 +10167,39 @@ namespace ProgressApi.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProgressApi.Entities.TowerLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Damage")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("FireRate")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Range")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TowerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TowerId");
+
+                    b.ToTable("TowerLevel");
+                });
+
             modelBuilder.Entity("ProgressApi.Entities.TowerProgress", b =>
                 {
                     b.Property<long>("Id")
@@ -9185,11 +10249,17 @@ namespace ProgressApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<double>("BarrierHealth")
-                        .HasColumnType("double precision");
+                    b.Property<int>("BarrierHealth")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("ScrapValue")
-                        .HasColumnType("double precision");
+                    b.Property<int>("GainedCoin")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SpentCoin")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalCoin")
+                        .HasColumnType("integer");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
@@ -9207,7 +10277,63 @@ namespace ProgressApi.Migrations
 
                     b.HasIndex("WaveId");
 
-                    b.ToTable("UserProgress");
+                    b.ToTable("UserProgressHistory");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserTowerPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TowerLevelId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TowerLevelId");
+
+                    b.HasIndex("WaveId");
+
+                    b.ToTable("UserTowerPlace");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserWave", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BarierHealth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalCoin")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WaveId");
+
+                    b.ToTable("UserWave");
                 });
 
             modelBuilder.Entity("ProgressApi.Entities.Wave", b =>
@@ -9222,6 +10348,9 @@ namespace ProgressApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("StageId")
                         .HasColumnType("integer");
 
@@ -9230,6 +10359,47 @@ namespace ProgressApi.Migrations
                     b.HasIndex("StageId");
 
                     b.ToTable("Wave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.WaveDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EnemyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EnemyLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EnemyNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("EntryInterval")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("EntryPoint")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("EntryTime")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("PlaceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WaveId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnemyId");
+
+                    b.HasIndex("WaveId");
+
+                    b.ToTable("WaveDetail");
                 });
 
             modelBuilder.Entity("SharedLibrary.Entities.Log", b =>
@@ -9352,21 +10522,43 @@ namespace ProgressApi.Migrations
 
             modelBuilder.Entity("ProgressApi.Entities.EnemyKill", b =>
                 {
+                    b.HasOne("ProgressApi.Entities.EnemyLevel", "EnemyLevel")
+                        .WithMany()
+                        .HasForeignKey("EnemyLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApi.Entities.UserProgressHistory", "UserProgressHistory")
+                        .WithMany()
+                        .HasForeignKey("UserProgressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EnemyLevel");
+
+                    b.Navigation("UserProgressHistory");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.EnemyLevel", b =>
+                {
                     b.HasOne("ProgressApi.Entities.Enemy", "Enemy")
                         .WithMany()
                         .HasForeignKey("EnemyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProgressApi.Entities.UserProgressHistory", "UserProgress")
+                    b.Navigation("Enemy");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.TowerLevel", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Tower", "Tower")
                         .WithMany()
-                        .HasForeignKey("UserProgressId")
+                        .HasForeignKey("TowerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Enemy");
-
-                    b.Navigation("UserProgress");
+                    b.Navigation("Tower");
                 });
 
             modelBuilder.Entity("ProgressApi.Entities.TowerProgress", b =>
@@ -9397,6 +10589,36 @@ namespace ProgressApi.Migrations
                     b.Navigation("Wave");
                 });
 
+            modelBuilder.Entity("ProgressApi.Entities.UserTowerPlace", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.TowerLevel", "TowerLevel")
+                        .WithMany()
+                        .HasForeignKey("TowerLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TowerLevel");
+
+                    b.Navigation("Wave");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.UserWave", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wave");
+                });
+
             modelBuilder.Entity("ProgressApi.Entities.Wave", b =>
                 {
                     b.HasOne("ProgressApi.Entities.Stage", "Stage")
@@ -9406,6 +10628,25 @@ namespace ProgressApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Stage");
+                });
+
+            modelBuilder.Entity("ProgressApi.Entities.WaveDetail", b =>
+                {
+                    b.HasOne("ProgressApi.Entities.Enemy", "Enemy")
+                        .WithMany()
+                        .HasForeignKey("EnemyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApi.Entities.Wave", "Wave")
+                        .WithMany()
+                        .HasForeignKey("WaveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enemy");
+
+                    b.Navigation("Wave");
                 });
 #pragma warning restore 612, 618
         }

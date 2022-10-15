@@ -1,8 +1,8 @@
 ﻿namespace ProgressApi.Models
 {
-    public class EnemyKillDto
+    public class EnemyKillDTO
     {
-        public long ZombieId { get; set; }
-        public long DeadCount { get; set; }
+        public int EnemyLevelId { get; set; }
+        public int DeadCount { get; set; }
     }
 }

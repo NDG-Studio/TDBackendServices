@@ -3,17 +3,17 @@ using SharedLibrary.Models;
 
 namespace ProgressApi.Models
 {
-    public class ProgressDto
+    public class ProgressDTO
     {
-        public List<TowerProgressDto> TowerProgressList { get; set; } = new List<TowerProgressDto>();
-        public int StageId { get; set; }
-        public int StarCount { get; set; }
-        public double Score { get; set; }
-        public double ScrapValue { get; set; }
+        public List<TowerProgressDTO> TowerProgressList { get; set; } = new List<TowerProgressDTO>();
+        public int WaweId { get; set; }
+        public int SpentCoin { get; set; }
+        public int GainedCoin { get; set; }
+        public int TotalCoin { get; set; }
         public double Time { get; set; }
-        public string? WaveStartTime { get; set; }
-        public double BarrierHealth { get; set; }
-        public List<EnemyKillDto> ZombieKillList { get; set; } = new List<EnemyKillDto>();
+        public int BarrierHealth { get; set; }
+        public List<EnemyKillDTO> EnemyKillList { get; set; } = new List<EnemyKillDTO>();
+        public List<UserTowerPlaceDTO> TowerPlaceList { get; set; } = new List<UserTowerPlaceDTO>();
 
     }
 }

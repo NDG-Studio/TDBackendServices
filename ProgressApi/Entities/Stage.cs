@@ -10,6 +10,7 @@ namespace ProgressApi.Entities
         public string Code { get; set; } = string.Empty;
         public string SceneId { get; set; } = string.Empty;
         public int Coin { get; set; }
+        public int BarrierHealth { get; set; }
         public bool IsActive { get; set; }
     }
 }
