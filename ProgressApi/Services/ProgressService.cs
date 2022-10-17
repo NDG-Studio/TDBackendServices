@@ -300,6 +300,9 @@ namespace ProgressApi.Services
                     CreatableTowerList =creatableTowers
                 };
 
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)

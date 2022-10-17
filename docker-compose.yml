@@ -6,22 +6,22 @@ version: '3.4'
 
 services:
     identitydb:
-        image: postgres
+        image: postgres:14.5-alpine
         mem_limit: 1g
         #networks:
         #    - isolation-network
     progressdb:
-        image: postgres
+        image: postgres:14.5-alpine
         mem_limit: 1g
         #networks:
         #    - isolation-network
     playerbasedb:
-        image: postgres
+        image: postgres:14.5-alpine
         mem_limit: 1g
         #networks:
         #    - isolation-network
     mapdb:
-        image: postgres
+        image: postgres:14.5-alpine
         mem_limit: 1g
         #networks:
         #    - isolation-network
