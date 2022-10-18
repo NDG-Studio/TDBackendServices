@@ -15,6 +15,7 @@ namespace PlayerBaseApi
         }
 
         public DbSet<Buff> Buff { get; set; }
+        public DbSet<PlayerBuff> PlayerBuff { get; set; }
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
         public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }

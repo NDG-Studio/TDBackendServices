@@ -11,7 +11,7 @@
         CityShield = 7,
         SpyFaker = 8,
         DefenseIncrease = 9,
-        AttackInscrease = 10,
+        AttackIncrease = 10,
         SpyProtection = 11,
         TroopCapEnhancer = 12,
         AutoLootrun = 13,

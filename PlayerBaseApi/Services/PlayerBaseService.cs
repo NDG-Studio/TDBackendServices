@@ -1533,7 +1533,8 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                switch (playerItem.Item.ItemTypeId)//TODO: 2-3-4 CategoryId items eklenecek.
+                Buff buff = new Buff();
+                switch (playerItem.Item.ItemTypeId)
                 {
                     case ((int)ItemTypeEnum.HeroCard):
                         playerBaseInfo.HeroCards += req.Data.Count * playerItem.Item.Value1 ?? 0;
@@ -1550,7 +1551,66 @@ namespace PlayerBaseApi.Services
                     case ((int)ItemTypeEnum.Fuel):
                         playerBaseInfo.Fuel += req.Data.Count * playerItem.Item.Value1 ?? 0;
                         break;
+                    case ((int)ItemTypeEnum.CityShield):
+                        buff = new Buff()
+                        {
+                            Name = "city-shield-" + user.Username,
+                            Description = "city-shield-" + user.Username,
+                            CityShieldActive = true
+                        };
+                        break;
+                    case ((int)ItemTypeEnum.SpyFaker):
+                        buff = new Buff()
+                        {
+                            Name = "spy-faker-" + user.Username,
+                            Description = "spy-faker-" + user.Username,
+                            SpyFakerMultiplier = playerItem.Item.Value2 ?? 2
+                        };
+                        break;
+                    case ((int)ItemTypeEnum.DefenseIncrease):
+                        buff = new Buff()
+                        {
+                            Name = "def-increase-" + user.Username,
+                            Description = "def-increase-" + user.Username,
+                            DefenseMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                        };
+                        break;
+                    case ((int)ItemTypeEnum.AttackIncrease):
+                        buff = new Buff()
+                        {
+                            Name = "atk-increase-" + user.Username,
+                            Description = "atk-increase-" + user.Username,
+                            AttackMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                        };
+                        break;
+                    case ((int)ItemTypeEnum.SpyProtection):
+                        buff = new Buff()
+                        {
+                            Name = "Spy-Protection-" + user.Username,
+                            Description = "Spy-Protection-" + user.Username,
+                            SpyProtectionActive = true
+                        };
+                        break;
+                    case ((int)ItemTypeEnum.TroopCapEnhancer):
+                        buff = new Buff()
+                        {
+                            Name = "troop-capacity-" + user.Username,
+                            Description = "troop-capacity-" + user.Username,
+                            TroopCapacityMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                        };
+                        break;
+
                 }
+
+                await _context.AddAsync(buff);
+                await _context.SaveChangesAsync();
+                await _context.AddAsync(new PlayerBuff()
+                {
+                    BuffId = buff.Id,
+                    UserId = user.Id,
+                    StartDate = DateTimeOffset.Now,
+                    EndDate = DateTimeOffset.Now + new TimeSpan(0, playerItem.Item.Value1 ?? 0, 0)
+                });
 
                 playerItem.Count -= req.Data.Count;
 

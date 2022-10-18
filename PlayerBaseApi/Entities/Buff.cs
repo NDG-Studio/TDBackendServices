@@ -9,7 +9,7 @@ namespace PlayerBaseApi.Entities
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
 
-
+        #region BUILDING BUFFS
 
         /// <summary>
         /// Bina yükseltme işleminin  UpgradeDuration katsayısı
@@ -26,6 +26,10 @@ namespace PlayerBaseApi.Entities
         /// Not: Default değer BuildingUpgradeTime tablosunda belirlenmektedir
         /// </summary>
         public double BuildingUpgradeCostMultiplier { get; set; } = 0;
+
+        #endregion
+
+        #region LOOT BUFFS
 
         /// <summary>
         /// Heronun lootta getirdiği Gemlerin katsayısı 
@@ -65,12 +69,16 @@ namespace PlayerBaseApi.Entities
         /// <br/>
         /// Not: Default sayı Gözcü binasının leveline bağlı olarak değişiyor
         /// </summary>
-        public double LootDurationMultiplier { get; set; } = 0;        
-        
+        public double LootDurationMultiplier { get; set; } = 0;
+
         /// <summary>
         /// Heronun lootdan gelirken getirebileceği maksimum resource sayısı
         /// </summary>
-        public double LootCapacity{ get; set; } = 0;
+        public double LootCapacity { get; set; } = 0;
+
+        #endregion
+
+        #region PRISON BUFFS
 
         /// <summary>
         /// Hapishanenin esir kapasitesi için katsayı
@@ -112,9 +120,57 @@ namespace PlayerBaseApi.Entities
         /// </summary>
         public double PrisonExecutionEarnMultiplier { get; set; } = 0;
 
+        #endregion
+
+        #region SPY BUFFS
+
+        /// <summary>
+        /// if Spy Faker active this is the multiplier
+        /// </summary>
+        public double SpyFakerMultiplier { get; set; } = 0;
+
+        /// <summary>
+        /// if Spy Protection active this prop will be true
+        /// </summary>
+        public bool SpyProtectionActive { get; set; } = false;
+
+        #endregion
+
+        #region WAR BUFFS
+
+        /// <summary>
+        /// Defense Multiplier
+        /// </summary>
+        public double DefenseMultiplier { get; set; } = 0;
+
+        /// <summary>
+        /// Attack Multiplier
+        /// </summary>
+        public double AttackMultiplier { get; set; } = 0;
+
+        /// <summary>
+        /// Troop Capacity Multiplier for marching
+        /// </summary>
+        public double TroopCapacityMultiplier { get; set; } = 0;
+
+        #endregion
+
+
         /// <summary>
         /// Base üretimi için katsayı
         /// </summary>
         public double BaseResourceMultiplier { get; set; } = 0;
+
+        /// <summary>
+        /// City Shield Duration buff
+        /// </summary>
+        public bool CityShieldActive { get; set; } = false;
+        
+        /// <summary>
+        /// Auto LootRun Duration buff
+        /// </summary>
+        public bool AutoLootRunActive { get; set; } = false;
+
+
     }
 }
