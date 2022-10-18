@@ -65,9 +65,9 @@ namespace PlayerBaseApi.Controllers
         /// <br/>
         /// UseHeroExperienceRequest.Count = kullanilacak itemin sayisi
         /// <br/>
-        /// Input: BaseRequest&lt;UseHeroExperienceRequest&gt;
+        /// Input: BaseRequest &lt; UseHeroExperienceRequest &gt;
         /// <br/>
-        /// Output: TDResponse&lt;bool&gt; Not: Hero level atlamissa true doner
+        /// Output: TDResponse &lt; bool &gt;       Not: Hero level atlamissa true doner
         /// </remarks>
         [LoginRequired]
         [HttpPost("UseHeroExp")]
