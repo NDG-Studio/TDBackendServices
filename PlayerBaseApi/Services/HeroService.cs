@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Entities;
+using PlayerBaseApi.Enums;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
@@ -120,6 +121,108 @@ namespace PlayerBaseApi.Services
                     response.Data = true;
                 }
                 await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<bool>> UseHeroExp(BaseRequest<UseHeroExperienceRequest> req, UserDto user)
+        {
+            TDResponse<bool> response = new TDResponse<bool>();
+            var info = InfoDetail.CreateInfo(req, "UseHeroExp");
+            try
+            {
+                var pH = await _context.PlayerHero.Include(l => l.Hero)
+                    .Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId && l.EndDate == null).FirstOrDefaultAsync();
+
+                if (pH == null || req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerItems = await _context.PlayerItem.Include(l => l.Item)
+                   .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).FirstOrDefaultAsync();
+
+                if (playerItems == null || playerItems.Count < req.Data.Count)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (pH.CurrentLevel >= pH.Hero.MaxLevel)
+                {
+                    info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
+                    response.SetError(OperationMessages.HeroAllreadyMaxLevel);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var threshold = await _context.HeroLevelThreshold
+                    .Where(l => l.HeroId == req.Data.HeroId && l.Level == pH.CurrentLevel + 1)
+                    .Select(l => l.Experience).FirstOrDefaultAsync();
+
+                pH.Exp += req.Data.Count * (playerItems.Item.Value1 ?? 0);
+                playerItems.Count -= req.Data.Count;
+
+                response.Data = false;
+                if (pH.Exp >= threshold)
+                {
+                    pH.CurrentLevel = await _context.HeroLevelThreshold
+                        .Where(l => l.HeroId == pH.HeroId && l.Experience <= pH.Exp)
+                        .OrderByDescending(l => l.Level).Select(l => l.Level).FirstOrDefaultAsync();
+                    response.Data = true;
+                }
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersHeroXpItems(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayersHeroXpItems");
+            try
+            {
+
+                var pq = _context.PlayerItem.Include(l => l.Item)
+                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).OrderBy(l => l.ItemId);
+                var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
+
+                var heroXpItems = await _context.Item
+                    .Where(l => l.ItemTypeId == (int)ItemTypeEnum.HeroXp && !playerItems.Select(c => c.Item.Id).Contains(l.Id))
+                    .OrderBy(l => l.Id).ToListAsync();
+                for (int i = 0; i < heroXpItems.Count; i++)
+                {
+                    playerItems.Add(new PlayerItemDTO()
+                    {
+                        Item = _mapper.Map<ItemDTO>(heroXpItems[i]),
+                        Count = 0
+                    });
+                }
+
+                response.Data = playerItems.OrderBy(l=>l.Item.Id).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -263,8 +366,8 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "UpgradeHeroSkillBySkillId");
             try
             {
-                var heroSkill = await _context.HeroSkill.Include(l=>l.Hero).Where(l => l.Id == req.Data).FirstOrDefaultAsync();
-                if (heroSkill==null)
+                var heroSkill = await _context.HeroSkill.Include(l => l.Hero).Where(l => l.Id == req.Data).FirstOrDefaultAsync();
+                if (heroSkill == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
                     info.AddInfo(OperationMessages.DbItemNotFound);
@@ -272,7 +375,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var isOwned = await _context.PlayerHero.Where(l => l.HeroId == heroSkill.HeroId && l.UserId==user.Id).AnyAsync();
+                var isOwned = await _context.PlayerHero.Where(l => l.HeroId == heroSkill.HeroId && l.UserId == user.Id).AnyAsync();
                 if (!isOwned)
                 {
                     response.SetError(OperationMessages.PlayerHaveNoHero);
@@ -281,8 +384,8 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var currentHeroSkillLevel = await _context.PlayerHeroSkillLevel.Include(l=>l.HeroSkillLevel).Where(l => l.HeroSkillLevel.HeroSkillId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
-                if (currentHeroSkillLevel==null)
+                var currentHeroSkillLevel = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).Where(l => l.HeroSkillLevel.HeroSkillId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
+                if (currentHeroSkillLevel == null)
                 {
                     var newEnt = new PlayerHeroSkillLevel()
                     {
@@ -300,7 +403,7 @@ namespace PlayerBaseApi.Services
                         _logger.LogInformation(info.ToString());
                         return response;
                     }
-                    currentHeroSkillLevel.HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == currentHeroSkillLevel.HeroSkillLevel.Level+1).Select(l => l.Id).FirstOrDefaultAsync();
+                    currentHeroSkillLevel.HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == currentHeroSkillLevel.HeroSkillLevel.Level + 1).Select(l => l.Id).FirstOrDefaultAsync();
                 }
                 await _context.SaveChangesAsync();
                 response.SetSuccess();

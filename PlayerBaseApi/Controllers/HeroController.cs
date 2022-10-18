@@ -39,6 +39,9 @@ namespace PlayerBaseApi.Controllers
             return await _heroService.GetPlayersHeroById(req, user);
         }
 
+        /// <summary>
+        /// AddHeroExperience SADECE TEST ICIN KULLANILMALIDIR !!! HeroXp kullanma islemi icin 'UseHeroExp' i kullaniniz
+        /// </summary>
         [LoginRequired]
         [HttpPost("AddHeroExperience")]
         public async Task<TDResponse<bool>> AddHeroExperience([FromBody] BaseRequest<AddHeroExperienceRequest> req)
@@ -47,6 +50,54 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.AddHeroExperience(req, user);
+        }
+
+        /// <summary>
+        /// Oyuncu envanterinde bulunan heroxp pack itemlari kullanilarak heroya xp verir, itemleri almak icin bknz: GetPlayersHeroXpItems
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// UseHeroExperienceRequest.HeroId = xp eklenecek heroid
+        /// <br/>
+        /// UseHeroExperienceRequest.ItemId = xp eklemek icin kullanilacak itemin idsi
+        /// <br/>
+        /// UseHeroExperienceRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// Input: BaseRequest&lt;UseHeroExperienceRequest&gt;
+        /// <br/>
+        /// Output: TDResponse&lt;bool&gt; Not: Hero level atlamissa true doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("UseHeroExp")]
+        public async Task<TDResponse<bool>> UseHeroExp([FromBody] BaseRequest<UseHeroExperienceRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.UseHeroExp(req, user);
+        }
+
+        /// <summary>
+        /// Oyuncu envanterinde bulunan heroxp pack itemlarini getirir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse&lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayersHeroXpItems")]
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersHeroXpItems([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.GetPlayersHeroXpItems(req, user);
         }
 
         [LoginRequired]
