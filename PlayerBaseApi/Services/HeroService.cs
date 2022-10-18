@@ -207,7 +207,7 @@ namespace PlayerBaseApi.Services
             {
 
                 var pq = _context.PlayerItem.Include(l => l.Item)
-                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).OrderBy(l => l.ItemId);
+                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).OrderByDescending(l => l.Count).ThenBy(l=>l.ItemId);
                 var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
 
                 var heroXpItems = await _context.Item
@@ -222,7 +222,7 @@ namespace PlayerBaseApi.Services
                     });
                 }
 
-                response.Data = playerItems.OrderBy(l=>l.Item.Id).ToList();
+                response.Data = playerItems;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
