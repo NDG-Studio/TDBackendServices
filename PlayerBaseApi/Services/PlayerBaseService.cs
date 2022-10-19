@@ -1,14 +1,15 @@
 ﻿
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PlayerBaseApi.Entities;
+using PlayerBaseApi.Enums;
+using PlayerBaseApi.Helpers;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
-using PlayerBaseApi.Helpers;
 using SharedLibrary.Models;
-using Newtonsoft.Json;
-using PlayerBaseApi.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PlayerBaseApi.Services
 {
@@ -719,6 +720,62 @@ namespace PlayerBaseApi.Services
                 response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                 info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                 _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<string>> SpeedUpResearchNodeUpgrade(BaseRequest<SpeedUpRequest> req, UserDto user)
+        {
+            TDResponse<string> response = new TDResponse<string>();
+            var info = InfoDetail.CreateInfo(req, "SpeedUpResearchNodeUpgrade");
+            try
+            {
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var currentNode = await _context.PlayerResearchNode.Include(l => l.ResearchNode)
+                    .Where(l => l.UserId == user.Id && l.ResearchNodeId == req.Data.GenericId).FirstOrDefaultAsync();
+
+                if (currentNode == null || currentNode.UpdateEndDate == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerItem = await _context.PlayerItem.Include(l => l.Item)
+                    .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+
+                if (playerItem == null || playerItem.Count < req.Data.Count)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                currentNode.UpdateEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
+                playerItem.Count -= req.Data.Count;
+                await _context.SaveChangesAsync();
+
+                response.Data = currentNode.UpdateEndDate.ToString();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
             }
             catch (Exception e)
             {

@@ -43,5 +43,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<List<DialogDTO>>> GetDialogByCodeName(BaseRequest<string> req, UserDto user);
 
         Task<TDResponse> UseItem(BaseRequest<UseItemRequest> req, UserDto user);
+        Task<TDResponse<string>> SpeedUpResearchNodeUpgrade(BaseRequest<SpeedUpRequest> req, UserDto user);
     }
 }

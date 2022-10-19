@@ -157,6 +157,33 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.UpgradeResearchNode(req, user);
+        }
+
+        /// <summary>
+        /// Upgrade islemi devam eden research nodelari hizlandirici kullanarak hizlandirmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// SpeedUpRequest.GenericId = researchNodeId degeri
+        /// <br/>
+        /// SpeedUpRequest.ItemId = hizlandirici icin kullanilacak itemin idsi
+        /// <br/>
+        /// SpeedUpRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// Input: BaseRequest &lt; SpeedUpRequest &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; string &gt;       Not: hizlandirma sonrasi yeni upgradeEndDate degerini doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpeedUpResearchNodeUpgrade")]
+        public async Task<TDResponse<string>> SpeedUpResearchNodeUpgrade([FromBody] BaseRequest<SpeedUpRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpeedUpResearchNodeUpgrade(req, user);
         }        
         
         [LoginRequired]
