@@ -226,6 +226,33 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.PrisonerTrainingRequest(req, user);
         }
 
+        /// <summary>
+        /// devam eden prisoner training islemini hizlandirici kullanarak hizlandirmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// SpeedUpRequest.ItemId = hizlandirici icin kullanilacak itemin idsi
+        /// <br/>
+        /// SpeedUpRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// SpeedUpRequest.GenericId = 0 gonderin
+        /// <br/>
+        /// Input: BaseRequest &lt; SpeedUpRequest &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; string &gt;       Not: hizlandirma sonrasi yeni trainingDoneDate degerini doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpeedUpPrisonerTraining")]
+        public async Task<TDResponse<string>> SpeedUpPrisonerTraining([FromBody] BaseRequest<SpeedUpRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpeedUpPrisonerTraining(req, user);
+        }
+
         [LoginRequired]
         [HttpPost("PrisonerTrainingDoneRequest")]
         public async Task<TDResponse<int>> PrisonerTrainingDoneRequest([FromBody] BaseRequest req)
