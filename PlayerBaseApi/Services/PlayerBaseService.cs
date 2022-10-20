@@ -206,10 +206,22 @@ namespace PlayerBaseApi.Services
                 var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query == null)
                 {
-                    info.AddInfo(OperationMessages.DbItemNotFound);
-                    response.SetError(OperationMessages.DbItemNotFound);
-                    _logger.LogInformation(info.ToString());
-                    return response;
+                    query = new PlayerBaseInfo()
+                    {
+                        BaseLevel = 1,
+                        BluePrints = 0,
+                        Gems = 5,
+                        BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
+                        Fuel = 100,
+                        ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
+                        HeroCards = 0,
+                        LastBaseCollect = DateTimeOffset.Now,
+                        Scraps = 10000,
+                        UserId = user.Id,
+                        Username = user.Username
+                    };
+                    await _context.AddAsync(query);
+                    await _context.SaveChangesAsync();
                 }
                 response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
                 response.SetSuccess();
