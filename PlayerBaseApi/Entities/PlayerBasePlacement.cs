@@ -11,8 +11,8 @@ namespace PlayerBaseApi.Entities
         public int BuildingTypeId { get; set; }
         public int BuildingLevel { get; set; }
         public DateTimeOffset? UpdateEndDate { get; set; } = null;
-        public int CoordX { get; set; }
-        public int CoordY { get; set; }
+        public double CoordX { get; set; }
+        public double CoordY { get; set; }
 
         [ForeignKey("BuildingTypeId")]
         public BuildingType BuildingType { get; set; }

@@ -2,8 +2,8 @@
 {
     public class PlayerBaseBuildingRequest
     {
-        public int CoordX { get; set; }
-        public int CoordY { get; set; }
+        public double CoordX { get; set; }
+        public double CoordY { get; set; }
         public int BuildingTypeId { get; set; }
     }
 }
