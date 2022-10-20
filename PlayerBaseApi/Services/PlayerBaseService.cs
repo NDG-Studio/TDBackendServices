@@ -1744,7 +1744,31 @@ namespace PlayerBaseApi.Services
 
         #endregion
 
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayersSpeedUpItems");
+            try
+            {
 
+                var pq = _context.PlayerItem.Include(l => l.Item)
+                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).OrderBy(l => l.ItemId);
+                var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
+
+                response.Data = playerItems;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
 
         #region PRIVATE FUNCTIONS

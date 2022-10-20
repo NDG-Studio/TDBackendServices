@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
+using PlayerBaseApi.Services;
 using SharedLibrary.Models;
 
 namespace PlayerBaseApi.Controllers
@@ -399,6 +400,29 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.UseItem(req, user);
         }
+
+
+        /// <summary>
+        /// Oyuncu envanterinde bulunan speedup itemlarini getirir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse&lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayersSpeedUpItems")]
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPlayersSpeedUpItems(req, user);
+        }
+
 
     }
 }

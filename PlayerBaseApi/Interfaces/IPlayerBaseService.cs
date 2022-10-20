@@ -45,5 +45,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> UseItem(BaseRequest<UseItemRequest> req, UserDto user);
         Task<TDResponse<string>> SpeedUpResearchNodeUpgrade(BaseRequest<SpeedUpRequest> req, UserDto user);
         Task<TDResponse<string>> SpeedUpPrisonerTraining(BaseRequest<SpeedUpRequest> req, UserDto user);
+        Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
     }
 }
