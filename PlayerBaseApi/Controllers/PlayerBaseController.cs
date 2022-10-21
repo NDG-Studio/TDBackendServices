@@ -350,7 +350,34 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.HealingRequest(req, user);
         }
-                
+
+        /// <summary>
+        /// devam eden yaralilari iyilestirme islemini hizlandirici kullanarak hizlandirmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// SpeedUpRequest.ItemId = hizlandirici icin kullanilacak itemin idsi
+        /// <br/>
+        /// SpeedUpRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// SpeedUpRequest.GenericId = 0 gonderin
+        /// <br/>
+        /// Input: BaseRequest &lt; SpeedUpRequest &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; string &gt;       Not: hizlandirma sonrasi yeni operationenddate degerini doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpeedUpHealing")]
+        public async Task<TDResponse<string>> SpeedUpHealing([FromBody] BaseRequest<SpeedUpRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpeedUpHealing(req, user);
+        }
+
         [LoginRequired]
         [HttpPost("HealingDoneRequest")]
         public async Task<TDResponse<int>> HealingDoneRequest([FromBody] BaseRequest req)
