@@ -17,6 +17,9 @@
         AutoLootrun = 13,
         HeroXp = 14,
         GangBadge = 15,
-        InstantFinisher = 16
+        InstantFinisher = 16,
+        RareHeroCard=17,
+        EpicHeroCard=18,
+        LegendaryHeroCard=19
     }
 }

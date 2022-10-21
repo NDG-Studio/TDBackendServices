@@ -8,7 +8,9 @@
         public int Scraps { get; set; } = 0;
         public int Gems { get; set; } = 0;
         public int Fuel { get; set; } = 0;
-        public int HeroCards { get; set; } = 0;
+        public int RareHeroCards { get; set; } = 0;
+        public int EpicHeroCards { get; set; } = 0;
+        public int LegendaryHeroCards { get; set; } = 0;
         public int BluePrints { get; set; } = 0;
         public string LastBaseCollect { get; set; } = "";
     }
