@@ -292,8 +292,35 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.SendLootRun(req, user);
-        }        
-        
+        }
+
+        /// <summary>
+        /// devam eden lotrun islemini hizlandirici kullanarak hizlandirmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// SpeedUpRequest.ItemId = hizlandirici icin kullanilacak itemin idsi
+        /// <br/>
+        /// SpeedUpRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// SpeedUpRequest.GenericId = lootrundaki heronun idsi
+        /// <br/>
+        /// Input: BaseRequest &lt; SpeedUpRequest &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; string &gt;       Not: hizlandirma sonrasi yeni operationenddate degerini doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpeedUpLootRun")]
+        public async Task<TDResponse<string>> SpeedUpLootRun([FromBody] BaseRequest<SpeedUpRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpeedUpLootRun(req, user);
+        }
+
         [LoginRequired]
         [HttpPost("LootRunDoneRequest")]
         public async Task<TDResponse<LootRunDoneInfoDTO>> LootRunDoneRequest([FromBody] BaseRequest<int> req)

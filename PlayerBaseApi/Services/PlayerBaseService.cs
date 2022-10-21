@@ -1152,6 +1152,62 @@ namespace PlayerBaseApi.Services
             return response;
         }
 
+        public async Task<TDResponse<string>> SpeedUpLootRun(BaseRequest<SpeedUpRequest> req, UserDto user)
+        {
+            TDResponse<string> response = new TDResponse<string>();
+            var info = InfoDetail.CreateInfo(req, "SpeedUpLootRun");
+            try
+            {
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerHeroLoot = await _context.PlayerHeroLoot
+                    .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId== req.Data.GenericId).FirstOrDefaultAsync();
+
+                if (playerHeroLoot == null || playerHeroLoot.OperationEndDate == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerItem = await _context.PlayerItem.Include(l => l.Item)
+                    .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+
+                if (playerItem == null || playerItem.Count < req.Data.Count)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerHeroLoot.OperationEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
+                playerItem.Count -= req.Data.Count;
+                await _context.SaveChangesAsync();
+
+                response.Data = playerHeroLoot.OperationEndDate.ToString();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         public async Task<TDResponse> SendLootRun(BaseRequest<int> req, UserDto user)
         {
             TDResponse response = new TDResponse();
