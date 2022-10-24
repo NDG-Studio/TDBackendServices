@@ -9,7 +9,6 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PlayerBaseApi.Services
 {
@@ -214,9 +213,9 @@ namespace PlayerBaseApi.Services
                         BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
                         Fuel = 100,
                         ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
-                        RareHeroCards=0,
-                        EpicHeroCards=0,
-                        LegendaryHeroCards=0,
+                        RareHeroCards = 0,
+                        EpicHeroCards = 0,
+                        LegendaryHeroCards = 0,
                         LastBaseCollect = DateTimeOffset.Now,
                         Scraps = 10000,
                         UserId = user.Id,
@@ -887,6 +886,13 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "ExecutePrisoners");
             try
             {
+                if (req.Data < 1)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query.PrisonerCount < req.Data)
@@ -925,6 +931,13 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "PrisonerTrainingRequest");
             try
             {
+                if (req.Data < 1)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 if (await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == 5 && l.UpdateEndDate != null).AnyAsync())//prison
                 {
                     response.SetError(OperationMessages.UpgradingMustBeDone);
@@ -1182,7 +1195,7 @@ namespace PlayerBaseApi.Services
                 }
 
                 var playerHeroLoot = await _context.PlayerHeroLoot
-                    .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId== req.Data.GenericId).FirstOrDefaultAsync();
+                    .Where(l => l.PlayerHero.UserId == user.Id && l.PlayerHero.HeroId == req.Data.GenericId).FirstOrDefaultAsync();
 
                 if (playerHeroLoot == null || playerHeroLoot.OperationEndDate == null)
                 {
@@ -1398,6 +1411,13 @@ namespace PlayerBaseApi.Services
             {
                 var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (req.Data < 1)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 if (query.InjuredCount < req.Data)
                 {
                     req.Data = query.InjuredCount;
@@ -1450,7 +1470,7 @@ namespace PlayerBaseApi.Services
                 }
 
                 var playerHospital = await _context.PlayerHospital
-                    .Where(l => l.UserId == user.Id ).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
 
                 if (playerHospital == null || playerHospital.HealingDoneDate == null)
                 {
@@ -1780,7 +1800,7 @@ namespace PlayerBaseApi.Services
                         break;
                     case ((int)ItemTypeEnum.EpicHeroCard):
                         playerBaseInfo.EpicHeroCards += req.Data.Count * playerItem.Item.Value1 ?? 0;
-                        break;                    
+                        break;
                     case ((int)ItemTypeEnum.LegendaryHeroCard):
                         playerBaseInfo.LegendaryHeroCards += req.Data.Count * playerItem.Item.Value1 ?? 0;
                         break;
