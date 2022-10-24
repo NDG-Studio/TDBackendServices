@@ -480,5 +480,27 @@ namespace PlayerBaseApi.Controllers
         }
 
 
+        /// <summary>
+        /// Training islemi bitmis trooplari toplamayi saglar
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse&lt; CollectTroopResponse &gt; NOT: islem sonrasi kazanilan troop sayisini ve cesitli bilgileri doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("CollectTroopsFromBarracks")]
+        public async Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.CollectTroopsFromBarracks(req, user);
+        }
+
+
     }
 }

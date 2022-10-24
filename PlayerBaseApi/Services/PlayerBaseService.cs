@@ -125,7 +125,10 @@ namespace PlayerBaseApi.Services
                         var pTroop = new PlayerTroop()
                         {
                             TroopCount = 0,
-                            UserId = user.Id
+                            UserId = user.Id,
+                            LastTroopCollect=DateTimeOffset.Now,
+                            MaxDuration= TimeSpan.FromHours(12),
+                            TrainingPerHour=100
                         };
                         await _context.AddAsync(pTroop);
                         break;
@@ -1897,6 +1900,54 @@ namespace PlayerBaseApi.Services
 
         #endregion
 
+
+        #region BARRACKS UTILS
+
+        public async Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks(BaseRequest req, UserDto user)
+        {
+            TDResponse<CollectTroopResponse> response = new TDResponse<CollectTroopResponse>();
+            var info = InfoDetail.CreateInfo(req, "CollectBaseResources");
+            try
+            {
+                var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if ((DateTimeOffset.Now - playerTroops.LastTroopCollect).TotalMilliseconds < (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+                {
+                    response.SetError(OperationMessages.NoChanges);
+                    info.AddInfo(OperationMessages.NoChanges);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var duration = DateTimeOffset.Now - playerTroops.LastTroopCollect;
+                duration = playerTroops.MaxDuration < duration ? playerTroops.MaxDuration : duration;
+
+
+                response.Data = new CollectTroopResponse()
+                {
+                    CollectDuration = duration,
+                    CollectedTroops = (int)(duration.TotalHours * playerTroops.TrainingPerHour),
+                    TroopTrainingPerHour = playerTroops.TrainingPerHour,
+                    BarrackFullDuration = playerTroops.MaxDuration
+                };
+                response.Data.CollectedTroops += (int)(response.Data.CollectedTroops * (await GetPlayersTotalBuff(user.Id)).TroopTrainingMultiplier);
+                playerTroops.LastTroopCollect = DateTimeOffset.Now;
+                playerTroops.TroopCount += response.Data.CollectedTroops;
+
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
+
         public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user)
         {
             TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
@@ -1987,7 +2038,17 @@ namespace PlayerBaseApi.Services
                 PrisonExecutionEarnMultiplier = playerBuffs.Sum(l => l.PrisonExecutionEarnMultiplier),
                 PrisonTrainingCostMultiplier = playerBuffs.Sum(l => l.PrisonTrainingCostMultiplier),
                 PrisonTrainingDurationMultiplier = playerBuffs.Sum(l => l.PrisonTrainingDurationMultiplier),
-                BuildingUpgradeDurationMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier)
+                BuildingUpgradeDurationMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier),
+                TroopTrainingMultiplier = playerBuffs.Sum(l => l.TroopTrainingMultiplier),
+                AttackMultiplier = playerBuffs.Sum(l => l.AttackMultiplier),
+                BaseResourceMultiplier = playerBuffs.Sum(l => l.BaseResourceMultiplier),
+                BuildingUpgradeCostMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeCostMultiplier),
+                DefenseMultiplier = playerBuffs.Sum(l => l.DefenseMultiplier),
+                SpyFakerMultiplier = playerBuffs.Sum(l => l.SpyFakerMultiplier),
+                TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopCapacityMultiplier),
+                AutoLootRunActive = playerBuffs.Any(l=>l.AutoLootRunActive),
+                CityShieldActive = playerBuffs.Any(l=>l.CityShieldActive),
+                SpyProtectionActive = playerBuffs.Any(l=>l.SpyProtectionActive)
             };
         }
 

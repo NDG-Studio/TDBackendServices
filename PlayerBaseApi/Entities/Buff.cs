@@ -155,6 +155,15 @@ namespace PlayerBaseApi.Entities
 
         #endregion
 
+        #region TROOP TRAINING BUFFS
+
+        /// <summary>
+        /// Troop Training Per Hour Multiplier
+        /// </summary>
+        public double TroopTrainingMultiplier { get; set; } = 0;
+
+        #endregion
+
 
         /// <summary>
         /// Base üretimi için katsayı
