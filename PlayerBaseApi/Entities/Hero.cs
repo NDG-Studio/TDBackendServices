@@ -14,6 +14,8 @@ namespace PlayerBaseApi.Entities
         public string ThemeColor { get; set; }
         public int MaxLevel { get; set; }
         public bool IsApe { get; set; }
+        public int Rarity { get; set; } = 1;
+        public int Price { get; set; } = 1;
         public bool IsActive { get; set; }
     }
 }

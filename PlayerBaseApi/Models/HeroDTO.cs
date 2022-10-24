@@ -11,6 +11,8 @@
         public string ThemeColor { get; set; }
         public int MaxLevel { get; set; }
         public bool Owned { get; set; }
+        public int Rarity { get; set; }
+        public int Price { get; set; }
         public bool IsApe { get; set; }
     }
 

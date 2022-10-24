@@ -22,6 +22,7 @@ namespace SharedLibrary.Helpers
 
         public const string UserAllreadyActive = "Kullanıcı zaten aktif olduğundan işleminiz gerçekleşmedi!";
         public const string ProcessAllreadyExist= "İşlem aktif olduğundan işleminiz gerçekleşmedi!";
+        public const string HeroAllreadyExist= "Oyuncu heroya zaten sahip!";
         public const string InfoNull = "İşlemi gerçekleştirmek için yeterli bilgiye ulaşılamadı!";
         public const string HeroAllreadyMaxLevel = "Daha fazla yükseltilemez!";
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";

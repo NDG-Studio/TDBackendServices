@@ -408,6 +408,94 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse> BuyHeroByHeroId(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "BuyHeroByHeroId");
+            try
+            {
+                var isAllreadyExist = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data).AnyAsync();
+                if (isAllreadyExist)
+                {
+                    response.SetError(OperationMessages.HeroAllreadyExist);
+                    info.AddInfo(OperationMessages.HeroAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var hero = await _context.Hero.Where(l => l.Id == req.Data && l.IsActive).FirstOrDefaultAsync();
+                if (hero == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var playerInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerInfo == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var hasError = false;
+                switch (hero.Rarity)
+                {
+                    case (int)HeroRarity.Rare:
+                        if (playerInfo.RareHeroCards < hero.Price)
+                        {
+                            hasError = true;
+                        }
+                        playerInfo.RareHeroCards -= hero.Price;
+                        break;
+                    case (int)HeroRarity.Epic:
+                        if (playerInfo.EpicHeroCards < hero.Price)
+                        {
+                            hasError = true;
+                        }
+                        playerInfo.EpicHeroCards -= hero.Price;
+                        break;
+                    case (int)HeroRarity.Legendary:
+                        if (playerInfo.LegendaryHeroCards < hero.Price)
+                        {
+                            hasError = true;
+                        }
+                        playerInfo.LegendaryHeroCards -= hero.Price;
+                        break;
+                }
+                if (hasError)
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                await _context.AddAsync(new PlayerHero()
+                {
+                    SkillPoint = 0,
+                    CurrentLevel = 1,
+                    Exp = 0,
+                    HeroId = req.Data,
+                    TalentPoint = 0,
+                    UserId = user.Id,
+                    EndDate = null
+                });
+
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
 
 

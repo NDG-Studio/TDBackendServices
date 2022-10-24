@@ -138,6 +138,30 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.UpgradeHeroSkillBySkillId(req, user);
+        }
+
+
+        /// <summary>
+        /// Oyuncu sahip oldugu herocardlar ile kendisinde olmayan bir heroya sahip olur
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// BaseRequest.Data = alinacak heroid
+        /// <br/>
+        /// Input: BaseRequest &lt; int &gt;
+        /// <br/>
+        /// Output: TDResponse       Not: islem basarili ise haserror 'false' doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("BuyHeroByHeroId")]
+        public async Task<TDResponse> BuyHeroByHeroId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.BuyHeroByHeroId(req, user);
         }        
         
 
