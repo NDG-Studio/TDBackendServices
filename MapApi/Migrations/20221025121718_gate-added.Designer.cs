@@ -3,6 +3,7 @@ using System;
 using MapApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MapApi.Migrations
 {
     [DbContext(typeof(MapContext))]
-    partial class MapContextModelSnapshot : ModelSnapshot
+    [Migration("20221025121718_gate-added")]
+    partial class gateadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1269,31 +1271,6 @@ namespace MapApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MapApi.Entities.Gate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GangId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GateStateId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PassPricePerUnit")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TroopCount")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Gate");
-                });
-
             modelBuilder.Entity("MapApi.Entities.MapItem", b =>
                 {
                     b.Property<int>("Id")
@@ -1333,8 +1310,6 @@ namespace MapApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AreaId");
-
-                    b.HasIndex("GateId");
 
                     b.HasIndex("MapItemTypeId");
 
@@ -1665,10 +1640,6 @@ namespace MapApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MapApi.Entities.Gate", "Gate")
-                        .WithMany()
-                        .HasForeignKey("GateId");
-
                     b.HasOne("MapApi.Entities.MapItemType", "MapItemType")
                         .WithMany()
                         .HasForeignKey("MapItemTypeId")
@@ -1676,8 +1647,6 @@ namespace MapApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Area");
-
-                    b.Navigation("Gate");
 
                     b.Navigation("MapItemType");
                 });

@@ -16,6 +16,7 @@ namespace MapApi
 
         public DbSet<Zone> Zone { get; set; }
         public DbSet<Area> Area { get; set; }
+        public DbSet<Gate> Gate { get; set; }
         public DbSet<MapItemType> MapItemType { get; set; }
         public DbSet<MapItem> MapItem { get; set; }
         public DbSet<Log> Log { get; set; }
