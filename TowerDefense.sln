@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "SharedLibr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerBaseApi", "PlayerBaseApi\PlayerBaseApi.csproj", "{2E1952FD-9A81-45B3-AC91-510E36B1EA24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapApi", "MapApi\MapApi.csproj", "{121BBE22-8967-49ED-B3D6-3692176E6355}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapApi", "MapApi\MapApi.csproj", "{121BBE22-8967-49ED-B3D6-3692176E6355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

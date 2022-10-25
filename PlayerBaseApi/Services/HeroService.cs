@@ -30,7 +30,8 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetHeroTypes");
             try
             {
-                var query = _context.Hero.Where(l => l.IsActive);
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var query = _context.Hero.Where(l => l.IsActive && l.IsApe == playerBaseInfo.IsApe);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
                 var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).Select(l => l.HeroId).ToListAsync();
 
@@ -423,16 +424,17 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var hero = await _context.Hero.Where(l => l.Id == req.Data && l.IsActive).FirstOrDefaultAsync();
-                if (hero == null)
+                var playerInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerInfo == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
                     info.AddInfo(OperationMessages.DbItemNotFound);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var playerInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                if (playerInfo == null)
+
+                var hero = await _context.Hero.Where(l => l.Id == req.Data && l.IsActive && l.IsApe == playerInfo.IsApe).FirstOrDefaultAsync();
+                if (hero == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
                     info.AddInfo(OperationMessages.DbItemNotFound);

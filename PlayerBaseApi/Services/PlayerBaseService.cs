@@ -222,7 +222,8 @@ namespace PlayerBaseApi.Services
                         LastBaseCollect = DateTimeOffset.Now,
                         Scraps = 10000,
                         UserId = user.Id,
-                        Username = user.Username
+                        Username = user.Username,
+                        IsApe = false
                     };
                     await _context.AddAsync(query);
                     await _context.SaveChangesAsync();

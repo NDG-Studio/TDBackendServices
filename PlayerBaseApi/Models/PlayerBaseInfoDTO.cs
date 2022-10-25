@@ -13,5 +13,6 @@
         public int LegendaryHeroCards { get; set; } = 0;
         public int BluePrints { get; set; } = 0;
         public string LastBaseCollect { get; set; } = "";
+        public bool IsApe { get; set; } = false;
     }
 }
