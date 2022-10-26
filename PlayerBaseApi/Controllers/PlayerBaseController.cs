@@ -315,12 +315,14 @@ namespace PlayerBaseApi.Controllers
         /// </remarks>
         [LoginRequired]
         [HttpPost("SpeedUpLootRun")]
+        [Obsolete("deprecated", true)]
         public async Task<TDResponse<string>> SpeedUpLootRun([FromBody] BaseRequest<SpeedUpRequest> req)
         {
-            var user = (HttpContext.Items["User"] as UserDto);
-            req.SetUser(user.Id);
-            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.SpeedUpLootRun(req, user);
+            //var user = (HttpContext.Items["User"] as UserDto);
+            //req.SetUser(user.Id);
+            //req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            //return await _playerBaseService.SpeedUpLootRun(req, user);
+            return new TDResponse<string>();
         }
 
         [LoginRequired]

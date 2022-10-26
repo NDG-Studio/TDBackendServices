@@ -5,7 +5,7 @@ namespace PlayerBaseApi.Helpers
     {
         public static int GetRandomResource(int min, int max, double minChance = 0.1, double maxChance = 0.05)//TODO: Random algoritması araştırılacak
         {
-            var random = new Random().Next(min, max);
+            int random = new Random().Next(min, max);
             if ((max - min) * minChance > random)
             {
                 random = min;
