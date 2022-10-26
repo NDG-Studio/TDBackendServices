@@ -144,7 +144,7 @@ namespace PlayerBaseApi.Services
             {
                 var pH = await _context.PlayerHero.Include(l => l.Hero)
                     .Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId && l.EndDate == null).FirstOrDefaultAsync();
-
+                var oldLevel = pH.CurrentLevel;
                 if (pH == null || req.Data == null)
                 {
                     info.AddInfo(OperationMessages.DbItemNotFound);
@@ -185,6 +185,7 @@ namespace PlayerBaseApi.Services
                         .OrderByDescending(l => l.Level).Select(l => l.Level).FirstOrDefaultAsync();
                     response.Data = true;
                 }
+                pH.TalentPoint += pH.CurrentLevel - oldLevel;
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -257,7 +258,7 @@ namespace PlayerBaseApi.Services
         }
 
 
-        public async Task<TDResponse> AddHeroTalentNodeByNodeId(BaseRequest<int> req, UserDto user) //TODO: yeterli talent point var mı bakılacak
+        public async Task<TDResponse> AddHeroTalentNodeByNodeId(BaseRequest<int> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "AddHeroTalentNodeByNodeId");
@@ -266,6 +267,14 @@ namespace PlayerBaseApi.Services
                 var existEnt = await _context.PlayerTalentTreeNode.Include(l => l.TalentTreeNode).Where(l => l.TalentTreeNodeId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
                 if (existEnt != null)
                 {
+                    var pq = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == existEnt.TalentTreeNode.HeroId).FirstOrDefaultAsync();
+                    if (pq!.TalentPoint < 1)
+                    {
+                        response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                        info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
                     if (existEnt.TalentTreeNode.Capacity == existEnt.Level)
                     {
                         response.SetError(OperationMessages.HeroAllreadyMaxLevel);
@@ -274,6 +283,7 @@ namespace PlayerBaseApi.Services
                         return response;
 
                     }
+                    pq.TalentPoint--;
                     existEnt.Level++;
                 }
                 else
@@ -294,12 +304,22 @@ namespace PlayerBaseApi.Services
                         return response;
                     }
 
+                    var pq = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == ttn.HeroId).FirstOrDefaultAsync();
+                    if (pq!.TalentPoint < 1)
+                    {
+                        response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                        info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+
                     var ent = new PlayerTalentTreeNode()
                     {
                         Level = 1,
                         TalentTreeNodeId = req.Data,
                         UserId = user.Id
                     };
+                    pq.TalentPoint--;
                     await _context.AddAsync(ent);
                 }
                 await _context.SaveChangesAsync();
