@@ -27,7 +27,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<int>> ExecutePrisoners(BaseRequest<int> req, UserDto user);
         Task<TDResponse> PrisonerTrainingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<int>> PrisonerTrainingDoneRequest(BaseRequest req, UserDto user);
-        Task<TDResponse<LootRunResponse>> GetActiveLootRuns(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user);
         Task<TDResponse> OpenCloseAutoRun(BaseRequest<SendLootRunRequest> req, UserDto user);
         Task<TDResponse<LootRunPredictionInfo>> GetLootRunPrediction(BaseRequest<int> req, UserDto user);
         Task<TDResponse> SendLootRun(BaseRequest<SendLootRunRequest> req, UserDto user);

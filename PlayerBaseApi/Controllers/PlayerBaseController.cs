@@ -295,7 +295,7 @@ namespace PlayerBaseApi.Controllers
         
         [LoginRequired]
         [HttpPost("GetActiveLootRuns")]
-        public async Task<TDResponse<LootRunResponse>> GetActiveLootRuns([FromBody] BaseRequest req)
+        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);

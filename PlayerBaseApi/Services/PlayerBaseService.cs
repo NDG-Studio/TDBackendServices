@@ -9,6 +9,7 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using System.Collections.Generic;
 
 namespace PlayerBaseApi.Services
 {
@@ -1152,13 +1153,12 @@ namespace PlayerBaseApi.Services
 
         #region LOOTRUN UTILS
 
-        public async Task<TDResponse<LootRunResponse>> GetActiveLootRuns(BaseRequest req, UserDto user)
+        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user)
         {
-            TDResponse<LootRunResponse> response = new TDResponse<LootRunResponse>();
+            TDResponse<List<PlayerHeroLootDTO>> response = new TDResponse<List<PlayerHeroLootDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetActiveLootRuns");
             try
             {
-                response.Data = new LootRunResponse();
                 //response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
                 //response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
@@ -1177,7 +1177,7 @@ namespace PlayerBaseApi.Services
                             playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
                             gainedResource.StartDate = loot.OperationStartDate.ToString();
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
-                            response.Data.GainedLootRuns.Add(gainedResource);
+                            //response.Data.GainedLootRuns.Add(gainedResource); //TODO: SONRADAN MAIL ISLEMI YAZILACAK
                         }
 
                         var initialDate = loot.OperationEndDate;
@@ -1202,11 +1202,11 @@ namespace PlayerBaseApi.Services
                                 playerBaseInfo!.Scraps += gainedLoots?.ScrapCount ?? 0;
                                 playerBaseInfo!.BluePrints += gainedLoots?.BluePrintCount ?? 0;
                                 playerBaseInfo!.Gems += gainedLoots?.GemCount ?? 0;
-                                response.Data.GainedLootRuns.Add(gainedLoots);
+                                //response.Data.GainedLootRuns.Add(gainedLoots);//TODO: SONRADAN MAIL ISLEMI YAZILACAK
                             }
                             else
                             {
-                                response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(ent));
+                                response.Data.Add(_mapper.Map<PlayerHeroLootDTO>(ent));
                             }
 
                             await _context.AddAsync(ent);
@@ -1218,7 +1218,7 @@ namespace PlayerBaseApi.Services
                     }
                     else
                     {
-                        response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                        response.Data.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
                     }
                 }
 
