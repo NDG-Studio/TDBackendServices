@@ -35,9 +35,10 @@ namespace SocketApi
             //Console.WriteLine($"Server started");
             server = new Server
             {
-                TimeoutTime = ushort.MaxValue 
+                TimeoutTime = ushort.MaxValue
             };
             server.Start(7777, 10000);
+            server.ClientDisconnected += PlayerLeft;
 
             while (isRunning)
             {
@@ -47,6 +48,12 @@ namespace SocketApi
             }
 
             server.Stop();
+        }
+
+        private static void PlayerLeft(object? sender, ServerDisconnectedEventArgs e)
+        {
+            Console.WriteLine(e.ToString());
+            Player.list.Remove(e.Client.Id);
         }
 
     }
