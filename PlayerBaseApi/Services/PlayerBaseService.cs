@@ -447,6 +447,62 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse<string>> SpeedUpUpgradeBuilding(BaseRequest<SpeedUpRequest> req, UserDto user)
+        {
+            TDResponse<string> response = new TDResponse<string>();
+            var info = InfoDetail.CreateInfo(req, "SpeedUpUpgradeBuilding");
+            try
+            {
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerBuilding = await _context.PlayerBasePlacement
+                    .Where(l => l.UserId == user.Id && l.BuildingTypeId == req.Data.GenericId).FirstOrDefaultAsync();
+
+                if (playerBuilding == null || playerBuilding.UpdateEndDate == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerItem = await _context.PlayerItem.Include(l => l.Item)
+                    .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+
+                if (playerItem == null || playerItem.Count < req.Data.Count)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerBuilding.UpdateEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
+                playerItem.Count -= req.Data.Count;
+                await _context.SaveChangesAsync();
+
+                response.Data = playerBuilding.UpdateEndDate.ToString();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingDoneRequest(BaseRequest<int> req, UserDto user)
         {
             TDResponse<PlayerBasePlacementDTO> response = new TDResponse<PlayerBasePlacementDTO>();

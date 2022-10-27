@@ -102,6 +102,33 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.UpgradeBuildingRequest(req, user);
         }
 
+        /// <summary>
+        /// Upgrade islemi devam eden binalarin upgrade islemini hizlandirici kullanarak hizlandirmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// SpeedUpRequest.GenericId = BuildingTypeId degeri
+        /// <br/>
+        /// SpeedUpRequest.ItemId = hizlandirici icin kullanilacak itemin idsi
+        /// <br/>
+        /// SpeedUpRequest.Count = kullanilacak itemin sayisi
+        /// <br/>
+        /// Input: BaseRequest &lt; SpeedUpRequest &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; string &gt;       Not: hizlandirma sonrasi yeni UpgradeEndDate degerini doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpeedUpUpgradeBuilding")]
+        public async Task<TDResponse<string>> SpeedUpUpgradeBuilding([FromBody] BaseRequest<SpeedUpRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpeedUpUpgradeBuilding(req, user);
+        }
+
         [LoginRequired]
         [HttpPost("UpgradeBuildingDoneRequest")]
         public async Task<TDResponse<PlayerBasePlacementDTO>> UpgradeBuildingDoneRequest([FromBody] BaseRequest<int> req)
