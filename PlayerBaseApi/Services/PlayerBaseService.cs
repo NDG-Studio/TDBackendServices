@@ -1179,6 +1179,10 @@ namespace PlayerBaseApi.Services
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
                             //response.Data.GainedLootRuns.Add(gainedResource); //TODO: SONRADAN MAIL ISLEMI YAZILACAK
                         }
+                        else
+                        {
+                            response.Data.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                        }
 
                         var initialDate = loot.OperationEndDate;
                         while (initialDate < DateTimeOffset.Now && initialDate <= loot.AutoLootRunEndDate)
