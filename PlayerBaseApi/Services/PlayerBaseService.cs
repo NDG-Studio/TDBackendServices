@@ -1159,7 +1159,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetActiveLootRuns");
             try
             {
-                //response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
+                response.Data = new List<PlayerHeroLootDTO>();
                 //response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
