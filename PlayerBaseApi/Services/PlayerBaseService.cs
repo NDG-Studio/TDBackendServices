@@ -126,9 +126,9 @@ namespace PlayerBaseApi.Services
                         {
                             TroopCount = 0,
                             UserId = user.Id,
-                            LastTroopCollect=DateTimeOffset.Now,
-                            MaxDuration= TimeSpan.FromHours(12),
-                            TrainingPerHour=100
+                            LastTroopCollect = DateTimeOffset.Now,
+                            MaxDuration = TimeSpan.FromHours(12),
+                            TrainingPerHour = 100
                         };
                         await _context.AddAsync(pTroop);
                         break;
@@ -1096,15 +1096,76 @@ namespace PlayerBaseApi.Services
 
         #region LOOTRUN UTILS
 
-        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user)
+        public async Task<TDResponse<LootRunResponse>> GetActiveLootRuns(BaseRequest req, UserDto user)
         {
-            TDResponse<List<PlayerHeroLootDTO>> response = new TDResponse<List<PlayerHeroLootDTO>>();
+            TDResponse<LootRunResponse> response = new TDResponse<LootRunResponse>();
             var info = InfoDetail.CreateInfo(req, "GetActiveLootRuns");
             try
             {
-                var playerHeroLoot = _context.PlayerHeroLoot.Where(l => l.PlayerHero.UserId == user.Id && l.IsActive);
+                response.Data = new LootRunResponse();
+                //response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
+                //response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
+                var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                foreach (var loot in playerHeroLoot)
+                {
+                    if (loot.AutoLootRunEndDate != null)
+                    {
+                        var oneLootDuration = loot.OperationEndDate - loot.OperationStartDate;
+                        if (DateTimeOffset.Now > loot.OperationEndDate)
+                        {
+                            loot.IsActive = false;
+                            var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(loot.GainedResources);
+                            playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
+                            playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
+                            playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
+                            gainedResource.StartDate = loot.OperationStartDate.ToString();
+                            gainedResource.EndDate = loot.OperationEndDate.ToString();
+                            response.Data.GainedLootRuns.Add(gainedResource);
+                        }
 
-                response.Data = await _mapper.ProjectTo<PlayerHeroLootDTO>(playerHeroLoot).ToListAsync();
+                        var initialDate = loot.OperationEndDate;
+                        while (initialDate < DateTimeOffset.Now && initialDate <= loot.AutoLootRunEndDate)
+                        {
+                            var gainedLoots = await GetLootGainedResource(loot.PlayerHero, initialDate, initialDate + oneLootDuration);
+                            var ent = new PlayerHeroLoot()
+                            {
+                                IsActive = true,
+                                LootLevelId = loot.LootLevelId,
+                                OperationStartDate = initialDate,
+                                OperationEndDate = initialDate + oneLootDuration,
+                                GainedResources = JsonConvert.SerializeObject(gainedLoots),
+                                PlayerHeroId = loot.PlayerHeroId,
+                                AutoLootRunEndDate = loot.AutoLootRunEndDate,
+                                PlayerHero = loot.PlayerHero
+                            };
+
+                            if (ent.OperationEndDate < DateTimeOffset.Now)
+                            {
+                                ent.IsActive = false;
+                                playerBaseInfo!.Scraps += gainedLoots?.ScrapCount ?? 0;
+                                playerBaseInfo!.BluePrints += gainedLoots?.BluePrintCount ?? 0;
+                                playerBaseInfo!.Gems += gainedLoots?.GemCount ?? 0;
+                                response.Data.GainedLootRuns.Add(gainedLoots);
+                            }
+                            else
+                            {
+                                response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(ent));
+                            }
+
+                            await _context.AddAsync(ent);
+
+                            initialDate += oneLootDuration;
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                    }
+                }
+
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -1118,7 +1179,6 @@ namespace PlayerBaseApi.Services
 
             return response;
         }
-
         public async Task<TDResponse<LootRunPredictionInfo>> GetLootRunPrediction(BaseRequest<int> req, UserDto user)
         {
             TDResponse<LootRunPredictionInfo> response = new TDResponse<LootRunPredictionInfo>();
@@ -1184,6 +1244,7 @@ namespace PlayerBaseApi.Services
             return response;
         }
 
+        [Obsolete("deprecated", true)]
         public async Task<TDResponse<string>> SpeedUpLootRun(BaseRequest<SpeedUpRequest> req, UserDto user)
         {
             TDResponse<string> response = new TDResponse<string>();
@@ -1239,8 +1300,7 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-
-        public async Task<TDResponse> SendLootRun(BaseRequest<int> req, UserDto user)
+        public async Task<TDResponse> SendLootRun(BaseRequest<SendLootRunRequest> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "SendLootRun");
@@ -1256,7 +1316,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var playerHero = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data).FirstOrDefaultAsync();
+                var playerHero = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId).FirstOrDefaultAsync();
                 if (playerHero == null) //TODO: 2 HERO GÖNDERME İŞLEMİ SONRA YAPILACAK
                 {
                     response.SetError(OperationMessages.PlayerHaveNoHero);
@@ -1268,7 +1328,7 @@ namespace PlayerBaseApi.Services
 
 
                 var lootLevelId = await _context.PlayerBasePlacement
-                    .Where(l => l.UserId == user.Id && l.BuildingTypeId == 8)//8 watch tower
+                    .Where(l => l.UserId == playerHero.UserId && l.BuildingTypeId == 8)//8 watch tower
                     .Select(l => l.BuildingLevel).FirstOrDefaultAsync();
 
                 var lootLevel = await _context.LootLevel
@@ -1279,8 +1339,8 @@ namespace PlayerBaseApi.Services
                 var heroLevelBuff = await _context.HeroLevelThreshold.Include(l => l.Buff)
                     .Where(l => l.HeroId == playerHero.HeroId && l.Level == playerHero.CurrentLevel).Select(l => l.Buff).FirstOrDefaultAsync();
 
-                var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff).Where(l => l.UserId == user.Id && l.HeroSkillLevel.HeroSkill
-                .HeroId == req.Data).ToListAsync();
+                var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff)
+                    .Where(l => l.UserId == playerHero.UserId && l.HeroSkillLevel.HeroSkill.HeroId == playerHero.HeroId).ToListAsync();
 
                 var totalScrapMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootScrapMultiplier) ?? 0) + heroLevelBuff.LootScrapMultiplier;
                 var totalBluePrintMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootBluePrintMultiplier) ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
@@ -1299,12 +1359,13 @@ namespace PlayerBaseApi.Services
                 var ent = new PlayerHeroLoot()
                 {
                     LootLevelId = lootLevelId,
-                    PlayerHeroId = await _context.PlayerHero.Where(l => l.HeroId == req.Data && l.UserId == user.Id).Select(l => l.Id).FirstOrDefaultAsync(),
+                    PlayerHeroId = await _context.PlayerHero.Where(l => l.HeroId == req.Data.HeroId && l.UserId == user.Id).Select(l => l.Id).FirstOrDefaultAsync(),
                     OperationEndDate = DateTimeOffset.Now + (lootLevel.LootDuration + lootLevel.LootDuration * totalDurationMultiplier),
                     OperationStartDate = DateTimeOffset.Now,
                     GainedResources = JsonConvert.SerializeObject(calculated),
                     IsActive = true,
-                    LootLevel = lootLevel
+                    LootLevel = lootLevel,
+                    AutoLootRunEndDate = req.Data.AutoLootRun ? DateTimeOffset.Now + TimeSpan.FromHours(8) : null
                 };
 
                 await _context.AddAsync(ent);
@@ -1322,7 +1383,38 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        public async Task<TDResponse> OpenCloseAutoRun(BaseRequest<SendLootRunRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SendLootRun");
+            try
+            {
+                var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).FirstOrDefaultAsync();
 
+                if (playerHeroLoot == null) //TODO: 2 HERO GÖNDERME İŞLEMİ SONRA YAPILACAK
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerHeroLoot.AutoLootRunEndDate = req.Data.AutoLootRun ? DateTimeOffset.Now + TimeSpan.FromHours(8) : null;
+
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         public async Task<TDResponse<LootRunDoneInfoDTO>> LootRunDoneRequest(BaseRequest<int> req, UserDto user)
         {
             TDResponse<LootRunDoneInfoDTO> response = new TDResponse<LootRunDoneInfoDTO>();
@@ -1957,7 +2049,7 @@ namespace PlayerBaseApi.Services
             {
 
                 var pq = _context.PlayerItem.Include(l => l.Item)
-                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.Count>0).OrderBy(l => l.ItemId);
+                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.Count > 0).OrderBy(l => l.ItemId);
                 var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
 
                 response.Data = playerItems;
@@ -2047,10 +2139,46 @@ namespace PlayerBaseApi.Services
                 DefenseMultiplier = playerBuffs.Sum(l => l.DefenseMultiplier),
                 SpyFakerMultiplier = playerBuffs.Sum(l => l.SpyFakerMultiplier),
                 TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopCapacityMultiplier),
-                AutoLootRunActive = playerBuffs.Any(l=>l.AutoLootRunActive),
-                CityShieldActive = playerBuffs.Any(l=>l.CityShieldActive),
-                SpyProtectionActive = playerBuffs.Any(l=>l.SpyProtectionActive)
+                AutoLootRunActive = playerBuffs.Any(l => l.AutoLootRunActive),
+                CityShieldActive = playerBuffs.Any(l => l.CityShieldActive),
+                SpyProtectionActive = playerBuffs.Any(l => l.SpyProtectionActive)
             };
+        }
+
+
+        private async Task<LootRunDoneInfoDTO> GetLootGainedResource(PlayerHero playerHero, DateTimeOffset StartDate, DateTimeOffset EndDate)
+        {
+
+            var lootLevelId = await _context.PlayerBasePlacement
+                .Where(l => l.UserId == playerHero.UserId && l.BuildingTypeId == 8)//8 watch tower
+                .Select(l => l.BuildingLevel).FirstOrDefaultAsync();
+
+            var lootLevel = await _context.LootLevel
+                .Where(l => l.Id == lootLevelId).FirstOrDefaultAsync();
+
+            var heroLevelBuff = await _context.HeroLevelThreshold.Include(l => l.Buff)
+                .Where(l => l.HeroId == playerHero.HeroId && l.Level == playerHero.CurrentLevel).Select(l => l.Buff).FirstOrDefaultAsync();
+
+            var heroSkillBuffs = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff)
+                .Where(l => l.UserId == playerHero.UserId && l.HeroSkillLevel.HeroSkill.HeroId == playerHero.HeroId).ToListAsync();
+
+            var totalScrapMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootScrapMultiplier) ?? 0) + heroLevelBuff.LootScrapMultiplier;
+            var totalBluePrintMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootBluePrintMultiplier) ?? 0) + heroLevelBuff.LootBluePrintMultiplier;
+            var totalGemMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootGemMultiplier) ?? 0) + heroLevelBuff.LootGemMultiplier;
+            var totalDurationMultiplier = (heroSkillBuffs?.Sum(l => l.HeroSkillLevel.Buff.LootDurationMultiplier) ?? 0) + heroLevelBuff.LootDurationMultiplier;
+
+            var calculated = new LootRunDoneInfoDTO()
+            {
+                ScrapCount = LootRandomer.GetRandomResource(lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier), lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
+                GemCount = LootRandomer.GetRandomResource(lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
+                BluePrintCount = LootRandomer.GetRandomResource(lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier)),
+                StartDate = StartDate.ToString(),
+                EndDate = EndDate.ToString()
+
+            };
+
+
+            return calculated;
         }
 
         #endregion

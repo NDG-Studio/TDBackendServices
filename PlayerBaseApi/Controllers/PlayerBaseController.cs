@@ -268,12 +268,22 @@ namespace PlayerBaseApi.Controllers
         
         [LoginRequired]
         [HttpPost("GetActiveLootRuns")]
-        public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns([FromBody] BaseRequest req)
+        public async Task<TDResponse<LootRunResponse>> GetActiveLootRuns([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetActiveLootRuns(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("OpenCloseAutoRun")]
+        public async Task<TDResponse> OpenCloseAutoRun([FromBody] BaseRequest<SendLootRunRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.OpenCloseAutoRun(req, user);
         }        
         
         [LoginRequired]
@@ -288,7 +298,7 @@ namespace PlayerBaseApi.Controllers
                 
         [LoginRequired]
         [HttpPost("SendLootRun")]
-        public async Task<TDResponse> SendLootRun([FromBody] BaseRequest<int> req)
+        public async Task<TDResponse> SendLootRun([FromBody] BaseRequest<SendLootRunRequest> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
