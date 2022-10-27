@@ -6,6 +6,7 @@ using MapApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using MapApi;
+using MapApi.Enums;
 
 namespace MapApi.Services
 {
@@ -265,6 +266,30 @@ namespace MapApi.Services
 
         }
 
+        #region GATE UTILS
+        public async Task<TDResponse<List<MapItemDTO>>> GetAllGates(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<MapItemDTO>> response = new TDResponse<List<MapItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetAllGates");
+            try
+            {
+                var q = _context.MapItem.Include(l=>l.Gate)
+                    .Where(l => l.MapItemTypeId == (int)MapItemTypeEnum.Gate);
+                response.Data =await _mapper.ProjectTo<MapItemDTO>(q).ToListAsync();
 
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
     }
 }

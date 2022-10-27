@@ -11,6 +11,7 @@ namespace MapApi.MapperProfiles
             CreateMap<MapItemType, MapItemTypeDTO>();
             CreateMap<MapItem, MapItemDTO>();
             CreateMap<MapItem, MapInfoDto>();
+            CreateMap<Gate, GateDTO>();
         }
 
     }

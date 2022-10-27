@@ -7,5 +7,6 @@
         public int CoordX { get; set; }
         public int CoordY { get; set; }
         public int BaseLevel { get; set; }
+        public GateDTO? Gate { get; set; } = null;
     }
 }
