@@ -2100,7 +2100,34 @@ namespace PlayerBaseApi.Services
 
         }
         #endregion
+        public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerTroopInfoDTO> response = new TDResponse<PlayerTroopInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerTroopInfo");
+            try
+            {
+                var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerTroops == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                response.Data = _mapper.Map<PlayerTroopInfoDTO>(playerTroops);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
 
+        }
         public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user)
         {
             TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();

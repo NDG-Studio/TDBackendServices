@@ -76,8 +76,12 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<Dialog, DialogDTO>()
                 .ForMember(dest => dest.Texts, operations => operations
                 .MapFrom(
-                    source => source.Text.Split("_,_",StringSplitOptions.None).ToList())); 
+                    source => source.Text.Split("_,_",StringSplitOptions.None).ToList()));
 
+            CreateMap<PlayerTroop, PlayerTroopInfoDTO>()
+                .ForMember(dest => dest.LastTroopCollect, operations => operations
+                .MapFrom(
+                    source => source.LastTroopCollect != null ? source.LastTroopCollect.ToString() : null));
 
         }
 

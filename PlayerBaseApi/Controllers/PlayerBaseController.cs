@@ -541,5 +541,27 @@ namespace PlayerBaseApi.Controllers
         }
 
 
+        /// <summary>
+        /// Player troop bilgisini doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse&lt; PlayerTroopInfoDTO &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerTroopInfo")]
+        public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPlayerTroopInfo(req, user);
+        }
+
+
     }
 }
