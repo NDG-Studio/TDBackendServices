@@ -109,6 +109,33 @@ services:
             - Logging__Database__LogLevel__Default=Information
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+    #socketapi:
+    #    image:  ugurcanbagriyanik/socketapi
+    #    stdin_open: true
+    #    tty: true
+    #    mem_limit: 1g
+    #    build:
+    #        context: .
+    #        dockerfile: SocketApi/Dockerfile
+    websocket:
+        #networks:
+        #    - isolation-network
+        image: ugurcanbagriyanik/websocket
+        mem_limit: 1g
+        build:
+            context: .
+            dockerfile: WebSocket/Dockerfile
+        environment:
+            - ConnectionStrings__MapContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
+            - IdentityEndpoint=https://identityapi
+            - Logging__LogLevel__Default=Information
+            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
+            - Logging__Database__Options__LogTable=Log
+            - Logging__Database__Options__LogInfoTable=LogAction
+            - Logging__Database__LogLevel__Default=Information
+            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
 
 volumes:
     identitydb_volume:
