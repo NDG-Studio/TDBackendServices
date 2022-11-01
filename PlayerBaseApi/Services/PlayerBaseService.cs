@@ -2059,7 +2059,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks(BaseRequest req, UserDto user)
         {
             TDResponse<CollectTroopResponse> response = new TDResponse<CollectTroopResponse>();
-            var info = InfoDetail.CreateInfo(req, "CollectBaseResources");
+            var info = InfoDetail.CreateInfo(req, "CollectTroopsFromBarracks");
             try
             {
                 var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
