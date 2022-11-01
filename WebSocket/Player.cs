@@ -111,8 +111,8 @@ namespace WebSocket
             if (user != null && !Player.list.Where(l => l.Value.UniqueId == user.Id).Any())
             {
 
-                Create(pendingConnection.Id, user.Id, user.Username, token);
                 ServerProgram.server.Accept(pendingConnection);
+                Create(pendingConnection.Id, user.Id, user.Username, token);
             }
             else
             {
