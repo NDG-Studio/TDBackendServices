@@ -13,7 +13,6 @@ namespace WebSocket.Socket
     {
         public static Server server { get; set; }
         private static bool isRunning = false;
-        public static NewsService newsService;
         public static void Start()
         {
             RiptideLogger.Initialize(Console.WriteLine, true);

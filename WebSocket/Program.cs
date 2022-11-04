@@ -93,7 +93,6 @@ using (var serviceScope = app.Services
 }
 
 ServerProgram.Start();
-ServerProgram.newsService = app.Services.GetService<NewsService>()!;
 
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<ApiMiddleware>();
