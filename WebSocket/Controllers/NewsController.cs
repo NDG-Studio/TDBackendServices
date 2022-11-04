@@ -25,6 +25,13 @@ public class NewsController : ControllerBase
         return await _newsService.SendImportantNews(req.Data);
     }
 
+    [OnlyAdmin]
+    [HttpPost("SendAnnouncment")]
+    public async Task<TDResponse> SendAnnouncment([FromBody] BaseRequest<ImportantNews> req)
+    {
+        return await _newsService.SendAnnouncment(req.Data);
+    }
+
 
 
 }
