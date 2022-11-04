@@ -9,7 +9,6 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
-using System.Collections.Generic;
 
 namespace PlayerBaseApi.Services
 {
@@ -73,7 +72,6 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-
 
         public async Task<TDResponse> AddPlayerBaseBuilding(BaseRequest<PlayerBaseBuildingRequest> req, UserDto user)
         {
@@ -1276,14 +1274,14 @@ namespace PlayerBaseApi.Services
 
                 var calculated = new LootRunPredictionInfo()
                 {
-                    MinScrapCount = lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier),
-                    MaxScrapCount = lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier),
+                    MinScrapCount = (int)(lootLevel.MinScrapCount * totalScrapMultiplier),
+                    MaxScrapCount = (int)(lootLevel.MaxScrapCount * totalScrapMultiplier),
+                    ScrapHeroLevelBonus = totalScrapMultiplier,
+                    BlueprintDoubleChance = totalBluePrintMultiplier,
                     MinGemCount = lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier),
                     MaxGemCount = lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier),
-                    MinBluePrintCount = lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier),
-                    MaxBluePrintCount = lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier),
+                    MinBluePrintCount = lootLevel.MinBlueprintCount,
                     LootDuration = lootLevel.LootDuration + (lootLevel.LootDuration * totalDurationMultiplier)
-
                 };
 
                 #endregion
@@ -1409,9 +1407,11 @@ namespace PlayerBaseApi.Services
 
                 var calculated = new LootRunDoneInfoDTO()
                 {
-                    ScrapCount = LootRandomer.GetRandomResource(lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier), lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
-                    GemCount = LootRandomer.GetRandomResource(lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
-                    BluePrintCount = LootRandomer.GetRandomResource(lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier)),
+                    ScrapCount = LootRandomer.GetRandomScrap((int)(lootLevel.MinScrapCount * totalScrapMultiplier), (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
+                    GemCount = LootRandomer.GetRandomGem((int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
+                    BluePrintCount = LootRandomer.GetRandomBlueprint(lootLevel.MinBlueprintCount, totalBluePrintMultiplier),
+                    StartDate = DateTimeOffset.Now.ToString(),
+                    EndDate = (DateTimeOffset.Now + (lootLevel.LootDuration + lootLevel.LootDuration * totalDurationMultiplier)).ToString(),
                 };
 
                 #endregion
@@ -2100,6 +2100,8 @@ namespace PlayerBaseApi.Services
 
         }
         #endregion
+
+
         public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user)
         {
             TDResponse<PlayerTroopInfoDTO> response = new TDResponse<PlayerTroopInfoDTO>();
@@ -2256,9 +2258,9 @@ namespace PlayerBaseApi.Services
 
             var calculated = new LootRunDoneInfoDTO()
             {
-                ScrapCount = LootRandomer.GetRandomResource(lootLevel.MinScrapCount + (int)(lootLevel.MinScrapCount * totalScrapMultiplier), lootLevel.MaxScrapCount + (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
-                GemCount = LootRandomer.GetRandomResource(lootLevel.MinGemCount + (int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
-                BluePrintCount = LootRandomer.GetRandomResource(lootLevel.MinBlueprintCount + (int)(lootLevel.MinBlueprintCount * totalBluePrintMultiplier), lootLevel.MaxBlueprintCount + (int)(lootLevel.MaxBlueprintCount * totalBluePrintMultiplier)),
+                ScrapCount = LootRandomer.GetRandomScrap((int)(lootLevel.MinScrapCount * totalScrapMultiplier), (int)(lootLevel.MaxScrapCount * totalScrapMultiplier)),
+                GemCount = LootRandomer.GetRandomGem((int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
+                BluePrintCount = LootRandomer.GetRandomBlueprint(lootLevel.MinBlueprintCount, totalBluePrintMultiplier),
                 StartDate = StartDate.ToString(),
                 EndDate = EndDate.ToString()
 

@@ -85,6 +85,7 @@ using (var serviceScope = app.Services
     using (var context = serviceScope.ServiceProvider.GetService<PlayerBaseContext>())
     {
         context.Database.Migrate();
+        //context.CreateHeroLevelBuffs();
     }
 }
 app.UseCors("ALLACCESSPOLICY");

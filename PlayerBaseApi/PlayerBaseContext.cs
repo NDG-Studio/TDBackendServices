@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Entities;
+using PlayerBaseApi.Enums;
 using SharedLibrary.Entities;
 
 namespace PlayerBaseApi
@@ -95,7 +96,7 @@ namespace PlayerBaseApi
                 new ResearchTable() { Id = 4, Name = "Tower Defense Research", ThumbnailUrl = "https://gaming.ndgstudio.com.tr/wp-content/uploads/2021/09/h1-client-img-6.png" }
                 );
 
-                var c = 1;
+            var c = 1;
 
             #endregion
 
@@ -383,7 +384,7 @@ namespace PlayerBaseApi
 
 
 
-                #endregion
+            #endregion
 
             //    #region LootLevel
             //    List<LootLevel> lootLevels = new List<LootLevel>();
@@ -405,6 +406,35 @@ namespace PlayerBaseApi
             //    #endregion
         }
 
+
+        public void CreateHeroLevelBuffs()
+        {
+            var query = HeroLevelThreshold.Include(l => l.Hero).Include(l => l.Buff).OrderBy(l => l.Level).ToList();
+            foreach (var hl in query)
+            {
+                double k = 0;
+                double l = 0;
+
+                switch (hl.Hero.Rarity)
+                {
+                    case (int)HeroRarity.Rare:
+                        k = 0.01;
+                        l = 1.05;
+                        break;
+                    case (int)HeroRarity.Epic:
+                        k = 0.012;
+                        l = 1.10;
+                        break;
+                    case (int)HeroRarity.Legendary:
+                        k = 0.014;
+                        l = 1.20;
+                        break;
+                }
+                hl.Buff.LootBluePrintMultiplier = Math.Round(k * hl.Level, 4);
+                hl.Buff.LootScrapMultiplier = Math.Round(l * hl.Level, 2);
+                SaveChanges();
+            }
+        }
         #endregion
     }
 }
