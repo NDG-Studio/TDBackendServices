@@ -1,4 +1,6 @@
-﻿namespace PlayerBaseApi.Models
+﻿using SharedLibrary.Models.Hero;
+
+namespace SharedLibrary.Models.Loot
 {
     public class PlayerHeroLootDTO
     {

@@ -1,4 +1,4 @@
-﻿namespace PlayerBaseApi.Models
+﻿namespace SharedLibrary.Models.Loot
 {
     public class LootRunResponse
     {

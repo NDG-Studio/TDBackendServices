@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Hero;
 
 namespace PlayerBaseApi.Controllers
 {

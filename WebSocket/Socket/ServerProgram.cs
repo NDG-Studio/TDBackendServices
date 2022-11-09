@@ -17,8 +17,7 @@ namespace WebSocket.Socket
         {
             RiptideLogger.Initialize(Console.WriteLine, true);
             isRunning = true;
-
-
+            Message.MaxPayloadSize = 30000;
             new Thread(new ThreadStart(Update)).Start();
             
         }

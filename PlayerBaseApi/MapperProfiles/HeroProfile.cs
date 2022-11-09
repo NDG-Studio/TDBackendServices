@@ -8,7 +8,7 @@ namespace PlayerBaseApi.MapperProfiles
 
         public HeroProfile(){
 
-            CreateMap<Hero, HeroDTO>();
+            CreateMap<Hero, SharedLibrary.Models.Hero.HeroDTO>();
             CreateMap<PlayerHero, PlayerHeroDTO>()
                 .ForMember(dest => dest.EndDate, operations => operations
                 .MapFrom(

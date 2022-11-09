@@ -9,6 +9,7 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Loot;
 
 namespace PlayerBaseApi.Services
 {
@@ -1151,6 +1152,7 @@ namespace PlayerBaseApi.Services
 
         #region LOOTRUN UTILS
 
+        [Obsolete("deprecated", true)]
         public async Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user)
         {
             TDResponse<List<PlayerHeroLootDTO>> response = new TDResponse<List<PlayerHeroLootDTO>>();
@@ -1221,6 +1223,88 @@ namespace PlayerBaseApi.Services
                     else
                     {
                         response.Data.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                    }
+                }
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+        public async Task<TDResponse<LootRunResponse>> GetActiveLootRunsForSocket(BaseRequest req, UserDto user)
+        {
+            TDResponse<LootRunResponse> response = new TDResponse<LootRunResponse>();
+            var info = InfoDetail.CreateInfo(req, "GetActiveLootRuns");
+            try
+            {
+                response.Data = new LootRunResponse();
+                response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
+                response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
+                var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                foreach (var loot in playerHeroLoot)
+                {
+                    if (loot.AutoLootRunEndDate != null)
+                    {
+                        var oneLootDuration = loot.OperationEndDate - loot.OperationStartDate;
+                        if (DateTimeOffset.Now > loot.OperationEndDate)
+                        {
+                            loot.IsActive = false;
+                            var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(loot.GainedResources);
+                            gainedResource.StartDate = loot.OperationStartDate.ToString();
+                            gainedResource.EndDate = loot.OperationEndDate.ToString();
+                            response.Data.GainedLootRuns.Add(gainedResource);
+                        }
+                        else
+                        {
+                            response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                        }
+
+                        var initialDate = loot.OperationEndDate;
+                        while (initialDate < DateTimeOffset.Now && initialDate <= loot.AutoLootRunEndDate)
+                        {
+                            var gainedLoots = await GetLootGainedResource(loot.PlayerHero, initialDate, initialDate + oneLootDuration);
+                            var ent = new PlayerHeroLoot()
+                            {
+                                IsActive = true,
+                                LootLevelId = loot.LootLevelId,
+                                OperationStartDate = initialDate,
+                                OperationEndDate = initialDate + oneLootDuration,
+                                GainedResources = JsonConvert.SerializeObject(gainedLoots),
+                                PlayerHeroId = loot.PlayerHeroId,
+                                AutoLootRunEndDate = loot.AutoLootRunEndDate,
+                                PlayerHero = loot.PlayerHero
+                            };
+
+                            if (ent.OperationEndDate < DateTimeOffset.Now)
+                            {
+                                ent.IsActive = false;
+                                response.Data.GainedLootRuns.Add(gainedLoots);
+                            }
+                            else
+                            {
+                                response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(ent));
+                            }
+
+                            await _context.AddAsync(ent);
+
+                            initialDate += oneLootDuration;
+                        }
+
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
                     }
                 }
 
@@ -1492,7 +1576,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                if ((playerHeroLoot.OperationEndDate - DateTimeOffset.Now).TotalMilliseconds > 0)
+                if ((playerHeroLoot.OperationEndDate - DateTimeOffset.Now).TotalSeconds > 2)
                 {
                     response.SetError(OperationMessages.ProcessAllreadyExist);
                     info.AddInfo(OperationMessages.ProcessAllreadyExist);
@@ -1501,11 +1585,26 @@ namespace PlayerBaseApi.Services
                 }
 
                 playerHeroLoot.IsActive = false;
+                if (playerHeroLoot.AutoLootRunEndDate >= playerHeroLoot.OperationEndDate)
+                {
+                    var gained = await GetLootGainedResource(playerHeroLoot.PlayerHero, playerHeroLoot.OperationEndDate, (playerHeroLoot.OperationEndDate + (playerHeroLoot.OperationEndDate - playerHeroLoot.OperationStartDate)));
+                    var phl = new PlayerHeroLoot()
+                    {
+                        IsActive = true,
+                        OperationEndDate = playerHeroLoot.OperationEndDate + (playerHeroLoot.OperationEndDate - playerHeroLoot.OperationStartDate),
+                        AutoLootRunEndDate = playerHeroLoot.AutoLootRunEndDate,
+                        OperationStartDate = playerHeroLoot.OperationEndDate,
+                        LootLevelId = playerHeroLoot.LootLevelId,
+                        PlayerHeroId = playerHeroLoot.PlayerHeroId,
+                        GainedResources = JsonConvert.SerializeObject(gained)
+                    };
+                    await _context.AddAsync(phl);
+                }
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(playerHeroLoot.GainedResources);
-                playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
-                playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
-                playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
+                //playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
+                //playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
+                //playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
 
                 await _context.SaveChangesAsync();
 

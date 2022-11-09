@@ -1,7 +1,10 @@
-﻿namespace WebSocket.Models
+﻿using Riptide;
+
+namespace WebSocket.Models
 {
     public class NewsDTO
     {
+        public string Id { get; set; }
         public int TypeId { get; set; } // enum
         public string? Title { get; set; } //all
         public string? Detail { get; set; } //all

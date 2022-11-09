@@ -1,5 +1,6 @@
 ﻿using PlayerBaseApi.Models;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Loot;
 
 namespace PlayerBaseApi.Interfaces
 {
@@ -28,6 +29,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> PrisonerTrainingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<int>> PrisonerTrainingDoneRequest(BaseRequest req, UserDto user);
         Task<TDResponse<List<PlayerHeroLootDTO>>> GetActiveLootRuns(BaseRequest req, UserDto user);
+        Task<TDResponse<LootRunResponse>> GetActiveLootRunsForSocket(BaseRequest req, UserDto user);
         Task<TDResponse> OpenCloseAutoRun(BaseRequest<SendLootRunRequest> req, UserDto user);
         Task<TDResponse<LootRunPredictionInfo>> GetLootRunPrediction(BaseRequest<int> req, UserDto user);
         Task<TDResponse> SendLootRun(BaseRequest<SendLootRunRequest> req, UserDto user);

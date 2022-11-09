@@ -4,6 +4,7 @@ using PlayerBaseApi.Services;
 using Riptide;
 using SharedLibrary.Models;
 using System.Net.Security;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -17,24 +18,27 @@ namespace WebSocket.Socket
     public class Player
     {
         public static Dictionary<long, Player> list = new Dictionary<long, Player>();
-        private static string IdentityUrl = "";
-        private static string PlayerBaseUrl = "";
+        public static string IdentityUrl = "";
+        public static string PlayerBaseUrl = "";
         public ushort Id { get; private set; }
         public string Username { get; private set; }
         public long UniqueId { get; private set; }
         private string Token { get; set; }
+        public string GetToken() => Token;
+        private InfoDto Info { get; set; }
+        public InfoDto GetInfo() => Info;
 
-
-        public static void Create(ushort id, long userId, string username, string token)
+        public static void Create(ushort id, long userId, string username, string token, InfoDto info)
         {
             Player player = new Player();
             player.Username = username;
             player.UniqueId = userId;
             player.Id = id;
             player.Token = token;
+            player.Info = info;
             list.Add(userId, player);
 
-            DbService.SetUserActivity(userId, DateTimeOffset.Now, true);
+            DbService.SetUserActivity(player, DateTimeOffset.Now, true);
         }
 
 
@@ -44,16 +48,16 @@ namespace WebSocket.Socket
         [MessageHandler((ushort)MessageEndpointId.handshake)]
         private static void handshake(ushort fromClientId, Message message)
         {
-            var token = message.GetString();
-            var user = Checkuser(token);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
-            if (user != null && !list.Where(l => l.Value.UniqueId == user.Id).Any())
-            {
-                Create(fromClientId, user.Id, user.Username, token);
-            }
-            else
-            {
-                ServerProgram.server.DisconnectClient(fromClientId);
-            }
+            //var token = message.GetString();
+            //var user = Checkuser(token);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
+            //if (user != null && !list.Where(l => l.Value.UniqueId == user.Id).Any())
+            //{
+            //    Create(fromClientId, user.Id, user.Username, token);
+            //}
+            //else
+            //{
+            //    ServerProgram.server.DisconnectClient(fromClientId);
+            //}
 
         }
 
@@ -67,19 +71,19 @@ namespace WebSocket.Socket
         private static void RefreshNews(ushort fromClientId, Message message)
         {
             var player = list.Values.FirstOrDefault(l => l.Id == fromClientId)?.UniqueId;
-            if (player==null)
+            if (player == null)
             {
                 return;
             }
             DbService.SendNews(null, player.Value, null);
-          
+
         }
 
         #endregion
 
 
 
-        private static UserDto? Checkuser(string token)
+        private static UserDto? Checkuser(string token, InfoDto info)
         {
             var handler = new HttpClientHandler();
 
@@ -107,16 +111,7 @@ errors
                         new BaseRequest<string>()
                         {
                             Data = token,
-                            Info = new InfoDto()
-                            {
-                                DeviceId = "socket",
-                                AppVersion = "dsad",
-                                DeviceModel = "dsadsa",
-                                Ip = "123ds1a2d1a3s",
-                                UserId = 12,
-                                DeviceType = "dsadsa",
-                                OsVersion = "1"
-                            }
+                            Info = info
                         }
                         ), Encoding.UTF8, "application/json")).Result;
                 if (response.IsSuccessStatusCode)
@@ -162,9 +157,9 @@ errors
 
                 Console.WriteLine(e.Message);
             }
-        }        
-        
-        public static void SendNewNews(long userId,List<NewsDTO> message)
+        }
+
+        public static void SendNewNews(long userId, List<NewsDTO> message)
         {
             try
             {
@@ -187,6 +182,7 @@ errors
         }
         public static void KickPlayerByUniqueId(long id)
         {
+            DbService.SetUserActivity(list[id], DateTimeOffset.Now, false);
             ServerProgram.server.DisconnectClient(list[id].Id);
 
         }
@@ -194,13 +190,14 @@ errors
         public static void ConnectionAttemptHandler(Connection pendingConnection, Message connectMessage)
         {
             var token = connectMessage.GetString();
-            var user = Checkuser(token);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
+            var info = connectMessage.GetModel<InfoDto>();
+            var user = Checkuser(token, info);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
             var c = new Player();
-            if (user != null && !list.TryGetValue(user.Id,out c))
+            if (user != null && !list.TryGetValue(user.Id, out c))
             {
 
                 ServerProgram.server.Accept(pendingConnection);
-                Create(pendingConnection.Id, user.Id, user.Username, token);
+                Create(pendingConnection.Id, user.Id, user.Username, token, info);
             }
             else
             {

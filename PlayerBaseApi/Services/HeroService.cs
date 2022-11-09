@@ -6,6 +6,7 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Hero;
 
 namespace PlayerBaseApi.Services
 {

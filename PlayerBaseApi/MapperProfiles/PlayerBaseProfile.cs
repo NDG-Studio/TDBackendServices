@@ -1,6 +1,8 @@
 using AutoMapper;
 using PlayerBaseApi.Models;
 using PlayerBaseApi.Entities;
+using SharedLibrary.Models.Loot;
+
 namespace PlayerBaseApi.MapperProfiles
 {
     public class PlayerBaseProfile : Profile

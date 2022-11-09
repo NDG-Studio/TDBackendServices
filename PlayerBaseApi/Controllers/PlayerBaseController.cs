@@ -3,6 +3,7 @@ using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using PlayerBaseApi.Services;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Loot;
 
 namespace PlayerBaseApi.Controllers
 {
@@ -301,6 +302,16 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetActiveLootRuns(req, user);
+        }          
+        
+        [LoginRequired]
+        [HttpPost("GetActiveLootRunsForSocket")]
+        public async Task<TDResponse<LootRunResponse>> GetActiveLootRunsForSocket([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetActiveLootRunsForSocket(req, user);
         }        
         
         [LoginRequired]
