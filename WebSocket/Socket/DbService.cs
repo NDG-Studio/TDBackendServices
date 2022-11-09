@@ -127,7 +127,7 @@ namespace WebSocket.Socket
 
             }
         }
-        public static async Task RefreshLootRuns(WebSocketContext? _context, Player player, UserActivity? userActivity)
+        public static async Task RefreshLootRuns(WebSocketContext? _context, Player player, UserActivity? userActivity, bool sendNews = false)
         {
             try
             {
@@ -166,7 +166,10 @@ namespace WebSocket.Socket
                 Message lootMessage = Message.Create(MessageSendMode.Reliable, MessageEndpointId.ActiveLootRuns);
                 lootMessage.AddModel(res.ActiveLootRuns);
                 ServerProgram.server.Send(lootMessage, ServerProgram.server.Clients.First(l => l.Id == player.Id));
-
+                if (sendNews)
+                {
+                    Player.SendNewsRefreshNeeded(player.UniqueId);
+                }
 
                 if (g == null)
                 {
@@ -187,23 +190,11 @@ namespace WebSocket.Socket
             var handler = new HttpClientHandler();
 
             handler.ServerCertificateCustomValidationCallback =
-            (
-message,
-cert,
-chain,
-errors
-             ) =>
-            { return true; }; //TODO: Prodda silinmeli
+                (message, cert, chain, errors) =>
+                    { return true; }; //TODO: Prodda silinmeli
 
             using (HttpClient client = new HttpClient(handler))
             {
-                //var request = new HttpRequestMessage
-                //{
-                //    Method = HttpMethod.Post,
-                //    RequestUri = new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken"),
-                //    Content = new StringContent((new BaseRequest<string>() { Data = token, Info = info }).ToString()!, Encoding.UTF8, "application/json")
-
-                //};
                 client.DefaultRequestHeaders.Authorization
                          = new AuthenticationHeaderValue("Bearer", token);
 

@@ -142,6 +142,7 @@ namespace PlayerBaseApi.Controllers
         
         [LoginRequired]
         [HttpPost("CollectBaseResources")]
+        [Obsolete("deprecated", true)]
         public async Task<TDResponse<CollectBaseResponse>> CollectBaseResources([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);

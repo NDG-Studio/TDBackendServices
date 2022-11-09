@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Entities;
 using PlayerBaseApi.Enums;
 using SharedLibrary.Entities;
+using SharedLibrary.Models;
 
 namespace PlayerBaseApi
 {
@@ -15,11 +16,19 @@ namespace PlayerBaseApi
             Database.Migrate();
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__PlayerBaseContext"));
+            }
+        }
+
         public DbSet<Buff> Buff { get; set; }
         public DbSet<PlayerBuff> PlayerBuff { get; set; }
         public DbSet<BuildingType> BuildingType { get; set; }
         public DbSet<PlayerBasePlacement> PlayerBasePlacement { get; set; }
-        public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; }
+        public DbSet<PlayerBaseInfo> PlayerBaseInfo { get; set; } 
         public DbSet<BuildingUpgradeTime> BuildingUpgradeTime { get; set; }
         public DbSet<ResearchTable> ResearchTable { get; set; }
         public DbSet<ResearchNode> ResearchNode { get; set; }
@@ -406,6 +415,50 @@ namespace PlayerBaseApi
             //    #endregion
         }
 
+        public async Task<PlayerBaseInfo?> GetPlayerBaseInfoByUserId(UserDto user)
+        {
+            var playerBaseInfo = await PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+            if (playerBaseInfo == null)
+            {
+                playerBaseInfo = new PlayerBaseInfo()
+                {
+                    BaseLevel = 1,
+                    BluePrints = 0,
+                    Gems = 5,
+                    BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
+                    Fuel = 100,
+                    ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
+                    RareHeroCards = 0,
+                    EpicHeroCards = 0,
+                    LegendaryHeroCards = 0,
+                    LastBaseCollect = DateTimeOffset.Now,
+                    Scraps = 10000,
+                    UserId = user.Id,
+                    Username = user.Username,
+                    IsApe = false
+                };
+                await AddAsync(playerBaseInfo);
+                await SaveChangesAsync();
+            }
+
+            #region Resource Addition
+
+            if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+            {
+                var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
+                duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
+
+                playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
+
+                await SaveChangesAsync();
+            }
+
+            #endregion
+
+            return playerBaseInfo;
+        }
 
         public void CreateHeroLevelBuffs()
         {

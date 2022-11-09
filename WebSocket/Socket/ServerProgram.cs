@@ -5,6 +5,7 @@ using Riptide;
 using Riptide.Utils;
 using System.Configuration;
 using System.Text.Json;
+using WebSocket.Enums;
 using WebSocket.Interfaces;
 
 namespace WebSocket.Socket
@@ -16,9 +17,10 @@ namespace WebSocket.Socket
         public static void Start()
         {
             RiptideLogger.Initialize(Console.WriteLine, true);
-            isRunning = true;
+            
             Message.MaxPayloadSize = 30000;
             new Thread(new ThreadStart(Update)).Start();
+            new Thread(new ThreadStart(ResfreshPlayerBase)).Start();
             
         }
 
@@ -82,7 +84,7 @@ namespace WebSocket.Socket
             server.Start(7777, 10000);
             server.ClientDisconnected += PlayerLeft;
             server.HandleConnection = Player.ConnectionAttemptHandler;
-
+            isRunning = true;
             while (isRunning)
             {
                 server.Update();
@@ -91,6 +93,17 @@ namespace WebSocket.Socket
             }
 
             server.Stop();
+        }
+
+        private static void ResfreshPlayerBase()
+        {
+
+            while (isRunning)
+            {
+                Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RefreshPlayerBaseInfo);
+                server.SendToAll(message);
+                Thread.Sleep(300000);
+            }
         }
 
         private static void PlayerLeft(object? sender, ServerDisconnectedEventArgs e)

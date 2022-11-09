@@ -205,10 +205,10 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
             try
             {
-                var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                if (query == null)
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                if (playerBaseInfo == null)
                 {
-                    query = new PlayerBaseInfo()
+                    playerBaseInfo = new PlayerBaseInfo()
                     {
                         BaseLevel = 1,
                         BluePrints = 0,
@@ -225,10 +225,27 @@ namespace PlayerBaseApi.Services
                         Username = user.Username,
                         IsApe = false
                     };
-                    await _context.AddAsync(query);
+                    await _context.AddAsync(playerBaseInfo);
                     await _context.SaveChangesAsync();
                 }
-                response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
+
+                #region Resource Addition
+
+                if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+                {
+                    var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
+                    duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
+
+                    playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                    playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                    playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
+
+                    await _context.SaveChangesAsync();
+                }
+
+                #endregion
+
+                response.Data = _mapper.Map<PlayerBaseInfoDTO>(playerBaseInfo);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -250,7 +267,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "UpdatePlayerBaseInfo");
             try
             {
-                //var query = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                //var query = await _context.GetPlayerBaseInfoByUserId(user);
                 //if (query != null)
                 //{
                 //    query.Scraps = req.Data.Scraps;
@@ -421,7 +438,7 @@ namespace PlayerBaseApi.Services
                 var buff = await GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 if (playerBaseInfo.Scraps < cost)
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -560,47 +577,48 @@ namespace PlayerBaseApi.Services
 
         }
 
+        [Obsolete("deprecated", true)]
         public async Task<TDResponse<CollectBaseResponse>> CollectBaseResources(BaseRequest req, UserDto user)
         {
             TDResponse<CollectBaseResponse> response = new TDResponse<CollectBaseResponse>();
             var info = InfoDetail.CreateInfo(req, "CollectBaseResources");
-            try
-            {
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds < (new TimeSpan(0, 1, 0)).TotalMilliseconds)
-                {
-                    response.SetError(OperationMessages.NoChanges);
-                    info.AddInfo(OperationMessages.NoChanges);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
-                var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
-                duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
+            //try
+            //{
+            //    var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+            //    if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds < (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+            //    {
+            //        response.SetError(OperationMessages.NoChanges);
+            //        info.AddInfo(OperationMessages.NoChanges);
+            //        _logger.LogInformation(info.ToString());
+            //        return response;
+            //    }
+            //    var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
+            //    duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
 
 
-                response.Data = new CollectBaseResponse()
-                {
-                    CollectDuration = duration,
-                    CollectedResource = (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour),
-                    ResourceProductionPerHour = playerBaseInfo.ResourceProductionPerHour,
-                    BaseFullDuration = playerBaseInfo.BaseFullDuration
-                };
-                response.Data.CollectedResource += (int)(response.Data.CollectedResource * (await GetPlayersTotalBuff(user.Id)).BaseResourceMultiplier);
-                playerBaseInfo.Fuel += response.Data.CollectedResource;
-                playerBaseInfo.Scraps += response.Data.CollectedResource;
-                playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
+            //    response.Data = new CollectBaseResponse()
+            //    {
+            //        CollectDuration = duration,
+            //        CollectedResource = (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour),
+            //        ResourceProductionPerHour = playerBaseInfo.ResourceProductionPerHour,
+            //        BaseFullDuration = playerBaseInfo.BaseFullDuration
+            //    };
+            //    response.Data.CollectedResource += (int)(response.Data.CollectedResource * (await GetPlayersTotalBuff(user.Id)).BaseResourceMultiplier);
+            //    playerBaseInfo.Fuel += response.Data.CollectedResource;
+            //    playerBaseInfo.Scraps += response.Data.CollectedResource;
+            //    playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
 
-                await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
-                _logger.LogInformation(info.ToString());
-            }
-            catch (Exception e)
-            {
-                response.SetError(OperationMessages.DbError);
-                info.SetException(e);
-                _logger.LogError(info.ToString());
-            }
+            //    await _context.SaveChangesAsync();
+            //    response.SetSuccess();
+            //    info.AddInfo(OperationMessages.Success);
+            //    _logger.LogInformation(info.ToString());
+            //}
+            //catch (Exception e)
+            //{
+            //    response.SetError(OperationMessages.DbError);
+            //    info.SetException(e);
+            //    _logger.LogError(info.ToString());
+            //}
             return response;
 
         }
@@ -778,7 +796,7 @@ namespace PlayerBaseApi.Services
                 }
                 var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == currentNode.CurrentLevel + 1 && l.ResearchNodeId == req.Data);
                 var necessaries = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
-                var playerResource = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerResource = await _context.GetPlayerBaseInfoByUserId(user);
                 if (necessaries.ScrapCount <= playerResource.Scraps && necessaries.BluePrintCount <= playerResource.BluePrints)
                 {
                     playerResource.Scraps -= necessaries.ScrapCount;
@@ -954,7 +972,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
@@ -1006,7 +1024,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
@@ -1112,7 +1130,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query.InTrainingPrisonerCount == 0)
                 {
@@ -1162,7 +1180,7 @@ namespace PlayerBaseApi.Services
                 response.Data = new List<PlayerHeroLootDTO>();
                 //response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 foreach (var loot in playerHeroLoot)
                 {
                     if (loot.AutoLootRunEndDate != null)
@@ -1250,7 +1268,7 @@ namespace PlayerBaseApi.Services
                 response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 foreach (var loot in playerHeroLoot)
                 {
                     if (loot.AutoLootRunEndDate != null)
@@ -1530,7 +1548,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse> OpenCloseAutoRun(BaseRequest<SendLootRunRequest> req, UserDto user)
         {
             TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "SendLootRun");
+            var info = InfoDetail.CreateInfo(req, "OpenCloseAutoRun");
             try
             {
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).FirstOrDefaultAsync();
@@ -1600,7 +1618,7 @@ namespace PlayerBaseApi.Services
                     };
                     await _context.AddAsync(phl);
                 }
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(playerHeroLoot.GainedResources);
                 //playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
                 //playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
@@ -1665,7 +1683,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 if (req.Data < 1)
                 {
                     response.SetError(OperationMessages.InputError);
@@ -1773,7 +1791,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query.InHealingCount == 0)
                 {
@@ -1865,7 +1883,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "BuyMarketItem");
             try
             {
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var marketItem = await _context.MarketItem.Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
 
                 if (marketItem == null || playerBaseInfo == null || req.Data == null)
@@ -2020,7 +2038,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "UseItem");
             try
             {
-                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var playerItem = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
                     .Where(l => l.ItemId == (req.Data == null ? 0 : req.Data.ItemId) && l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerItem == null || playerBaseInfo == null || req.Data == null || req.Data.Count <= 0)

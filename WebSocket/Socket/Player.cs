@@ -79,6 +79,18 @@ namespace WebSocket.Socket
 
         }
 
+        [MessageHandler((ushort)MessageEndpointId.RefreshActiveLoots)]
+        private static void RefreshActiveLoots(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+            DbService.RefreshLootRuns(null, player, null,true);
+
+        }
+
         #endregion
 
 
@@ -180,6 +192,13 @@ errors
             Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RefreshNews);
             ServerProgram.server.SendToAll(message);
         }
+
+        public static void SendNewsRefreshNeeded(long userId)
+        {
+            Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RefreshNews);
+            ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+        }
+
         public static void KickPlayerByUniqueId(long id)
         {
             DbService.SetUserActivity(list[id], DateTimeOffset.Now, false);

@@ -2,6 +2,7 @@ using AutoMapper;
 using PlayerBaseApi.Models;
 using PlayerBaseApi.Entities;
 using SharedLibrary.Models.Loot;
+using SharedLibrary.Models;
 
 namespace PlayerBaseApi.MapperProfiles
 {

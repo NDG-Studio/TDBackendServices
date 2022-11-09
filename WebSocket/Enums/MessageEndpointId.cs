@@ -7,5 +7,7 @@
         NewNews = 3,
         RefreshNews = 4,
         ActiveLootRuns = 5,
+        RefreshActiveLoots = 6,
+        RefreshPlayerBaseInfo = 7,
     }
 }
