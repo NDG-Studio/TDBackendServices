@@ -216,6 +216,37 @@ namespace WebSocket.Socket
             }
         }
 
+        public static async Task<TDResponse> SpendGangCreateMoney (string token, InfoDto info)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                    { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                client.DefaultRequestHeaders.Authorization
+                         = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/SpendGangCreateMoney"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<string>()
+                        {
+                            Data = token,
+                            Info = info
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
+
 
     }
 }

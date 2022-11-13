@@ -71,6 +71,7 @@ builder.Services.AddAutoMapper(
     );
 
 builder.Services.AddScoped<INewsService, NewsService>();
+builder.Services.AddScoped<IGangService, GangService>();
 
 
 var app = builder.Build();
@@ -91,8 +92,8 @@ using (var serviceScope = app.Services
         context.Database.Migrate();
     }
 }
-
-ServerProgram.Start();
+var cc = app.Services.GetRequiredService<ILoggerProvider>();
+ServerProgram.Start(cc);
 
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<ApiMiddleware>();

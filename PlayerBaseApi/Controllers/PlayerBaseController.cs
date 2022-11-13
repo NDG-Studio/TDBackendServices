@@ -575,5 +575,30 @@ namespace PlayerBaseApi.Controllers
         }
 
 
+        /// <summary>
+        /// Player gang ucretini duser. Yeterli gem yoksa hata doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpendGangCreateMoney")]
+        public async Task<TDResponse> SpendGangCreateMoney([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpendGangCreateMoney(req, user);
+        }
+
+
+
+
+
     }
 }

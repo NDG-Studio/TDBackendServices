@@ -33,5 +33,7 @@ namespace SharedLibrary.Helpers
         public const string ItemNotUsable = "Bu item kullanılamaz!";
         public const string MaxLevel = "Tebrikler son seviyedesiniz.";
         public const string InputError = "Beklenen input değerine ulaşılamadı!!";
+        public const string PlayerAllreadyGangMember = "Oyuncu zaten bir çete üyesi!!";
+        public const string GangAllreadyExist = "Aynı isimli bir çete zaten mevcut!!";
     }
 }

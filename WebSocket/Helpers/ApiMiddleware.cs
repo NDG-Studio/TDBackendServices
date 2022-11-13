@@ -94,6 +94,7 @@ namespace WebSocket.Helpers
                         var content = response.Content.ReadAsStringAsync().Result;
                         userDto = JsonConvert.DeserializeObject<TDResponse<UserDto>>(content)?.Data;
                         context.Items["User"] = userDto;
+                        context.Items["Token"] = token;
                     }
                 }
 

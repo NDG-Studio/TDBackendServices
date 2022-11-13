@@ -28,6 +28,9 @@ namespace WebSocket
         public DbSet<News> News { get; set; }
         public DbSet<News> ImportantNews { get; set; }
         public DbSet<UserActivity> UserActivity { get; set; }
+        public DbSet<Gang> Gang { get; set; }
+        public DbSet<MemberType> MemberType { get; set; }
+        public DbSet<GangMember> GangMember { get; set; }
 
 
 

@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Services;
 using Riptide;
 using Riptide.Utils;
+using SharedLibrary.Helpers;
 using System.Configuration;
 using System.Text.Json;
 using WebSocket.Enums;
+using WebSocket.Helpers;
 using WebSocket.Interfaces;
 
 namespace WebSocket.Socket
@@ -14,9 +16,9 @@ namespace WebSocket.Socket
     {
         public static Server server { get; set; }
         private static bool isRunning = false;
-        public static void Start()
+        public static void Start(ILoggerProvider logger)
         {
-            RiptideLogger.Initialize(Console.WriteLine, true);
+            RiptideLogger.Initialize(logger.CreateLogger("").SocketLog, true);
             
             Message.MaxPayloadSize = 30000;
             new Thread(new ThreadStart(Update)).Start();
@@ -43,7 +45,9 @@ namespace WebSocket.Socket
                     case "start":
                         isRunning = false;
                         Thread.Sleep(10);
-                        Start();
+                        isRunning = true;
+                        new Thread(new ThreadStart(Update)).Start();
+                        new Thread(new ThreadStart(ResfreshPlayerBase)).Start();
                         response.Add("Done");
                         break;
                     case "kick":

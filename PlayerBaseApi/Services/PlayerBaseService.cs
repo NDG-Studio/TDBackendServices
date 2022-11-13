@@ -239,7 +239,7 @@ namespace PlayerBaseApi.Services
                     playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
                     playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
                     playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
-
+                    _context.Update(playerBaseInfo);
                     await _context.SaveChangesAsync();
                 }
 
@@ -447,6 +447,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 playerBaseInfo.Scraps -= cost;
+                _context.Update(playerBaseInfo);
                 query.UpdateEndDate = DateTimeOffset.Now.Add(duration);
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
@@ -987,6 +988,7 @@ namespace PlayerBaseApi.Services
                 query.PrisonerCount -= req.Data;
                 playerBaseInfo.Scraps += (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
                 response.Data = (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
+                _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -1052,6 +1054,7 @@ namespace PlayerBaseApi.Services
                 query.InTrainingPrisonerCount += req.Data;
                 query.TrainingDoneDate = DateTimeOffset.Now + (query.PrisonLevel.TrainingDurationPerUnit * req.Data);
                 playerBaseInfo.Scraps -= (int)(req.Data * query.PrisonLevel.TrainingCostPerUnit);
+                _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -1235,7 +1238,7 @@ namespace PlayerBaseApi.Services
 
                             initialDate += oneLootDuration;
                         }
-
+                        _context.Update(playerBaseInfo);
                         await _context.SaveChangesAsync();
                     }
                     else
@@ -1713,6 +1716,7 @@ namespace PlayerBaseApi.Services
                 query.InHealingCount += req.Data;
                 query.HealingDoneDate = DateTimeOffset.Now + (query.HospitalLevel.HealingDurationPerUnit * req.Data);
                 playerBaseInfo.Scraps -= (int)(req.Data * query.HospitalLevel.HealingCostPerUnit);
+                _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -1934,7 +1938,7 @@ namespace PlayerBaseApi.Services
                 playerBaseInfo.Scraps -= marketItem.ScrapPrice * req.Data.Count;
                 history.AfterScrapCount = playerBaseInfo.Scraps;
                 history.AfterGemCount = playerBaseInfo.Gems;
-
+                _context.Update(playerBaseInfo);
                 await _context.AddAsync(history);
                 await _context.SaveChangesAsync();
 
@@ -2139,7 +2143,7 @@ namespace PlayerBaseApi.Services
                         break;
 
                 }
-
+                _context.Update(playerBaseInfo);
                 await _context.AddAsync(buff);
                 await _context.SaveChangesAsync();
                 await _context.AddAsync(new PlayerBuff()
@@ -2216,6 +2220,44 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        #endregion
+
+
+        #region GANG UTILS
+
+        public async Task<TDResponse> SpendGangCreateMoney (BaseRequest req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SpendGangCreateMoney");
+            try
+            {
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                if (playerBaseInfo == null || playerBaseInfo.Gems <500) //TODO: GEM SAYISI CONFIGDEN ALINACAK
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerBaseInfo.Gems -= 500;
+                _context.Update(playerBaseInfo);
+                await _context.SaveChangesAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         #endregion
 
 
