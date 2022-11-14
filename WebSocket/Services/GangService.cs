@@ -43,8 +43,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var query = await _context.GangMember
-                    .Where(l => (l.UserId == user.Id && l.MemberType.Gang.IsActive) || l.MemberType.Gang.OwnerId == user.Id).FirstOrDefaultAsync();
+                var query = await _context.GangMember.Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -84,7 +83,28 @@ namespace PlayerBaseApi.Services
                         Name = "Member",
                         GangId = gang.Id
                     };
+                    var ownerType = new MemberType()
+                    {
+                        Name = "Owner",
+                        GangId = gang.Id,
+                        CanAcceptMember = true,
+                        CanDistributeMoney = true,
+                        CanKick = true,
+                        CanMemberChangeType = true,
+                        CanStartWar = true,
+                        GateManager = true,
+                        IsActive = true
+                    };
                     await _context.AddAsync(memberType);
+                    await _context.AddAsync(ownerType);
+                    await _context.SaveChangesAsync();
+
+                    var gangMember = new GangMember()
+                    {
+                        MemberTypeId = ownerType.Id,
+                        UserId = user.Id
+                    };
+                    await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
                 }
             }
