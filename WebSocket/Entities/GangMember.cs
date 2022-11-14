@@ -9,9 +9,11 @@ namespace WebSocket.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public long UserId { get; set; }
+        public string UserName { get; set; }
+        public long Power { get; set; } = 0;
         public Guid MemberTypeId { get; set; }
 
-        
+
         [ForeignKey("MemberTypeId")]
         public MemberType MemberType { get; set; }
 

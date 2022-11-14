@@ -30,7 +30,7 @@ namespace PlayerBaseApi.Services
             _context = context;
         }
 
-        public async Task<TDResponse> CreateGang(BaseRequest<CreateGangRequest> req, UserDto user,string token)
+        public async Task<TDResponse> CreateGang(BaseRequest<CreateGangRequest> req, UserDto user, string token)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
@@ -58,11 +58,19 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                if (await _context.Gang.AnyAsync(l => l.ShortName == req.Data.ShortName && l.IsActive))
+                {
+                    response.SetError(OperationMessages.GangShortNameTaken);
+                    info.AddInfo(OperationMessages.GangShortNameTaken);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 var spendMoneyRes = await DbService.SpendGangCreateMoney(token, req.Info);
                 if (spendMoneyRes != null && !spendMoneyRes.HasError)
                 {
                     var gang = new Gang()
                     {
+                        ShortName = req.Data.ShortName,
                         Name = req.Data.Name,
                         Description = req.Data.Description,
                         OwnerId = user.Id,
@@ -109,9 +117,7 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-
-
-        public async Task<TDResponse> SendGangInvitation (BaseRequest<long> req, UserDto user)
+        public async Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "SendGangInvitation");
@@ -125,7 +131,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var query = await _context.GangMember
-                    .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
                     .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 var queryForInvitation = await _context.GangMember.Where(l => l.UserId == req.Data && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 if (queryForInvitation != null)
@@ -169,7 +175,7 @@ namespace PlayerBaseApi.Services
                 Player.SendNewsRefreshNeeded(req.Data);
 
 
-            
+
             }
             catch (Exception e)
             {
@@ -180,7 +186,47 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        public async Task<TDResponse<GangInfo>> GetGangInfo(BaseRequest<long?> req, UserDto user)
+        {
+            TDResponse<GangInfo> response = new TDResponse<GangInfo>();
+            var info = InfoDetail.CreateInfo(req, "GetGangInfo");
+            try
+            {
+                var userId = req.Data ?? user.Id;
+                var c = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                var owner = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                response.Data = new GangInfo()
+                {
+                     Id=c.MemberType.Gang.Id,
+                     Capacity=c.MemberType.Gang.Capacity,
+                     Description=c.MemberType.Gang.Description,
+                     MemberCount=c.MemberType.Gang.MemberCount,
+                     Name=c.MemberType.Gang.Name,
+                     Power = c.MemberType.Gang.Power,
+                     ShortName = c.MemberType.Gang.ShortName,
+                     Owner=new GangMemberInfo()
+                     {
+                         Power=owner.Power,
+                         MemberTypeName=owner.MemberType.Name,
+                         UserName=owner.UserName,
+                         UserId=owner.UserId
+                     }
+                };
 
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
         private static async Task<LootRunResponse?> GetPlayerBaseInfo(long userId, string token, InfoDto info)
         {
             var handler = new HttpClientHandler();

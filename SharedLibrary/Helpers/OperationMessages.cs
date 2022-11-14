@@ -37,5 +37,6 @@ namespace SharedLibrary.Helpers
         public const string GangAllreadyExist = "Aynı isimli bir çete zaten mevcut!!";
         public const string PlayerIsNotInGangMember = "Oyuncu çete çete üye değil!!";
         public const string PlayerNotHavePermission = "Oyuncu gerekli yetkiye sahip değil!!";
+        public const string GangShortNameTaken = "Bu kısaltma başka bir çeteyi temsil ediyor!!";
     }
 }

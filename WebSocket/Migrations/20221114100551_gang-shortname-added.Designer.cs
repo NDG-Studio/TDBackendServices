@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebSocket;
@@ -11,9 +12,10 @@ using WebSocket;
 namespace WebSocket.Migrations
 {
     [DbContext(typeof(WebSocketContext))]
-    partial class WebSocketContextModelSnapshot : ModelSnapshot
+    [Migration("20221114100551_gang-shortname-added")]
+    partial class gangshortnameadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,9 +161,6 @@ namespace WebSocket.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MemberCount")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -200,15 +199,8 @@ namespace WebSocket.Migrations
                     b.Property<Guid>("MemberTypeId")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("Power")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
