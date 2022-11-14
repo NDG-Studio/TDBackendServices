@@ -102,7 +102,9 @@ namespace PlayerBaseApi.Services
                     var gangMember = new GangMember()
                     {
                         MemberTypeId = ownerType.Id,
-                        UserId = user.Id
+                        UserId = user.Id,
+                        UserName = user.Username,
+                        Power=0//todo: power hesaplaması yapılacak
                     };
                     await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
@@ -250,7 +252,7 @@ namespace PlayerBaseApi.Services
                 var gangId = new Guid(req.Data);
                 var query = await _context.GangMember
                     .Include(l => l.MemberType)
-                    .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive)
+                    .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive && l.MemberType.Name != "Owner")
                     .OrderBy(l => l.Power).ThenBy(l => l.UserName)
                     .Select(l => new GangMemberInfo()
                     {
