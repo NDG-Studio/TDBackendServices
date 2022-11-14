@@ -34,6 +34,30 @@ public class GangController : ControllerBase
         return await _gangService.CreateGang(req, user, token);
     }
 
+
+    /// <summary>
+    /// Gang daveti yollamak icin kullanilir.
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// data = davet edilecek playerin idsi
+    /// <br/>
+    /// Input: BaseRequest &lt; long &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("SendGangInvitation")]
+    public async Task<TDResponse> SendGangInvitation([FromBody] BaseRequest<long> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.SendGangInvitation(req, user);
+    }
+
  
     
 }

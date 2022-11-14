@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using SharedLibrary.Models.Loot;
 using System.Net.Http.Headers;
 using System.Text;
+using WebSocket.Enums;
 
 namespace PlayerBaseApi.Services
 {
@@ -98,6 +99,77 @@ namespace PlayerBaseApi.Services
                     await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
                 }
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+
+        public async Task<TDResponse> SendGangInvitation (BaseRequest<long> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SendGangInvitation");
+            try
+            {
+                if (req == null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var query = await _context.GangMember
+                    .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                var queryForInvitation = await _context.GangMember.Where(l => l.UserId == req.Data && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                if (queryForInvitation != null)
+                {
+                    response.SetError(OperationMessages.PlayerAllreadyGangMember);
+                    info.AddInfo(OperationMessages.PlayerAllreadyGangMember);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (query == null)
+                {
+                    response.SetError(OperationMessages.PlayerIsNotInGangMember);
+                    info.AddInfo(OperationMessages.PlayerIsNotInGangMember);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!query.MemberType.CanAcceptMember)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var gangInvitations = new News()
+                {
+                    Title = "Gang Invitation",
+                    Detail = $" {user.Username} invites you to join '{query.MemberType.Gang.Name}' gang",
+                    Date = DateTimeOffset.Now,
+                    UserId = req.Data,
+                    IsActive = true,
+                    Seen = false,
+                    TypeId = (int)NewsType.GangInvitation
+                };
+                await _context.AddAsync(gangInvitations);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+
+
+                Player.SendNewsRefreshNeeded(req.Data);
+
+
+            
             }
             catch (Exception e)
             {

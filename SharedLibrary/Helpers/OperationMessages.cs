@@ -35,5 +35,7 @@ namespace SharedLibrary.Helpers
         public const string InputError = "Beklenen input değerine ulaşılamadı!!";
         public const string PlayerAllreadyGangMember = "Oyuncu zaten bir çete üyesi!!";
         public const string GangAllreadyExist = "Aynı isimli bir çete zaten mevcut!!";
+        public const string PlayerIsNotInGangMember = "Oyuncu çete çete üye değil!!";
+        public const string PlayerNotHavePermission = "Oyuncu gerekli yetkiye sahip değil!!";
     }
 }
