@@ -176,6 +176,12 @@ namespace PlayerBaseApi.Services
                 var c = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
                     .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                if (c == null)
+                {
+                    response.Data=null;
+                    response.SetSuccess(OperationMessages.Success);
+                    return response;
+                }
                 var owner = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
                     .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
