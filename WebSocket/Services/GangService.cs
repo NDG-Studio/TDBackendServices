@@ -43,7 +43,8 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var query = await _context.GangMember.Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                var query = await _context.GangMember
+                    .Where(l => (l.UserId == user.Id && l.MemberType.Gang.IsActive) || l.MemberType.Gang.OwnerId == user.Id).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -83,28 +84,7 @@ namespace PlayerBaseApi.Services
                         Name = "Member",
                         GangId = gang.Id
                     };
-                    var ownerType = new MemberType()
-                    {
-                        Name = "Owner",
-                        GangId = gang.Id,
-                        CanAcceptMember = true,
-                        CanDistributeMoney = true,
-                        CanKick = true,
-                        CanMemberChangeType = true,
-                        CanStartWar = true,
-                        GateManager = true,
-                        IsActive = true
-                    };
                     await _context.AddAsync(memberType);
-                    await _context.AddAsync(ownerType);
-                    await _context.SaveChangesAsync();
-
-                    var gangMember = new GangMember()
-                    {
-                        MemberTypeId = ownerType.Id,
-                        UserId = user.Id
-                    };
-                    await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -201,22 +181,59 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 response.Data = new GangInfo()
                 {
-                     Id=c.MemberType.Gang.Id,
-                     Capacity=c.MemberType.Gang.Capacity,
-                     Description=c.MemberType.Gang.Description,
-                     MemberCount=c.MemberType.Gang.MemberCount,
-                     Name=c.MemberType.Gang.Name,
-                     Power = c.MemberType.Gang.Power,
-                     ShortName = c.MemberType.Gang.ShortName,
-                     Owner=new GangMemberInfo()
-                     {
-                         Power=owner.Power,
-                         MemberTypeName=owner.MemberType.Name,
-                         UserName=owner.UserName,
-                         UserId=owner.UserId
-                     }
+                    Id = c.MemberType.Gang.Id,
+                    Capacity = c.MemberType.Gang.Capacity,
+                    Description = c.MemberType.Gang.Description,
+                    MemberCount = c.MemberType.Gang.MemberCount,
+                    Name = c.MemberType.Gang.Name,
+                    Power = c.MemberType.Gang.Power,
+                    ShortName = c.MemberType.Gang.ShortName,
+                    Owner = new GangMemberInfo()
+                    {
+                        Power = owner.Power,
+                        MemberTypeName = owner.MemberType.Name,
+                        UserName = owner.UserName,
+                        UserId = owner.UserId
+                    }
                 };
 
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+
+        public async Task<TDResponse<List<GangMemberInfo>>> GetGangMembers(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse<List<GangMemberInfo>> response = new TDResponse<List<GangMemberInfo>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangInfo");
+            try
+            {
+                if (req.Data == null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var gangId = new Guid(req.Data);
+                var query = await _context.GangMember
+                    .Include(l => l.MemberType)
+                    .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive)
+                    .OrderBy(l => l.Power).ThenBy(l => l.UserName)
+                    .Select(l => new GangMemberInfo()
+                    {
+                        Power = l.Power,
+                        MemberTypeName = l.MemberType.Name,
+                        UserName = l.UserName,
+                        UserId = l.UserId
+                    }).ToListAsync();
+                response.Data = query;
                 response.SetSuccess();
             }
             catch (Exception e)
