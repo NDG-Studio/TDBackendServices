@@ -193,10 +193,18 @@ errors
             ServerProgram.server.SendToAll(message);
         }
 
-        public static void SendNewsRefreshNeeded(long userId)
+        public static bool SendNewsRefreshNeeded(long userId)
         {
-            Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RefreshNews);
-            ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            try
+            {
+                Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RefreshNews);
+                ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static void KickPlayerByUniqueId(long id)
