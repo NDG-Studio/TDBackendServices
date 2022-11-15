@@ -11,5 +11,8 @@ namespace ProgressApi.Interfaces
         Task<TDResponse<List<StageDTO>>> GetStages(BaseRequest req);
         Task<TDResponse<List<StageStatusDTO>>> GetUserStageStatus(BaseRequest req, UserDto UserDto);
         Task<TDResponse<UserTDInfoDTO>> GetNextWave(BaseRequest req, UserDto user);
+        Task<TDResponse> ResetLevel(BaseRequest req, UserDto user);
+        Task<TDResponse<UserTDInfoDTO>> GetTutorialWave(BaseRequest req);
+        Task<TDResponse> AddTutorialProgress(BaseRequest<ProgressDTO> req);
     }
 }

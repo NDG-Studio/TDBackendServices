@@ -32,7 +32,7 @@ namespace ProgressApi.Controllers
 
         [LoginRequired]
         [HttpPost("GetNextWave")]
-        public async Task<TDResponse<UserTDInfoDTO>> GetNextWave(BaseRequest req)
+        public async Task<TDResponse<UserTDInfoDTO>> GetNextWave([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user!.Id);
@@ -40,43 +40,30 @@ namespace ProgressApi.Controllers
             return await _progressService.GetNextWave(req, user);
         }
 
-        //[HttpPost("GetZombies")]
-        //public async Task<TDResponse<List<EnemyDTO>>> GetZombies([FromBody] BaseRequest req)
-        //{
-        //    var user = (HttpContext.Items["User"] as UserDto);
-        //    req.SetUser(user?.Id);
-        //    req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-        //    return await _progressService.GetZombies(req);
-        //}
 
-        //[HttpPost("GetTowers")]
-        //public async Task<TDResponse<List<TowerDTO>>> GetTowers([FromBody] BaseRequest req)
-        //{
-        //    var user = (HttpContext.Items["User"] as UserDto);
-        //    req.SetUser(user?.Id);
-        //    req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-        //    return await _progressService.GetTowers(req);
-        //}        
+        [LoginRequired]
+        [HttpPost("ResetLevel")]
+        public async Task<TDResponse> ResetLevel([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user!.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.ResetLevel(req, user);
+        }
 
-        //[HttpPost("GetStages")]
-        //public async Task<TDResponse<List<StageDTO>>> GetStages([FromBody] BaseRequest req)
-        //{
-        //    var user = (HttpContext.Items["User"] as UserDto);
-        //    req.SetUser(user?.Id);
-        //    req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-        //    return await _progressService.GetStages(req);
-        //}
+        [HttpPost("GetTutorialWave")]
+        public async Task<TDResponse<UserTDInfoDTO>> GetTutorialWave([FromBody] BaseRequest req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.GetTutorialWave(req);
+        }
 
-        //[LoginRequired]
-        //[HttpPost("GetUserStageStatus")]
-        //public async Task<TDResponse<List<StageStatusDTO>>> GetUserStageStatus(BaseRequest req)
-        //{
-        //    var user = (HttpContext.Items["User"] as UserDto);
-        //    req.SetUser(user?.Id);
-        //    req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-        //    return await _progressService.GetUserStageStatus(req, user);
-        //}        
-
+        [HttpPost("AddTutorialProgress")]
+        public async Task<TDResponse> AddTutorialProgress([FromBody] BaseRequest<ProgressDTO> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _progressService.AddTutorialProgress(req);
+        }
 
     }
 }

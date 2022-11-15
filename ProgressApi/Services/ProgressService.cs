@@ -60,7 +60,10 @@ namespace ProgressApi.Services
 
                 if (userProgressHistory.BarrierHealth <= 0)
                 {
-
+                    response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
+                    return response;
                 }
 
                 List<TowerProgress> qTowerProgress = _mapper.ProjectTo<TowerProgress>(req.Data!.TowerProgressList.AsQueryable()).ToList();
@@ -113,6 +116,43 @@ namespace ProgressApi.Services
             return response;
         }
 
+        public async Task<TDResponse> ResetLevel(BaseRequest req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ResetLevel");
+
+            try
+            {
+
+
+                UserWave? query = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    info.AddInfo(OperationMessages.NoChanges);
+                    response.SetError(OperationMessages.NoChanges);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                _context.RemoveRange(_context.UserTowerPlace.Where(l => l.UserId == user.Id && l.Wave.StageId == query.Wave.StageId));
+                if (query.Wave.StageId != 1)
+                {
+                    query.WaveId = await _context.Wave.Where(l => l.StageId == query.Wave.StageId - 1).OrderByDescending(l => l.OrderId).Select(l => l.Id).FirstOrDefaultAsync();
+                }
+
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
 
         public async Task<TDResponse<List<EnemyDTO>>> GetZombies(BaseRequest req)
         {
@@ -326,7 +366,204 @@ namespace ProgressApi.Services
             return response;
         }
 
+        public async Task<TDResponse> AddTutorialProgress(BaseRequest<ProgressDTO> req)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddTutorialProgress");
 
+            try
+            {
+                if (req.Data == null || req.Info == null)
+                {
+                    info.AddInfo(OperationMessages.GeneralError);
+                    response.SetError(OperationMessages.GeneralError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var userHashId = req.Info.DeviceId.GetHashCode();
+
+                UserProgressHistory userProgressHistory = new UserProgressHistory()
+                {
+                    UserId = req.Info.DeviceId.GetHashCode(),
+                    WaveId = req.Data.WaveId,
+                    SpentCoin = req.Data.SpentCoin,
+                    GainedCoin = req.Data.GainedCoin,
+                    TotalCoin = req.Data.TotalCoin,
+                    BarrierHealth = req.Data.BarrierHealth,
+                    WaveStartTime = DateTimeOffset.Now - new TimeSpan(0, 0, (int)req.Data.Time),
+                    WaveEndTime = DateTimeOffset.Now
+                };
+
+                await _context.AddAsync(userProgressHistory);
+                await _context.SaveChangesAsync();
+
+                if (userProgressHistory.BarrierHealth <= 0)
+                {
+                    response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                List<TowerProgress> qTowerProgress = _mapper.ProjectTo<TowerProgress>(req.Data!.TowerProgressList.AsQueryable()).ToList();
+                qTowerProgress.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
+                List<EnemyKill> enemyKill = _mapper.ProjectTo<EnemyKill>(req.Data!.EnemyKillList.AsQueryable()).ToList();
+                enemyKill.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
+
+                UserWave? query = await _context.UserWave.Where(l => l.UserId == userHashId).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    query = new UserWave()
+                    {
+                        UserId = userHashId,
+                        BarierHealth = (int)req.Data.BarrierHealth,
+                        TotalCoin = req.Data.TotalCoin,
+                        WaveId = req.Data.WaveId
+                    };
+                    await _context.AddAsync(query);
+                }
+                else
+                {
+                    query.BarierHealth = (int)req.Data.BarrierHealth;
+                    query.TotalCoin = req.Data.TotalCoin;
+                    query.WaveId = req.Data.WaveId;
+                }
+
+                await _context.AddRangeAsync(qTowerProgress);
+                await _context.AddRangeAsync(enemyKill);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+        public async Task<TDResponse<UserTDInfoDTO>> GetTutorialWave(BaseRequest req)
+        {
+            TDResponse<UserTDInfoDTO> response = new TDResponse<UserTDInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetTutorialWave");
+            try
+            {
+                UserWave? userWave = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == req.Info.DeviceId.GetHashCode()).FirstOrDefaultAsync();
+                List<WaveDetail> waveDetail = new List<WaveDetail>();
+                Wave? nextWave = null;
+                if (userWave == null)
+                {
+                    waveDetail = await _context.WaveDetail.Include(l => l.Enemy).Include(l => l.Wave).ThenInclude(l => l.Stage)
+                        .Where(l => l.Wave.Stage.Id == 999999999 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
+                        .ToListAsync();
+                    nextWave = waveDetail.FirstOrDefault()?.Wave;
+                }
+                else
+                {
+                    nextWave = await _context.Wave
+                        .Where(l =>
+                            (l.OrderId == userWave.Wave.OrderId + 1 && l.StageId == userWave.Wave.StageId)
+                        )
+                        .OrderBy(l => l.StageId)
+                        .FirstOrDefaultAsync();
+                    if (nextWave == null)
+                    {
+                        info.AddInfo(OperationMessages.MaxLevel);
+                        response.SetError(OperationMessages.MaxLevel);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    waveDetail = await _context.WaveDetail.Include(l => l.Enemy).Include(l => l.Wave).ThenInclude(l => l.Stage)
+                        .Where(l => l.WaveId == nextWave.Id).OrderBy(l => l.PlaceId)
+                        .ToListAsync();
+                }
+
+                if (waveDetail.Count == 0)
+                {
+                    info.AddInfo(OperationMessages.GeneralError);
+                    response.SetError(OperationMessages.GeneralError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var stageDto = _mapper.Map<StageDTO>(waveDetail[0].Wave.Stage);
+                var creatableTowers = new List<CreatableTowerDTO>();
+                var qq = await _context.TowerLevel.Include(l => l.Tower).Where(l => l.Tower.IsActive).OrderBy(l => l.TowerId).ThenBy(l => l.Level).ToListAsync();
+
+                var groupedLevels = qq.GroupBy(l => l.Tower);
+
+                foreach (var tl in groupedLevels)
+                {
+                    creatableTowers.Add(new CreatableTowerDTO()
+                    {
+
+                        Tower = _mapper.Map<TowerDTO>(tl.Key),
+                        TowerLevelList = _mapper.ProjectTo<TowerLevelDTO>(tl.ToList().AsQueryable()).ToList()
+
+                    });
+
+                }
+                var waveDetailList = new List<WaveDetailDTO>();
+                foreach (var wd in waveDetail)
+                {
+                    var ed = await _context.EnemyLevel.Where(l => l.EnemyId == wd.EnemyId && l.Level == wd.EnemyLevel).FirstOrDefaultAsync();
+                    waveDetailList.Add(new WaveDetailDTO()
+                    {
+                        EnemyId = wd.EnemyId,
+                        EnemyName = wd.Enemy.Name,
+                        EnemyLevel = wd.EnemyLevel,
+                        EnemyNumber = wd.EnemyNumber,
+                        EntryInterval = wd.EntryInterval,
+                        EntryPoint = wd.EntryPoint,
+                        EntryTime = wd.EntryTime,
+                        PlaceId = wd.PlaceId,
+                        EnemyDetail = new EnemyDetailDTO()
+                        {
+                            EnemyLevelId = ed.Id,
+                            Armor = ed.Armor,
+                            Coin = ed.Coin,
+                            BarierDamageAmount = ed.BarierDamageAmount,
+                            Health = ed.Health,
+                            Speed = ed.Speed
+
+                        }
+
+
+                    });
+                }
+
+                response.Data = new UserTDInfoDTO()
+                {
+                    WaveId = nextWave!.Id,
+                    Stage = stageDto,
+                    WaveOrderId = nextWave!.OrderId,
+                    TotalCoin = nextWave!.OrderId == 1 ? waveDetail[0].Wave.Stage.Coin : userWave!.TotalCoin,
+                    BarrierHealth = userWave?.BarierHealth ?? waveDetail[0].Wave.Stage.BarrierHealth,
+                    UserTowerStatusList = new List<UserTowerStatusDTO>(),
+                    WaveDetailList = waveDetailList,
+                    CreatableTowerList = creatableTowers
+                };
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                var cc = info.ToString();
+                _logger.LogError(cc);
+            }
+
+            return response;
+        }
+
+    
 
     }
 }
