@@ -31,6 +31,7 @@ namespace ProgressApi.Services
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "AddProgress");
+
             try
             {
                 if (req.Data == null)
@@ -40,6 +41,7 @@ namespace ProgressApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+
 
                 UserProgressHistory userProgressHistory = new UserProgressHistory()
                 {
@@ -55,6 +57,11 @@ namespace ProgressApi.Services
 
                 await _context.AddAsync(userProgressHistory);
                 await _context.SaveChangesAsync();
+
+                if (userProgressHistory.BarrierHealth <= 0)
+                {
+
+                }
 
                 List<TowerProgress> qTowerProgress = _mapper.ProjectTo<TowerProgress>(req.Data!.TowerProgressList.AsQueryable()).ToList();
                 qTowerProgress.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
@@ -210,7 +217,7 @@ namespace ProgressApi.Services
                 if (userWave == null)
                 {
                     waveDetail = await _context.WaveDetail.Include(l => l.Enemy).Include(l => l.Wave).ThenInclude(l => l.Stage)
-                        .Where(l => l.Wave.Stage.Id == 11 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
+                        .Where(l => l.Wave.Stage.Id == 1 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
                         .ToListAsync();
                     nextWave = waveDetail.FirstOrDefault()?.Wave;
                 }
@@ -244,20 +251,21 @@ namespace ProgressApi.Services
                     return response;
                 }
                 var stageDto = _mapper.Map<StageDTO>(waveDetail[0].Wave.Stage);
-                var quserTowerStatus =_context.UserTowerPlace.Include(l => l.TowerLevel).ThenInclude(l=>l.Tower)
+                var quserTowerStatus = _context.UserTowerPlace.Include(l => l.TowerLevel).ThenInclude(l => l.Tower)
                     .Where(l => l.UserId == user.Id && l.WaveId == userWave!.WaveId);
                 var creatableTowers = new List<CreatableTowerDTO>();
-                var qq= await _context.TowerLevel.Include(l => l.Tower).Where(l => l.Tower.IsActive).OrderBy(l=>l.TowerId).ThenBy(l=>l.Level).ToListAsync();
+                var qq = await _context.TowerLevel.Include(l => l.Tower).Where(l => l.Tower.IsActive).OrderBy(l => l.TowerId).ThenBy(l => l.Level).ToListAsync();
 
-                var groupedLevels=qq.GroupBy(l => l.Tower);
+                var groupedLevels = qq.GroupBy(l => l.Tower);
 
                 foreach (var tl in groupedLevels)
                 {
-                    creatableTowers.Add(new CreatableTowerDTO() {
-                        
-                        Tower=_mapper.Map<TowerDTO>(tl.Key),
-                        TowerLevelList=_mapper.ProjectTo<TowerLevelDTO>(tl.ToList().AsQueryable()).ToList()
-                    
+                    creatableTowers.Add(new CreatableTowerDTO()
+                    {
+
+                        Tower = _mapper.Map<TowerDTO>(tl.Key),
+                        TowerLevelList = _mapper.ProjectTo<TowerLevelDTO>(tl.ToList().AsQueryable()).ToList()
+
                     });
 
                 }
@@ -265,26 +273,28 @@ namespace ProgressApi.Services
                 foreach (var wd in waveDetail)
                 {
                     var ed = await _context.EnemyLevel.Where(l => l.EnemyId == wd.EnemyId && l.Level == wd.EnemyLevel).FirstOrDefaultAsync();
-                    waveDetailList.Add(new WaveDetailDTO() {
-                    EnemyId=wd.EnemyId,
-                    EnemyName=wd.Enemy.Name,
-                    EnemyLevel=wd.EnemyLevel,
-                    EnemyNumber=wd.EnemyNumber,
-                    EntryInterval=wd.EntryInterval,
-                    EntryPoint=wd.EntryPoint,
-                    EntryTime=wd.EntryTime,
-                    PlaceId=wd.PlaceId,
-                    EnemyDetail= new EnemyDetailDTO() { 
-                        EnemyLevelId=ed.Id,
-                        Armor=ed.Armor,
-                        Coin=ed.Coin,
-                        BarierDamageAmount=ed.BarierDamageAmount,
-                        Health=ed.Health,
-                        Speed=ed.Speed
-                        
-                    }
-                    
-                    
+                    waveDetailList.Add(new WaveDetailDTO()
+                    {
+                        EnemyId = wd.EnemyId,
+                        EnemyName = wd.Enemy.Name,
+                        EnemyLevel = wd.EnemyLevel,
+                        EnemyNumber = wd.EnemyNumber,
+                        EntryInterval = wd.EntryInterval,
+                        EntryPoint = wd.EntryPoint,
+                        EntryTime = wd.EntryTime,
+                        PlaceId = wd.PlaceId,
+                        EnemyDetail = new EnemyDetailDTO()
+                        {
+                            EnemyLevelId = ed.Id,
+                            Armor = ed.Armor,
+                            Coin = ed.Coin,
+                            BarierDamageAmount = ed.BarierDamageAmount,
+                            Health = ed.Health,
+                            Speed = ed.Speed
+
+                        }
+
+
                     });
                 }
 
@@ -297,7 +307,7 @@ namespace ProgressApi.Services
                     BarrierHealth = userWave?.BarierHealth ?? waveDetail[0].Wave.Stage.BarrierHealth,
                     UserTowerStatusList = nextWave!.OrderId == 1 ? new List<UserTowerStatusDTO>() : await _mapper.ProjectTo<UserTowerStatusDTO>(quserTowerStatus).ToListAsync(),
                     WaveDetailList = waveDetailList,
-                    CreatableTowerList =creatableTowers
+                    CreatableTowerList = creatableTowers
                 };
 
                 response.SetSuccess();
