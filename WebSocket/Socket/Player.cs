@@ -220,15 +220,19 @@ errors
             var info = connectMessage.GetModel<InfoDto>();
             var user = Checkuser(token, info);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
             var c = new Player();
-            if (user != null && !list.TryGetValue(user.Id, out c))
+            Connection conn = null;
+            if (user == null || (list.TryGetValue(user.Id, out c) && ServerProgram.server.TryGetClient(list[user.Id].Id,out conn)))
             {
-
-                ServerProgram.server.Accept(pendingConnection);
-                Create(pendingConnection.Id, user.Id, user.Username, token, info);
+                ServerProgram.server.Reject(pendingConnection);
             }
             else
             {
-                ServerProgram.server.Reject(pendingConnection);
+                if (list.TryGetValue(user.Id,out c))
+                {
+                    list.Remove(user.Id);
+                }
+                ServerProgram.server.Accept(pendingConnection);
+                Create(pendingConnection.Id, user.Id, user.Username, token, info);
             }
         }
 

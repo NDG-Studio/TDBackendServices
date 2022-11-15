@@ -82,7 +82,7 @@ namespace WebSocket.Socket
             //Console.WriteLine($"Server started");
             server = new Server
             {
-                TimeoutTime = ushort.MaxValue
+                TimeoutTime = 10000
             };
             Player.SetUrls();
             server.Start(7777, 10000);

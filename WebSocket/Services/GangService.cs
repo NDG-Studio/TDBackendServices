@@ -253,7 +253,7 @@ namespace PlayerBaseApi.Services
                 var query = await _context.GangMember
                     .Include(l => l.MemberType)
                     .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive && l.MemberType.Name != "Owner")
-                    .OrderBy(l => l.Power).ThenBy(l => l.UserName)
+                    .OrderByDescending(l => l.Power).ThenBy(l => l.UserName)
                     .Select(l => new GangMemberInfo()
                     {
                         Power = l.Power,
