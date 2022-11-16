@@ -10,6 +10,8 @@ using WebSocket.Entities;
 using WebSocket.Enums;
 using WebSocket.Helpers;
 using WebSocket.Models;
+using static System.Net.Mime.MediaTypeNames;
+using System.Numerics;
 
 namespace WebSocket.Socket
 {
@@ -60,6 +62,7 @@ namespace WebSocket.Socket
                     var userActivity = await _context.UserActivity.Where(l => l.UserId == player.UniqueId).FirstOrDefaultAsync();
                     await RefreshLootRuns(_context, player, userActivity);
                     await SendNews(_context, player.UniqueId, userActivity);
+                    await SendChatRooms(_context, player.UniqueId, userActivity);
                 }
             }
             catch (Exception e)
@@ -182,6 +185,164 @@ namespace WebSocket.Socket
             }
         }
 
+        public static async Task SendChatRooms(WebSocketContext? _context, long userId, UserActivity? userActivity)
+        {
+            try
+            {
+                var g = _context;
+                if (_context == null)
+                {
+                    _context = new WebSocketContext();
+                }
+                if (userActivity == null)
+                {
+                    userActivity = await _context.UserActivity.Where(l => l.UserId == userId).FirstOrDefaultAsync();
+                }
+
+                var globalChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat && l.IsActive).FirstOrDefaultAsync();
+                var dmRooms = await _context.ChatMessage
+                    .Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
+                    .Where(l => l.ChatRoomMember.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.Dm && l.ChatRoomMember.UserId == userId && l.ChatRoomMember.IsActive)
+                    .Select(l => l.ChatRoomMember.ChatRoom)
+                    .Distinct()
+                    .ToListAsync();
+
+                Player.SendGlobalChat(userId, globalChat?.Id.ToString() ?? "--");
+                Player.SendDmRooms(userId, dmRooms);
+
+                if (g == null)
+                {
+                    _context.Dispose();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public static async Task CreateDm(Player player, long recieverUserId, string recieverUserName, int extentionTypeId, string text, string extention)
+        {
+            using (var _context = new WebSocketContext())
+            {
+                var chatRoom = new ChatRoom()
+                {
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    IsActive = true,
+                    ChatRoomTypeId = (int)ChatRoomTypeEnum.Dm,
+                    LastChangeDate = DateTimeOffset.UtcNow,
+                    Name = $"{player.Username}*.-.*{recieverUserName}"
+                };
+                await _context.AddAsync(chatRoom);
+                await _context.SaveChangesAsync();
+                var chatRoomMember = new ChatRoomMember()
+                {
+                    IsActive = true,
+                    UserId = recieverUserId,
+                    ChatRoomId = chatRoom.Id,
+                    JoinedRoomDate = DateTimeOffset.UtcNow,
+                    Username = recieverUserName,
+                    LastSeen = DateTimeOffset.UtcNow,
+
+                };
+                var senderMember = new ChatRoomMember()
+                {
+                    IsActive = true,
+                    UserId = player.UniqueId,
+                    ChatRoomId = chatRoom.Id,
+                    JoinedRoomDate = DateTimeOffset.UtcNow,
+                    Username = player.Username,
+                    LastSeen = DateTimeOffset.UtcNow
+
+                };
+                await _context.AddAsync(chatRoomMember);
+                await _context.AddAsync(senderMember);
+                await _context.SaveChangesAsync();
+
+                var chatMessage = new ChatMessage()
+                {
+                    SendedDate = DateTimeOffset.UtcNow,
+                    ChatRoomMemberId = senderMember.Id,
+                    ExtentionTypeId = extentionTypeId,
+                    Extention = extention,
+                    Text = text
+                };
+                await _context.AddAsync(chatMessage);
+                await _context.SaveChangesAsync();
+
+                Player.SendInitialRoom(recieverUserId, chatRoom.Id.ToString(), chatRoom.Name, chatRoom.LastChangeDate.ToString());
+                Player.SendInitialRoom(player.UniqueId, chatRoom.Id.ToString(), chatRoom.Name, chatRoom.LastChangeDate.ToString());
+            }
+        }
+        public static async Task SendChatMessage(Player player, string chatId, int extentionTypeId, string text, string extention)
+        {
+            using (var _context = new WebSocketContext())
+            {
+                if (true)//TODO: ozel chat kontrolleri yapılacak
+                {
+
+                }
+                var chatGuid = new Guid(chatId);
+                var chatRoom = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
+                    .Select(l => l.ChatRoom)
+                    .FirstOrDefaultAsync();
+                if (chatRoom == null)
+                {
+                    return;
+                }
+                var chatMessage = new ChatMessage()
+                {
+                    SendedDate = DateTimeOffset.UtcNow,
+                    ChatRoomMemberId = chatRoom.Id,
+                    ExtentionTypeId = extentionTypeId,
+                    Extention = extention,
+                    Text = text
+                };
+                await _context.AddAsync(chatMessage);
+                await _context.SaveChangesAsync();
+
+                Player.RoomRefreshNeeded(chatRoom.Id.ToString());
+            }
+        }
+
+        public static async Task GetChatMessagesFromLastMessageDate(Player player, string chatId, string? lastMessageDate)
+        {
+            using (var _context = new WebSocketContext())
+            {
+                if (true)//TODO: ozel chat kontrolleri yapılacak
+                {
+
+                }
+
+                var chatGuid = new Guid(chatId);
+                var canSeeMessage = await _context.ChatRoomMember
+                    .Include(l => l.ChatRoom)
+                    .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
+                if (!canSeeMessage)
+                {
+                    return;
+                }
+
+
+                DateTimeOffset? date = lastMessageDate?.ToDateTimeOffsetUtc();
+                var chatMessages = await _context.ChatMessage   //.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
+                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderByDescending(l => l.SendedDate)
+                    .Select(l => l)
+                    .ToListAsync();
+
+                for (int i = 0; i < (chatMessages.Count / 5) + 1; i++)
+                {
+                    var chatRoomList = chatMessages.Skip(i * 5).Take(5).ToList();
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GetChatMessagesFromLastMessageDate);
+                    m.AddModel(chatRoomList);
+                    ServerProgram.server.Send(m, player.Id);
+                    Thread.Sleep(10);
+                }
+
+            }
+        }
+
 
 
 
@@ -216,7 +377,7 @@ namespace WebSocket.Socket
             }
         }
 
-        public static async Task<TDResponse> SpendGangCreateMoney (string token, InfoDto info)
+        public static async Task<TDResponse> SpendGangCreateMoney(string token, InfoDto info)
         {
             var handler = new HttpClientHandler();
 

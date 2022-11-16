@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Xml.Linq;
+using WebSocket.Entities;
 using WebSocket.Enums;
 using WebSocket.Helpers;
 using WebSocket.Interfaces;
@@ -91,9 +93,124 @@ namespace WebSocket.Socket
 
         }
 
+
+        [MessageHandler((ushort)MessageEndpointId.CreateDm)]
+        private static void CreateDm(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+            var recieverUserId = message.GetLong();
+            var recieverUserName = message.GetString();
+            var extentionTypeId = message.GetInt();
+            var text = message.GetString();
+            var extention = message.GetString();
+            DbService.CreateDm(player,recieverUserId,recieverUserName,extentionTypeId,text,extention);
+
+        }
+
+
+        [MessageHandler((ushort)MessageEndpointId.SendChatMessage)]
+        private static void SendChatMessage(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+            var chatId = message.GetString();
+            var extentionTypeId = message.GetInt();
+            var text = message.GetString();
+            var extention = message.GetString();
+            DbService.SendChatMessage(player,chatId,extentionTypeId,text,extention);
+
+        }
+
+        [MessageHandler((ushort)MessageEndpointId.GetChatMessagesFromLastMessageDate)]
+        private static void GetChatMessagesFromLastMessageId(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+            var chatId = message.GetString();
+            var lastMessageId = message.GetString();//default "--"
+            DbService.GetChatMessagesFromLastMessageDate(player,chatId,lastMessageId);
+
+        }
+
         #endregion
 
+        public static void SendInitialRoom(long userId,string ChatId,string Name, string LastChangeDate)
+        {
+            try
+            {
+                var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.InitialChatRoom);
+                m.AddString(ChatId);
+                m.AddString(Name);
+                m.AddString(LastChangeDate);
+                ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:128", e);
 
+            }
+        }
+
+        public static void RoomRefreshNeeded(string ChatId)
+        {
+            try
+            {
+                var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RoomRefreshNeeded);
+                m.AddString(ChatId);
+                ServerProgram.server.SendToAll(m);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:128", e);
+
+            }
+        }
+
+        public static void SendDmRooms(long userId,List<ChatRoom> chatRooms)
+        {
+            try
+            {
+                for (int i = 0; i < (chatRooms.Count / 5)+1; i++)
+                {
+                    var chatRoomList = chatRooms.Skip(i * 5).Take(5).ToList();
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.DmRooms);
+                    m.AddModel(chatRoomList);
+                    ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                    Thread.Sleep(100);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:149", e);
+            }
+        }
+
+        public static void SendGlobalChat(long userId,string globalChatId)
+        {
+            try
+            {
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GlobalChatRoom);
+                    m.AddString(globalChatId);
+                    ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                    Thread.Sleep(100);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:149", e);
+            }
+        }
 
         private static UserDto? Checkuser(string token, InfoDto info)
         {
