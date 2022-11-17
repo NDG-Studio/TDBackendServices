@@ -326,16 +326,28 @@ namespace WebSocket.Socket
 
 
                 DateTimeOffset? date = lastMessageDate?.ToDateTimeOffsetUtc();
-                var chatMessages = await _context.ChatMessage   //.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
+                var chatMessages = await _context.ChatMessage.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
                     .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderByDescending(l => l.SendedDate)
-                    .Select(l => l)
+                    .Select(l => new ChatMessageDTO()
+                    {
+                        Id=l.Id.ToString(),
+                        Extention=l.Extention,
+                        ExtentionTypeId=l.ExtentionTypeId,
+                        SendedDate=l.SendedDate.ToString(),
+                        SenderUserId=l.ChatRoomMember.UserId,
+                        SenderIsActive=l.ChatRoomMember.IsActive,
+                        SenderUsername=l.ChatRoomMember.Username,
+                        Text=l.Text
+                    })
                     .ToListAsync();
 
                 for (int i = 0; i < (chatMessages.Count / 5) + 1; i++)
                 {
-                    var chatRoomList = chatMessages.Skip(i * 5).Take(5).ToList();
+                    var chatMessagesList = chatMessages.Skip(i * 5).Take(5).ToList();
                     var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GetChatMessagesFromLastMessageDate);
-                    m.AddModel(chatRoomList);
+                    m.AddBool(i == 0);
+                    m.AddString(chatId);
+                    m.AddModel(chatMessagesList);
                     ServerProgram.server.Send(m, player.Id);
                     Thread.Sleep(10);
                 }

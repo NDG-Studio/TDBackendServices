@@ -137,8 +137,8 @@ namespace WebSocket.Socket
                 return;
             }
             var chatId = message.GetString();
-            var lastMessageId = message.GetString();//default "--"
-            DbService.GetChatMessagesFromLastMessageDate(player,chatId,lastMessageId);
+            var lastMessageDate = message.GetString();//default "--"
+            DbService.GetChatMessagesFromLastMessageDate(player,chatId, lastMessageDate);
 
         }
 
@@ -182,8 +182,15 @@ namespace WebSocket.Socket
             {
                 for (int i = 0; i < (chatRooms.Count / 5)+1; i++)
                 {
-                    var chatRoomList = chatRooms.Skip(i * 5).Take(5).ToList();
+                    var chatRoomList = chatRooms.Skip(i * 5).Take(5).Select(l=>new ChatRoomDTO()
+                    {
+                        Id=l.Id.ToString(),
+                        ChatRoomTypeId=l.ChatRoomTypeId,
+                        LastChangeDate=l.LastChangeDate.ToString(),
+                        Name = l.Name
+                    }).ToList();
                     var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.DmRooms);
+                    m.AddBool(i==0);
                     m.AddModel(chatRoomList);
                     ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
                     Thread.Sleep(100);
