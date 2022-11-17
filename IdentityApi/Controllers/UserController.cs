@@ -46,8 +46,8 @@ namespace IdentityApi.Controllers
         public async Task<TDResponse<long>> SignInRequest([FromBody] BaseRequest<UserRequest> req)
         {
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _userService.SignInRequest(req);
-        }        
+            return await _userService.SignInRequestV2(req);
+        }
         
         [HttpPost("ActivateUser")]
         public async Task<TDResponse> ActivateUser([FromBody] BaseRequest<ActivationRequest> req)
@@ -68,6 +68,13 @@ namespace IdentityApi.Controllers
         {
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.Login(req);
+        }
+
+        [HttpPost("LoginWithDeviceId")]
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithDeviceId([FromBody] BaseRequest req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.LoginWithDeviceId(req);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace IdentityApi
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
-                new User() { Id = 1, Username = "Ugur", Email = "ugurcan.bagriyanik@ndgstudio.com.tr", PasswordHash= "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",IsActive=true,IsAndroid=true,LastSeen=DateTime.Now,MobileUserId="dummyMobileUserId1",UsingNFT=true }
+                new User() { Id = 1, Username = "Ugur", Email = "ugurcan.bagriyanik@ndgstudio.com.tr", PasswordHash= "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",IsActive=true,IsAndroid=true,LastSeen=DateTime.Now,MobileUserId="dummyMobileUserId1",IsApe=true }
                 );
 
         }

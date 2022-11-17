@@ -53,7 +53,7 @@ namespace IdentityApi.Services
             }
 
             return response;
-        }        
+        }
         public async Task<TDResponse<UserDto>> GetUserById(long id)
         {
             TDResponse<UserDto> response = new TDResponse<UserDto>();
@@ -109,7 +109,7 @@ namespace IdentityApi.Services
             return response;
         }
 
-
+        [Obsolete("deprecated")]
         public async Task<TDResponse<long>> SignInRequest(BaseRequest<UserRequest> req)
         {
             TDResponse<long> response = new TDResponse<long>();
@@ -151,7 +151,7 @@ namespace IdentityApi.Services
                                 existUser.MobileUserId = us.MobileUserId;
                                 existUser.IsAndroid = us.IsAndroid;
                                 existUser.LastSeen = us.LastSeen;
-                                existUser.UsingNFT = us.UsingNFT;
+                                existUser.IsApe = us.IsApe;
                                 response.Data = existUser.Id;
                             }
                         }
@@ -203,6 +203,117 @@ namespace IdentityApi.Services
             return response;
         }
 
+        public async Task<TDResponse<long>> SignInRequestV2(BaseRequest<UserRequest> req)
+        {
+            TDResponse<long> response = new TDResponse<long>();
+            var userRequest = req.Data;
+            var info = InfoDetail.CreateInfo(req, "SignInRequestV2");
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+                {
+                    try
+                    {
+                        var us = _mapper.Map<User>(userRequest);
+                        us.IsActive = null;
+                        us.LastSeen = DateTimeOffset.UtcNow;
+                        us.PasswordHash = HashHelper.ComputeSha256Hash(userRequest.Password);
+                        if (await _context.User.Where(l => l.Email == us.Email && l.IsActive != false).AnyAsync())
+                        {
+                            response.SetError(OperationMessages.DuplicateMail);
+                            info.AddInfo(OperationMessages.DuplicateMail);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+
+                        var existUser = await _context.User.Where(l => l.Username == us.Username && l.IsActive == true).FirstOrDefaultAsync();
+
+                        if (existUser != null)
+                        {
+                            response.SetError(OperationMessages.DuplicateRecord);
+                            info.AddInfo(OperationMessages.DuplicateRecord);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        else
+                        {
+                            var tutUser = await _context.User.Where(l => l.MobileUserId == req.Info.DeviceId && l.MobileUserId != null).FirstOrDefaultAsync();
+                            if (tutUser == null)
+                            {
+                                response.SetError(OperationMessages.InputError);
+                                info.AddInfo(OperationMessages.InputError);
+                                _logger.LogInformation(info.ToString());
+                                return response;
+                            }
+                            if (tutUser.IsActive == true)
+                            {
+                                response.SetError(OperationMessages.DuplicateRecord);
+                                info.AddInfo(OperationMessages.DuplicateRecord);
+                                _logger.LogInformation(info.ToString());
+                                return response;
+                            }
+                            else if (tutUser.IsActive == null)
+                            {
+                                tutUser.PasswordHash = us.PasswordHash;
+                                tutUser.Email = us.Email;
+                                tutUser.Username = us.Username;
+                                tutUser.LastSeen = us.LastSeen;
+                                tutUser.IsApe = us.IsApe;
+                                response.Data = tutUser.Id;
+                            }
+                            else
+                            {
+                                tutUser.PasswordHash = us.PasswordHash;
+                                tutUser.Email = us.Email;
+                                tutUser.LastSeen = us.LastSeen;
+                                tutUser.IsApe = us.IsApe;
+                                tutUser.Username = us.Username;
+                            }
+                            await _context.SaveChangesAsync();
+                            response.Data = tutUser.Id;
+                        }
+
+                        #region Create Token
+
+                        var userToken = new UserToken()
+                        {
+                            CreatedDate = DateTimeOffset.UtcNow,
+                            IsActive = true,
+                            Token = new Random().Next(100000, 999999).ToString(),
+                            UserId = response.Data
+                        };
+                        info.AddInfo("Token eklendi");
+                        var tokenExist = await _context.UserToken.Where(l => l.UserId == userToken.UserId && l.IsActive == true).ToListAsync();
+                        foreach (var t in tokenExist)
+                        {
+                            t.IsActive = false;
+                        }
+                        await _context.AddAsync(userToken);
+                        #endregion
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                        _mailService.SendMailAsync(us.Email, userToken.Token);
+                        response.SetSuccess();
+                        info.AddInfo(OperationMessages.Success);
+                        _logger.LogInformation(info.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw e;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
 
         public async Task<TDResponse> ActivateUser(BaseRequest<ActivationRequest> req)
         {
@@ -221,6 +332,7 @@ namespace IdentityApi.Services
                     _user.IsActive = true;
                     _user.LastSeen = DateTimeOffset.UtcNow;
                     _user.FirstLogInDate = DateTimeOffset.UtcNow;
+                    _user.MobileUserId = null;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     info.AddInfo(OperationMessages.Success);
@@ -325,7 +437,7 @@ namespace IdentityApi.Services
             try
             {
                 var userEnt = await _context.User.FirstOrDefaultAsync(x => x.Username == model.Username && x.IsActive == true);
-                
+
                 if (userEnt?.PasswordHash?.Equals(HashHelper.ComputeSha256Hash(model.Password)) != true)
                 {
                     response.SetError(OperationMessages.AuthenticateError);
@@ -342,7 +454,57 @@ namespace IdentityApi.Services
                     _logger.LogInformation(info.ToString());
 
                 }
-                
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithDeviceId(BaseRequest req)
+        {
+
+            var info = InfoDetail.CreateInfo(req, "LoginWithDeviceId");
+
+            TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
+            try
+            {
+                var userEnt = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == true).FirstOrDefaultAsync();
+                if (userEnt == null)
+                {
+                    await _context.AddAsync(new User()
+                    {
+                        IsActive = false,
+                        IsAndroid = false,
+                        Email = "",
+                        FirstLogInDate = DateTimeOffset.UtcNow,
+                        LastSeen = DateTimeOffset.UtcNow,
+                        PasswordHash = null,
+                        MobileUserId = req.Info.DeviceId,
+                        Username = "",
+                        IsApe = false
+                    });
+                    await _context.SaveChangesAsync();
+                    userEnt = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == false).FirstOrDefaultAsync();
+                    userEnt.Username = "user_" + userEnt.Id;
+                    userEnt.Email = "user_" + userEnt.Id;
+                    await _context.SaveChangesAsync();
+                }
+
+
+                var user = _mapper.Map<User, UserDto>(userEnt);
+                var token = generateJwtToken(user);
+                response.Data = new AuthenticateResponse(user, token);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+
             }
             catch (Exception e)
             {

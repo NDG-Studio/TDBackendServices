@@ -6,13 +6,11 @@ namespace IdentityApi.Models
 
     public class UserRequest
     {
-        public long Id { get; set; }=0;
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string? MobileUserId { get; set; }
-        public bool? IsAndroid { get; set; }
-        
+        public bool IsApe { get; set; }
+
 
     }
 
@@ -40,6 +38,7 @@ namespace IdentityApi.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public bool IsApe { get; set; }
 
 
         public AuthenticateResponse(UserDto user, string token)
@@ -48,6 +47,7 @@ namespace IdentityApi.Models
             Username = user.Username;
             Email = user.Email;
             Token = token;
+            IsApe = user.IsApe;
         }
     }
 }

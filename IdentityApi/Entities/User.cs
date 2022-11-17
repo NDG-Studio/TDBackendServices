@@ -20,7 +20,7 @@ namespace IdentityApi.Entities
         public string? MobileUserId { get; set; }
 
         public bool? IsAndroid { get; set; }
-        public bool? UsingNFT { get; set; }
+        public bool IsApe { get; set; }
         public bool? IsActive { get; set; }
     }
 }
