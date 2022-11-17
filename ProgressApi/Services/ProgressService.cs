@@ -458,7 +458,7 @@ namespace ProgressApi.Services
                 if (userWave == null)
                 {
                     waveDetail = await _context.WaveDetail.Include(l => l.Enemy).Include(l => l.Wave).ThenInclude(l => l.Stage)
-                        .Where(l => l.Wave.Stage.Id == 999999999 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
+                        .Where(l => l.Wave.Stage.Id == 900 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
                         .ToListAsync();
                     nextWave = waveDetail.FirstOrDefault()?.Wave;
                 }
@@ -467,6 +467,8 @@ namespace ProgressApi.Services
                     nextWave = await _context.Wave
                         .Where(l =>
                             (l.OrderId == userWave.Wave.OrderId + 1 && l.StageId == userWave.Wave.StageId)
+                            ||
+                            (l.OrderId == 1 && l.StageId == userWave.Wave.StageId + 1)
                         )
                         .OrderBy(l => l.StageId)
                         .FirstOrDefaultAsync();
