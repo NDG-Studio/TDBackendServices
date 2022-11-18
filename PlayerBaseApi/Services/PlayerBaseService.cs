@@ -34,7 +34,22 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetBuildings");
             try
             {
+                if (!(await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == 1 && l.BuildingType.IsActive).AnyAsync()))//base var mı?
+                {
+                    await _context.AddAsync(new PlayerBasePlacement()
+                    {
+                        BuildingTypeId = 1,
+                        BuildingLevel=1,
+                        CoordX=0,
+                        CoordY=0,
+                        UpdateEndDate=null,
+                        UserId=user.Id
+                    });
+                    await _context.SaveChangesAsync();
+                }
+
                 var query = _context.PlayerBasePlacement.Include(l => l.BuildingType).Where(l => l.UserId == user.Id && l.BuildingType.IsActive);
+
                 var qlist = await _mapper.ProjectTo<PlayerBasePlacementDTO>(query).ToListAsync();
                 response.Data = qlist;
                 response.SetSuccess();
@@ -2225,14 +2240,14 @@ namespace PlayerBaseApi.Services
 
         #region GANG UTILS
 
-        public async Task<TDResponse> SpendGangCreateMoney (BaseRequest req, UserDto user)
+        public async Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "SpendGangCreateMoney");
             try
             {
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
-                if (playerBaseInfo == null || playerBaseInfo.Gems <500) //TODO: GEM SAYISI CONFIGDEN ALINACAK
+                if (playerBaseInfo == null || playerBaseInfo.Gems < 500) //TODO: GEM SAYISI CONFIGDEN ALINACAK
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
