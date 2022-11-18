@@ -487,6 +487,7 @@ namespace IdentityApi.Services
                         PasswordHash = null,
                         MobileUserId = req.Info.DeviceId,
                         Username = "",
+                        IsTutorialDone = false,
                         IsApe = false
                     });
                     await _context.SaveChangesAsync();

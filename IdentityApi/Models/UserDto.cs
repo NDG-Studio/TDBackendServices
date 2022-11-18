@@ -41,6 +41,7 @@ namespace IdentityApi.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public bool IsTutorialDone { get; set; }
         public bool IsApe { get; set; }
 
 
@@ -50,6 +51,7 @@ namespace IdentityApi.Models
             Username = user.Username;
             Email = user.Email;
             Token = token;
+            IsTutorialDone = user.IsTutorialDone;
             IsApe = user.IsApe;
         }
     }
