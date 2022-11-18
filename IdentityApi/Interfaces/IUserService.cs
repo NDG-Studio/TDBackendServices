@@ -14,5 +14,8 @@ namespace IdentityApi.Interfaces
         Task<TDResponse<AuthenticateResponse>> Login(BaseRequest<AuthenticateRequest> req);
         Task<TDResponse<AuthenticateResponse>> LoginWithDeviceId(BaseRequest req);
         Task<TDResponse<long>> SignInRequestV2(BaseRequest<UserRequest> req);
+        Task<TDResponse<AuthenticateResponse>> LoginWithFacebook(BaseRequest<string> req);
+        Task<TDResponse<AuthenticateResponse>> LoginWithApple(BaseRequest<string> req);
+        Task<TDResponse> TutorialDone(BaseRequest req, UserDto user);
     }
 }

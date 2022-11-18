@@ -516,6 +516,168 @@ namespace IdentityApi.Services
             return response;
         }
 
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithApple(BaseRequest<string> req)
+        {
+
+            var info = InfoDetail.CreateInfo(req, "LoginWithApple");
+
+            TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
+            try
+            {
+                var userEnt = await _context.User.Where(x => x.AppleId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                if (userEnt == null)
+                {
+                    var deviceUser = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == false).FirstOrDefaultAsync();
+                    if (deviceUser == null)
+                    {
+
+                        await _context.AddAsync(new User()
+                        {
+                            IsActive = true,
+                            IsAndroid = false,
+                            Email = "",
+                            IsTutorialDone = false,
+                            AppleId = req.Data,
+                            FacebookId = null,
+                            GooglePlayId = null,
+                            FirstLogInDate = DateTimeOffset.UtcNow,
+                            LastSeen = DateTimeOffset.UtcNow,
+                            PasswordHash = null,
+                            MobileUserId = null,
+                            Username = "",
+                            IsApe = false
+                        });
+                        await _context.SaveChangesAsync();
+                        userEnt = await _context.User.Where(x => x.AppleId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                        userEnt.Username = "user_" + userEnt.Id;
+                        userEnt.Email = "user_" + userEnt.Id;
+                    }
+                    else
+                    {
+                        deviceUser.IsActive = true;
+                        deviceUser.AppleId = req.Data;
+                        deviceUser.MobileUserId = null;
+                    }
+                    await _context.SaveChangesAsync();
+                    userEnt = await _context.User.Where(x => x.AppleId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                }
+
+                var user = _mapper.Map<User, UserDto>(userEnt);
+                var token = generateJwtToken(user);
+                response.Data = new AuthenticateResponse(user, token);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithFacebook(BaseRequest<string> req)
+        {
+
+            var info = InfoDetail.CreateInfo(req, "LoginWithFacebook");
+
+            TDResponse<AuthenticateResponse> response = new TDResponse<AuthenticateResponse>();
+            try
+            {
+                var userEnt = await _context.User.Where(x => x.FacebookId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                if (userEnt == null)
+                {
+                    var deviceUser = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == false).FirstOrDefaultAsync();
+                    if (deviceUser == null)
+                    {
+
+                        await _context.AddAsync(new User()
+                        {
+                            IsActive = true,
+                            IsAndroid = false,
+                            Email = "",
+                            IsTutorialDone = false,
+                            AppleId = null,
+                            FacebookId = req.Data,
+                            GooglePlayId = null,
+                            FirstLogInDate = DateTimeOffset.UtcNow,
+                            LastSeen = DateTimeOffset.UtcNow,
+                            PasswordHash = null,
+                            MobileUserId = null,
+                            Username = "",
+                            IsApe = false
+                        });
+                        await _context.SaveChangesAsync();
+                        userEnt = await _context.User.Where(x => x.FacebookId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                        userEnt.Username = "user_" + userEnt.Id;
+                        userEnt.Email = "user_" + userEnt.Id;
+                    }
+                    else
+                    {
+                        deviceUser.IsActive = true;
+                        deviceUser.FacebookId = req.Data;
+                        deviceUser.MobileUserId = null;
+                    }
+                    await _context.SaveChangesAsync();
+                    userEnt = await _context.User.Where(x => x.FacebookId == req.Data && x.IsActive == true).FirstOrDefaultAsync();
+                }
+
+                var user = _mapper.Map<User, UserDto>(userEnt);
+                var token = generateJwtToken(user);
+                response.Data = new AuthenticateResponse(user, token);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
+        public async Task<TDResponse> TutorialDone(BaseRequest req, UserDto user)
+        {
+
+            var info = InfoDetail.CreateInfo(req, "TutorialDone");
+
+            TDResponse response = new TDResponse();
+            try
+            {
+                var userEnt = await _context.User.Where(x => x.Id == user.Id && x.IsActive == true).FirstOrDefaultAsync();
+                if (userEnt == null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                userEnt.IsTutorialDone = true;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
         private string generateJwtToken(UserDto user)
         {
             // generate token that is valid for 23 HOURS

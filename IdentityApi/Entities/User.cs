@@ -18,6 +18,10 @@ namespace IdentityApi.Entities
         
         [MaxLength(200)]
         public string? MobileUserId { get; set; }
+        public string? GooglePlayId { get; set; }
+        public string? AppleId { get; set; }
+        public string? FacebookId { get; set; }
+        public bool IsTutorialDone { get; set; }
 
         public bool? IsAndroid { get; set; }
         public bool IsApe { get; set; }

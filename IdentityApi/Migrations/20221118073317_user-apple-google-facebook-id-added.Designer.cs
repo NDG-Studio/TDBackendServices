@@ -3,6 +3,7 @@ using System;
 using IdentityApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityApi.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20221118073317_user-apple-google-facebook-id-added")]
+    partial class userapplegooglefacebookidadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,9 +57,6 @@ namespace IdentityApi.Migrations
                     b.Property<bool>("IsApe")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsTutorialDone")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTimeOffset>("LastSeen")
                         .HasColumnType("timestamp with time zone");
 
@@ -82,12 +81,11 @@ namespace IdentityApi.Migrations
                         {
                             Id = 1L,
                             Email = "ugurcan.bagriyanik@ndgstudio.com.tr",
-                            FirstLogInDate = new DateTimeOffset(new DateTime(2022, 11, 18, 12, 19, 7, 708, DateTimeKind.Unspecified).AddTicks(1513), new TimeSpan(0, 3, 0, 0, 0)),
+                            FirstLogInDate = new DateTimeOffset(new DateTime(2022, 11, 18, 10, 33, 17, 743, DateTimeKind.Unspecified).AddTicks(6345), new TimeSpan(0, 3, 0, 0, 0)),
                             IsActive = true,
                             IsAndroid = true,
                             IsApe = true,
-                            IsTutorialDone = false,
-                            LastSeen = new DateTimeOffset(new DateTime(2022, 11, 18, 12, 19, 7, 708, DateTimeKind.Unspecified).AddTicks(1567), new TimeSpan(0, 3, 0, 0, 0)),
+                            LastSeen = new DateTimeOffset(new DateTime(2022, 11, 18, 10, 33, 17, 743, DateTimeKind.Unspecified).AddTicks(6388), new TimeSpan(0, 3, 0, 0, 0)),
                             MobileUserId = "dummyMobileUserId1",
                             PasswordHash = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
                             Username = "Ugur"

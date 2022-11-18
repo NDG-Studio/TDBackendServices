@@ -48,7 +48,7 @@ namespace IdentityApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.SignInRequestV2(req);
         }
-        
+
         [HttpPost("ActivateUser")]
         public async Task<TDResponse> ActivateUser([FromBody] BaseRequest<ActivationRequest> req)
         {
@@ -75,6 +75,30 @@ namespace IdentityApi.Controllers
         {
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.LoginWithDeviceId(req);
+        }
+
+        [HttpPost("LoginWithApple")]
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithApple([FromBody] BaseRequest<string> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.LoginWithApple(req);
+        }
+
+        [HttpPost("LoginWithFacebook")]
+        public async Task<TDResponse<AuthenticateResponse>> LoginWithFacebook([FromBody] BaseRequest<string> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.LoginWithFacebook(req);
+        }
+
+        [LoginRequired]
+        [HttpPost("TutorialDone")]
+        public async Task<TDResponse> TutorialDone([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.TutorialDone(req, user);
         }
     }
 }
