@@ -597,6 +597,28 @@ namespace PlayerBaseApi.Controllers
         }
 
 
+        /// <summary>
+        /// Playerin tutorial gorevlerini doner 
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerTutorialQuestDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerTutorialQuests")]
+        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPlayerTutorialQuests(req, user);
+        }
+
+
 
 
 

@@ -54,5 +54,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks(BaseRequest req, UserDto user);
         Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user);
         Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user);
     }
 }

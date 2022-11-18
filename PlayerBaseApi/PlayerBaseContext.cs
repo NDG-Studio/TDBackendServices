@@ -62,6 +62,9 @@ namespace PlayerBaseApi
 
         public DbSet<DialogScene> DialogScene { get; set; }
         public DbSet<Dialog> Dialog { get; set; }
+        public DbSet<TutorialQuest> TutorialQuest { get; set; }
+        public DbSet<TutorialQuestsGift> TutorialQuestsGift { get; set; }
+        public DbSet<PlayerTutorialQuest> PlayerTutorialQuest { get; set; }
 
 
 

@@ -39,11 +39,11 @@ namespace PlayerBaseApi.Services
                     await _context.AddAsync(new PlayerBasePlacement()
                     {
                         BuildingTypeId = 1,
-                        BuildingLevel=1,
-                        CoordX=0,
-                        CoordY=0,
-                        UpdateEndDate=null,
-                        UserId=user.Id
+                        BuildingLevel = 1,
+                        CoordX = 0,
+                        CoordY = 0,
+                        UpdateEndDate = null,
+                        UserId = user.Id
                     });
                     await _context.SaveChangesAsync();
                 }
@@ -2276,6 +2276,64 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        #region TUTORIAL QUEST UTILS
+        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user)//Todo: algoritma daha verimli olabilir
+        {
+            TDResponse<List<PlayerTutorialQuestDTO>> response = new TDResponse<List<PlayerTutorialQuestDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerTutorialQuests");
+            try
+            {
+                var currentStageId = 1;
+                var playerTutorialQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.IsClaim)
+                    .OrderByDescending(l => l.TutorialQuest.StageId).FirstOrDefaultAsync();
+
+                if (playerTutorialQuest != null)
+                {
+                    currentStageId = playerTutorialQuest.TutorialQuest.StageId;
+                    var isCurruntStage =
+                        (await _context.PlayerTutorialQuest.Where(l => l.UserId == user.Id && l.IsClaim).CountAsync())
+                        <
+                        (await _context.TutorialQuest.Where(l => l.StageId == currentStageId && l.IsActive == true).CountAsync());
+                    currentStageId += isCurruntStage ? 0 : 1;
+                }
+
+                var playerQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive == true && l.TutorialQuest.StageId == currentStageId).ToListAsync();
+
+                var allQuest = await _context.TutorialQuest.Where(l => l.StageId == currentStageId && l.IsActive).ToListAsync();
+                var resList = new List<PlayerTutorialQuestDTO>();
+                foreach (var tq in allQuest)
+                {
+                    var ptq = playerQuest.FirstOrDefault(l => l.TutorialQuestId == tq.Id);
+                    resList.Add(new PlayerTutorialQuestDTO()
+                    {
+                        TutorialQuestId = tq.Id,
+                        StageId = tq.StageId,
+                        StageOrderId = tq.StageOrderId,
+                        IsClaim = ptq?.IsClaim ?? false,
+                        IsDone = ptq?.IsDone ?? false
+                    });
+                }
+                response.Data = resList;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        #endregion
+
+
         public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user)
         {
             TDResponse<PlayerTroopInfoDTO> response = new TDResponse<PlayerTroopInfoDTO>();
@@ -2407,8 +2465,6 @@ namespace PlayerBaseApi.Services
                 SpyProtectionActive = playerBuffs.Any(l => l.SpyProtectionActive)
             };
         }
-
-
         private async Task<LootRunDoneInfoDTO> GetLootGainedResource(PlayerHero playerHero, DateTimeOffset StartDate, DateTimeOffset EndDate)
         {
 
