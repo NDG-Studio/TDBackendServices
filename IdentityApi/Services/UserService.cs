@@ -479,7 +479,7 @@ namespace IdentityApi.Services
                 {
                     await _context.AddAsync(new User()
                     {
-                        IsActive = false,
+                        IsActive = true,
                         IsAndroid = false,
                         Email = "",
                         FirstLogInDate = DateTimeOffset.UtcNow,
@@ -491,7 +491,7 @@ namespace IdentityApi.Services
                         IsApe = false
                     });
                     await _context.SaveChangesAsync();
-                    userEnt = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == false).FirstOrDefaultAsync();
+                    userEnt = await _context.User.Where(x => x.MobileUserId == req.Info.DeviceId && x.IsActive == true).FirstOrDefaultAsync();
                     userEnt.Username = "user_" + userEnt.Id;
                     userEnt.Email = "user_" + userEnt.Id;
                     await _context.SaveChangesAsync();
