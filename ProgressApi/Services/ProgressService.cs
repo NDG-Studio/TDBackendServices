@@ -138,6 +138,10 @@ namespace ProgressApi.Services
                 {
                     query.WaveId = await _context.Wave.Where(l => l.StageId == query.Wave.StageId - 1).OrderByDescending(l => l.OrderId).Select(l => l.Id).FirstOrDefaultAsync();
                 }
+                else
+                {
+                    _context.Remove(query);
+                }
 
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
@@ -254,8 +258,15 @@ namespace ProgressApi.Services
                 UserWave? userWave = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 List<WaveDetail> waveDetail = new List<WaveDetail>();
                 Wave? nextWave = null;
+                if (userWave != null && userWave.Wave.StageId == 902)
+                {
+                    _context.Remove(userWave);
+                    await _context.SaveChangesAsync();
+                    userWave = null;
+                }
                 if (userWave == null)
                 {
+
                     waveDetail = await _context.WaveDetail.Include(l => l.Enemy).Include(l => l.Wave).ThenInclude(l => l.Stage)
                         .Where(l => l.Wave.Stage.Id == 1 && l.Wave.OrderId == 1).OrderBy(l => l.PlaceId)
                         .ToListAsync();
@@ -366,7 +377,7 @@ namespace ProgressApi.Services
             return response;
         }
 
-        public async Task<TDResponse> AddTutorialProgress(BaseRequest<ProgressDTO> req)
+        public async Task<TDResponse> AddTutorialProgress(BaseRequest<ProgressDTO> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "AddTutorialProgress");
@@ -380,11 +391,10 @@ namespace ProgressApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var userHashId = req.Info.DeviceId.GetHashCode();
 
                 UserProgressHistory userProgressHistory = new UserProgressHistory()
                 {
-                    UserId = req.Info.DeviceId.GetHashCode(),
+                    UserId = user.Id,
                     WaveId = req.Data.WaveId,
                     SpentCoin = req.Data.SpentCoin,
                     GainedCoin = req.Data.GainedCoin,
@@ -410,12 +420,12 @@ namespace ProgressApi.Services
                 List<EnemyKill> enemyKill = _mapper.ProjectTo<EnemyKill>(req.Data!.EnemyKillList.AsQueryable()).ToList();
                 enemyKill.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
 
-                UserWave? query = await _context.UserWave.Where(l => l.UserId == userHashId).FirstOrDefaultAsync();
+                UserWave? query = await _context.UserWave.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query == null)
                 {
                     query = new UserWave()
                     {
-                        UserId = userHashId,
+                        UserId = user.Id,
                         BarierHealth = (int)req.Data.BarrierHealth,
                         TotalCoin = req.Data.TotalCoin,
                         WaveId = req.Data.WaveId
@@ -446,13 +456,13 @@ namespace ProgressApi.Services
             return response;
         }
 
-        public async Task<TDResponse<UserTDInfoDTO>> GetTutorialWave(BaseRequest req)
+        public async Task<TDResponse<UserTDInfoDTO>> GetTutorialWave(BaseRequest req, UserDto user)
         {
             TDResponse<UserTDInfoDTO> response = new TDResponse<UserTDInfoDTO>();
             var info = InfoDetail.CreateInfo(req, "GetTutorialWave");
             try
             {
-                UserWave? userWave = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == req.Info.DeviceId.GetHashCode()).FirstOrDefaultAsync();
+                UserWave? userWave = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 List<WaveDetail> waveDetail = new List<WaveDetail>();
                 Wave? nextWave = null;
                 if (userWave == null)
@@ -565,7 +575,7 @@ namespace ProgressApi.Services
             return response;
         }
 
-    
+
 
     }
 }

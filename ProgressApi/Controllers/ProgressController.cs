@@ -51,18 +51,24 @@ namespace ProgressApi.Controllers
             return await _progressService.ResetLevel(req, user);
         }
 
+        [LoginRequired]
         [HttpPost("GetTutorialWave")]
         public async Task<TDResponse<UserTDInfoDTO>> GetTutorialWave([FromBody] BaseRequest req)
         {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user!.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _progressService.GetTutorialWave(req);
+            return await _progressService.GetTutorialWave(req,user);
         }
 
+        [LoginRequired]
         [HttpPost("AddTutorialProgress")]
         public async Task<TDResponse> AddTutorialProgress([FromBody] BaseRequest<ProgressDTO> req)
         {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user!.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _progressService.AddTutorialProgress(req);
+            return await _progressService.AddTutorialProgress(req,user);
         }
 
     }

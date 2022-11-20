@@ -1340,7 +1340,19 @@ namespace PlayerBaseApi.Services
                     }
                     else
                     {
-                        response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                        if (DateTimeOffset.Now > loot.OperationEndDate)
+                        {
+                            loot.IsActive = false;
+                            await _context.SaveChangesAsync();
+                            var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(loot.GainedResources);
+                            gainedResource.StartDate = loot.OperationStartDate.ToString();
+                            gainedResource.EndDate = loot.OperationEndDate.ToString();
+                            response.Data.GainedLootRuns.Add(gainedResource);
+                        }
+                        else
+                        {
+                            response.Data.ActiveLootRuns.Add(_mapper.Map<PlayerHeroLootDTO>(loot));
+                        }
                     }
                 }
 
