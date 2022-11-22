@@ -507,7 +507,7 @@ namespace PlayerBaseApi.Services
                     CurrentLevel = 1,
                     Exp = 0,
                     HeroId = req.Data,
-                    TalentPoint = 0,
+                    TalentPoint = 1,
                     UserId = user.Id,
                     EndDate = null
                 });
