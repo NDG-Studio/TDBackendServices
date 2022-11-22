@@ -92,6 +92,16 @@ namespace IdentityApi.Controllers
         }
 
         [LoginRequired]
+        [HttpPost("ChangeUsername")]
+        public async Task<TDResponse<string>> ChangeUsername([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.ChangeUsername(req, user);
+        }
+
+        [LoginRequired]
         [HttpPost("TutorialDone")]
         public async Task<TDResponse> TutorialDone([FromBody] BaseRequest req)
         {

@@ -17,5 +17,6 @@ namespace IdentityApi.Interfaces
         Task<TDResponse<AuthenticateResponse>> LoginWithFacebook(BaseRequest<string> req);
         Task<TDResponse<AuthenticateResponse>> LoginWithApple(BaseRequest<string> req);
         Task<TDResponse> TutorialDone(BaseRequest req, UserDto user);
+        Task<TDResponse<string>> ChangeUsername(BaseRequest<string> req, UserDto user);
     }
 }

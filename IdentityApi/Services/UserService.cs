@@ -517,6 +517,40 @@ namespace IdentityApi.Services
             return response;
         }
 
+        public async Task<TDResponse<string>> ChangeUsername(BaseRequest<string> req,UserDto user)
+        {
+
+            var info = InfoDetail.CreateInfo(req, "ChangeUsername");
+
+            TDResponse<string> response = new TDResponse<string>();
+            try
+            {
+                var userEnt = await _context.User.Where(x => x.Id == user.Id && x.IsActive == true).FirstOrDefaultAsync();
+                var userExist = await _context.User.Where(l => l.Username == req.Data && l.IsActive==true).FirstOrDefaultAsync();
+                if (userExist!=null || userEnt == null)
+                {
+                    response.SetError(OperationMessages.DuplicateRecord);
+                    info.AddInfo(OperationMessages.DuplicateRecord);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                userEnt.Username = req.Data;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+
         public async Task<TDResponse<AuthenticateResponse>> LoginWithApple(BaseRequest<string> req)
         {
 
