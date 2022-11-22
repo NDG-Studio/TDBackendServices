@@ -220,7 +220,7 @@ namespace PlayerBaseApi.Services
                 {
                     sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
                 }
-                response.Data = heroXpItems.OrderByDescending(l=>l.Count).ToList();
+                response.Data = heroXpItems.OrderByDescending(l => l.Count).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -359,6 +359,10 @@ namespace PlayerBaseApi.Services
                     var temp = await _context.PlayerHeroSkillLevel.Include(z => z.HeroSkillLevel).Where(o => o.UserId == user.Id && o.HeroSkillLevel.HeroSkillId == item.Id).FirstOrDefaultAsync();
                     item.Level = temp?.HeroSkillLevel?.Level ?? 0;
                     item.BuffId = temp?.HeroSkillLevel?.Level ?? 0;
+                    item.UpgradeCost = temp?.HeroSkillLevel == null ? 
+                        await _context.HeroSkillLevel.Where(o => o.HeroSkillId == item.Id && o.Level == 1).Select(l => l.Cost).FirstOrDefaultAsync() 
+                        : 
+                        await _context.HeroSkillLevel.Where(o => o.HeroSkill==temp.HeroSkillLevel.HeroSkill && o.Level==temp.HeroSkillLevel.Level+1).Select(l=>l.Cost).FirstOrDefaultAsync();
                 }
 
                 response.Data = dto;
@@ -391,9 +395,10 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                var playerInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
 
-                var isOwned = await _context.PlayerHero.Where(l => l.HeroId == heroSkill.HeroId && l.UserId == user.Id).AnyAsync();
-                if (!isOwned)
+                var playerHero = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.HeroId == heroSkill.HeroId && l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerHero == null || playerInfo == null)
                 {
                     response.SetError(OperationMessages.PlayerHaveNoHero);
                     info.AddInfo(OperationMessages.PlayerHaveNoHero);
@@ -402,12 +407,22 @@ namespace PlayerBaseApi.Services
                 }
 
                 var currentHeroSkillLevel = await _context.PlayerHeroSkillLevel.Include(l => l.HeroSkillLevel).Where(l => l.HeroSkillLevel.HeroSkillId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
+                var cost = 0;
                 if (currentHeroSkillLevel == null)
                 {
+                    var heroSkillLevel = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).FirstOrDefaultAsync();
+                    if (heroSkillLevel==null)
+                    {
+                        response.SetError(OperationMessages.InputError);
+                        info.AddInfo(OperationMessages.InputError);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    cost = heroSkillLevel.Cost;
                     var newEnt = new PlayerHeroSkillLevel()
                     {
                         UserId = user.Id,
-                        HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).Select(l => l.Id).FirstOrDefaultAsync()
+                        HeroSkillLevelId = heroSkillLevel.Id
                     };
                     await _context.AddAsync(newEnt);
                 }
@@ -420,7 +435,39 @@ namespace PlayerBaseApi.Services
                         _logger.LogInformation(info.ToString());
                         return response;
                     }
-                    currentHeroSkillLevel.HeroSkillLevelId = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == currentHeroSkillLevel.HeroSkillLevel.Level + 1).Select(l => l.Id).FirstOrDefaultAsync();
+                    var heroSkillLevell = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == currentHeroSkillLevel.HeroSkillLevel.Level + 1).FirstOrDefaultAsync();
+                    if (heroSkillLevell == null)
+                    {
+                        response.SetError(OperationMessages.InputError);
+                        info.AddInfo(OperationMessages.InputError);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    currentHeroSkillLevel.HeroSkillLevelId= heroSkillLevell.Id;
+                    cost = heroSkillLevell.Cost;
+                }
+                var hasError = false;
+                switch (playerHero.Hero.Rarity)
+                {
+                    case (int)HeroRarity.Rare:
+                        hasError = playerInfo.RareHeroCards < cost;
+                        playerInfo.RareHeroCards -= cost;
+                        break;
+                    case (int)HeroRarity.Epic:
+                        hasError = playerInfo.EpicHeroCards < cost;
+                        playerInfo.EpicHeroCards -= cost;
+                        break;
+                    case (int)HeroRarity.Legendary:
+                        hasError = playerInfo.LegendaryHeroCards < cost;
+                        playerInfo.LegendaryHeroCards -= cost;
+                        break;
+                }
+                if (hasError)
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
                 }
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
