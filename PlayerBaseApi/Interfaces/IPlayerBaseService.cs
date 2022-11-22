@@ -48,12 +48,12 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> UseItem(BaseRequest<UseItemRequest> req, UserDto user);
         Task<TDResponse<string>> SpeedUpResearchNodeUpgrade(BaseRequest<SpeedUpRequest> req, UserDto user);
         Task<TDResponse<string>> SpeedUpPrisonerTraining(BaseRequest<SpeedUpRequest> req, UserDto user);
-        Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
         Task<TDResponse<string>> SpeedUpLootRun(BaseRequest<SpeedUpRequest> req, UserDto user);
         Task<TDResponse<string>> SpeedUpHealing(BaseRequest<SpeedUpRequest> req, UserDto user);
         Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks(BaseRequest req, UserDto user);
         Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user);
         Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user);
         Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user);
+        Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
     }
 }

@@ -1878,16 +1878,16 @@ namespace PlayerBaseApi.Services
                     switch (qq[i].Key)
                     {
                         case 1:
-                            response.Data.Resources = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Resources = _mapper.ProjectTo<MarketItemDTO>(qq?[i].OrderBy(l => l.MarketOrderId).ToList().AsQueryable()).ToList();
                             break;
                         case 2:
-                            response.Data.SpeedUps = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.SpeedUps = _mapper.ProjectTo<MarketItemDTO>(qq?[i].OrderBy(l => l.MarketOrderId).ToList().AsQueryable()).ToList();
                             break;
                         case 3:
-                            response.Data.Buffs = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Buffs = _mapper.ProjectTo<MarketItemDTO>(qq?[i].OrderBy(l => l.MarketOrderId).ToList().AsQueryable()).ToList();
                             break;
                         case 4:
-                            response.Data.Others = _mapper.ProjectTo<MarketItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Others = _mapper.ProjectTo<MarketItemDTO>(qq?[i].OrderBy(l => l.MarketOrderId).ToList().AsQueryable()).ToList();
                             break;
                         default:
                             break;
@@ -1999,16 +1999,16 @@ namespace PlayerBaseApi.Services
                     switch (qq[i].Key)
                     {
                         case 1:
-                            response.Data.Resources = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Resources = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].OrderBy(l => l.Id).ToList().AsQueryable()).ToList();
                             break;
                         case 2:
-                            response.Data.SpeedUps = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.SpeedUps = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].OrderBy(l => l.Id).ToList().AsQueryable()).ToList();
                             break;
                         case 3:
-                            response.Data.Buffs = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Buffs = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].OrderBy(l => l.Id).ToList().AsQueryable()).ToList();
                             break;
                         case 4:
-                            response.Data.Others = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].ToList().AsQueryable()).ToList();
+                            response.Data.Others = _mapper.ProjectTo<PlayerItemDTO>(qq?[i].OrderBy(l => l.Id).ToList().AsQueryable()).ToList();
                             break;
                         default:
                             break;
@@ -2374,9 +2374,9 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user)
+        public async Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user)
         {
-            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            TDResponse<List<UsableItemDTO>> response = new TDResponse<List<UsableItemDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetPlayersSpeedUpItems");
             try
             {
@@ -2385,7 +2385,15 @@ namespace PlayerBaseApi.Services
                    .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.Count > 0).OrderBy(l => l.ItemId);
                 var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
 
-                response.Data = playerItems;
+
+                var speedUpItems = await _mapper.ProjectTo<UsableItemDTO>(_context.MarketItem
+                    .Where(l => l.IsActive && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp)
+                    .OrderBy(l => l.MarketOrderId)).ToListAsync();
+                foreach (var sui in speedUpItems)
+                {
+                    sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
+                }
+                response.Data = speedUpItems.OrderByDescending(l => l.Count).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

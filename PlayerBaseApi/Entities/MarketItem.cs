@@ -11,6 +11,7 @@ namespace PlayerBaseApi.Entities
         public int MaxCount { get; set; }
         public int GemPrice { get; set; } = 0;
         public int ScrapPrice { get; set; } = 0;
+        public int MarketOrderId { get; set; } = 0;
         public bool IsActive { get; set; } = true;
 
         [ForeignKey("ItemId")]

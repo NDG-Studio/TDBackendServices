@@ -518,11 +518,11 @@ namespace PlayerBaseApi.Controllers
         /// <br/>
         /// Input: BaseRequest
         /// <br/>
-        /// Output: TDResponse&lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// Output: TDResponse&lt; List &lt; UsableItemDTO &gt; &gt;
         /// </remarks>
         [LoginRequired]
         [HttpPost("GetPlayersSpeedUpItems")]
-        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersSpeedUpItems([FromBody] BaseRequest req)
+        public async Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);

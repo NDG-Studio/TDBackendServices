@@ -202,18 +202,25 @@ namespace PlayerBaseApi.Services
 
         }
 
-        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayersHeroXpItems(BaseRequest req, UserDto user)
+        public async Task<TDResponse<List<UsableItemDTO>>> GetPlayersHeroXpItems(BaseRequest req, UserDto user)
         {
-            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            TDResponse<List<UsableItemDTO>> response = new TDResponse<List<UsableItemDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetPlayersHeroXpItems");
             try
             {
-
                 var pq = _context.PlayerItem.Include(l => l.Item)
-                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).OrderBy(l => l.ItemId);
+                   .Where(l => l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp && l.Count > 0).OrderBy(l => l.ItemId);
                 var playerItems = await _mapper.ProjectTo<PlayerItemDTO>(pq).ToListAsync();
 
-                response.Data = playerItems;
+
+                var heroXpItems = await _mapper.ProjectTo<UsableItemDTO>(_context.MarketItem
+                    .Where(l => l.IsActive && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp)
+                    .OrderBy(l => l.MarketOrderId)).ToListAsync();
+                foreach (var sui in heroXpItems)
+                {
+                    sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
+                }
+                response.Data = heroXpItems.OrderByDescending(l=>l.Count).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

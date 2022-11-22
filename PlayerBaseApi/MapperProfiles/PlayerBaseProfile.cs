@@ -64,6 +64,7 @@ namespace PlayerBaseApi.MapperProfiles
                     source => source.HealingDoneDate != null ? source.HealingDoneDate.ToString() : null));
 
             CreateMap<HospitalLevel, HospitalLevelDTO>();
+            CreateMap<MarketItem, UsableItemDTO>();
 
 
             CreateMap<MarketItem, MarketItemDTO>();
