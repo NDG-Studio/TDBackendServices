@@ -535,6 +535,8 @@ namespace IdentityApi.Services
                     return response;
                 }
                 userEnt.Username = req.Data;
+                await _context.SaveChangesAsync();
+                response.Data = userEnt.Username;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
