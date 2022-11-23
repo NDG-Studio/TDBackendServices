@@ -508,12 +508,40 @@ namespace PlayerBaseApi.Services
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
 
-                if (playerItem == null || playerItem.Count < req.Data.Count)
+                if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     _logger.LogInformation(info.ToString());
                     return response;
+                }
+
+                if (req.Data.Buy && (playerItem == null || playerItem.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItem = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+                    }
                 }
 
                 playerBuilding.UpdateEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
@@ -867,12 +895,40 @@ namespace PlayerBaseApi.Services
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
 
-                if (playerItem == null || playerItem.Count < req.Data.Count)
+                if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     _logger.LogInformation(info.ToString());
                     return response;
+                }
+
+                if (req.Data.Buy && (playerItem == null || playerItem.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItem = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+                    }
                 }
 
                 currentNode.UpdateEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
@@ -1113,12 +1169,40 @@ namespace PlayerBaseApi.Services
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
 
-                if (playerItem == null || playerItem.Count < req.Data.Count)
+                if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     _logger.LogInformation(info.ToString());
                     return response;
+                }
+
+                if (req.Data.Buy && (playerItem == null || playerItem.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItem = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+                    }
                 }
 
                 playerPrison.TrainingDoneDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
@@ -1463,12 +1547,40 @@ namespace PlayerBaseApi.Services
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
 
-                if (playerItem == null || playerItem.Count < req.Data.Count)
+                if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     _logger.LogInformation(info.ToString());
                     return response;
+                }
+
+                if (req.Data.Buy && (playerItem == null || playerItem.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItem = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+                    }
                 }
 
                 playerHeroLoot.OperationEndDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);
@@ -1786,13 +1898,41 @@ namespace PlayerBaseApi.Services
 
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
-
-                if (playerItem == null || playerItem.Count < req.Data.Count)
+                
+                if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
                     _logger.LogInformation(info.ToString());
                     return response;
+                }
+
+                if (req.Data.Buy && (playerItem == null || playerItem.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItem = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
+                    }
                 }
 
                 playerHospital.HealingDoneDate -= new TimeSpan(0, req.Data.Count * playerItem.Item.Value1 ?? 0, 0);

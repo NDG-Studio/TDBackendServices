@@ -17,5 +17,10 @@
         /// kullanilacak islemin ayirt edici idsi bknz:(researchnodeid,buildingtypeid)
         /// </summary>
         public int GenericId { get; set; }
+
+        /// <summary>
+        /// kullanilacak speedup itemi yoksa gem karsiliginda satin al
+        /// </summary>
+        public bool Buy { get; set; }=false;
     }
 }
