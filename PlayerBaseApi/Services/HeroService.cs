@@ -15,14 +15,16 @@ namespace PlayerBaseApi.Services
         private readonly ILogger<HeroService> _logger;
         private readonly IMapper _mapper;
         private readonly PlayerBaseContext _context;
+        private readonly PlayerBaseService _playerBaseService;
         private readonly IConfiguration _configuration;
 
-        public HeroService(ILogger<HeroService> logger, PlayerBaseContext context, IMapper mapper, IConfiguration configuration)
+        public HeroService(ILogger<HeroService> logger, PlayerBaseContext context, IMapper mapper, PlayerBaseService playerBaseService, IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
             _configuration = configuration;
+            _playerBaseService = playerBaseService;
         }
 
         public async Task<TDResponse<List<HeroDTO>>> GetHeroTypes(BaseRequest req, UserDto user)
@@ -157,13 +159,6 @@ namespace PlayerBaseApi.Services
                 var playerItems = await _context.PlayerItem.Include(l => l.Item)
                    .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).FirstOrDefaultAsync();
 
-                if (playerItems == null || playerItems.Count < req.Data.Count)
-                {
-                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
-                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
                 if (pH.CurrentLevel >= pH.Hero.MaxLevel)
                 {
                     info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
@@ -171,6 +166,42 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                if ((playerItems == null || playerItems.Count < req.Data.Count) && !req.Data.Buy)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (req.Data.Buy && (playerItems == null || playerItems.Count < req.Data.Count))
+                {
+                    var marketItemId = await _context.MarketItem
+                        .Where(l => l.ItemId == req.Data.ItemId && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp && l.IsActive)
+                        .Select(l => l.Id).FirstOrDefaultAsync();
+                    var marketReq = new BaseRequest<BuyMarketItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new BuyMarketItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            MarketItemId = marketItemId,
+                        }
+                    };
+                    var buyResponse = await _playerBaseService.BuyMarketItem(marketReq, user);
+                    if (buyResponse.HasError)
+                    {
+                        response.SetError(buyResponse.Message);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    else
+                    {
+                        playerItems = await _context.PlayerItem.Include(l => l.Item)
+                            .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.HeroXp).FirstOrDefaultAsync();
+                    }
+                }
+
                 var threshold = await _context.HeroLevelThreshold
                     .Where(l => l.HeroId == req.Data.HeroId && l.Level == pH.CurrentLevel + 1)
                     .Select(l => l.Experience).FirstOrDefaultAsync();
@@ -359,10 +390,10 @@ namespace PlayerBaseApi.Services
                     var temp = await _context.PlayerHeroSkillLevel.Include(z => z.HeroSkillLevel).Where(o => o.UserId == user.Id && o.HeroSkillLevel.HeroSkillId == item.Id).FirstOrDefaultAsync();
                     item.Level = temp?.HeroSkillLevel?.Level ?? 0;
                     item.BuffId = temp?.HeroSkillLevel?.Level ?? 0;
-                    item.UpgradeCost = temp?.HeroSkillLevel == null ? 
-                        await _context.HeroSkillLevel.Where(o => o.HeroSkillId == item.Id && o.Level == 1).Select(l => l.Cost).FirstOrDefaultAsync() 
-                        : 
-                        await _context.HeroSkillLevel.Where(o => o.HeroSkill==temp.HeroSkillLevel.HeroSkill && o.Level==temp.HeroSkillLevel.Level+1).Select(l=>l.Cost).FirstOrDefaultAsync();
+                    item.UpgradeCost = temp?.HeroSkillLevel == null ?
+                        await _context.HeroSkillLevel.Where(o => o.HeroSkillId == item.Id && o.Level == 1).Select(l => l.Cost).FirstOrDefaultAsync()
+                        :
+                        await _context.HeroSkillLevel.Where(o => o.HeroSkill == temp.HeroSkillLevel.HeroSkill && o.Level == temp.HeroSkillLevel.Level + 1).Select(l => l.Cost).FirstOrDefaultAsync();
                 }
 
                 response.Data = dto;
@@ -411,7 +442,7 @@ namespace PlayerBaseApi.Services
                 if (currentHeroSkillLevel == null)
                 {
                     var heroSkillLevel = await _context.HeroSkillLevel.Where(l => l.HeroSkillId == req.Data && l.Level == 1).FirstOrDefaultAsync();
-                    if (heroSkillLevel==null)
+                    if (heroSkillLevel == null)
                     {
                         response.SetError(OperationMessages.InputError);
                         info.AddInfo(OperationMessages.InputError);
@@ -443,7 +474,7 @@ namespace PlayerBaseApi.Services
                         _logger.LogInformation(info.ToString());
                         return response;
                     }
-                    currentHeroSkillLevel.HeroSkillLevelId= heroSkillLevell.Id;
+                    currentHeroSkillLevel.HeroSkillLevelId = heroSkillLevell.Id;
                     cost = heroSkillLevell.Cost;
                 }
                 var hasError = false;
