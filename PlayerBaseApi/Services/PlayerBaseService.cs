@@ -2055,7 +2055,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
-                var marketItem = await _context.MarketItem.Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
+                var marketItem = await _context.MarketItem.Include(l=>l.Item).Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
 
                 if (marketItem == null || playerBaseInfo == null || req.Data == null)
                 {
