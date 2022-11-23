@@ -15,10 +15,10 @@ namespace PlayerBaseApi.Services
         private readonly ILogger<HeroService> _logger;
         private readonly IMapper _mapper;
         private readonly PlayerBaseContext _context;
-        private readonly PlayerBaseService _playerBaseService;
+        private readonly IPlayerBaseService _playerBaseService;
         private readonly IConfiguration _configuration;
 
-        public HeroService(ILogger<HeroService> logger, PlayerBaseContext context, IMapper mapper, PlayerBaseService playerBaseService, IConfiguration configuration)
+        public HeroService(ILogger<HeroService> logger, PlayerBaseContext context, IMapper mapper, IPlayerBaseService playerBaseService, IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
