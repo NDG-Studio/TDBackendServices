@@ -1898,7 +1898,7 @@ namespace PlayerBaseApi.Services
 
                 var playerItem = await _context.PlayerItem.Include(l => l.Item)
                     .Where(l => l.ItemId == req.Data.ItemId && l.UserId == user.Id && l.Item.ItemTypeId == (int)ItemTypeEnum.SpeedUp).FirstOrDefaultAsync();
-                
+
                 if ((playerItem == null || playerItem.Count < req.Data.Count) && !req.Data.Buy)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
@@ -2108,10 +2108,38 @@ namespace PlayerBaseApi.Services
                 _context.Update(playerBaseInfo);
                 await _context.AddAsync(history);
                 await _context.SaveChangesAsync();
-
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+
+
+                if (
+                    (new int[] { (int)ItemTypeEnum.RareHeroCard, (int)ItemTypeEnum.EpicHeroCard, (int)ItemTypeEnum.LegendaryHeroCard }).Contains(marketItem.Item.ItemTypeId)
+                    &&
+                    marketItem.Item.Value1 == 1)
+                {
+                    var useReq = new BaseRequest<UseItemRequest>()
+                    {
+                        Info = req.Info,
+                        Data = new UseItemRequest()
+                        {
+                            Count = req.Data.Count,
+                            ItemId = marketItem.ItemId
+                        }
+                    };
+                    var useResponse = await UseItem(useReq, user);
+                    if (useResponse.HasError)
+                    {
+                        response.SetSuccess(OperationMessages.ItemBuyedButNotUsed);
+                        info.AddInfo(OperationMessages.ItemBuyedButNotUsed);
+                        _logger.LogInformation(info.ToString());
+                    }
+
+                }
+
+
+
+
             }
             catch (Exception e)
             {

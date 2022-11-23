@@ -38,5 +38,6 @@ namespace SharedLibrary.Helpers
         public const string PlayerIsNotInGangMember = "Oyuncu çete çete üye değil!!";
         public const string PlayerNotHavePermission = "Oyuncu gerekli yetkiye sahip değil!!";
         public const string GangShortNameTaken = "Bu kısaltma başka bir çeteyi temsil ediyor!!";
+        public const string ItemBuyedButNotUsed = "Item envantere aktarıldı!";
     }
 }
