@@ -39,5 +39,7 @@ namespace SharedLibrary.Helpers
         public const string PlayerNotHavePermission = "Oyuncu gerekli yetkiye sahip değil!!";
         public const string GangShortNameTaken = "Bu kısaltma başka bir çeteyi temsil ediyor!!";
         public const string ItemBuyedButNotUsed = "Item envantere aktarıldı!";
+        public const string BeforeUpgradeThis = "Önce şu binayı yükseltmelisin!";
+        public const string BuildingAllreadyExist = "Bina zaten aktif olduğundan işleminiz gerçekleşmedi!";
     }
 }

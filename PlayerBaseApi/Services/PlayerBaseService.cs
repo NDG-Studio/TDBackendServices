@@ -10,6 +10,7 @@ using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using SharedLibrary.Models.Loot;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PlayerBaseApi.Services
 {
@@ -385,7 +386,11 @@ namespace PlayerBaseApi.Services
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
                 buildingUpgradeTime!.UpgradeDuration = duration;
                 buildingUpgradeTime!.ScrapCount = cost;
-
+                buildingUpgradeTime.Conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
+                    _context.BuildingUpgradeCondition
+                        .Include(l => l.PrereqBuildingType)
+                        .Where(l => l.BuildingId == req.Data && l.BuildingLevel == query.BuildingLevel + 1)
+                    ).ToListAsync();
                 response.Data = buildingUpgradeTime;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -453,6 +458,26 @@ namespace PlayerBaseApi.Services
                 var buff = await GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
+                var conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
+                        _context.BuildingUpgradeCondition
+                            .Include(l => l.PrereqBuildingType)
+                            .Where(l => l.BuildingId == req.Data && l.BuildingLevel == query.BuildingLevel + 1)
+                        ).ToListAsync();
+                bool canUpgrade = true;
+                foreach (var cond in conditions)
+                {
+                    canUpgrade = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == cond.PrereqBuildingTypeId && l.BuildingLevel >= cond.PrereqLevel).AnyAsync();
+                    if (!canUpgrade)
+                    {
+                        response.SetError(OperationMessages.BeforeUpgradeThis + cond.PrereqBuildingTypeName + $"({cond.PrereqLevel})");
+                        info.AddInfo(OperationMessages.BeforeUpgradeThis);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                }
+
+
+
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 if (playerBaseInfo.Scraps < cost)
                 {
@@ -2055,7 +2080,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
-                var marketItem = await _context.MarketItem.Include(l=>l.Item).Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
+                var marketItem = await _context.MarketItem.Include(l => l.Item).Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
 
                 if (marketItem == null || playerBaseInfo == null || req.Data == null)
                 {
