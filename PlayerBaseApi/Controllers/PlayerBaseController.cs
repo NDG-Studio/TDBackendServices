@@ -619,6 +619,50 @@ namespace PlayerBaseApi.Controllers
         }
 
 
+        /// <summary>
+        /// Playerin towerdefensedeki wave sonu odullerini doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; int &gt;  NOT: oynanacak wave'in id degeri
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetTDWaveRewardsByWaveId")]
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetTDWaveRewardsByWaveId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetTDWaveRewardsByWaveId(req, user);
+        }
+
+
+        /// <summary>
+        /// Playerin towerdefensedeki wave sonu odullerini almak icin cagirilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; int &gt;  NOT: oynanacak wave'in id degeri
+        /// <br/>
+        /// Output: TDResponse ;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetTDWaveRewardsDoneByWaveId")]
+        public async Task<TDResponse> GetTDWaveRewardsDoneByWaveId([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetTDWaveRewardsDoneByWaveId(req, user);
+        }
+
+
 
 
 

@@ -55,5 +55,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user);
         Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user);
         Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerItemDTO>>> GetTDWaveRewardsByWaveId(BaseRequest<int> req, UserDto user);
+        Task<TDResponse> GetTDWaveRewardsDoneByWaveId(BaseRequest<int> req, UserDto user);
     }
 }

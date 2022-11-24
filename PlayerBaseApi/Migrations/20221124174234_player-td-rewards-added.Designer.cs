@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221124174234_player-td-rewards-added")]
+    partial class playertdrewardsadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1258,27 +1260,6 @@ namespace PlayerBaseApi.Migrations
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("WaveId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("PlayerTDReward");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTDRewardHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTimeOffset>("Date")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
@@ -1287,7 +1268,9 @@ namespace PlayerBaseApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlayerTDRewardHistory");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("PlayerTDReward");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTroop", b =>

@@ -2537,6 +2537,99 @@ namespace PlayerBaseApi.Services
         }
         #endregion
 
+        #region TD REWARD UTILS
+
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetTDWaveRewardsByWaveId(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetTDWaveRewardsByWaveId");
+            try
+            {
+                if (await _context.PlayerTDRewardHistory.Where(l => l.UserId == user.Id && l.WaveId == req.Data).AnyAsync())
+                {
+                    response.SetError(OperationMessages.WaveRewardAllreadyReceived);
+                    info.AddInfo(OperationMessages.WaveRewardAllreadyReceived);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var waveItemListQuery = _context.PlayerTDReward.Where(l => l.WaveId == req.Data);
+                response.Data = await _mapper.ProjectTo<PlayerItemDTO>(waveItemListQuery).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse> GetTDWaveRewardsDoneByWaveId(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "GetTDWaveRewardsDoneByWaveId");
+            try
+            {
+                var waveItemList = await _context.PlayerTDReward.Where(l => l.WaveId == req.Data).ToListAsync();
+                if (waveItemList.Count==0)
+                {
+                    response.SetError(OperationMessages.NoReward);
+                    info.AddInfo(OperationMessages.NoReward);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (await _context.PlayerTDRewardHistory.Where(l => l.UserId == user.Id && l.WaveId == req.Data).AnyAsync())
+                {
+                    response.SetError(OperationMessages.WaveRewardAllreadyReceived);
+                    info.AddInfo(OperationMessages.WaveRewardAllreadyReceived);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                foreach (var item in waveItemList)
+                {
+                    var inventoryItem = await _context.PlayerItem.Where(l => l.UserId == user.Id && l.ItemId == item.Id).FirstOrDefaultAsync();
+                    if (inventoryItem == null)
+                    {
+                        await _context.AddAsync(new PlayerItem()
+                        {
+                            ItemId = item.Id,
+                            Count = item.Count,
+                            UserId = user.Id
+                        });
+                        continue;
+                    }
+                    inventoryItem.Count += item.Count;
+
+                }
+                await _context.SaveChangesAsync();
+                await _context.AddRangeAsync(waveItemList.Select(l => new PlayerTDRewardHistory()
+                {
+                    UserId = user.Id,
+                    WaveId = l.WaveId,
+                    Date = DateTimeOffset.UtcNow
+                }).ToList());
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        #endregion
+
 
         public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user)
         {
@@ -2585,7 +2678,7 @@ namespace PlayerBaseApi.Services
                 {
                     sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
                 }
-                response.Data = speedUpItems.GroupBy(l => l.Count == 0).OrderBy(l=>l.Key).SelectMany(l=>l).ToList();
+                response.Data = speedUpItems.GroupBy(l => l.Count == 0).OrderBy(l => l.Key).SelectMany(l => l).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

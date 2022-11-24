@@ -84,6 +84,7 @@ namespace PlayerBaseApi.MapperProfiles
                 .MapFrom(
                     source => source.ItemType.IsConsumable));
             CreateMap<PlayerItem, PlayerItemDTO>();
+            CreateMap<PlayerTDReward, PlayerItemDTO>();
 
             CreateMap<Dialog, DialogDTO>()
                 .ForMember(dest => dest.Texts, operations => operations

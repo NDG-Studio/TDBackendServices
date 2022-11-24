@@ -66,6 +66,8 @@ namespace PlayerBaseApi
         public DbSet<TutorialQuestsGift> TutorialQuestsGift { get; set; }
         public DbSet<PlayerTutorialQuest> PlayerTutorialQuest { get; set; }
         public DbSet<BuildingUpgradeCondition> BuildingUpgradeCondition { get; set; }
+        public DbSet<PlayerTDReward> PlayerTDReward { get; set; }
+        public DbSet<PlayerTDRewardHistory> PlayerTDRewardHistory { get; set; }
 
 
 

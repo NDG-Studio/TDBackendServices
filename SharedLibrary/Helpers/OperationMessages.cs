@@ -41,5 +41,7 @@ namespace SharedLibrary.Helpers
         public const string ItemBuyedButNotUsed = "Item envantere aktarıldı!";
         public const string BeforeUpgradeThis = "Önce şu binayı yükseltmelisin!";
         public const string BuildingAllreadyExist = "Bina zaten aktif olduğundan işleminiz gerçekleşmedi!";
+        public const string WaveRewardAllreadyReceived = "Bu wave ödülleri zaten alınmış!!";
+        public const string NoReward = "Ödül yok!";
     }
 }
