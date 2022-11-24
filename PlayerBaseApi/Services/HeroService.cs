@@ -251,7 +251,7 @@ namespace PlayerBaseApi.Services
                 {
                     sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
                 }
-                response.Data = heroXpItems.OrderByDescending(l => l.Count).ToList();
+                response.Data = heroXpItems.GroupBy(l => l.Count == 0).OrderBy(l => l.Key).SelectMany(l => l).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

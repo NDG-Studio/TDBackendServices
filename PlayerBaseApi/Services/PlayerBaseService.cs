@@ -10,7 +10,6 @@ using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using SharedLibrary.Models.Loot;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PlayerBaseApi.Services
 {
@@ -2586,7 +2585,7 @@ namespace PlayerBaseApi.Services
                 {
                     sui.Count = playerItems.FirstOrDefault(l => l.Item.Id == sui.Item.Id)?.Count ?? 0;
                 }
-                response.Data = speedUpItems.OrderByDescending(l => l.Count).ToList();
+                response.Data = speedUpItems.GroupBy(l => l.Count == 0).OrderBy(l=>l.Key).SelectMany(l=>l).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
