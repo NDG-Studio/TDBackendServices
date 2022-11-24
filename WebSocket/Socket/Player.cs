@@ -129,7 +129,7 @@ namespace WebSocket.Socket
         }
 
         [MessageHandler((ushort)MessageEndpointId.GetChatMessagesFromLastMessageDate)]
-        private static void GetChatMessagesFromLastMessageId(ushort fromClientId, Message message)
+        private static void GetChatMessagesFromLastMessageDate(ushort fromClientId, Message message)
         {
             var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
             if (player == null)
@@ -139,6 +139,20 @@ namespace WebSocket.Socket
             var chatId = message.GetString();
             var lastMessageDate = message.GetString();//default "--"
             DbService.GetChatMessagesFromLastMessageDate(player,chatId, lastMessageDate);
+
+        }
+
+        [MessageHandler((ushort)MessageEndpointId.GetChatMessagesFromFirstMessageDate)]
+        private static void GetChatMessagesFromFirstMessageDate(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+            var chatId = message.GetString();
+            var firstMessageDate = message.GetString();//default "--"
+            DbService.GetChatMessagesFromFirstMessageDate(player,chatId, firstMessageDate);
 
         }
 
@@ -360,5 +374,32 @@ errors
             }
         }
 
+
+        #region TEST UTILS
+
+        public static void CreateDmTEST(long userId ,long recieverUserId,string receiverUserName,string text)
+        {
+            var player = list[userId];
+            if (player == null)
+            {
+                return;
+            }
+
+            DbService.CreateDm(player, recieverUserId, receiverUserName, (int)ExtentionTypeEnum.None, text, string.Empty);
+
+        }
+
+        public static void SendChatMessageTEST(long userId ,string chatId,string text)
+        {
+            var player = list[userId];
+            if (player == null)
+            {
+                return;
+            }
+
+            DbService.SendChatMessage(player, chatId,(int)ExtentionTypeEnum.None, text, string.Empty);
+
+        }
+        #endregion
     }
 }

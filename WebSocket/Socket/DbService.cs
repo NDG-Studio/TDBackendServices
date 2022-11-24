@@ -279,30 +279,50 @@ namespace WebSocket.Socket
         {
             using (var _context = new WebSocketContext())
             {
-                if (true)//TODO: ozel chat kontrolleri yapılacak
-                {
 
-                }
                 var chatGuid = new Guid(chatId);
-                var chatRoom = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
-                    .Select(l => l.ChatRoom)
-                    .FirstOrDefaultAsync();
-                if (chatRoom == null)
+                var isGlobal = false;
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
                 {
-                    return;
+                    isGlobal = true;
+                }
+                var chatRoomMember = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
+                    .FirstOrDefaultAsync();
+                if (chatRoomMember == null)
+                {
+                    await _context.AddAsync(new ChatRoomMember()
+                    {
+                        ChatRoomId = chatGuid,
+                        IsActive=true,
+                        JoinedRoomDate=DateTimeOffset.UtcNow,
+                        LastSeen=DateTimeOffset.UtcNow,
+                        UserId=player.UniqueId,
+                        Username=player.Username
+                    });
+                    await _context.SaveChangesAsync();
+                    chatRoomMember = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
+                    .FirstOrDefaultAsync();
                 }
                 var chatMessage = new ChatMessage()
                 {
                     SendedDate = DateTimeOffset.UtcNow,
-                    ChatRoomMemberId = chatRoom.Id,
+                    ChatRoomMemberId = chatRoomMember.Id,
                     ExtentionTypeId = extentionTypeId,
                     Extention = extention,
                     Text = text
                 };
                 await _context.AddAsync(chatMessage);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
 
-                Player.RoomRefreshNeeded(chatRoom.Id.ToString());
+                    var c = e;
+                }
+
+                Player.RoomRefreshNeeded(chatRoomMember.ChatRoomId.ToString());
             }
         }
 
@@ -310,15 +330,15 @@ namespace WebSocket.Socket
         {
             using (var _context = new WebSocketContext())
             {
-                if (true)//TODO: ozel chat kontrolleri yapılacak
-                {
-
-                }
 
                 var chatGuid = new Guid(chatId);
                 var canSeeMessage = await _context.ChatRoomMember
                     .Include(l => l.ChatRoom)
                     .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                {
+                    canSeeMessage = true;
+                }
                 if (!canSeeMessage)
                 {
                     return;
@@ -327,25 +347,71 @@ namespace WebSocket.Socket
 
                 DateTimeOffset? date = lastMessageDate?.ToDateTimeOffsetUtc();
                 var chatMessages = await _context.ChatMessage.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
-                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderByDescending(l => l.SendedDate)
+                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate > date)).OrderByDescending(l => l.SendedDate).Take(25).OrderBy(l=>l.SendedDate)
                     .Select(l => new ChatMessageDTO()
                     {
-                        Id=l.Id.ToString(),
-                        Extention=l.Extention,
-                        ExtentionTypeId=l.ExtentionTypeId,
-                        SendedDate=l.SendedDate.ToString(),
-                        SenderUserId=l.ChatRoomMember.UserId,
-                        SenderIsActive=l.ChatRoomMember.IsActive,
-                        SenderUsername=l.ChatRoomMember.Username,
-                        Text=l.Text
+                        Id = l.Id.ToString(),
+                        Extention = l.Extention,
+                        ExtentionTypeId = l.ExtentionTypeId,
+                        SendedDate = l.SendedDate.ToString(),
+                        SenderUserId = l.ChatRoomMember.UserId,
+                        SenderIsActive = l.ChatRoomMember.IsActive,
+                        SenderUsername = l.ChatRoomMember.Username,
+                        Text = l.Text
                     })
                     .ToListAsync();
-
                 for (int i = 0; i < (chatMessages.Count / 5) + 1; i++)
                 {
                     var chatMessagesList = chatMessages.Skip(i * 5).Take(5).ToList();
                     var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GetChatMessagesFromLastMessageDate);
-                    m.AddBool(i == 0);
+                    m.AddInt(i == (chatMessages.Count / 5) ? 2 : i == 0 ? 0 : 1);
+                    m.AddString(chatId);
+                    m.AddModel(chatMessagesList);
+                    ServerProgram.server.Send(m, player.Id);
+                    Thread.Sleep(10);
+                }
+
+            }
+        }
+        public static async Task GetChatMessagesFromFirstMessageDate(Player player, string chatId, string? firstMessageDate)
+        {
+            using (var _context = new WebSocketContext())
+            {
+
+                var chatGuid = new Guid(chatId);
+                var canSeeMessage = await _context.ChatRoomMember
+                    .Include(l => l.ChatRoom)
+                    .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                {
+                    canSeeMessage = true;
+                }
+                if (!canSeeMessage)
+                {
+                    return;
+                }
+
+
+                DateTimeOffset? date = firstMessageDate?.ToDateTimeOffsetUtc();
+                var chatMessages = await _context.ChatMessage.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
+                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderBy(l => l.SendedDate).Take(25).OrderByDescending(l=>l.SendedDate)
+                    .Select(l => new ChatMessageDTO()
+                    {
+                        Id = l.Id.ToString(),
+                        Extention = l.Extention,
+                        ExtentionTypeId = l.ExtentionTypeId,
+                        SendedDate = l.SendedDate.ToString(),
+                        SenderUserId = l.ChatRoomMember.UserId,
+                        SenderIsActive = l.ChatRoomMember.IsActive,
+                        SenderUsername = l.ChatRoomMember.Username,
+                        Text = l.Text
+                    })
+                    .ToListAsync();
+                for (int i = 0; i < (chatMessages.Count / 5) + 1; i++)
+                {
+                    var chatMessagesList = chatMessages.Skip(i * 5).Take(5).ToList().OrderBy(l => l.SendedDate).ToList();
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GetChatMessagesFromFirstMessageDate);
+                    m.AddInt(i == (chatMessages.Count / 5) ? 2 : i == 0 ? 0 : 1);
                     m.AddString(chatId);
                     m.AddModel(chatMessagesList);
                     ServerProgram.server.Send(m, player.Id);

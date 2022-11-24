@@ -62,6 +62,21 @@ namespace WebSocket.Socket
                     case "sayall":
                         Player.SendAllRawMessage(line.ToLower().Split()[1]);
                         response.Add("Done");
+                        break;                    
+                    case "createdm":
+                        var fromUserIdc = Int64.Parse(line.ToLower().Split()[1]);
+                        var receiverUserIdc = Int64.Parse(line.ToLower().Split()[2]);
+                        var receiverUserNamec = line.ToLower().Split()[3];
+                        var textc = line.ToLower().Split()[4];
+                        Player.CreateDmTEST(fromUserIdc, receiverUserIdc, receiverUserNamec, textc);
+                        response.Add("Done");
+                        break;                    
+                    case "sendmessage":
+                        var fromUserIds = Int64.Parse(line.ToLower().Split()[1]);
+                        var chatIds = line.ToLower().Split()[2];
+                        var texts = line.ToLower().Split()[3];
+                        Player.SendChatMessageTEST(fromUserIds, chatIds, texts);
+                        response.Add("Done");
                         break;
                     default:
                         response.Add($"No Command Exist :  {line.Split()[0]}");

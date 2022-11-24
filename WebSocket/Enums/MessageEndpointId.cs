@@ -19,7 +19,8 @@
         DmRooms = 12,
         SendChatMessage = 13,
         RoomRefreshNeeded = 14,
-        GetChatMessagesFromLastMessageDate=15
+        GetChatMessagesFromLastMessageDate=15,
+        GetChatMessagesFromFirstMessageDate=16
 
         #endregion
     }

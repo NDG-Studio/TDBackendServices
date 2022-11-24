@@ -32,6 +32,10 @@ public class SocketController : ControllerBase
     /// - 'sayto' :: oyuncuya test mesaji yollar (ex: 'sayto 4 blablabla')
     /// <br/>
     /// - 'sayall' :: tum oyunculara test mesaji yollar (ex: 'sayall blablabla')
+    /// <br/>    
+    /// - 'createdm' :: dm olusturur (ex: 'createdm -fromuserid- -receiveruserid- -receivername- -text-')
+    /// <br/>    
+    /// - 'sendmessage' :: message olusturur (ex: 'sendmessage -fromuserid- -chatId- -text-')
     /// <br/>
     /// </remarks>
     [OnlyAdmin]
