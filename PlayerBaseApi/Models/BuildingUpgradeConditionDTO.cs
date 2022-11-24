@@ -12,7 +12,7 @@
         /// Yükseltme için olması gereken leveli belirtilen BuildingType'in name'i
         /// <br/>
         /// </summary>
-        public int? PrereqBuildingTypeName { get; set; }        
+        public string? PrereqBuildingTypeName { get; set; }        
 
         /// <summary>
         /// PrereqBuildingTypeId de idsi verilen building 'in olması gereken level

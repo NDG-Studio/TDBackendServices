@@ -31,7 +31,7 @@ namespace PlayerBaseApi.Entities
         /// </summary>
         public int PrereqLevel { get; set; }
 
-        [ForeignKey("BuildingTypeId")]
+        [ForeignKey("BuildingId")]
         public BuildingType? BuildingType { get; set; }
 
         [ForeignKey("PrereqBuildingTypeId")]
