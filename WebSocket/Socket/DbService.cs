@@ -288,16 +288,16 @@ namespace WebSocket.Socket
                 }
                 var chatRoomMember = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
                     .FirstOrDefaultAsync();
-                if (chatRoomMember == null)
+                if (chatRoomMember == null && isGlobal)
                 {
                     await _context.AddAsync(new ChatRoomMember()
                     {
                         ChatRoomId = chatGuid,
-                        IsActive=true,
-                        JoinedRoomDate=DateTimeOffset.UtcNow,
-                        LastSeen=DateTimeOffset.UtcNow,
-                        UserId=player.UniqueId,
-                        Username=player.Username
+                        IsActive = true,
+                        JoinedRoomDate = DateTimeOffset.UtcNow,
+                        LastSeen = DateTimeOffset.UtcNow,
+                        UserId = player.UniqueId,
+                        Username = player.Username
                     });
                     await _context.SaveChangesAsync();
                     chatRoomMember = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
@@ -347,7 +347,7 @@ namespace WebSocket.Socket
 
                 DateTimeOffset? date = lastMessageDate?.ToDateTimeOffsetUtc();
                 var chatMessages = await _context.ChatMessage.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
-                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate > date)).OrderByDescending(l => l.SendedDate).Take(25).OrderBy(l=>l.SendedDate)
+                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate > date)).OrderByDescending(l => l.SendedDate).Take(25).OrderBy(l => l.SendedDate)
                     .Select(l => new ChatMessageDTO()
                     {
                         Id = l.Id.ToString(),
@@ -394,7 +394,7 @@ namespace WebSocket.Socket
 
                 DateTimeOffset? date = firstMessageDate?.ToDateTimeOffsetUtc();
                 var chatMessages = await _context.ChatMessage.Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
-                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderBy(l => l.SendedDate).Take(25).OrderByDescending(l=>l.SendedDate)
+                    .Where(l => l.ChatRoomMember.ChatRoomId == chatGuid && (date == null ? true : l.SendedDate < date)).OrderBy(l => l.SendedDate).Take(25).OrderByDescending(l => l.SendedDate)
                     .Select(l => new ChatMessageDTO()
                     {
                         Id = l.Id.ToString(),
