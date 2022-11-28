@@ -12,5 +12,6 @@ namespace MapApi.Interfaces
         Task<TDResponse<List<InfoWithAreaDTO>>> GetMapByBoundBox(BaseRequest<BoundBox> req, UserDto user);
         Task<TDResponse<bool>> GetApeIsRecommended(BaseRequest req, UserDto user);
         Task<TDResponse<List<MapItemDTO>>> GetAllGates(BaseRequest isApe, UserDto user);
+        Task<TDResponse<List<MapInfoDto>>> GetMapByBoundBoxV2(BaseRequest<BoundBox> req, UserDto user);
     }
 }
