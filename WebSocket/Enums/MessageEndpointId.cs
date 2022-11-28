@@ -20,7 +20,10 @@
         SendChatMessage = 13,
         RoomRefreshNeeded = 14,
         GetChatMessagesFromLastMessageDate=15,
-        GetChatMessagesFromFirstMessageDate=16
+        GetChatMessagesFromFirstMessageDate=16,
+        ServerRoom = 17,
+        RaceChatRoom = 18,
+        GangChatRoom = 19,
 
         #endregion
     }

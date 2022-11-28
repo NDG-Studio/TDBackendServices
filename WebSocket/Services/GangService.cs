@@ -12,6 +12,7 @@ using SharedLibrary.Models.Loot;
 using System.Net.Http.Headers;
 using System.Text;
 using WebSocket.Enums;
+using System.Numerics;
 
 namespace PlayerBaseApi.Services
 {
@@ -104,10 +105,11 @@ namespace PlayerBaseApi.Services
                         MemberTypeId = ownerType.Id,
                         UserId = user.Id,
                         UserName = user.Username,
-                        Power=0//todo: power hesaplaması yapılacak
+                        Power = 0//todo: power hesaplaması yapılacak
                     };
                     await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
+                    await CreateGangChat(new BaseRequest<Guid>() { Info = req.Info, Data = gang.Id }, user);
                 }
             }
             catch (Exception e)
@@ -118,6 +120,49 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
+        }
+
+        private async Task<TDResponse> CreateGangChat(BaseRequest<Guid> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
+
+            try
+            {
+                var gang = await _context.Gang.Where(l => l.Id == req.Data).FirstOrDefaultAsync();
+
+                var chatRoom = new ChatRoom()
+                {
+                    ChatRoomTypeId = (int)ChatRoomTypeEnum.GangChat,
+                    CreatedDate = DateTimeOffset.UtcNow,
+                    IsActive = true,
+                    LastChangeDate = DateTimeOffset.UtcNow,
+                    Name = req.Data.ToString()
+                };
+                await _context.AddAsync(chatRoom);
+                await _context.SaveChangesAsync();
+
+                var chatRoomMember = new ChatRoomMember()
+                {
+                    ChatRoomId = chatRoom.Id,
+                    IsActive = true,
+                    JoinedRoomDate = DateTimeOffset.UtcNow,
+                    LastSeen=DateTimeOffset.UtcNow,
+                    UserId=user.Id,
+                    Username=user.Username
+                };
+                await _context.AddAsync(chatRoomMember);
+                await _context.SaveChangesAsync();
+                Player.SendGangChatId(user.Id, chatRoom.Id.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
         }
         public async Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user)
         {
@@ -200,7 +245,7 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 if (c == null)
                 {
-                    response.Data=null;
+                    response.Data = null;
                     response.SetSuccess(OperationMessages.Success);
                     return response;
                 }

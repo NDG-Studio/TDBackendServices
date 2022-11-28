@@ -6,6 +6,7 @@
         ApeChat=2,
         HumanChat=3,
         GangChat=4,
-        Dm=5
+        Dm=5,
+        ServerChat=6,
     }
 }

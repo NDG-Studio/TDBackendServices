@@ -62,7 +62,7 @@ namespace WebSocket.Socket
                     var userActivity = await _context.UserActivity.Where(l => l.UserId == player.UniqueId).FirstOrDefaultAsync();
                     await RefreshLootRuns(_context, player, userActivity);
                     await SendNews(_context, player.UniqueId, userActivity);
-                    await SendChatRooms(_context, player.UniqueId, userActivity);
+                    await SendChatRooms(_context, player, userActivity);
                 }
             }
             catch (Exception e)
@@ -185,7 +185,7 @@ namespace WebSocket.Socket
             }
         }
 
-        public static async Task SendChatRooms(WebSocketContext? _context, long userId, UserActivity? userActivity)
+        public static async Task SendChatRooms(WebSocketContext? _context, Player player, UserActivity? userActivity)
         {
             try
             {
@@ -196,19 +196,42 @@ namespace WebSocket.Socket
                 }
                 if (userActivity == null)
                 {
-                    userActivity = await _context.UserActivity.Where(l => l.UserId == userId).FirstOrDefaultAsync();
+                    userActivity = await _context.UserActivity.Where(l => l.UserId == player.UniqueId).FirstOrDefaultAsync();
                 }
 
                 var globalChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat && l.IsActive).FirstOrDefaultAsync();
-                var dmRooms = await _context.ChatMessage
-                    .Include(l => l.ChatRoomMember).ThenInclude(l => l.ChatRoom)
-                    .Where(l => l.ChatRoomMember.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.Dm && l.ChatRoomMember.UserId == userId && l.ChatRoomMember.IsActive)
-                    .Select(l => l.ChatRoomMember.ChatRoom)
+                var serverChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat && l.IsActive).FirstOrDefaultAsync();
+                var raceChatId = await _context.ChatRoom.Where(l => (player.IsApe ? (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ApeChat) : (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.HumanChat)) && l.IsActive).FirstOrDefaultAsync();
+                var gangId = await _context.GangMember.Include(l => l.MemberType).ThenInclude(l => l.Gang).Where(l => l.UserId == player.UniqueId && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                    .Select(l => l.MemberType.GangId.ToString()).FirstOrDefaultAsync();
+                if (gangId != null)
+                {
+                    var gangChatRoomId = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat && l.Name == gangId).Select(l => l.Id).FirstOrDefaultAsync();
+                    if (gangChatRoomId != null)
+                    {
+                        Player.SendGangChatId(player.UniqueId, gangChatRoomId.ToString());
+                    }
+
+                }
+
+                Player.SendGlobalChat(player.UniqueId, globalChat?.Id.ToString() ?? "--");
+                Player.SendServerChatId(player.UniqueId, serverChat?.Id.ToString() ?? "--");
+                Player.SendRaceChatId(player.UniqueId, raceChatId!.Id.ToString());
+                var dmRooms = await _context.ChatRoomMember
+                    .Include(l => l.ChatRoom)
+                    .Where(l => l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.Dm && l.UserId == player.UniqueId && l.IsActive)
+                    .Select(l => new ChatRoomDTO()
+                    {
+                        OtherPlayerId = _context.ChatRoomMember.Where(c => c.ChatRoomId == l.ChatRoomId && c.UserId != l.UserId).Select(z => z.UserId).FirstOrDefault(),
+                        ChatRoomTypeId = l.ChatRoom.ChatRoomTypeId,
+                        LastChangeDate = l.ChatRoom.LastChangeDate.ToString(),
+                        Name = l.ChatRoom.Name,
+                        Id = l.ChatRoom.Id.ToString()
+                    })
                     .Distinct()
                     .ToListAsync();
 
-                Player.SendGlobalChat(userId, globalChat?.Id.ToString() ?? "--");
-                Player.SendDmRooms(userId, dmRooms);
+                Player.SendDmRooms(player.UniqueId, dmRooms.Where(l => l.OtherPlayerId != player.UniqueId && l.OtherPlayerId != null).ToList());
 
                 if (g == null)
                 {
@@ -270,9 +293,17 @@ namespace WebSocket.Socket
                 };
                 await _context.AddAsync(chatMessage);
                 await _context.SaveChangesAsync();
+                var newChatRoomDto = new ChatRoomDTO()
+                {
+                    OtherPlayerId = recieverUserId,
+                    ChatRoomTypeId = (int)ChatRoomTypeEnum.Dm,
+                    LastChangeDate = DateTimeOffset.UtcNow.ToString(),
+                    Name = chatRoom.Name,
+                    Id = chatRoom.Id.ToString(),
+                };
 
-                Player.SendInitialRoom(recieverUserId, chatRoom.Id.ToString(), chatRoom.Name, chatRoom.LastChangeDate.ToString());
-                Player.SendInitialRoom(player.UniqueId, chatRoom.Id.ToString(), chatRoom.Name, chatRoom.LastChangeDate.ToString());
+                Player.SendInitialRoom(player.UniqueId, newChatRoomDto);
+                Player.SendInitialRoom(recieverUserId, newChatRoomDto);
             }
         }
         public static async Task SendChatMessage(Player player, string chatId, int extentionTypeId, string text, string extention)
@@ -282,7 +313,12 @@ namespace WebSocket.Socket
 
                 var chatGuid = new Guid(chatId);
                 var isGlobal = false;
-                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid &&
+                (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat
+                || l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat
+                || (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ApeChat && player.IsApe)
+                || (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.HumanChat && !player.IsApe)
+                )).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
                 {
                     isGlobal = true;
                 }
@@ -302,6 +338,11 @@ namespace WebSocket.Socket
                     await _context.SaveChangesAsync();
                     chatRoomMember = await _context.ChatRoomMember.Include(l => l.ChatRoom).Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive)
                     .FirstOrDefaultAsync();
+                }
+                if (chatRoomMember == null)
+                {
+                    Console.WriteLine("chatroommember_null");
+                    return;
                 }
                 var chatMessage = new ChatMessage()
                 {
@@ -335,7 +376,7 @@ namespace WebSocket.Socket
                 var canSeeMessage = await _context.ChatRoomMember
                     .Include(l => l.ChatRoom)
                     .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
-                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat || l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat)).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
                 {
                     canSeeMessage = true;
                 }

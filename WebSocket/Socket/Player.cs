@@ -25,12 +25,13 @@ namespace WebSocket.Socket
         public ushort Id { get; private set; }
         public string Username { get; private set; }
         public long UniqueId { get; private set; }
+        public bool IsApe { get; private set; }
         private string Token { get; set; }
         public string GetToken() => Token;
         private InfoDto Info { get; set; }
         public InfoDto GetInfo() => Info;
 
-        public static void Create(ushort id, long userId, string username, string token, InfoDto info)
+        public static void Create(ushort id, long userId, string username, string token, InfoDto info,bool isApe)
         {
             Player player = new Player();
             player.Username = username;
@@ -38,6 +39,7 @@ namespace WebSocket.Socket
             player.Id = id;
             player.Token = token;
             player.Info = info;
+            player.IsApe = isApe;
             list.Add(userId, player);
 
             DbService.SetUserActivity(player, DateTimeOffset.Now, true);
@@ -158,14 +160,12 @@ namespace WebSocket.Socket
 
         #endregion
 
-        public static void SendInitialRoom(long userId,string ChatId,string Name, string LastChangeDate)
+        public static void SendInitialRoom(long userId,ChatRoomDTO chatRoom)
         {
             try
             {
                 var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.InitialChatRoom);
-                m.AddString(ChatId);
-                m.AddString(Name);
-                m.AddString(LastChangeDate);
+                m.AddModel(chatRoom);
                 ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
             }
             catch (Exception e)
@@ -190,19 +190,13 @@ namespace WebSocket.Socket
             }
         }
 
-        public static void SendDmRooms(long userId,List<ChatRoom> chatRooms)
+        public static void SendDmRooms(long userId,List<ChatRoomDTO> chatRooms)
         {
             try
             {
                 for (int i = 0; i < (chatRooms.Count / 5)+1; i++)
                 {
-                    var chatRoomList = chatRooms.Skip(i * 5).Take(5).Select(l=>new ChatRoomDTO()
-                    {
-                        Id=l.Id.ToString(),
-                        ChatRoomTypeId=l.ChatRoomTypeId,
-                        LastChangeDate=l.LastChangeDate.ToString(),
-                        Name = l.Name
-                    }).ToList();
+                    var chatRoomList = chatRooms.Skip(i * 5).Take(5).ToList();
                     var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.DmRooms);
                     m.AddBool(i==0);
                     m.AddModel(chatRoomList);
@@ -230,6 +224,55 @@ namespace WebSocket.Socket
             catch (Exception e)
             {
                 Console.WriteLine("hata:149", e);
+            }
+        }
+
+        public static void SendServerChatId(long userId,string serverChatId)
+        {
+            try
+            {
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.ServerRoom);
+                    m.AddString(serverChatId);
+                    ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                    Thread.Sleep(100);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:SendServerChatId", e);
+            }
+        }
+
+
+        public static void SendGangChatId(long userId,string gangChatId)
+        {
+            try
+            {
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GangChatRoom);
+                    m.AddString(gangChatId);
+                    ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                    Thread.Sleep(100);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:SendServerChatId", e);
+            }
+        }
+
+        public static void SendRaceChatId(long userId,string raceChatId)
+        {
+            try
+            {
+                    var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RaceChatRoom);
+                    m.AddString(raceChatId);
+                    ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+                    Thread.Sleep(100);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:SendServerChatId", e);
             }
         }
 
@@ -370,7 +413,7 @@ errors
                     list.Remove(user.Id);
                 }
                 ServerProgram.server.Accept(pendingConnection);
-                Create(pendingConnection.Id, user.Id, user.Username, token, info);
+                Create(pendingConnection.Id, user.Id, user.Username, token, info, user.IsApe);
             }
         }
 
