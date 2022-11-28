@@ -197,7 +197,7 @@ namespace MapApi.Services
             try
             {
 
-               
+
 
                 var qa = await _context.Area.Where(l =>
                 (l.XMin <= req.Data.XMax && l.XMin > req.Data.XMin) && (l.YMin <= req.Data.YMax && l.YMin > req.Data.YMin)
@@ -207,7 +207,7 @@ namespace MapApi.Services
                 (l.XMax <= req.Data.XMax && l.XMax > req.Data.XMin) && (l.YMin <= req.Data.YMax && l.YMin > req.Data.YMin)
                     ||
                 (l.XMax <= req.Data.XMax && l.XMax > req.Data.XMin) && (l.YMax <= req.Data.YMax && l.YMax > req.Data.YMin)
-                    
+
                    ||
 
                 (req.Data.XMin <= l.XMax && req.Data.XMin > l.XMin) && (req.Data.YMin <= l.YMax && req.Data.YMin > l.YMin)
@@ -219,15 +219,38 @@ namespace MapApi.Services
                 (req.Data.XMax <= l.XMax && req.Data.XMax > l.XMin) && (req.Data.YMax <= l.YMax && req.Data.YMax > l.YMin)
 
 
-                ).Select(l=>l.Id).ToListAsync();
+                ).Select(l => l.Id).ToListAsync();
 
                 var q = _context.MapItem.Where(l => qa.Contains(l.AreaId));
 
-                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).GroupBy(l => l.AreaId).Select(l=>new InfoWithAreaDTO()
+                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).GroupBy(l => l.AreaId).Select(l => new InfoWithAreaDTO()
                 {
-                    AreaId=l.Key,
-                    MapItems=l.ToList(),
+                    AreaId = l.Key,
+                    MapItems = l.ToList(),
                 }).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse<List<MapInfoDto>>> GetMapByBoundBoxV2(BaseRequest<BoundBox> req, UserDto user)
+        {
+            TDResponse<List<MapInfoDto>> response = new TDResponse<List<MapInfoDto>>();
+            var info = InfoDetail.CreateInfo(req, "GetMapByBoundBoxV2");
+            try
+            {
+                var q = _context.MapItem.Where(l => l.CoordX <= req.Data.XMax && l.CoordX >= req.Data.XMin && l.CoordY >= req.Data.YMin && l.CoordY <= req.Data.YMax);
+
+                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -273,9 +296,9 @@ namespace MapApi.Services
             var info = InfoDetail.CreateInfo(req, "GetAllGates");
             try
             {
-                var q = _context.MapItem.Include(l=>l.Gate)
+                var q = _context.MapItem.Include(l => l.Gate)
                     .Where(l => l.MapItemTypeId == (int)MapItemTypeEnum.Gate);
-                response.Data =await _mapper.ProjectTo<MapItemDTO>(q).ToListAsync();
+                response.Data = await _mapper.ProjectTo<MapItemDTO>(q).ToListAsync();
 
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

@@ -69,7 +69,20 @@ namespace MapApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _mapService.GetMapByBoundBox(req, user);
         }
-       
+
+
+        [LoginRequired]
+        [HttpPost("GetMapByBoundBoxV2")]
+        public async Task<TDResponse<List<MapInfoDto>>> GetMapByBoundBoxV2([FromBody] BaseRequest<BoundBox> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.GetMapByBoundBoxV2(req, user);
+        }
+
+
+
         [LoginRequired]
         [HttpPost("GetApeIsRecommended")]
         public async Task<TDResponse<bool>> GetApeIsRecommended([FromBody] BaseRequest req)
