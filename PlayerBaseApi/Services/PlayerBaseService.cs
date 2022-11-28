@@ -385,11 +385,20 @@ namespace PlayerBaseApi.Services
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
                 buildingUpgradeTime!.UpgradeDuration = duration;
                 buildingUpgradeTime!.ScrapCount = cost;
-                buildingUpgradeTime.Conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
+                var conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
                     _context.BuildingUpgradeCondition
                         .Include(l => l.PrereqBuildingType)
                         .Where(l => l.BuildingId == req.Data && l.BuildingLevel == query.BuildingLevel + 1)
                     ).ToListAsync();
+                buildingUpgradeTime.Conditions = new List<BuildingUpgradeConditionDTO>();
+                foreach (var cond in conditions)
+                {
+                    bool canUpgrade = await _context.PlayerBasePlacement.Where(l => l.UserId == user.Id && l.BuildingTypeId == cond.PrereqBuildingTypeId && l.BuildingLevel >= cond.PrereqLevel).AnyAsync();
+                    if (!canUpgrade)
+                    {
+                        buildingUpgradeTime.Conditions.Add(cond);
+                    }
+                }
                 response.Data = buildingUpgradeTime;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
