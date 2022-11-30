@@ -42,12 +42,23 @@ namespace MapApi.Controllers
         
         [LoginRequired]
         [HttpPost("MoveUserBase")]
+        [Obsolete("deprecated")]
         public async Task<TDResponse> MoveUserBase([FromBody] BaseRequest<MapItemDTO> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _mapService.MoveUserBase(req, user);
+        }        
+        
+        [LoginRequired]
+        [HttpPost("TeleportUserBase")]
+        public async Task<TDResponse> TeleportUserBase([FromBody] BaseRequest<TeleportBaseRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.TeleportPlayerBase(req, user);
         }
 
         [LoginRequired]

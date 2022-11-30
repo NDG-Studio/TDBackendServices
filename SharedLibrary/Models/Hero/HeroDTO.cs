@@ -10,6 +10,7 @@
         public string BackgroundPictureUrl { get; set; }
         public string ThemeColor { get; set; }
         public int MaxLevel { get; set; }
+        public int CurrentLevel { get; set; } = 0;
         public bool Owned { get; set; }
         public int Rarity { get; set; }
         public int Price { get; set; }

@@ -43,5 +43,6 @@ namespace SharedLibrary.Helpers
         public const string BuildingAllreadyExist = "Bina zaten aktif olduğundan işleminiz gerçekleşmedi!";
         public const string WaveRewardAllreadyReceived = "Bu wave ödülleri zaten alınmış!!";
         public const string NoReward = "Ödül yok!";
+        public const string WrongCoordinate = "Hatalı koordinat!!";
     }
 }

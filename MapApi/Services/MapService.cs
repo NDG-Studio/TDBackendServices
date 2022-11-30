@@ -163,6 +163,74 @@ namespace MapApi.Services
         }
 
 
+
+        public async Task<TDResponse> TeleportPlayerBase(BaseRequest<TeleportBaseRequest> req, UserDto user)
+        {
+            TDResponse<TeleportBaseRequest> response = new TDResponse<TeleportBaseRequest>();
+            var info = InfoDetail.CreateInfo(req, "TeleportPlayerBase");
+            try
+            {
+                var area = await _context.Area.Where(l =>
+                    req.Data.CoordX >= l.XMin &&
+                    req.Data.CoordX < l.XMax &&
+                    req.Data.CoordY >= l.YMin &&
+                    req.Data.CoordY < l.YMax
+                    )
+                    .FirstOrDefaultAsync();
+                if (area == null)
+                {
+                    response.SetError(OperationMessages.WrongCoordinate);
+                    info.AddInfo(OperationMessages.WrongCoordinate);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var q = await _context.MapItem.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (q==null)
+                {
+                    var ent = new MapItem()
+                    {
+                        AreaId = area.Id,
+                        CoordX = req.Data.CoordX,
+                        CoordY = req.Data.CoordY,
+                        MapItemTypeId = (int)MapItemTypeEnum.Player,//player
+                        IsApe = user.IsApe,
+                        UserId = user.Id,
+                        UserName = user.Username,
+                        BaseLevel = 1
+                    };
+                    await _context.AddAsync(ent);
+                    await _context.SaveChangesAsync();
+                    q = await _context.MapItem.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                }
+                if (q==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                q!.CoordX = req.Data.CoordX;
+                q!.CoordY = req.Data.CoordY;
+                q.AreaId = area.Id;
+                //TODO: Fuel harcama eklenecek
+
+
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         public async Task<TDResponse<List<MapInfoDto>>> GetMapByAreaIds(BaseRequest<List<int>> req, UserDto user)
         {
             TDResponse<List<MapInfoDto>> response = new TDResponse<List<MapInfoDto>>();
@@ -248,7 +316,13 @@ namespace MapApi.Services
             var info = InfoDetail.CreateInfo(req, "GetMapByBoundBoxV2");
             try
             {
-                var q = _context.MapItem.Where(l => l.CoordX <= req.Data.XMax && l.CoordX >= req.Data.XMin && l.CoordY >= req.Data.YMin && l.CoordY <= req.Data.YMax);
+                var q = _context.MapItem.Where(l =>
+                l.CoordX <= req.Data.XMax &&
+                l.CoordX >= req.Data.XMin &&
+                l.CoordY >= req.Data.YMin &&
+                l.CoordY <= req.Data.YMax &&
+                l.MapItemTypeId == (int)MapItemTypeEnum.Player
+                );
 
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
                 response.SetSuccess();

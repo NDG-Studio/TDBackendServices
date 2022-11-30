@@ -36,12 +36,13 @@ namespace PlayerBaseApi.Services
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
                 var query = _context.Hero.Where(l => l.IsActive && l.IsApe == playerBaseInfo.IsApe);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
-                var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).Select(l => l.HeroId).ToListAsync();
+                var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).ToListAsync();
 
                 response.Data = qlist;
                 foreach (var oh in ownedHeroes)
                 {
-                    qlist.FirstOrDefault(l => l.Id == oh).Owned = true;
+                    qlist.FirstOrDefault(l => l.Id == oh.HeroId).Owned = true;
+                    qlist.FirstOrDefault(l => l.Id == oh.HeroId).CurrentLevel = oh.CurrentLevel;
                 }
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
