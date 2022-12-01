@@ -25,28 +25,6 @@ namespace MapApi.Services
             _configuration = configuration;
         }
 
-        //public async Task<TDResponse<List<PlayerBasePlacementDTO>>> GetBuildings(BaseRequest req, UserDto user)
-        //{
-        //    TDResponse<List<PlayerBasePlacementDTO>> response = new TDResponse<List<PlayerBasePlacementDTO>>();
-        //    var info = InfoDetail.CreateInfo(req, "GetBuildings");
-        //    try
-        //    {
-        //        var query = _context.PlayerBasePlacement.Include(l => l.BuildingType).Where(l => l.UserId == user.Id && l.BuildingType.IsActive);
-        //        var qlist = await _mapper.ProjectTo<PlayerBasePlacementDTO>(query).ToListAsync();
-        //        response.Data = qlist;
-        //        response.SetSuccess();
-        //        info.AddInfo(OperationMessages.Success);
-        //        _logger.LogInformation(info.ToString());
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response.SetError(OperationMessages.DbError);
-        //        info.SetException(e);
-        //        _logger.LogError(info.ToString());
-        //    }
-        //    return response;
-
-        //}
 
         public async Task<TDResponse<List<MapItemTypeDTO>>> GetMapItemTypes(BaseRequest req, UserDto user)
         {
@@ -321,10 +299,48 @@ namespace MapApi.Services
                 l.CoordX >= req.Data.XMin &&
                 l.CoordY >= req.Data.YMin &&
                 l.CoordY <= req.Data.YMax &&
-                l.MapItemTypeId == (int)MapItemTypeEnum.Player
+                l.MapItemTypeId == (int)MapItemTypeEnum.Player &&
+                l.UserId != user.Id
                 );
 
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse<MapInfoDto>> GetPlayerBaseCoord(BaseRequest req, UserDto user)
+        {
+            TDResponse<MapInfoDto> response = new TDResponse<MapInfoDto>();
+            var info = InfoDetail.CreateInfo(req, "GetMapByBoundBoxV2");
+            try
+            {
+                var q = _context.MapItem.Where(l =>
+                    l.UserId == user.Id &&
+                    l.MapItemTypeId == (int)MapItemTypeEnum.Player
+                );
+
+                response.Data = await _mapper.ProjectTo<MapInfoDto>(q).FirstOrDefaultAsync() ?? new MapInfoDto()
+                {
+                    Id = 0,
+                    AreaId = 0,
+                    BaseLevel = 0,
+                    CoordX = 50,
+                    CoordY = 50,
+                    UserId = user.Id,
+                    UserName = user.Username,
+                    IsApe = user.IsApe,
+                    MapItemTypeId = (int)MapItemTypeEnum.Player
+                };
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
