@@ -242,6 +242,8 @@ namespace WebSocket.Socket
                 Console.WriteLine("hata:SendServerChatId", e);
             }
         }
+        
+        
 
 
         public static void SendGangChatId(long userId,string gangChatId)
@@ -257,6 +259,21 @@ namespace WebSocket.Socket
             catch (Exception e)
             {
                 Console.WriteLine("hata:SendServerChatId", e);
+            }
+        }
+        
+        public static void SendScoutInfoTest(long userId,ScoutInfoDTO scoutInfoDto)
+        {
+            try
+            {
+                var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.SendScoutInfo);
+                m.AddModel(scoutInfoDto);
+                ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("hata:SendScoutInfoTest", e);
             }
         }
 

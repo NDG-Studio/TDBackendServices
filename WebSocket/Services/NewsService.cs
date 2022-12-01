@@ -87,7 +87,42 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
+        
+        public async Task<TDResponse> SendScoutNews(ScoutInfoDTO req)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                /*using (var _context = new WebSocketContext())
+                {
+                    var imN = new News()
+                    {
+                        Title = req.Title,
+                        Detail = req.Detail,
+                        Date = DateTimeOffset.Now,
+                        UserId = null,
+                        IsActive = true,
+                        Seen = false,
+                        TypeId = (int)NewsType.Announcment
+                    };
+                    await _context.ImportantNews.AddAsync(imN);
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                }*/
+                //Todo: NewsOLarak da ekleencek
+                
+                Player.SendScoutInfoTest(req.SenderUserId,req);
+                Player.SendScoutInfoTest(req.TargetUserId,req);
 
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+
+        }
 
 
 

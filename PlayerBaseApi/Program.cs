@@ -88,6 +88,8 @@ using (var serviceScope = app.Services
         //context.CreateHeroLevelBuffs();
     }
 }
+var cc = app.Services.GetRequiredService<ILoggerProvider>();
+ScoutHelper.Start(cc);
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<ApiMiddleware>();
 //app.UseHttpsRedirection();

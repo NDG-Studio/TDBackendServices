@@ -321,7 +321,7 @@ namespace MapApi.Services
         public async Task<TDResponse<MapInfoDto>> GetPlayerBaseCoord(BaseRequest req, UserDto user)
         {
             TDResponse<MapInfoDto> response = new TDResponse<MapInfoDto>();
-            var info = InfoDetail.CreateInfo(req, "GetMapByBoundBoxV2");
+            var info = InfoDetail.CreateInfo(req, "GetPlayerBaseCoord");
             try
             {
                 var q = _context.MapItem.Where(l =>

@@ -68,6 +68,7 @@ namespace PlayerBaseApi
         public DbSet<BuildingUpgradeCondition> BuildingUpgradeCondition { get; set; }
         public DbSet<PlayerTDReward> PlayerTDReward { get; set; }
         public DbSet<PlayerTDRewardHistory> PlayerTDRewardHistory { get; set; }
+        public DbSet<Scout> Scout { get; set; }
 
 
 

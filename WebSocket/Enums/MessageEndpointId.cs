@@ -9,6 +9,7 @@
         ActiveLootRuns = 5,
         RefreshActiveLoots = 6,
         RefreshPlayerBaseInfo = 7,
+        SendScoutInfo =20,
 
         #region CHAT
 

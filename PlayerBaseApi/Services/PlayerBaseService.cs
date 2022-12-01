@@ -1,4 +1,6 @@
 ﻿
+using System.Net.Http.Headers;
+using System.Text;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -2702,6 +2704,51 @@ namespace PlayerBaseApi.Services
 
         }
 
+        #region THREAD BASED INTERACTION UTILS
+        
+        public async Task<TDResponse<ScoutDTO>> ScoutPlayer(BaseRequest<ScoutRequest> req, UserDto user)
+        {
+            TDResponse<ScoutDTO> response = new TDResponse<ScoutDTO>();
+            var info = InfoDetail.CreateInfo(req, "ScoutPlayer");
+            try
+            {
+                //todo: kac tane aktif scoutu var kontrol edilecek
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var ent = new Scout()
+                {
+                    TargetUserId = req.Data.TargetUserId,
+                    ArrivedDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
+                    ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
+                    SenderUserId = user.Id
+                    
+                };
+
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+                
+                ScoutHelper.AddScoutList(ent);
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        
+
+        #endregion
 
         #region PRIVATE FUNCTIONS
 
@@ -2813,6 +2860,7 @@ namespace PlayerBaseApi.Services
 
             return calculated;
         }
+
 
         #endregion
 

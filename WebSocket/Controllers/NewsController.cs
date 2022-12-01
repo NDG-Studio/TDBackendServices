@@ -31,6 +31,12 @@ public class NewsController : ControllerBase
     {
         return await _newsService.SendAnnouncment(req.Data);
     }
+    //[OnlyApps]
+    [HttpPost("SendScoutNews")]
+    public async Task<TDResponse> SendScoutNews([FromBody] BaseRequest<ScoutInfoDTO> req)
+    {
+        return await _newsService.SendScoutNews(req.Data);
+    }    
 
 
 
