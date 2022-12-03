@@ -97,7 +97,7 @@ namespace WebSocket.Socket
             //Console.WriteLine($"Server started");
             server = new Server
             {
-                TimeoutTime = 10000
+                TimeoutTime = ushort.MaxValue
             };
             Player.SetUrls();
             server.Start(7777, 10000);
@@ -127,7 +127,11 @@ namespace WebSocket.Socket
 
         private static void PlayerLeft(object? sender, ServerDisconnectedEventArgs e)
         {
-            Player.list.Remove(Player.list.Values.FirstOrDefault(l=>l.Id==e.Client.Id).UniqueId);
+            var p = Player.list.Values.FirstOrDefault(l => l.Id == e.Client.Id);
+            if (p!=null)
+            {
+                Player.list.Remove(Player.list.Values.FirstOrDefault(l=>l.Id==e.Client.Id).UniqueId);
+            }
         }
 
 
