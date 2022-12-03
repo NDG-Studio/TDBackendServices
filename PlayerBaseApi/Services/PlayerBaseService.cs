@@ -2043,8 +2043,21 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetMarket");
             try
             {
+                var nowDay = DateTimeOffset.UtcNow.Day;
                 var query = await _context.MarketItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
-                    .Where(l => l.IsActive).OrderBy(l => l.Item.ItemTypeId).ToListAsync();
+                    .Where(l => l.IsActive)
+                    .Select(l=>new MarketItem()
+                    {
+                        Id = l.Id,
+                        Item = l.Item,
+                        GemPrice = l.GemPrice,
+                        IsActive = l.IsActive,
+                        ItemId = l.ItemId,
+                        MaxCount = l.MaxCount - _context.PlayerMarketHistory.Count(k => k.UserId==user.Id &&k.PurchaseDate.Day==nowDay &&k.MarketItemId==l.Id),
+                        ScrapPrice = l.ScrapPrice,
+                        MarketOrderId = l.MarketOrderId
+                    } )
+                    .OrderBy(l => l.Item.ItemTypeId).ToListAsync();
 
                 response.Data = new MarketDTO();
                 var qq = query.GroupBy(l => l.Item.ItemType.ItemCategoryId).OrderBy(l => l.Key).ToList();
