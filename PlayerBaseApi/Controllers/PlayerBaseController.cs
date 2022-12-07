@@ -682,6 +682,28 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.ScoutPlayer(req, user);
+        }        
+        
+        
+        /// <summary>
+        /// Baska bir playerin base'ine saldiri yapmak icin cagirilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>Not: Test icin distance hesaplamasi yapilmaksizin 2 dk gidis 2 dk gelis olarak ayarlandi
+        /// Input: BaseRequest &lt; AttackRequest &gt;  NOT: user'in idsi, kullanilacak heronun idsi, asker sayisi ve distance degeri alinir
+        /// <br/>
+        /// Output: TDResponse &lt; AttackInfoDTO &gt; Not: suan data null donuyor ne donecegine karar veremedim
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("AttackPlayer")]
+        public async Task<TDResponse<AttackInfoDTO>> AttackPlayer([FromBody] BaseRequest<AttackRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.AttackPlayer(req, user);
         }
 
 

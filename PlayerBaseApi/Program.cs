@@ -90,6 +90,7 @@ using (var serviceScope = app.Services
 }
 var cc = app.Services.GetRequiredService<ILoggerProvider>();
 ScoutHelper.Start(cc);
+AttackHelper.Start(cc);
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<ApiMiddleware>();
 //app.UseHttpsRedirection();

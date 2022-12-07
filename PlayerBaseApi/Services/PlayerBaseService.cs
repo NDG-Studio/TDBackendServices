@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text;
 using AutoMapper;
@@ -12,9 +13,11 @@ using PlayerBaseApi.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using SharedLibrary.Models.Loot;
+#pragma warning disable CS1591
 
 namespace PlayerBaseApi.Services
 {
+    [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
     public class PlayerBaseService : IPlayerBaseService
     {
         private readonly ILogger<PlayerBaseService> _logger;
@@ -2747,6 +2750,71 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
                 
                 ScoutHelper.AddScoutList(ent);
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }       
+        public async Task<TDResponse<AttackInfoDTO>> AttackPlayer(BaseRequest<AttackRequest> req, UserDto user)
+        {
+            TDResponse<AttackInfoDTO> response = new TDResponse<AttackInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "AttackPlayer");
+            try
+            {
+                //todo: kac tane aktif attack var kontrol edilecek
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var attackList =await  _context.Attack
+                    .Where(l => l.IsActive && l.AttackerUserId == user.Id )
+                    .ToListAsync();
+                if (attackList.Any(l=>l.AttackerHeroId == req.Data.AttackerHeroId))
+                {
+                    info.AddInfo(OperationMessages.PlayerHeroBusy);
+                    response.SetError(OperationMessages.PlayerHeroBusy);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var pt = (await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id)
+                    .FirstOrDefaultAsync());
+                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var att = new Attack()
+                {
+                    TargetUserId = req.Data.TargetUserId,
+                    ArriveDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
+                    ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
+                    AttackerUserId = user.Id,
+                    WinnerSide = null,
+                    AttackerHeroId = req.Data.AttackerHeroId,
+                    AttackerTroopCount = req.Data.AttackerTroopCount
+                };
+                
+                pt.TroopCount -= att.AttackerTroopCount;
+                
+                
+                await _context.AddAsync(att);
+                await _context.SaveChangesAsync();
+                
+                AttackHelper.NewAttack(att);
 
             }
             catch (Exception e)

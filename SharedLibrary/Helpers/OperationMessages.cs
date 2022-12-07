@@ -26,6 +26,7 @@ namespace SharedLibrary.Helpers
         public const string InfoNull = "İşlemi gerçekleştirmek için yeterli bilgiye ulaşılamadı!";
         public const string HeroAllreadyMaxLevel = "Daha fazla yükseltilemez!";
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";
+        public const string PlayerHeroBusy = "Kullanıcının işlem yapmak istediği hero müsait değil!";
         public const string PlayerDoesNotHaveResource = "Kullanıcı gerekli kaynaklara sahip değil!";
         public const string TrainingMustBeDone = "Eğitimin bitmesini bekleyin!";
         public const string HealingMustBeDone = "İyileştirme işleminin bitmesini bekleyin!";

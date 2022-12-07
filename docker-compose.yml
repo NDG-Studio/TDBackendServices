@@ -65,7 +65,7 @@ services:
             dockerfile: ProgressApi/Dockerfile
         environment:
             - ConnectionStrings__ProgressContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=https://identityapi
+            - IdentityEndpoint=http://identityapi
             - Logging__LogLevel__Default=Information
             - Logging__LogLevel__Microsoft.AspNetCore=Warning
             - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
@@ -84,7 +84,7 @@ services:
             dockerfile: PlayerBaseApi/Dockerfile
         environment:
             - ConnectionStrings__PlayerBaseContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=https://identityapi
+            - IdentityEndpoint=http://identityapi
             - Logging__LogLevel__Default=Information
             - Logging__LogLevel__Microsoft.AspNetCore=Warning
             - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
@@ -93,7 +93,7 @@ services:
             - Logging__Database__LogLevel__Default=Information
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - WebSocketUrl=https://websocket
+            - WebSocketUrl=http://websocket
     mapapi:
         #networks:
         #    - isolation-network
@@ -104,7 +104,7 @@ services:
             dockerfile: MapApi/Dockerfile
         environment:
             - ConnectionStrings__MapContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=https://identityapi
+            - IdentityEndpoint=http://identityapi
             - Logging__LogLevel__Default=Information
             - Logging__LogLevel__Microsoft.AspNetCore=Warning
             - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
@@ -123,7 +123,7 @@ services:
             dockerfile: WebSocket/Dockerfile
         environment:
             - ConnectionStrings__WebSocketContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=https://identityapi
+            - IdentityEndpoint=http://identityapi
             - Logging__LogLevel__Default=Information
             - Logging__LogLevel__Microsoft.AspNetCore=Warning
             - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
@@ -132,8 +132,8 @@ services:
             - Logging__Database__LogLevel__Default=Information
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - Identity_Url=https://identityapi
-            - PlayerBase_Url=https://playerbaseapi
+            - Identity_Url=http://identityapi
+            - PlayerBase_Url=http://playerbaseapi
             - Admins=1,2
 
 volumes:

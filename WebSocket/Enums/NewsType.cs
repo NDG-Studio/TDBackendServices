@@ -5,6 +5,8 @@
         LootRun =1,
         ImportantNews=2,
         Announcment=3,
-        GangInvitation=4
+        GangInvitation=4,
+        Scout=5,
+        Attack=6
     }
 }
