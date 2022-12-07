@@ -37,12 +37,15 @@ namespace PlayerBaseApi.Services
                 var query = _context.Hero.Where(l => l.IsActive && l.IsApe == playerBaseInfo.IsApe);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
                 var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).ToListAsync();
-
+                var herosInAttack = await _context.Attack.Where(l => l.IsActive && l.AttackerUserId == user.Id)
+                    .Select(l => l.AttackerHeroId).ToListAsync();
                 response.Data = qlist;
                 foreach (var oh in ownedHeroes)
                 {
                     qlist.FirstOrDefault(l => l.Id == oh.HeroId).Owned = true;
                     qlist.FirstOrDefault(l => l.Id == oh.HeroId).CurrentLevel = oh.CurrentLevel;
+                    qlist.FirstOrDefault(l => l.Id == oh.HeroId).InBattle = herosInAttack.Any(l => l == oh.HeroId);
+
                 }
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

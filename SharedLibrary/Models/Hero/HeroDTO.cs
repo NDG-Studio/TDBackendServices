@@ -15,6 +15,7 @@
         public int Rarity { get; set; }
         public int Price { get; set; }
         public bool IsApe { get; set; }
+        public bool InBattle { get; set; } = false;
     }
 
 }
