@@ -49,6 +49,34 @@ namespace PlayerBaseApi.Services
                         UpdateEndDate = null,
                         UserId = user.Id
                     });
+                    await _context.AddAsync(new PlayerBasePlacement()
+                    {
+                        BuildingTypeId = 10,
+                        BuildingLevel = 1,
+                        CoordX = -2.021312952041626,
+                        CoordY = 5.305946350097656,
+                        UpdateEndDate = null,
+                        UserId = user.Id
+                    });
+                    await _context.AddAsync(new PlayerBasePlacement()
+                    {
+                        BuildingTypeId = 7,
+                        BuildingLevel = 1,
+                        CoordX = 2.5266411304473877,
+                        CoordY = 6.063939094543457,
+                        UpdateEndDate = null,
+                        UserId = user.Id
+                    });
+                    
+                    var pTroop = new PlayerTroop()
+                    {
+                        TroopCount = 0,
+                        UserId = user.Id,
+                        LastTroopCollect = DateTimeOffset.Now,
+                        MaxDuration = TimeSpan.FromHours(12),
+                        TrainingPerHour = 100
+                    };
+                    await _context.AddAsync(pTroop);
                     await _context.SaveChangesAsync();
                 }
 
