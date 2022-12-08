@@ -10,6 +10,7 @@
         RefreshActiveLoots = 6,
         RefreshPlayerBaseInfo = 7,
         SendScoutInfo =20,
+        SeenNews=21,
 
         #region CHAT
 

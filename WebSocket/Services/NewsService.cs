@@ -96,26 +96,53 @@ namespace PlayerBaseApi.Services
             TDResponse response = new TDResponse();
             try
             {
-                /*using (var _context = new WebSocketContext())
+                using (var _context = new WebSocketContext())
                 {
-                    var imN = new News()
+                    switch ((req.ScoutedData,req.IsActive))
                     {
-                        Title = req.Title,
-                        Detail = req.Detail,
-                        Date = DateTimeOffset.Now,
-                        UserId = null,
-                        IsActive = true,
-                        Seen = false,
-                        TypeId = (int)NewsType.Announcment
-                    };
-                    await _context.ImportantNews.AddAsync(imN);
-                    await _context.SaveChangesAsync();
-                    response.SetSuccess();
-                }*/
-                //Todo: NewsOLarak da ekleencek
-                
-                Player.SendScoutInfoTest(req.SenderUserId,req);
-                Player.SendScoutInfoTest(req.TargetUserId,req);
+                        case (null,true):
+                            await _context.AddAsync(new News()
+                            {
+                                UserId = req.TargetUserId,
+                                Title = $"SCOUT COMING",
+                                Seen = false,
+                                Date = DateTimeOffset.UtcNow,
+                                Detail = $"Scout coming from { req.SenderUserId }",
+                                IsActive = true,
+                                TypeId = (int)NewsType.Scout
+                            });
+                            await _context.SaveChangesAsync();
+                            Player.SendNewsRefreshNeeded(req.TargetUserId);
+                            break;
+                        case (not null,true):
+                            await _context.AddAsync(new News()
+                            {
+                                UserId = req.TargetUserId,
+                                Title = $"SCOUTED",
+                                Seen = false,
+                                Date = DateTimeOffset.UtcNow,
+                                Detail = $"SCOUTED from { req.SenderUserId }",
+                                IsActive = true,
+                                TypeId = (int)NewsType.Scout
+                            });
+                            await _context.SaveChangesAsync();
+                            Player.SendNewsRefreshNeeded(req.TargetUserId);
+                            
+                            await _context.AddAsync(new News()
+                            {
+                                UserId = req.SenderUserId,
+                                Title = $"SCOUT SUCCEED",
+                                Seen = false,
+                                Date = DateTimeOffset.UtcNow,
+                                Detail = $"Scout mission succeed ({ req.TargetUserId })",
+                                IsActive = true,
+                                TypeId = (int)NewsType.Scout
+                            });
+                            await _context.SaveChangesAsync();
+                            Player.SendNewsRefreshNeeded(req.SenderUserId);
+                            break;
+                    }
+                }
 
             }
             catch (Exception e)
@@ -149,6 +176,7 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack
                             });
+                            await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.DefenserUserId);
                             break;                        
                         case (not null, true):
@@ -167,6 +195,7 @@ namespace PlayerBaseApi.Services
                                 Wounded = resultData.TargetsWoundedTroop,
                                 LostResource = resultData.LootedScrap,
                             });
+                            await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.DefenserUserId);
                             
                             await _context.AddAsync(new News()
@@ -183,6 +212,7 @@ namespace PlayerBaseApi.Services
                                 Wounded = resultData.AttackersWoundedTroop,
                                 LostResource = resultData.LootedScrap
                             });
+                            await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);
                             
                             break; 
@@ -201,10 +231,13 @@ namespace PlayerBaseApi.Services
                                 Wounded = resultData2.AttackersWoundedTroop,
                                 LostResource = resultData2.LootedScrap
                             });
+                            await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);
                             
                             break;
                     }
+
+                    
                 }
 
             }

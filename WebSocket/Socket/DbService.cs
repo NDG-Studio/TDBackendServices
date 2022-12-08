@@ -61,7 +61,7 @@ namespace WebSocket.Socket
                 {
                     var userActivity = await _context.UserActivity.Where(l => l.UserId == player.UniqueId).FirstOrDefaultAsync();
                     await RefreshLootRuns(_context, player, userActivity);
-                    await SendNews(_context, player.UniqueId, userActivity);
+                    await SendNews(_context, player.UniqueId, userActivity,null);
                     await SendChatRooms(_context, player, userActivity);
                 }
             }
@@ -72,7 +72,7 @@ namespace WebSocket.Socket
         }
 
 
-        public static async Task SendNews(WebSocketContext? _context, long userId, UserActivity? userActivity)
+        public static async Task SendNews(WebSocketContext? _context, long userId, UserActivity? userActivity,string? lastMessageDate)
         {
             try
             {
@@ -101,7 +101,10 @@ namespace WebSocket.Socket
                     });
                 }
                 await _context.SaveChangesAsync();
-                var newsQuery = await _context.News.Where(l => l.UserId == userId && l.IsActive).OrderByDescending(l => l.Date).Take(10)
+                var lastDate=lastMessageDate.ToDateTimeOffsetUtc();
+                var newsQuery = await _context.News
+                    .Where(l => l.UserId == userId && l.IsActive &&(lastDate==null ? true:l.Date>lastDate))
+                    .OrderByDescending(l => l.Date).Take(10)
                     .Select(l => new NewsDTO()
                     {
                         Casualities = l.Casualities,
@@ -117,7 +120,7 @@ namespace WebSocket.Socket
                         Id = l.Id.ToString()
                     })
                     .ToListAsync();
-                userActivity.LastNewsCheck = DateTimeOffset.Now;
+                userActivity.LastNewsCheck = DateTimeOffset.UtcNow;
                 await _context.SaveChangesAsync();
                 Player.SendNewNews(userId, newsQuery);
                 if (g == null)
@@ -364,6 +367,33 @@ namespace WebSocket.Socket
                 }
 
                 Player.RoomRefreshNeeded(chatRoomMember.ChatRoomId.ToString());
+            }
+        }
+        
+         public static async Task SeenReport(string reportId)
+        {
+            using (var _context = new WebSocketContext())
+            {
+
+                var reportGuid = new Guid(reportId);
+                var news = await _context.News
+                    .Where(l => l.Id == reportGuid)
+                    .FirstOrDefaultAsync();
+                if (news!=null)
+                {
+                    news.Seen = true;
+                }
+                
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+
+                    var c = e;
+                }
+
             }
         }
 

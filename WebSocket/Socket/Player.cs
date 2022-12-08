@@ -79,7 +79,9 @@ namespace WebSocket.Socket
             {
                 return;
             }
-            DbService.SendNews(null, player.Value, null);
+
+            var lastMessageDate = message.GetString();
+            DbService.SendNews(null, player.Value, null,lastMessageDate);
 
         }
 
@@ -92,6 +94,22 @@ namespace WebSocket.Socket
                 return;
             }
             DbService.RefreshLootRuns(null, player, null,true);
+
+        }
+        
+        
+        [MessageHandler((ushort)MessageEndpointId.SeenNews)]
+        private static void SeenNews(ushort fromClientId, Message message)
+        {
+            var player = list.Values.FirstOrDefault(l => l.Id == fromClientId);
+            if (player == null)
+            {
+                return;
+            }
+
+            var reportId = message.GetString();
+            
+            DbService.SeenReport(reportId);
 
         }
 

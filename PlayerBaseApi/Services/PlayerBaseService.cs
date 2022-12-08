@@ -17,7 +17,6 @@ using SharedLibrary.Models.Loot;
 
 namespace PlayerBaseApi.Services
 {
-    [SuppressMessage("ReSharper", "TemplateIsNotCompileTimeConstantProblem")]
     public class PlayerBaseService : IPlayerBaseService
     {
         private readonly ILogger<PlayerBaseService> _logger;
@@ -2056,7 +2055,7 @@ namespace PlayerBaseApi.Services
                         GemPrice = l.GemPrice,
                         IsActive = l.IsActive,
                         ItemId = l.ItemId,
-                        MaxCount = l.MaxCount - _context.PlayerMarketHistory.Count(k => k.UserId==user.Id &&k.PurchaseDate.Day==nowDay &&k.MarketItemId==l.Id),
+                        MaxCount = l.MaxCount - _context.PlayerMarketHistory.Where(k => k.UserId==user.Id &&k.PurchaseDate.Day==nowDay &&k.MarketItemId==l.Id).Sum(l=>l.Count),
                         ScrapPrice = l.ScrapPrice,
                         MarketOrderId = l.MarketOrderId
                     } )
