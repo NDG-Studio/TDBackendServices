@@ -209,6 +209,8 @@ namespace PlayerBaseApi.Services
                     Title = "Gang Invitation",
                     Detail = $" {user.Username} invites you to join '{query.MemberType.Gang.Name}' gang",
                     Date = DateTimeOffset.Now,
+                    AGangId = query.MemberType.Gang.Id.ToString(),
+                    AGangName = $"[{query.MemberType.Gang.ShortName}]{query.MemberType.Gang.Name}",
                     UserId = req.Data,
                     IsActive = true,
                     Seen = false,
