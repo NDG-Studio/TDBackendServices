@@ -2713,6 +2713,37 @@ namespace PlayerBaseApi.Services
         #endregion
 
 
+        public async Task<TDResponse> ChangeAvatar(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ChangeAvatar");
+            try
+            {
+                var _playerbase =await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerBaseInfo == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerBaseInfo.AvatarId = req.Data;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         public async Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user)
         {
             TDResponse<PlayerTroopInfoDTO> response = new TDResponse<PlayerTroopInfoDTO>();

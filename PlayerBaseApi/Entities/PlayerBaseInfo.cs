@@ -7,7 +7,8 @@ namespace PlayerBaseApi.Entities
         [Key]
         public int Id { get; set; }
         public long UserId { get; set; }
-        public string Username { get; set; } = "";
+        public string Username { get; set; } = "";        
+        public int? AvatarId { get; set; } = 0;
         public int BaseLevel { get; set; } = 1;
         public int Scraps { get; set; } = 0;
         public int Gems { get; set; } = 0;

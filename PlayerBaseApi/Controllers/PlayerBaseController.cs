@@ -723,6 +723,22 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetActiveInteractionsForSocket(req, user);
+        }        
+        
+        /// <summary>
+        /// AvatarId degistirmek icin kullanilir input olarak int alip tdresponse doner
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("ChangeAvatar")]
+        public async Task<TDResponse> ChangeAvatar([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.ChangeAvatar(req, user);
         }
 
 
