@@ -4,7 +4,7 @@ using AutoMapper;
 
 namespace SharedLibrary.Helpers
 {
-    public class Paging<T>
+    public class PagingOld<T>
     {
         public List<T> PagingData { get; set; } = new List<T>();
         public int TotalItemCount { get; set; } = 0;
@@ -12,17 +12,17 @@ namespace SharedLibrary.Helpers
         public int PageSize { get; set; } = 10;
 
     }
-    public class Paging
+    public class PagingOld
     {
         public int TotalItemCount { get; set; } = 0;
         public int PageIndex { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public Paging(bool isAll)
+        public PagingOld(bool isAll)
         {
             if (isAll)
                 this.PageSize = 0;
         }
-        public Paging()
+        public PagingOld()
         {
 
         }
@@ -39,9 +39,9 @@ namespace SharedLibrary.Helpers
         ///         0'dan büyük olması durumunda ise sorgulanmaz. DataGrid vb. nesnelerde bunun kullanımında, ilk sorgudan sonra dolu göndererek optimizasyon yapınız.
         /// ÖNEMLİ: Bu methodun cevap döndüğü veri IQueryable tipinde değil, List tipindedir. Bu yüzden cevap üzerinden tekrar kriter yazarak sorgulama yapılması halinde veritabanından değil, ram üzerinden sorgulama yapılmış olur.
         /// </summary>
-        public static async Task<Paging<U>> ToPagingAsync<T, U>(this IQueryable<T> source, Paging pagingParameters, IMapper _mapper)
+        public static async Task<PagingOld<U>> ToPagingAsync<T, U>(this IQueryable<T> source, PagingOld pagingParameters, IMapper _mapper)
         {
-            Paging<U> result = new Paging<U>();
+            PagingOld<U> result = new PagingOld<U>();
 
 
 
@@ -87,9 +87,9 @@ namespace SharedLibrary.Helpers
         ///         0'dan büyük olması durumunda ise sorgulanmaz. DataGrid vb. nesnelerde bunun kullanımında, ilk sorgudan sonra dolu göndererek optimizasyon yapınız.
         /// ÖNEMLİ: Bu methodun cevap döndüğü veri IQueryable tipinde değil, List tipindedir. Bu yüzden cevap üzerinden tekrar kriter yazarak sorgulama yapılması halinde veritabanından değil, ram üzerinden sorgulama yapılmış olur.
         /// </summary>
-        public static async Task<Paging<T>> ToPagingAsync<T>(this IQueryable<T> source, Paging pagingParameters)
+        public static async Task<PagingOld<T>> ToPagingAsync<T>(this IQueryable<T> source, PagingOld pagingParameters)
         {
-            Paging<T> result = new Paging<T>();
+            PagingOld<T> result = new PagingOld<T>();
 
 
 

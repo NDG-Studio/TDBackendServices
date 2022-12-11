@@ -739,6 +739,23 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.ChangeAvatar(req, user);
+        }       
+        
+        
+        /// <summary>
+        /// Base leveline gore sirali leaderboardu cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetBaseLevelLeaderBoard")]
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetBaseLevelLeaderBoard([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetBaseLevelLeaderBoard(req, user);
         }
 
 

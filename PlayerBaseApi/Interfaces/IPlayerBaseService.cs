@@ -61,5 +61,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<AttackInfoDTO>> AttackPlayer(BaseRequest<AttackRequest> req, UserDto user);
         Task<TDResponse<InteractionsDTO>> GetActiveInteractionsForSocket(BaseRequest req, UserDto user);
         Task<TDResponse> ChangeAvatar(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<Paging<LeaderBoardItem>>> GetBaseLevelLeaderBoard(BaseRequest<int> req, UserDto user);
     }
 }

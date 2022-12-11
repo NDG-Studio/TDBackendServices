@@ -691,6 +691,11 @@ namespace PlayerBaseApi.Services
                         phospital.HospitalLevelId++;
                         await _context.SaveChangesAsync();
                         break;
+                    case 1://base
+                        var playerbaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                        playerbaseInfo.BaseLevel = query.BuildingLevel;
+                        await _context.SaveChangesAsync();
+                        break;
 
                     default:
                         await _context.SaveChangesAsync();
@@ -2710,6 +2715,65 @@ namespace PlayerBaseApi.Services
 
         }
 
+        #endregion
+
+        #region LEADERBOARD UTILS
+        
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetBaseLevelLeaderBoard(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<Paging<LeaderBoardItem>> response = new TDResponse<Paging<LeaderBoardItem>>();
+            var info = InfoDetail.CreateInfo(req, "GetBaseLevelLeaderBoard");
+            try
+            {
+                response.Data = new Paging<LeaderBoardItem>();
+                response.Data.PageIndex = req.Data;
+                
+                response.Data.PagingData = await _context.PlayerBaseInfo
+                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id)
+                    .Skip(req.Data*10)
+                    .Take(10)
+                    .Select(l=>new LeaderBoardItem()
+                    {
+                        Username = l.Username,
+                        Value = l.BaseLevel,
+                        UserId = l.UserId
+                    }).ToListAsync();
+
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == user.Id)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.BaseLevel,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync()
+                    ?? new LeaderBoardItem()
+                    {
+                        Username = user.Username,
+                        UserId = user.Id,
+                        Value = 0
+                    };
+                ownValue.OwnRanked = await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value)
+                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id).CountAsync();
+                response.Data.PagingData.Add(ownValue);
+                
+                
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
         #endregion
 
 
