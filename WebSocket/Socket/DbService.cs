@@ -315,6 +315,17 @@ namespace WebSocket.Socket
                     userActivity = await _context.UserActivity.Where(l => l.UserId == player.UniqueId).FirstOrDefaultAsync();
                 }
 
+                #region Username Changing
+
+                var allmemberitys = await _context.ChatRoomMember.Where(l => l.UserId == player.UniqueId).ToListAsync();
+                foreach (var m in allmemberitys)
+                {
+                    m.Username = player.Username;
+                }
+
+                await _context.SaveChangesAsync();
+                #endregion
+
                 var globalChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat && l.IsActive).FirstOrDefaultAsync();
                 var serverChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat && l.IsActive).FirstOrDefaultAsync();
                 var raceChatId = await _context.ChatRoom.Where(l => (player.IsApe ? (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ApeChat) : (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.HumanChat)) && l.IsActive).FirstOrDefaultAsync();

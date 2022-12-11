@@ -449,6 +449,12 @@ namespace PlayerBaseApi
                 await SaveChangesAsync();
             }
 
+            if (playerBaseInfo.Username!=user.Username)
+            {
+                playerBaseInfo.Username = user.Username;
+                await SaveChangesAsync();
+            }
+
             #region Resource Addition
 
             if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)

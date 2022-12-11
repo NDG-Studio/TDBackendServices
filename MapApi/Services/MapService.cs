@@ -352,7 +352,13 @@ namespace MapApi.Services
                     l.UserId == user.Id &&
                     l.MapItemTypeId == (int)MapItemTypeEnum.Player
                 );
-
+                var cc=await q.FirstOrDefaultAsync();
+                if (cc!=null)
+                {
+                    cc.UserName = user.Username;
+                    await _context.SaveChangesAsync();
+                }
+                
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).FirstOrDefaultAsync() ?? new MapInfoDto()
                 {
                     Id = 0,
