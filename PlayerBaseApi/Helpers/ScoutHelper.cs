@@ -29,7 +29,10 @@ public class ScoutHelper
                 IsActive = s.IsActive,
                 ComeBackDate = s.ComeBackDate.ToString(),
                 SenderUserId = s.SenderUserId,
-                TargetUserId = s.TargetUserId
+                TargetUserId = s.TargetUserId,
+                SenderUserName = s.SenderUsername,
+                TargetUserName = s.TargetUsername,
+                Id = s.Id
             },
             Info = new InfoDto()
             {
@@ -77,14 +80,15 @@ public class ScoutHelper
                             .Select(l => l.BuildingLevel).FirstOrDefault();
                         var scoutData = new ScoutedData()
                         {
-                            TargetUsername = playerBaseInfo.Username,
+                            TargetUsername = s.TargetUsername,
                             ScrapCount = playerBaseInfo.Scraps,
                             TargetUserId = playerBaseInfo.UserId,
                             TroopCount = playerTroop.TroopCount,
                             BarracksLevel = barracksLevel,
                             WallLevel = wallLevel,
                             SenderUserId = s.SenderUserId,
-                            SenderUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==s.SenderUserId).Select(l=>l.Username).FirstOrDefault()
+                            SenderUsername = s.SenderUsername,
+                            
                             
                         };
                         var dbEnt =_context.Scout.Where(l => l.Id == s.Id).FirstOrDefault();
@@ -103,7 +107,10 @@ public class ScoutHelper
                                     IsActive = dbEnt.IsActive,
                                     ComeBackDate = dbEnt.ComeBackDate.ToString(),
                                     SenderUserId = dbEnt.SenderUserId,
-                                    TargetUserId = dbEnt.TargetUserId
+                                    TargetUserId = dbEnt.TargetUserId,
+                                    SenderUserName = dbEnt.SenderUsername,
+                                    TargetUserName = dbEnt.TargetUsername,
+                                    Id = dbEnt.Id
                                 },
                                 Info = new InfoDto()
                                 {

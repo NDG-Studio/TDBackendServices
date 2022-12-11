@@ -59,5 +59,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse> GetTDWaveRewardsDoneByWaveId(BaseRequest<int> req, UserDto user);
         Task<TDResponse<ScoutDTO>> ScoutPlayer(BaseRequest<ScoutRequest> req, UserDto user);
         Task<TDResponse<AttackInfoDTO>> AttackPlayer(BaseRequest<AttackRequest> req, UserDto user);
+        Task<TDResponse<InteractionsDTO>> GetActiveInteractionsForSocket(BaseRequest req, UserDto user);
     }
 }

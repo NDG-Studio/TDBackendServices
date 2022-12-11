@@ -11,6 +11,7 @@
         RefreshPlayerBaseInfo = 7,
         SendScoutInfo =20,
         SeenNews=21,
+        ActiveInteraction=22,
 
         #region CHAT
 

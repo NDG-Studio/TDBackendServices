@@ -10,9 +10,6 @@ using WebSocket.Entities;
 using WebSocket.Enums;
 using WebSocket.Helpers;
 using WebSocket.Models;
-using static System.Net.Mime.MediaTypeNames;
-using System.Numerics;
-
 namespace WebSocket.Socket
 {
     public class DbService
@@ -63,6 +60,7 @@ namespace WebSocket.Socket
                     await RefreshLootRuns(_context, player, userActivity);
                     await SendNews(_context, player.UniqueId, userActivity,null);
                     await SendChatRooms(_context, player, userActivity);
+                    await SendActiveInteractions(_context, player);
                 }
             }
             catch (Exception e)
@@ -107,22 +105,136 @@ namespace WebSocket.Socket
                     .OrderByDescending(l => l.Date).Take(10)
                     .Select(l => new NewsDTO()
                     {
-                        Casualities = l.Casualities,
-                        Date = l.Date.ToString(),
-                        Detail = l.Detail,
-                        GainedResources = l.GainedResources,
-                        LostResource = l.LostResource,
-                        Prisoners = l.Prisoners,
-                        Seen = l.Seen,
-                        TypeId = l.TypeId,
+                        Id = l.Id.ToString(),
                         Title = l.Title,
-                        Wounded = l.Wounded,
-                        Id = l.Id.ToString()
+                        Detail = l.Detail,
+                        TypeId = l.TypeId,
+                        GainedResources = l.GainedResources,
+                        ADead = l.ADead,
+                        ACoord = l.ACoord,
+                        TCoord = l.TCoord,
+                        APrisoner = l.APrisoner,
+                        ATroop = l.ATroop,
+                        AUsername = l.AUsername,
+                        AWounded = l.AWounded,
+                        ProcessDate = l.ProcessDate.ToString(),
+                        TDead = l.TDead,
+                        TPrisoner = l.TPrisoner,
+                        TScrap = l.TScrap,
+                        TTroop = l.TTroop,
+                        TUsername = l.TUsername,
+                        TWall = l.TWall,
+                        TWounded = l.TWounded,
+                        VictorySide = l.VictorySide,
+                        WarLoot = l.WarLoot,
+                        AGangId = l.AGangId,
+                        AGangName = l.AGangName,
+                        AUserId = l.AUserId,
+                        TGangId = l.TGangId,
+                        TGangName = l.TGangName,
+                        TUserId = l.TUserId,
+                        Date = l.Date.ToString(),
+                        IsCollected = l.IsCollected,
+                        Seen = l.Seen,
+                        IsActive = l.IsActive
                     })
                     .ToListAsync();
                 userActivity.LastNewsCheck = DateTimeOffset.UtcNow;
                 await _context.SaveChangesAsync();
                 Player.SendNewNews(userId, newsQuery);
+                if (g == null)
+                {
+                    _context.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        public static async Task SendActiveInteractions(WebSocketContext? _context, Player player)
+        {
+            try
+            {
+                var g = _context;
+                if (_context == null)
+                {
+                    _context = new WebSocketContext();
+                }
+
+                var allInteractions = GetActiveInteractions(player.UniqueId,player.GetToken(),player.GetInfo()).Result;
+                
+                
+                await _context.SaveChangesAsync();
+                foreach (var scout in allInteractions.ActiveScoutList)
+                {
+                    if (scout.ComeBackDate ==null)
+                    {
+                        continue;
+                    }
+
+                    Player.SendNewInteraction(player.UniqueId,new NewsDTO()
+                    {
+                        Title = $"SCOUT (not necessary)",
+                        Seen = false,
+                        Date = scout.ComeBackDate,
+                        Detail = $"not necessary",
+                        IsActive = true,
+                        TypeId = (int)NewsType.Scout,
+                        ACoord = DbService.GetUserCoordinate(scout.SenderUserId).Result.Data,
+                        AGangId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId)
+                            .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
+                        AUsername = scout.SenderUserName,
+                        AGangName = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId)
+                            .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                        AUserId = scout.SenderUserId,
+                        ProcessDate = scout.ArrivedDate,
+                        TCoord = DbService.GetUserCoordinate(scout.TargetUserId).Result.Data,
+                        TUsername = scout.TargetUserName,
+                        TGangId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId)
+                            .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
+                        TGangName = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId)
+                            .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                        TUserId = scout.TargetUserId,
+                        Id = scout.Id.ToString()
+                    });
+
+                }
+                
+                foreach (var attack in allInteractions.ActiveAttackList)
+                {
+                    if (attack.ComeBackDate ==null)
+                    {
+                        continue;
+                    }
+
+                    Player.SendNewInteraction(player.UniqueId,new NewsDTO()
+                    {
+                        Title = $"ATTACK (not necessary)",
+                        Seen = false,
+                        Date = attack.ComeBackDate,
+                        Detail = $"not necessary",
+                        IsActive = true,
+                        TypeId = (int)NewsType.Attack,
+                        ACoord = DbService.GetUserCoordinate(attack.AttackerUserId).Result.Data,
+                        AGangId = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId)
+                            .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
+                        AUsername = attack.AttackerUsername,
+                        AGangName = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId)
+                            .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                        AUserId = attack.AttackerUserId,
+                        ProcessDate = attack.ArriveDate,
+                        TCoord = DbService.GetUserCoordinate(attack.DefenserUserId).Result.Data,
+                        TUsername = attack.DefenserUsername,
+                        TGangId = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId)
+                            .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
+                        TGangName = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId)
+                            .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                        TUserId = attack.DefenserUserId,
+                        Id = attack.Id.ToString(),
+                    });
+
+                }
                 if (g == null)
                 {
                     _context.Dispose();
@@ -157,10 +269,11 @@ namespace WebSocket.Socket
                     await _context.News.AddAsync(new News()
                     {
                         Date = item.EndDate.ToDateTimeOffsetUtc() ?? DateTimeOffset.UtcNow,
-                        Title = "Loot Run Succeed",
+                        Title = "LOOT RUN SUCCEED",
                         Detail = "Congrats your loot run done!",
                         IsActive = true,
                         GainedResources = item.ToString(),
+                        IsCollected = false,
                         UserId = player.UniqueId,
                         Seen = false,
                         TypeId = (int)NewsType.LootRun
@@ -525,6 +638,37 @@ namespace WebSocket.Socket
                 return null;
             }
         }
+        
+        private static async Task<InteractionsDTO?> GetActiveInteractions(long userId, string token, InfoDto info)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                    { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                client.DefaultRequestHeaders.Authorization
+                         = new AuthenticationHeaderValue("Bearer", token);
+
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetActiveInteractionsForSocket"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<string>()
+                        {
+                            Data = token,
+                            Info = info
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<InteractionsDTO>>(content)?.Data;
+                    return res;
+                }
+                return null;
+            }
+        }
 
         public static async Task<TDResponse> SpendGangCreateMoney(string token, InfoDto info)
         {
@@ -551,6 +695,44 @@ namespace WebSocket.Socket
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
                     var res = JsonConvert.DeserializeObject<TDResponse>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
+        
+        public static async Task<TDResponse<string>> GetUserCoordinate(long id)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Player.MapApiUrl + "/api/Map/GetUserCoordinate"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = id,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<string>>(content);
                     return res;
                 }
                 return null;

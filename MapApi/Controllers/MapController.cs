@@ -125,6 +125,14 @@ namespace MapApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _mapService.GetAllGates(req, user);
         }
+        
+        //[OnlyApps]
+        [HttpPost("GetUserCoordinate")]
+        public async Task<TDResponse<string>> GetUserCoordinate([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _mapService.GetUserCoordinate(req);
+        }
 
 
 

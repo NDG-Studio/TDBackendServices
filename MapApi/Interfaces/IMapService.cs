@@ -15,5 +15,6 @@ namespace MapApi.Interfaces
         Task<TDResponse<List<MapItemDTO>>> GetAllGates(BaseRequest isApe, UserDto user);
         Task<TDResponse<List<MapInfoDto>>> GetMapByBoundBoxV2(BaseRequest<BoundBox> req, UserDto user);
         Task<TDResponse<MapInfoDto>> GetPlayerBaseCoord(BaseRequest req, UserDto user);
+        Task<TDResponse<string>> GetUserCoordinate(BaseRequest<long> req);
     }
 }

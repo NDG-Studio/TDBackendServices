@@ -48,6 +48,30 @@ namespace MapApi.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<string>> GetUserCoordinate(BaseRequest<long> req)
+        {
+            TDResponse<string> response = new TDResponse<string>();
+            var info = InfoDetail.CreateInfo(req, "GetMapItemTypes");
+            try
+            {
+                var query =await _context.MapItem.Where(l => l.UserId == req.Data)
+                    .Select(l=> $"{l.CoordX},{l.CoordY}").FirstOrDefaultAsync();
+
+                response.Data = query;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
         public async Task<TDResponse<MapItemDTO>> AddUserBase(BaseRequest<bool> isApe, UserDto user)
         {

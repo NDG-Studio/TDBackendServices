@@ -6,6 +6,7 @@ public class AttackResultData
     public int AttackersWoundedTroop { get; set; }
     public int AttackersDeadTroop { get; set; }
     public int TargetsDeadTroop { get; set; }
+    public int TargetsTroop { get; set; }
     public string TargetUsername { get; set; }
     public long TargetUserId { get; set; }
     public long SenderUserId { get; set; }
@@ -13,6 +14,7 @@ public class AttackResultData
     public int  BarracksLevel { get; set; }
     public int WallLevel { get; set; }
     public int LootedScrap { get; set; }
+    public int DefenserScrap { get; set; }
     public int PrisonerCount { get; set; }
     
 }

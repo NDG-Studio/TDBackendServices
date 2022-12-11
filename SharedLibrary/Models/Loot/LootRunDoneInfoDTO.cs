@@ -11,6 +11,8 @@ namespace SharedLibrary.Models.Loot
         public int GemCount { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public int? HeroId { get; set; }
+        public string? HeroName { get; set; }
 
 
 /// <summary>

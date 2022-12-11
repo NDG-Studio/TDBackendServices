@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PlayerBaseApi.Entities;
 using SharedLibrary.Enums;
-using PlayerBaseApi.Models;
 using SharedLibrary.Models;
 
 namespace PlayerBaseApi.Helpers;
@@ -22,33 +21,42 @@ public class AttackHelper
     public static void NewAttack(Attack attack)
     {
         AttackList.Add(attack);
-        var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
-                          {
-                              Data = new AttackInfoDTO()
-                              {
-                                  IsActive = attack.IsActive,
-                                  ComeBackDate = attack.ComeBackDate.ToString(),
-                                  Id = attack.Id,
-                                  ArriveDate = attack.ArriveDate.ToString(),
-                                  ResultData = attack.ResultData,
-                                  WinnerSide = attack.WinnerSide,
-                                  AttackerHeroId = attack.AttackerHeroId,
-                                  AttackerTroopCount = attack.AttackerTroopCount,
-                                  AttackerUserId = attack.AttackerUserId,
-                                  DefenserUserId = attack.TargetUserId
-                              },
-                              Info = new InfoDto()
-                              {
-                                  Ip = "",
-                                  AppVersion = "",
-                                  DeviceId = "",
-                                  DeviceModel = "",
-                                  DeviceType = "",
-                                  OsVersion = "",
-                                  UserId = 111
-                              }
-                          }).Result;
-        Console.WriteLine(ccc.Message+"--");
+        using (var _context = new PlayerBaseContext())
+        {
+            var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
+            {
+                Data = new AttackInfoDTO()
+                {
+                    IsActive = attack.IsActive,
+                    ComeBackDate = attack.ComeBackDate.ToString(),
+                    Id = attack.Id,
+                    ArriveDate = attack.ArriveDate.ToString(),
+                    ResultData = attack.ResultData,
+                    WinnerSide = attack.WinnerSide,
+                    AttackerHeroId = attack.AttackerHeroId,
+                    AttackerTroopCount = attack.AttackerTroopCount,
+                    AttackerUserId = attack.AttackerUserId,
+                    DefenserUserId = attack.TargetUserId,
+                    AttackerUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
+                        .Select(l=>l.Username).FirstOrDefault()??"",
+                    DefenserUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.TargetUserId)
+                        .Select(l=>l.Username).FirstOrDefault()??"",
+
+                },
+                Info = new InfoDto()
+                {
+                    Ip = "",
+                    AppVersion = "",
+                    DeviceId = "",
+                    DeviceModel = "",
+                    DeviceType = "",
+                    OsVersion = "",
+                    UserId = 111
+                }
+            }).Result;
+                    Console.WriteLine(ccc.Message+"--");
+        }
+
     }
 
     public static void AddAttackDetail()
@@ -76,7 +84,9 @@ public class AttackHelper
                 {
                     foreach (var s in doneList)
                     {
-                        #region ATTACK ALGORITHM
+                        try
+                        {
+                            #region ATTACK ALGORITHM
 
                             var playerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == s.TargetUserId)
                                 .FirstOrDefault();
@@ -90,13 +100,13 @@ public class AttackHelper
                             var wallLevel = playerBasePlacement.Where(l => l.BuildingTypeId == 3)
                                 .Select(l => l.BuildingLevel).FirstOrDefault();
                             
-                            int attackerWinCondition = s.AttackerTroopCount - (int)( playerTroop?.TroopCount * 1.05 * wallLevel ?? 0);
+                            int attackerWinCondition = s.AttackerTroopCount - (int)( playerTroop?.TroopCount * 1.05 * wallLevel ?? 1);
                             int attackerLastTroops = s.AttackerTroopCount - attackerWinCondition;
                             if (attackerWinCondition > 0) // attacker wins 
                             {
                                 var attackResultData = new AttackResultData()
                                 {
-                                    TargetUsername = playerBaseInfo.Username,
+                                    TargetUsername = playerBaseInfo?.Username??"",
                                     TargetUserId = playerBaseInfo.UserId,
                                     TargetsWoundedTroop = (playerTroop?.TroopCount/6*3) ?? 0,
                                     TargetsDeadTroop = (playerTroop?.TroopCount/6*2) ?? 0,
@@ -107,10 +117,17 @@ public class AttackHelper
                                     SenderUserId = s.AttackerUserId,
                                     SenderUsername = _context.PlayerBaseInfo
                                         .Where(l=>l.UserId==s.AttackerUserId)
-                                        .Select(l=>l.Username).FirstOrDefault(),
+                                        .Select(l=>l.Username).FirstOrDefault()??"",
                                     AttackersDeadTroop = (s.AttackerTroopCount-attackerLastTroops)/5,
-                                    AttackersWoundedTroop = (s.AttackerTroopCount-attackerLastTroops)/5*4
+                                    AttackersWoundedTroop = (s.AttackerTroopCount-attackerLastTroops)/5*4,
+                                    DefenserScrap = playerBaseInfo.Scraps,
+                                    TargetsTroop = _context.PlayerTroop
+                                        .Where(l=>l.UserId==s.TargetUserId)
+                                        .Select(l=>l.TroopCount).FirstOrDefault(),
+                                    
+                                    
                                 };
+                                
                                 Console.WriteLine(JsonConvert.SerializeObject(attackResultData));
                                 Console.WriteLine(s.ResultData+"----");
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
@@ -139,7 +156,7 @@ public class AttackHelper
                             {
                                 var attackResultData = new AttackResultData()
                                 {
-                                    TargetUsername = playerBaseInfo.Username,
+                                    TargetUsername = playerBaseInfo?.Username??"",
                                     TargetUserId = playerBaseInfo.UserId,
                                     TargetsWoundedTroop = (playerTroop?.TroopCount/12*3) ?? 0,
                                     TargetsDeadTroop = (playerTroop?.TroopCount/12*2) ?? 0,
@@ -150,9 +167,13 @@ public class AttackHelper
                                     SenderUserId = s.AttackerUserId,
                                     SenderUsername = _context.PlayerBaseInfo
                                         .Where(l=>l.UserId==s.AttackerUserId)
-                                        .Select(l=>l.Username).FirstOrDefault(),
+                                        .Select(l=>l.Username).FirstOrDefault()??"",
                                     AttackersDeadTroop = (s.AttackerTroopCount)/5,
-                                    AttackersWoundedTroop = (s.AttackerTroopCount)/5*4
+                                    AttackersWoundedTroop = (s.AttackerTroopCount)/5*4,
+                                    DefenserScrap = playerBaseInfo.Scraps,
+                                    TargetsTroop = _context.PlayerTroop
+                                        .Where(l=>l.UserId==s.TargetUserId)
+                                        .Select(l=>l.TroopCount).FirstOrDefault(),
                                 };
                                 s.WinnerSide = (byte)AttackSideEnum.Defenser;
                                 s.ResultData = JsonConvert.SerializeObject(attackResultData);
@@ -187,7 +208,13 @@ public class AttackHelper
                                         WinnerSide = dbEnt.WinnerSide,
                                         AttackerHeroId = dbEnt.AttackerHeroId,
                                         AttackerTroopCount = dbEnt.AttackerTroopCount,
-                                        AttackerUserId = dbEnt.AttackerUserId
+                                        AttackerUserId = dbEnt.AttackerUserId,
+                                        AttackerUsername = _context.PlayerBaseInfo
+                                            .Where(l=>l.UserId==s.AttackerUserId)
+                                            .Select(l=>l.Username).FirstOrDefault()??"",
+                                        DefenserUsername = _context.PlayerBaseInfo
+                                            .Where(l=>l.UserId==s.TargetUserId)
+                                            .Select(l=>l.Username).FirstOrDefault()??""
                                     },
                                     Info = new InfoDto()
                                     {
@@ -200,11 +227,16 @@ public class AttackHelper
                                         UserId = 111
                                     }
                                 }).Result;
-                                 Console.WriteLine("--SendAttackInfo-");
+                                Console.WriteLine("--SendAttackInfo-");
                             }
                             
 
-                        #endregion
+                            #endregion
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
                     }
                     
                     now=DateTimeOffset.UtcNow;
@@ -217,6 +249,7 @@ public class AttackHelper
                             var attackerPlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel).Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
                             var attackerPlayerTroops = _context.PlayerTroop.Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
                             var attackerPlayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
+                            var defenserPlayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == rS.TargetUserId).FirstOrDefault();
                             var attackerPlayerPrison = _context.PlayerPrison.Include(l=>l.PrisonLevel).Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
                             var resData = JsonConvert.DeserializeObject<AttackResultData>(rS.ResultData);
 
@@ -248,7 +281,9 @@ public class AttackHelper
                                     AttackerHeroId = rS.AttackerHeroId,
                                     AttackerTroopCount = rS.AttackerTroopCount,
                                     AttackerUserId = rS.AttackerUserId,
-                                    DefenserUserId = rS.TargetUserId
+                                    DefenserUserId = rS.TargetUserId,
+                                    AttackerUsername = attackerPlayerBaseInfo.Username,
+                                    DefenserUsername = defenserPlayerBaseInfo.Username
                                 },
                                 Info = new InfoDto()
                                 {

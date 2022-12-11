@@ -77,6 +77,32 @@ namespace PlayerBaseApi.Services
                         TrainingPerHour = 100
                     };
                     await _context.AddAsync(pTroop);
+                    if (!user.IsApe)
+                    {
+                        await _context.AddAsync(new PlayerHero()
+                        {
+                            SkillPoint = 0,
+                            CurrentLevel = 1,
+                            Exp = 0,
+                            HeroId = 1,//roger
+                            TalentPoint = 1,
+                            UserId = user.Id,
+                            EndDate = null
+                        });
+                    }
+                    else
+                    {
+                        await _context.AddAsync(new PlayerHero()
+                        {
+                            SkillPoint = 0,
+                            CurrentLevel = 1,
+                            Exp = 0,
+                            HeroId = 6,//hell night
+                            TalentPoint = 1,
+                            UserId = user.Id,
+                            EndDate = null
+                        });
+                    }
                     await _context.SaveChangesAsync();
                 }
 
@@ -258,8 +284,8 @@ namespace PlayerBaseApi.Services
                     playerBaseInfo = new PlayerBaseInfo()
                     {
                         BaseLevel = 1,
-                        BluePrints = 0,
-                        Gems = 5,
+                        BluePrints = 1,
+                        Gems = 5000,
                         BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
                         Fuel = 100,
                         ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
@@ -1447,6 +1473,8 @@ namespace PlayerBaseApi.Services
                             var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(loot.GainedResources);
                             gainedResource.StartDate = loot.OperationStartDate.ToString();
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
+                            gainedResource.HeroId = loot.PlayerHero.HeroId;
+                            gainedResource.HeroName = loot.PlayerHero.Hero.Name;
                             response.Data.GainedLootRuns.Add(gainedResource);
                         }
                         else
@@ -2628,8 +2656,8 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetTDWaveRewardsDoneByWaveId");
             try
             {
-                var waveItemList = await _context.PlayerTDReward.Where(l => l.WaveId == req.Data).ToListAsync();
-                if (waveItemList.Count==0)
+                var waveRewardList = await _context.PlayerTDReward.Where(l => l.WaveId == req.Data).ToListAsync();
+                if (waveRewardList.Count==0)
                 {
                     response.SetError(OperationMessages.NoReward);
                     info.AddInfo(OperationMessages.NoReward);
@@ -2644,24 +2672,24 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                foreach (var item in waveItemList)
+                foreach (var tdReward in waveRewardList)
                 {
-                    var inventoryItem = await _context.PlayerItem.Where(l => l.UserId == user.Id && l.ItemId == item.Id).FirstOrDefaultAsync();
+                    var inventoryItem = await _context.PlayerItem.Where(l => l.UserId == user.Id && l.ItemId == tdReward.ItemId).FirstOrDefaultAsync();
                     if (inventoryItem == null)
                     {
                         await _context.AddAsync(new PlayerItem()
                         {
-                            ItemId = item.Id,
-                            Count = item.Count,
+                            ItemId = tdReward.ItemId,
+                            Count = tdReward.Count,
                             UserId = user.Id
                         });
                         continue;
                     }
-                    inventoryItem.Count += item.Count;
+                    inventoryItem.Count += tdReward.Count;
 
                 }
                 await _context.SaveChangesAsync();
-                await _context.AddRangeAsync(waveItemList.Select(l => new PlayerTDRewardHistory()
+                await _context.AddRangeAsync(waveRewardList.Select(l => new PlayerTDRewardHistory()
                 {
                     UserId = user.Id,
                     WaveId = l.WaveId,
@@ -2767,10 +2795,12 @@ namespace PlayerBaseApi.Services
                 var ent = new Scout()
                 {
                     TargetUserId = req.Data.TargetUserId,
+                    TargetUsername = await _context.PlayerBaseInfo.Where(l=>l.UserId==req.Data.TargetUserId).Select(l=>l.Username).FirstOrDefaultAsync(),
                     ArrivedDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
                     ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
-                    SenderUserId = user.Id
-                    
+                    SenderUserId = user.Id,
+                    SenderUsername = user.Username
+
                 };
 
                 await _context.AddAsync(ent);
@@ -2827,6 +2857,7 @@ namespace PlayerBaseApi.Services
                 var att = new Attack()
                 {
                     TargetUserId = req.Data.TargetUserId,
+                    
                     ArriveDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
                     ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
                     AttackerUserId = user.Id,
@@ -2853,7 +2884,69 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<InteractionsDTO>> GetActiveInteractionsForSocket(BaseRequest req, UserDto user)
+        {
+            TDResponse<InteractionsDTO> response = new TDResponse<InteractionsDTO>();
+            response.Data = new InteractionsDTO();
+            response.Data.ActiveAttackList = new List<AttackInfoDTO>();
+            response.Data.ActiveScoutList = new List<ScoutInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetActiveInteractionsForSocket");
+            try
+            {
 
+                var attackList =await  _context.Attack
+                    .Where(l => l.IsActive && l.AttackerUserId == user.Id || l.TargetUserId==user.Id )
+                    .ToListAsync();
+                
+                var scoutList =await  _context.Scout
+                    .Where(l => l.IsActive && l.SenderUserId == user.Id || l.TargetUserId==user.Id )
+                    .ToListAsync();
+
+                response.Data.ActiveAttackList = attackList.Select(l => new AttackInfoDTO()
+                {
+                    IsActive = l.IsActive,
+                    ComeBackDate = l.ComeBackDate.ToString(),
+                    Id = l.Id,
+                    ArriveDate = l.ArriveDate.ToString(),
+                    ResultData = l.ResultData,
+                    WinnerSide = l.WinnerSide,
+                    AttackerHeroId = l.AttackerHeroId,
+                    AttackerTroopCount = l.AttackerTroopCount,
+                    AttackerUserId = l.AttackerUserId,
+                    DefenserUserId = l.TargetUserId,
+                    AttackerUsername = _context.PlayerBaseInfo.Where(k=>k.UserId==l.AttackerUserId).Select(k=>k.Username).FirstOrDefault()??"",
+                    DefenserUsername = _context.PlayerBaseInfo.Where(k=>k.UserId==l.TargetUserId).Select(k=>k.Username).FirstOrDefault()??"",
+                    
+                }).ToList();
+
+                response.Data.ActiveScoutList = scoutList.Select(s => new ScoutInfoDTO()
+                {
+                    ArrivedDate = s.ArrivedDate.ToString(),
+                    ScoutedData = s.ScoutedData,
+                    IsActive = s.IsActive,
+                    ComeBackDate = s.ComeBackDate.ToString(),
+                    SenderUserId = s.SenderUserId,
+                    TargetUserId = s.TargetUserId,
+                    SenderUserName = s.SenderUsername,
+                    TargetUserName = s.TargetUsername,
+                    Id = s.Id
+                }).ToList();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        
         
 
         #endregion
@@ -2961,7 +3054,9 @@ namespace PlayerBaseApi.Services
                 GemCount = LootRandomer.GetRandomGem((int)(lootLevel.MinGemCount * totalGemMultiplier), lootLevel.MaxGemCount + (int)(lootLevel.MaxGemCount * totalGemMultiplier)),
                 BluePrintCount = LootRandomer.GetRandomBlueprint(lootLevel.MinBlueprintCount, totalBluePrintMultiplier),
                 StartDate = StartDate.ToString(),
-                EndDate = EndDate.ToString()
+                EndDate = EndDate.ToString(),
+                HeroId = playerHero.HeroId,
+                HeroName = playerHero.Hero.Name
 
             };
 

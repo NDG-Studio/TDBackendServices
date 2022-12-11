@@ -22,6 +22,7 @@ namespace WebSocket.Socket
         public static Dictionary<long, Player> list = new Dictionary<long, Player>();
         public static string IdentityUrl = "";
         public static string PlayerBaseUrl = "";
+        public static string MapApiUrl = "";
         public ushort Id { get; private set; }
         public string Username { get; private set; }
         public long UniqueId { get; private set; }
@@ -69,6 +70,7 @@ namespace WebSocket.Socket
         {
             IdentityUrl = Environment.GetEnvironmentVariable("Identity_Url") ?? "";
             PlayerBaseUrl = Environment.GetEnvironmentVariable("PlayerBase_Url") ?? "";
+            MapApiUrl = Environment.GetEnvironmentVariable("MapApi_Url") ?? "";
         }
 
         [MessageHandler((ushort)MessageEndpointId.RefreshNews)]
@@ -393,6 +395,21 @@ errors
             {
 
                 var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.NewNews);
+                m.AddModel(message);
+                ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+        }        
+        
+        public static void SendNewInteraction(long userId, NewsDTO message)
+        {
+            try
+            {
+                var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.ActiveInteraction);
                 m.AddModel(message);
                 ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
             }

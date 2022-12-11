@@ -134,6 +134,7 @@ services:
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
             - Identity_Url=http://identityapi
             - PlayerBase_Url=http://playerbaseapi
+            - MapApi_Url=http://mapapi
             - Admins=1,2
 
 volumes:

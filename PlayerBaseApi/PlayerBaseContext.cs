@@ -431,8 +431,8 @@ namespace PlayerBaseApi
                 playerBaseInfo = new PlayerBaseInfo()
                 {
                     BaseLevel = 1,
-                    BluePrints = 0,
-                    Gems = 5,
+                    BluePrints = 1,
+                    Gems = 5000,
                     BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
                     Fuel = 100,
                     ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
