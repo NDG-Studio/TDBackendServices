@@ -2754,8 +2754,9 @@ namespace PlayerBaseApi.Services
                         UserId = user.Id,
                         Value = 0
                     };
-                ownValue.OwnRanked = await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value)
-                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id).CountAsync();
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value)
+                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id).CountAsync()) + 1;
+                
                 response.Data.PagingData.Add(ownValue);
                 
                 
@@ -2823,6 +2824,8 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 response.Data = _mapper.Map<PlayerTroopInfoDTO>(playerTroops);
+                response.Data.OutsideTroops = await _context.Attack
+                    .Where(l => l.AttackerUserId == user.Id && l.IsActive).SumAsync(l => l.AttackerTroopCount);
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

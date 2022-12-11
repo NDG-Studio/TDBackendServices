@@ -454,6 +454,7 @@ errors
             var user = Checkuser(token, info);//token bilgisi kontrol ediliyor. token bozuksa veya kullanıcı zaten aktifse girişi engellenir.
             var c = new Player();
             Connection conn = null;
+            Console.WriteLine("connecting"+(user?.Username??"--"));
             if (
                 user == null ||
                 (list.TryGetValue(user.Id, out c) && ServerProgram.server.TryGetClient(list[user.Id].Id,out conn))
