@@ -378,47 +378,30 @@ namespace PlayerBaseApi.Services
 
         }
 
-        [Obsolete("deprecated", true)]
-        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req, UserDto user)
+        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo(BaseRequest<PlayerBaseInfoDTO> req)
         {
             TDResponse<PlayerBaseInfoDTO> response = new TDResponse<PlayerBaseInfoDTO>();
-            var info = InfoDetail.CreateInfo(req, "UpdatePlayerBaseInfo");
+            var info = InfoDetail.CreateInfo(req, "UpdateOrCreatePlayerBaseInfo");
             try
             {
-                //var query = await _context.GetPlayerBaseInfoByUserId(user);
-                //if (query != null)
-                //{
-                //    query.Scraps = req.Data.Scraps;
-                //    query.BluePrints = req.Data.BluePrints;
-                //    query.HeroCards = req.Data.HeroCards;
-                //    query.Gems = req.Data.Gems;
-                //    query.LastBaseCollect = req.Data.LastBaseCollect != null && req.Data.LastBaseCollect != "" ? DateTimeOffset.Now : query.LastBaseCollect;
-                //    response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
-                //}
-                //else
-                //{
-                //    var newInfo = new PlayerBaseInfo()
-                //    {
-                //        BaseLevel = 1,
-                //        BluePrints = 0,
-                //        Gems = 0,
-                //        BaseFullDuration = new TimeSpan(10, 0, 0),//TODO: Confige alınacak
-                //        Fuel = 0,
-                //        ResourceProductionPerHour = 1000,//TODO: SONRADAN Değiştirilebilecek
-                //        HeroCards = 0,
-                //        LastBaseCollect = DateTimeOffset.Now,
-                //        Scraps = 0,
-                //        UserId = user.Id,
-                //        Username = user.Username
-                //    };
-                //    await _context.AddAsync(newInfo);
-                //    response.Data = _mapper.Map<PlayerBaseInfoDTO>(newInfo);
-                //}
-                //await _context.SaveChangesAsync();
+                var query = await _context.GetPlayerBaseInfoByUserId(req.Data.UserId);
+                if (query != null)
+                {
+                    query.Scraps += req.Data.Scraps;
+                    query.BluePrints += req.Data.BluePrints;
+                    query.Gems += req.Data.Gems;
+                    query.Fuel += req.Data.Fuel;
+                    query.EpicHeroCards += req.Data.EpicHeroCards;
+                    query.RareHeroCards += req.Data.RareHeroCards;
+                    query.LegendaryHeroCards += req.Data.LegendaryHeroCards;
+                    response.Data = _mapper.Map<PlayerBaseInfoDTO>(query);
+                    _context.Update(query);
+                }
+                await _context.SaveChangesAsync();
 
-                //response.SetSuccess();
-                //info.AddInfo(OperationMessages.Success);
-                //_logger.LogInformation(info.ToString());
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {

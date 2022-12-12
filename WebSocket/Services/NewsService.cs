@@ -8,6 +8,7 @@ using WebSocket.Interfaces;
 using WebSocket.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using SharedLibrary.Models.Loot;
 using WebSocket;
 using WebSocket.Socket;
 
@@ -437,7 +438,7 @@ namespace PlayerBaseApi.Services
 
         }
 
-        public async Task<TDResponse> CollectNews(string newsId)
+        public async Task<TDResponse> CollectLootRunByNewsId(string newsId)
         {
             TDResponse response = new TDResponse();
             try
@@ -446,15 +447,31 @@ namespace PlayerBaseApi.Services
                 {
                     var newsGuid = new Guid(newsId);
                     var collectable =await _context.News
-                        .Where(l => l.Id == newsGuid && l.IsCollected == null)
+                        .Where(l => l.Id == newsGuid && l.IsCollected == null && l.TypeId==(int)NewsType.LootRun)
                         .FirstOrDefaultAsync();
-                    switch ((NewsType)collectable.TypeId)
+                    if (collectable?.GainedResources==null)
                     {
-                        case NewsType.LootRun:
-                            break;
-                        case NewsType.GangInvitation:
-                            
-                            break;
+                        response.SetError();
+                        return response;
+                    }
+                    var resources =
+                        JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(collectable.GainedResources);
+                    if (resources==null)
+                    {
+                        response.SetError();
+                        return response;
+                    }
+                    var result=await DbService.SendLootGifts(new PlayerBaseInfoDTO()
+                    {
+                        Gems = resources.GemCount,
+                        Scraps = resources.ScrapCount,
+                        BluePrints = resources.BluePrintCount,
+                        UserId = collectable.UserId ?? 1,
+                    });
+                    if (!result.HasError)
+                    {
+                        collectable.IsCollected = true;
+                        await _context.SaveChangesAsync();
                     }
                     response.SetSuccess();
                 }

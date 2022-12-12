@@ -712,6 +712,44 @@ namespace WebSocket.Socket
             }
         }
         
+        public static async Task<TDResponse> SendLootGifts(PlayerBaseInfoDTO pb)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/UpdateOrCreatePlayerBaseInfo"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<PlayerBaseInfoDTO>()
+                        {
+                            Data = pb,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<string>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
+        
         public static async Task<TDResponse<string>> GetUserCoordinate(long id)
         {
             var handler = new HttpClientHandler();

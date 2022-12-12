@@ -44,6 +44,12 @@ public class NewsController : ControllerBase
     {
         return await _newsService.SendAttackNews(req.Data);
     }    
+    
+    [HttpPost("CollectLootRunByNewsId")]
+    public async Task<TDResponse> CollectLootRunByNewsId([FromBody] BaseRequest<string> req)
+    {
+        return await _newsService.CollectLootRunByNewsId(req.Data);
+    }    
 
 
 

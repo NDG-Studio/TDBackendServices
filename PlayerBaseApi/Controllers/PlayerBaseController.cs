@@ -80,16 +80,12 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.GetOtherPlayersBaseInfo(req);
         }
 
-        [LoginRequired]
+        //[OnlyApps]
         [HttpPost("UpdateOrCreatePlayerBaseInfo")]
-        [Obsolete("deprecated", true)]
-        public async Task<TDResponse<PlayerBaseInfoDTO>> UpdateOrCreatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
+        public async Task<TDResponse> UpdateOrCreatePlayerBaseInfo([FromBody] BaseRequest<PlayerBaseInfoDTO> req)
         {
-            //var user = (HttpContext.Items["User"] as UserDto);
-            //req.SetUser(user.Id);
-            //req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            //return await _playerBaseService.UpdateOrCreatePlayerBaseInfo(req, user);
-            return new TDResponse<PlayerBaseInfoDTO>();
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.UpdateOrCreatePlayerBaseInfo(req);
         }
 
         [LoginRequired]
