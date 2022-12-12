@@ -131,6 +131,29 @@ public class GangController : ControllerBase
         return await _gangService.AcceptGangInvitation(req, user);
     }
 
+
+    /// <summary>
+    /// Gang invitationu kabul veya reddetmek icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; GangInvitationResponse &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("EditGang")]
+    public async Task<TDResponse> EditGang([FromBody] BaseRequest<GangEditDTO> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.EditGang(req, user);
+    }
+
  
     
 }

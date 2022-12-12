@@ -27,6 +27,7 @@ namespace SharedLibrary.Helpers
         public const string HeroAllreadyMaxLevel = "Daha fazla yükseltilemez!";
         public const string PlayerHaveNoHero = "Kullanıcı işlem yapmak istediği heroya sahip değil!";
         public const string PlayerHeroBusy = "Kullanıcının işlem yapmak istediği hero müsait değil!";
+        public const string PlayerIsUnderProtection = "Saldırı yapmak için her iki tarafın da prison,hospital ve barrack binaları olmalı ";
         public const string PlayerDoesNotHaveResource = "Kullanıcı gerekli kaynaklara sahip değil!";
         public const string TrainingMustBeDone = "Eğitimin bitmesini bekleyin!";
         public const string HealingMustBeDone = "İyileştirme işleminin bitmesini bekleyin!";

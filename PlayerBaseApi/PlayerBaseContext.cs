@@ -423,7 +423,7 @@ namespace PlayerBaseApi
             //    #endregion
         }
 
-        public async Task<PlayerBaseInfo?> GetPlayerBaseInfoByUserId(UserDto user)
+        public async Task<PlayerBaseInfo?> GetPlayerBaseInfoByUser(UserDto user)
         {
             var playerBaseInfo = await PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
             if (playerBaseInfo == null)
@@ -443,7 +443,9 @@ namespace PlayerBaseApi
                     Scraps = 10000,
                     UserId = user.Id,
                     Username = user.Username,
-                    IsApe = false
+                    IsApe = false,
+                    Bio = "-",
+                    AvatarId = 0
                 };
                 await AddAsync(playerBaseInfo);
                 await SaveChangesAsync();
@@ -455,6 +457,31 @@ namespace PlayerBaseApi
                 await SaveChangesAsync();
             }
 
+            #region Resource Addition
+
+            if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)
+            {
+                var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
+                duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
+
+                playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
+
+                await SaveChangesAsync();
+            }
+
+            #endregion
+
+            return playerBaseInfo;
+        }
+        public async Task<PlayerBaseInfo?> GetPlayerBaseInfoByUserId(long userId)
+        {
+            var playerBaseInfo = await PlayerBaseInfo.Where(l => l.UserId == userId).FirstOrDefaultAsync();
+            if (playerBaseInfo==null)
+            {
+                return null;
+            }
             #region Resource Addition
 
             if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)

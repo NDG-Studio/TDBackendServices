@@ -249,44 +249,7 @@ namespace PlayerBaseApi.Services
             return response;
         }
         
-        private async Task<TDResponse> JoinGangChat(BaseRequest<Guid> req, UserDto user)
-        {
-            TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "JoinGangChat");
-
-            try
-            {
-                var guidId = req.Data.ToString();
-                var gangChatRoom = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat && l.Name == guidId).FirstOrDefaultAsync();
-                if (gangChatRoom==null)
-                {
-                    response.SetError(OperationMessages.GangInviteTimeout);
-                    info.AddInfo(OperationMessages.GangInviteTimeout+"--");
-                    _logger.LogInformation(info.ToString());
-                    return response; 
-                }
-                var chatRoomMember = new ChatRoomMember()
-                {
-                    ChatRoomId =gangChatRoom.Id,
-                    IsActive = true,
-                    JoinedRoomDate = DateTimeOffset.UtcNow,
-                    LastSeen=DateTimeOffset.UtcNow,
-                    UserId=user.Id,
-                    Username=user.Username
-                };
-                await _context.AddAsync(chatRoomMember);
-                await _context.SaveChangesAsync();
-                Player.SendGangChatId(user.Id, gangChatRoom.Id.ToString());
-
-            }
-            catch (Exception e)
-            {
-                response.SetError(OperationMessages.DbError);
-                info.SetException(e);
-                _logger.LogError(info.ToString());
-            }
-            return response;
-        }
+        
         public async Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -405,7 +368,51 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
+        public async Task<TDResponse> EditGang(BaseRequest<GangEditDTO> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "EditGang");
+            try
+            {
+                var gangGuid = new Guid(req.Data.Id);
+                var gangMember = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.MemberType.Gang.Id==gangGuid).FirstOrDefaultAsync();
+                if (gangMember == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanMemberChangeType)
+                {
+                    gangMember.MemberType.Gang.Description = req.Data.Description;
+                    gangMember.MemberType.Gang.ShortName = req.Data.ShortName;
+                    gangMember.MemberType.Gang.Name = req.Data.Name;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                response.SetError(OperationMessages.PlayerNotHavePermission);
+                info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                _logger.LogInformation(info.ToString());
+                return response;
+                
 
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+    
 
         public async Task<TDResponse<List<GangMemberInfo>>> GetGangMembers(BaseRequest<string> req, UserDto user)
         {
@@ -443,6 +450,8 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
+        
+        
         private static async Task<LootRunResponse?> GetPlayerBaseInfo(long userId, string token, InfoDto info)
         {
             var handler = new HttpClientHandler();
@@ -473,7 +482,44 @@ namespace PlayerBaseApi.Services
                 return null;
             }
         }
+        private async Task<TDResponse> JoinGangChat(BaseRequest<Guid> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "JoinGangChat");
 
+            try
+            {
+                var guidId = req.Data.ToString();
+                var gangChatRoom = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat && l.Name == guidId).FirstOrDefaultAsync();
+                if (gangChatRoom==null)
+                {
+                    response.SetError(OperationMessages.GangInviteTimeout);
+                    info.AddInfo(OperationMessages.GangInviteTimeout+"--");
+                    _logger.LogInformation(info.ToString());
+                    return response; 
+                }
+                var chatRoomMember = new ChatRoomMember()
+                {
+                    ChatRoomId =gangChatRoom.Id,
+                    IsActive = true,
+                    JoinedRoomDate = DateTimeOffset.UtcNow,
+                    LastSeen=DateTimeOffset.UtcNow,
+                    UserId=user.Id,
+                    Username=user.Username
+                };
+                await _context.AddAsync(chatRoomMember);
+                await _context.SaveChangesAsync();
+                Player.SendGangChatId(user.Id, gangChatRoom.Id.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
 
 
 

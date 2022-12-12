@@ -278,7 +278,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
             try
             {
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (playerBaseInfo == null)
                 {
                     playerBaseInfo = new PlayerBaseInfo()
@@ -319,6 +319,51 @@ namespace PlayerBaseApi.Services
                 #endregion
 
                 response.Data = _mapper.Map<PlayerBaseInfoDTO>(playerBaseInfo);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse<PlayerBaseInfoDTO>> GetOtherPlayersBaseInfo(BaseRequest<long> req)
+        {
+            TDResponse<PlayerBaseInfoDTO> response = new TDResponse<PlayerBaseInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetOtherPlayersBaseInfo");
+            try
+            {
+                if (req?.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data);
+                if (playerBaseInfo == null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+
+                response.Data = _mapper.Map<PlayerBaseInfoDTO>(playerBaseInfo);
+                response.Data.Fuel = 0;
+                response.Data.Gems = 0;
+                response.Data.Scraps = 0;
+                response.Data.BluePrints = 0;
+                response.Data.EpicHeroCards = 0;
+                response.Data.LegendaryHeroCards = 0;
+                response.Data.RareHeroCards = 0;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -544,7 +589,7 @@ namespace PlayerBaseApi.Services
 
 
 
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (playerBaseInfo.Scraps < cost)
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -936,7 +981,7 @@ namespace PlayerBaseApi.Services
                 }
                 var rq = _context.ResearchNodeUpgradeNecessaries.Where(l => l.UpgradeLevel == currentNode.CurrentLevel + 1 && l.ResearchNodeId == req.Data);
                 var necessaries = await _mapper.ProjectTo<ResearchNodeUpgradeNecessariesDTO>(rq).FirstOrDefaultAsync();
-                var playerResource = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerResource = await _context.GetPlayerBaseInfoByUser(user);
                 if (necessaries.ScrapCount <= playerResource.Scraps && necessaries.BluePrintCount <= playerResource.BluePrints)
                 {
                     playerResource.Scraps -= necessaries.ScrapCount;
@@ -1140,7 +1185,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
@@ -1193,7 +1238,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (query.PrisonerCount < req.Data)
                 {
                     req.Data = query.PrisonerCount;
@@ -1328,7 +1373,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerPrison.Include(l => l.PrisonLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query.InTrainingPrisonerCount == 0)
                 {
@@ -1378,7 +1423,7 @@ namespace PlayerBaseApi.Services
                 response.Data = new List<PlayerHeroLootDTO>();
                 //response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 foreach (var loot in playerHeroLoot)
                 {
                     if (loot.AutoLootRunEndDate != null)
@@ -1466,7 +1511,7 @@ namespace PlayerBaseApi.Services
                 response.Data.GainedLootRuns = new List<LootRunDoneInfoDTO>();
                 response.Data.ActiveLootRuns = new List<PlayerHeroLootDTO>();
                 var playerHeroLoot = await _context.PlayerHeroLoot.Include(l => l.PlayerHero).ThenInclude(l => l.Hero).Where(l => l.PlayerHero.UserId == user.Id && l.IsActive).ToListAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 foreach (var loot in playerHeroLoot)
                 {
                     if (loot.AutoLootRunEndDate != null)
@@ -1858,7 +1903,7 @@ namespace PlayerBaseApi.Services
                     };
                     await _context.AddAsync(phl);
                 }
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var gainedResource = JsonConvert.DeserializeObject<LootRunDoneInfoDTO>(playerHeroLoot.GainedResources);
                 //playerBaseInfo!.Scraps += gainedResource?.ScrapCount ?? 0;
                 //playerBaseInfo!.BluePrints += gainedResource?.BluePrintCount ?? 0;
@@ -1923,7 +1968,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (req.Data < 1)
                 {
                     response.SetError(OperationMessages.InputError);
@@ -2060,7 +2105,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 var query = await _context.PlayerHospital.Include(l => l.HospitalLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var playerTroop = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (query.InHealingCount == 0)
                 {
@@ -2165,7 +2210,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "BuyMarketItem");
             try
             {
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var marketItem = await _context.MarketItem.Include(l => l.Item).Where(l => l.Id == (req.Data == null ? 0 : req.Data.MarketItemId) && l.IsActive).FirstOrDefaultAsync();
 
                 if (marketItem == null || playerBaseInfo == null || req.Data == null)
@@ -2348,7 +2393,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "UseItem");
             try
             {
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var playerItem = await _context.PlayerItem.Include(l => l.Item).ThenInclude(l => l.ItemType)
                     .Where(l => l.ItemId == (req.Data == null ? 0 : req.Data.ItemId) && l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerItem == null || playerBaseInfo == null || req.Data == null || req.Data.Count <= 0)
@@ -2537,7 +2582,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "SpendGangCreateMoney");
             try
             {
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (playerBaseInfo == null || playerBaseInfo.Gems < 500) //TODO: GEM SAYISI CONFIGDEN ALINACAK
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -2784,7 +2829,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "ChangeAvatar");
             try
             {
-                var _playerbase =await _context.GetPlayerBaseInfoByUserId(user);
+                var _playerbase =await _context.GetPlayerBaseInfoByUser(user);
                 var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerBaseInfo == null)
                 {
@@ -2795,6 +2840,37 @@ namespace PlayerBaseApi.Services
                 }
 
                 playerBaseInfo.AvatarId = req.Data;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        public async Task<TDResponse> ChangeBio(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ChangeBio");
+            try
+            {
+                var _playerbase =await _context.GetPlayerBaseInfoByUser(user);
+                var playerBaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerBaseInfo == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                playerBaseInfo.Bio = req.Data;
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -2945,7 +3021,23 @@ namespace PlayerBaseApi.Services
                 var pt = (await _context.PlayerTroop
                     .Where(l => l.UserId == user.Id)
                     .FirstOrDefaultAsync());
-                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount)
+
+                var playerPrisons = await _context.PlayerPrison
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                var playerHospital = await _context.PlayerHospital
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
+                var playerTroop = await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
+                {
+                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
+                    response.SetError(OperationMessages.PlayerIsUnderProtection);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);

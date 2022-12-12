@@ -70,6 +70,15 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetPlayerBaseInfo(req, user);
         }
+        
+        [HttpPost("GetOtherPlayersBaseInfo")]
+        public async Task<TDResponse<PlayerBaseInfoDTO>> GetOtherPlayersBaseInfo([FromBody] BaseRequest<long> req)
+        {
+            // var user = (HttpContext.Items["User"] as UserDto);
+            // req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetOtherPlayersBaseInfo(req);
+        }
 
         [LoginRequired]
         [HttpPost("UpdateOrCreatePlayerBaseInfo")]
@@ -739,6 +748,22 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.ChangeAvatar(req, user);
+        }       
+                
+        /// <summary>
+        /// Player bio degistirmek icin kullanilir input olarak int alip tdresponse doner
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("ChangeBio")]
+        public async Task<TDResponse> ChangeBio([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.ChangeBio(req, user);
         }       
         
         

@@ -33,7 +33,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetHeroTypes");
             try
             {
-                var playerBaseInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var query = _context.Hero.Where(l => l.IsActive && l.IsApe == playerBaseInfo.IsApe);
                 var qlist = await _mapper.ProjectTo<HeroDTO>(query).ToListAsync();
                 var ownedHeroes = await _context.PlayerHero.Include(l => l.Hero).Where(l => l.Hero.IsActive && l.UserId == user.Id).ToListAsync();
@@ -534,7 +534,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var playerInfo = await _context.GetPlayerBaseInfoByUserId(user);
+                var playerInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (playerInfo == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);

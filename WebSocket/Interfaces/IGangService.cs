@@ -10,5 +10,6 @@ namespace WebSocket.Interfaces
         Task<TDResponse<List<GangMemberInfo>>> GetGangMembers(BaseRequest<string> req, UserDto user);
         Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user);
         Task<TDResponse> AcceptGangInvitation(BaseRequest<GangInvitationResponse> req, UserDto user);
+        Task<TDResponse> EditGang(BaseRequest<GangEditDTO> req, UserDto user);
     }
 }
