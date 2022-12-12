@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MapApi.Entities;
 using MapApi.Interfaces;
@@ -7,6 +8,7 @@ using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using MapApi;
 using MapApi.Enums;
+using Newtonsoft.Json;
 
 namespace MapApi.Services
 {
@@ -354,11 +356,17 @@ namespace MapApi.Services
                 );
                 var cc=await q.FirstOrDefaultAsync();
                 if (cc!=null)
-                {
+                {  
+                    var baseInfo = await GetPlayerBaseInfo(user.Id);
+                    if (!baseInfo.HasError && baseInfo.Data!=null)
+                    {
+                        cc.BaseLevel = baseInfo.Data.BaseLevel;
+                    }
                     cc.UserName = user.Username;
                     await _context.SaveChangesAsync();
                 }
-                
+
+
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).FirstOrDefaultAsync() ?? new MapInfoDto()
                 {
                     Id = 0,
@@ -434,5 +442,44 @@ namespace MapApi.Services
 
         }
         #endregion
+        
+        
+        private static async Task<TDResponse<PlayerBaseInfoDTO>> GetPlayerBaseInfo(long id)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Environment.GetEnvironmentVariable("PlayerbaseUrl") + "/api/playerbase/GetOtherPlayersBaseInfo"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = id,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_mapapi_",
+                                OsVersion = "_mapapi_",
+                                AppVersion = "_mapapi_",
+                                DeviceModel = "_mapapi_",
+                                DeviceType = "_mapapi_",
+                                UserId = 0,
+                                Ip = "_mapapi_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<PlayerBaseInfoDTO>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
     }
 }

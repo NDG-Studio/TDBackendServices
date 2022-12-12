@@ -113,6 +113,7 @@ services:
             - Logging__Database__LogLevel__Default=Information
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+            - PlayerbaseUrl=http://playerbaseapi
     websocket:
         #networks:
         #    - isolation-network
