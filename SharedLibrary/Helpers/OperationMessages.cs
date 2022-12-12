@@ -45,5 +45,6 @@ namespace SharedLibrary.Helpers
         public const string WaveRewardAllreadyReceived = "Bu wave ödülleri zaten alınmış!!";
         public const string NoReward = "Ödül yok!";
         public const string WrongCoordinate = "Hatalı koordinat!!";
+        public const string GangInviteTimeout = "Davet artık geçersiz!!";
     }
 }

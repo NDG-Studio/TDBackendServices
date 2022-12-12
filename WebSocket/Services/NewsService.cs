@@ -437,7 +437,37 @@ namespace PlayerBaseApi.Services
 
         }
 
+        public async Task<TDResponse> CollectNews(string newsId)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                using (var _context = new WebSocketContext())
+                {
+                    var newsGuid = new Guid(newsId);
+                    var collectable =await _context.News
+                        .Where(l => l.Id == newsGuid && l.IsCollected == null)
+                        .FirstOrDefaultAsync();
+                    switch ((NewsType)collectable.TypeId)
+                    {
+                        case NewsType.LootRun:
+                            break;
+                        case NewsType.GangInvitation:
+                            
+                            break;
+                    }
+                    response.SetSuccess();
+                }
+                Player.SendAllNewsRefreshNeeded();
 
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+
+        }
 
     }
 }

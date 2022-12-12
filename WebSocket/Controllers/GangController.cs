@@ -61,13 +61,13 @@ public class GangController : ControllerBase
 
 
     /// <summary>
-    /// Verilen userId degeri ile Gang infoyu döner
+    /// Verilen userId degeri ile Gang infoyu doner
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
     /// <br/>
     /// <br/>
-    /// data = gang üyesi olan herhangi bir user id  Not: Null ise kendi gang infosunu döner
+    /// data = gang uyesi olan herhangi bir user id  Not: Null ise kendi gang infosunu doner
     /// <br/>
     /// Input: BaseRequest &lt; long &gt;
     /// <br/>
@@ -86,7 +86,7 @@ public class GangController : ControllerBase
 
 
     /// <summary>
-    /// Verilen gangId degeri ile Gang memberlarini döner
+    /// Verilen gangId degeri ile Gang memberlarini doner
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
@@ -106,6 +106,29 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangMembers(req, user);
+    }
+
+
+    /// <summary>
+    /// Gang invitationu kabul veya reddetmek icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; GangInvitationResponse &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("AcceptGangInvitation")]
+    public async Task<TDResponse> AcceptGangInvitation([FromBody] BaseRequest<GangInvitationResponse> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.AcceptGangInvitation(req, user);
     }
 
  
