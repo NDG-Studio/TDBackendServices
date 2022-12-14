@@ -793,6 +793,22 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetKillTroopLeaderBoard(req, user);
+        }        
+        
+        /// <summary>
+        /// Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetLootedScrapLeaderBoard")]
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootedScrapLeaderBoard([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootedScrapLeaderBoard(req, user);
         }
         
 

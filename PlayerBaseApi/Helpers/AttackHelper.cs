@@ -142,6 +142,7 @@ public class AttackHelper
                                 }
                                 playerBaseInfo.Scraps -= playerBaseInfo.Scraps / 5;
                                 playerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
+                                playerBaseInfo.LootedScrap+=attackResultData.LootedScrap;
                                 playerTroop.TroopCount -= attackResultData.TargetsDeadTroop 
                                                           + attackResultData.TargetsWoundedTroop 
                                                           + attackResultData.PrisonerCount;
@@ -188,6 +189,7 @@ public class AttackHelper
                                         ? targetPlayerHospital.HospitalLevel.HospitalCapacity
                                         : newVal;
                                 playerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
+                                playerBaseInfo.LootedScrap+=attackResultData.LootedScrap;
                             }
 
                             var dbEnt =_context.Attack.Where(l => l.Id == s.Id).FirstOrDefault();
