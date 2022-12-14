@@ -402,30 +402,30 @@ namespace IdentityApi.Services
         }
 
 
-        //public async Task<TDResponse> DeleteUserById(int id)
-        //{
-        //    TDResponse response = new TDResponse();
-        //    try
-        //    {
-        //        var user = await _context.User.Where(l => l.Id == id).FirstOrDefaultAsync();
-        //        if (user != null)
-        //        {
-        //            _context.Remove(user);
-        //            response.SetSuccess();
-        //        }
-        //        else
-        //        {
-        //            response.SetError(OperationMessages.DbItemNotFound);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response.SetError(OperationMessages.DbError);
-        //        _logger.LogError(getException(e, "DeleteUserById"));
-        //    }
+        public async Task<TDResponse> DeleteUserByUsername(BaseRequest<string> req,UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                var ent = await _context.User.Where(l => l.Username == req.Data).FirstOrDefaultAsync();
+                if (ent != null && user.Id==1)
+                {
+                    ent.IsActive = false;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                }
+                else
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                }
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
 
-        //    return response;
-        //}
+            return response;
+        }
 
         public async Task<TDResponse<AuthenticateResponse>> Login(BaseRequest<AuthenticateRequest> req)
         {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221214094233_kill-count-added")]
+    partial class killcountadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -922,9 +924,6 @@ namespace PlayerBaseApi.Migrations
                     b.Property<bool>("IsApe")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("KillCount")
-                        .HasColumnType("integer");
-
                     b.Property<DateTimeOffset>("LastBaseCollect")
                         .HasColumnType("timestamp with time zone");
 
@@ -1171,6 +1170,25 @@ namespace PlayerBaseApi.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("PlayerItem");
+                });
+
+            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerKillCount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("KillCount")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerKillCount");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerMarketHistory", b =>

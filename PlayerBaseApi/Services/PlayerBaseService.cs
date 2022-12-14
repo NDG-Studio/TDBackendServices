@@ -2757,7 +2757,7 @@ namespace PlayerBaseApi.Services
                 response.Data.PageIndex = req.Data;
                 
                 response.Data.PagingData = await _context.PlayerBaseInfo
-                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id)
+                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.UserId)
                     .Skip(req.Data*10)
                     .Take(10)
                     .Select(l=>new LeaderBoardItem()
@@ -2782,8 +2782,64 @@ namespace PlayerBaseApi.Services
                         UserId = user.Id,
                         Value = 0
                     };
-                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value)
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value || (l.BaseLevel == ownValue.Value && l.UserId < user.Id) )
                     .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id).CountAsync()) + 1;
+                
+                response.Data.PagingData.Add(ownValue);
+                
+                
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }        
+        
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetKillTroopLeaderBoard(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<Paging<LeaderBoardItem>> response = new TDResponse<Paging<LeaderBoardItem>>();
+            var info = InfoDetail.CreateInfo(req, "GetKillTroopLeaderBoard");
+            try
+            {
+                response.Data = new Paging<LeaderBoardItem>();
+                response.Data.PageIndex = req.Data;
+                
+                response.Data.PagingData = await _context.PlayerBaseInfo
+                    .OrderByDescending(l => l.KillCount).ThenBy(l => l.UserId)
+                    .Skip(req.Data*10)
+                    .Take(10)
+                    .Select(l=>new LeaderBoardItem()
+                    {
+                        Username = l.Username,
+                        Value = l.KillCount,
+                        UserId = l.UserId
+                    }).ToListAsync();
+
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == user.Id)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.KillCount,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync()
+                    ?? new LeaderBoardItem()
+                    {
+                        Username = user.Username,
+                        UserId = user.Id,
+                        Value = 0
+                    };
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.KillCount > ownValue.Value || (l.KillCount == ownValue.Value && l.UserId < user.Id) )
+                    .OrderByDescending(l => l.KillCount).ThenBy(l => l.Id).CountAsync()) + 1;
                 
                 response.Data.PagingData.Add(ownValue);
                 

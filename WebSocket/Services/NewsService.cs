@@ -447,7 +447,7 @@ namespace PlayerBaseApi.Services
                 {
                     var newsGuid = new Guid(newsId);
                     var collectable =await _context.News
-                        .Where(l => l.Id == newsGuid && l.IsCollected == null && l.TypeId==(int)NewsType.LootRun)
+                        .Where(l => l.Id == newsGuid && l.IsCollected == false && l.TypeId==(int)NewsType.LootRun)
                         .FirstOrDefaultAsync();
                     if (collectable?.GainedResources==null)
                     {
@@ -475,12 +475,12 @@ namespace PlayerBaseApi.Services
                     }
                     response.SetSuccess();
                 }
-                Player.SendAllNewsRefreshNeeded();
 
             }
             catch (Exception e)
             {
                 response.SetError(OperationMessages.DbError);
+                Console.WriteLine(e);
             }
             return response;
 

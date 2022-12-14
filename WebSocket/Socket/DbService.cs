@@ -743,7 +743,7 @@ namespace WebSocket.Socket
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
-                    var res = JsonConvert.DeserializeObject<TDResponse<string>>(content);
+                    var res = JsonConvert.DeserializeObject<TDResponse>(content);
                     return res;
                 }
                 return null;

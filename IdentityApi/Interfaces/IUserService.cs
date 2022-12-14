@@ -18,5 +18,6 @@ namespace IdentityApi.Interfaces
         Task<TDResponse<AuthenticateResponse>> LoginWithApple(BaseRequest<string> req);
         Task<TDResponse> TutorialDone(BaseRequest req, UserDto user);
         Task<TDResponse<string>> ChangeUsername(BaseRequest<string> req, UserDto user);
+        Task<TDResponse> DeleteUserByUsername(BaseRequest<string> req,UserDto user);
     }
 }

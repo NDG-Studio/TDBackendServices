@@ -141,6 +141,7 @@ public class AttackHelper
                                     });
                                 }
                                 playerBaseInfo.Scraps -= playerBaseInfo.Scraps / 5;
+                                playerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
                                 playerTroop.TroopCount -= attackResultData.TargetsDeadTroop 
                                                           + attackResultData.TargetsWoundedTroop 
                                                           + attackResultData.PrisonerCount;
@@ -186,6 +187,7 @@ public class AttackHelper
                                     newVal > targetPlayerHospital.HospitalLevel.HospitalCapacity
                                         ? targetPlayerHospital.HospitalLevel.HospitalCapacity
                                         : newVal;
+                                playerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
                             }
 
                             var dbEnt =_context.Attack.Where(l => l.Id == s.Id).FirstOrDefault();
@@ -194,7 +196,6 @@ public class AttackHelper
                                 dbEnt.ResultData = s.ResultData;
                                 dbEnt.WinnerSide = s.WinnerSide;
                                 _context.SaveChanges();
-                                
                                 var xxx=SendAttackInfo(new BaseRequest<AttackInfoDTO>()
                                 {
                                     Data = new AttackInfoDTO()

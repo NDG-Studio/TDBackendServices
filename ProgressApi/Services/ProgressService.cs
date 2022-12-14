@@ -70,7 +70,7 @@ namespace ProgressApi.Services
                 qTowerProgress.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
                 List<EnemyKill> enemyKill = _mapper.ProjectTo<EnemyKill>(req.Data!.EnemyKillList.AsQueryable()).ToList();
                 enemyKill.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
-                List<UserTowerPlace> userTowerPlace = req.Data.TowerPlaceList.Select(l => new UserTowerPlace() //TODO: Bu kuleleri ekleyebilir mi kontrolü eklenecek
+                List<UserTowerPlace> userTowerPlace = req.Data.TowerPlaceList.Select(l => new UserTowerPlace() //TODO: Bu kuleleri ekleyebilir mi kontrolï¿½ eklenecek
                 {
                     PlaceId = l.PlaceId,
                     TowerLevelId = l.TowerLevelId,
@@ -258,7 +258,7 @@ namespace ProgressApi.Services
                 UserWave? userWave = await _context.UserWave.Include(l => l.Wave).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 List<WaveDetail> waveDetail = new List<WaveDetail>();
                 Wave? nextWave = null;
-                if (userWave != null && userWave.Wave.StageId == 902)
+                if (userWave != null && userWave.Wave.StageId == Int32.Parse(Environment.GetEnvironmentVariable("TutorialLastLevel")))
                 {
                     _context.Remove(userWave);
                     await _context.SaveChangesAsync();

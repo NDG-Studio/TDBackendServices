@@ -110,5 +110,15 @@ namespace IdentityApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _userService.TutorialDone(req, user);
         }
+        
+        [LoginRequired]
+        [HttpPost("DeleteUserByUsername")]
+        public async Task<TDResponse> DeleteUserByUsername([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _userService.DeleteUserByUsername(req, user);
+        }
     }
 }
