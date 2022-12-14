@@ -66,5 +66,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerBaseInfoDTO>> GetOtherPlayersBaseInfo(BaseRequest<long> req);
         Task<TDResponse<Paging<LeaderBoardItem>>> GetKillTroopLeaderBoard(BaseRequest<int> req, UserDto user);        
         Task<TDResponse<Paging<LeaderBoardItem>>> GetLootedScrapLeaderBoard(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user);
     }
 }

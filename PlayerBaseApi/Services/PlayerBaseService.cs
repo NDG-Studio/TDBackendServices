@@ -1487,7 +1487,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse<LootRunResponse>> GetActiveLootRunsForSocket(BaseRequest req, UserDto user)
         {
             TDResponse<LootRunResponse> response = new TDResponse<LootRunResponse>();
-            var info = InfoDetail.CreateInfo(req, "GetActiveLootRuns");
+            var info = InfoDetail.CreateInfo(req, "GetActiveLootRunsForSocket");
             try
             {
                 response.Data = new LootRunResponse();
@@ -1508,6 +1508,9 @@ namespace PlayerBaseApi.Services
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
                             gainedResource.HeroId = loot.PlayerHero.HeroId;
                             gainedResource.HeroName = loot.PlayerHero.Hero.Name;
+                            playerBaseInfo.LootRunPoint += gainedResource.BluePrintCount * 3;
+                            playerBaseInfo.LootRunPoint += gainedResource.ScrapCount * 1;
+                            playerBaseInfo.LootRunPoint += gainedResource.GemCount * 5;
                             response.Data.GainedLootRuns.Add(gainedResource);
                         }
                         else
@@ -1535,6 +1538,9 @@ namespace PlayerBaseApi.Services
                             {
                                 ent.IsActive = false;
                                 response.Data.GainedLootRuns.Add(gainedLoots);
+                                playerBaseInfo.LootRunPoint += gainedLoots.BluePrintCount * 3;
+                                playerBaseInfo.LootRunPoint += gainedLoots.ScrapCount * 1;
+                                playerBaseInfo.LootRunPoint += gainedLoots.GemCount * 5;
                             }
                             else
                             {
@@ -1558,6 +1564,9 @@ namespace PlayerBaseApi.Services
                             gainedResource.StartDate = loot.OperationStartDate.ToString();
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
                             response.Data.GainedLootRuns.Add(gainedResource);
+                            playerBaseInfo.LootRunPoint += gainedResource.BluePrintCount * 3;
+                            playerBaseInfo.LootRunPoint += gainedResource.ScrapCount * 1;
+                            playerBaseInfo.LootRunPoint += gainedResource.GemCount * 5;
                         }
                         else
                         {
@@ -1566,6 +1575,8 @@ namespace PlayerBaseApi.Services
                     }
                 }
 
+                _context.Update(playerBaseInfo);
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -2896,6 +2907,61 @@ namespace PlayerBaseApi.Services
                     };
                 ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootedScrap > ownValue.Value || (l.LootedScrap == ownValue.Value && l.UserId < user.Id) )
                     .OrderByDescending(l => l.LootedScrap).ThenBy(l => l.Id).CountAsync()) + 1;
+                
+                response.Data.PagingData.Add(ownValue);
+                
+                
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<Paging<LeaderBoardItem>> response = new TDResponse<Paging<LeaderBoardItem>>();
+            var info = InfoDetail.CreateInfo(req, "GetLootRunPointLeaderBoard");
+            try
+            {
+                response.Data = new Paging<LeaderBoardItem>();
+                response.Data.PageIndex = req.Data;
+                
+                response.Data.PagingData = await _context.PlayerBaseInfo
+                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.UserId)
+                    .Skip(req.Data*10)
+                    .Take(10)
+                    .Select(l=>new LeaderBoardItem()
+                    {
+                        Username = l.Username,
+                        Value = l.LootRunPoint,
+                        UserId = l.UserId
+                    }).ToListAsync();
+
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == user.Id)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.LootRunPoint,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync()
+                    ?? new LeaderBoardItem()
+                    {
+                        Username = user.Username,
+                        UserId = user.Id,
+                        Value = 0
+                    };
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootRunPoint > ownValue.Value || (l.LootRunPoint == ownValue.Value && l.UserId < user.Id) )
+                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.Id).CountAsync()) + 1;
                 
                 response.Data.PagingData.Add(ownValue);
                 

@@ -796,7 +796,7 @@ namespace PlayerBaseApi.Controllers
         }        
         
         /// <summary>
-        /// savaslardan lootlanan gore sirali leaderboardu cekmek icin kullanilir
+        /// Savaslardan lootlananlara gore sirali leaderboardu cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
@@ -809,6 +809,22 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetLootedScrapLeaderBoard(req, user);
+        }        
+        
+        /// <summary>
+        /// Lootrundan lootlananlara gore sirali leaderboardu cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetLootRunPointLeaderBoard")]
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootRunPointLeaderBoard(req, user);
         }
         
 
