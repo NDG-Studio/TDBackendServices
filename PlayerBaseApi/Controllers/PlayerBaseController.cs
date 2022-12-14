@@ -796,7 +796,7 @@ namespace PlayerBaseApi.Controllers
         }        
         
         /// <summary>
-        /// Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
+        /// savaslardan lootlanan gore sirali leaderboardu cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
