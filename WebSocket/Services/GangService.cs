@@ -35,7 +35,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse> CreateGang(BaseRequest<CreateGangRequest> req, UserDto user, string token)
         {
             TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
+            var info = InfoDetail.CreateInfo(req, "CreateGang");
             try
             {
                 if (req.Data == null)
@@ -442,6 +442,37 @@ namespace PlayerBaseApi.Services
                         MemberTypeName = l.MemberType.Name,
                         UserName = l.UserName,
                         UserId = l.UserId
+                    }).ToListAsync();
+                response.Data = query;
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+        public async Task<TDResponse<List<MemberTypeDTO>>> GetGangMemberTypes(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<MemberTypeDTO>> response = new TDResponse<List<MemberTypeDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangInfo");
+            try
+            {
+                var gangId =await _context.GangMember.Where(l => l.UserId == user.Id).Select(l=>l.Id).FirstOrDefaultAsync();
+                var query = await _context.MemberType
+                    .Where(l => l.Gang.Id == gangId && l.Gang.IsActive && l.Name != "Owner")
+                    .Select(l => new MemberTypeDTO()
+                    {
+                        Id = l.Id.ToString(),
+                        Name = l.Name,
+                        CanKick = l.CanKick,
+                        GateManager = l.GateManager,
+                        CanAcceptMember = l.CanAcceptMember,
+                        CanDistributeMoney = l.CanDistributeMoney,
+                        CanStartWar = l.CanStartWar,
+                        CanMemberChangeType = l.CanMemberChangeType
                     }).ToListAsync();
                 response.Data = query;
                 response.SetSuccess();

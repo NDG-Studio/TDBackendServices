@@ -106,6 +106,28 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangMembers(req, user);
+    }    
+    
+    /// <summary>
+    /// Kullanicinin gangine ait GangMemberTypelarini doner
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest
+    /// <br/>
+    /// Output: TDResponse &lt; List &lt; GetGangMemberTypes &gt; &gt;
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("GetGangMemberTypes")]
+    public async Task<TDResponse<List<MemberTypeDTO>>> GetGangMemberTypes([FromBody] BaseRequest req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.GetGangMemberTypes(req, user);
     }
 
 
