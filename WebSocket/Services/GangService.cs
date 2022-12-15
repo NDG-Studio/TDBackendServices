@@ -296,11 +296,13 @@ namespace PlayerBaseApi.Services
                     Detail = $" {user.Username} invites you to join '{query.MemberType.Gang.Name}' gang",
                     Date = DateTimeOffset.Now,
                     AGangId = query.MemberType.Gang.Id.ToString(),
+                    AGangAvatarId = query.MemberType.Gang.AvatarId,
                     AGangName = $"[{query.MemberType.Gang.ShortName}]{query.MemberType.Gang.Name}",
                     UserId = req.Data,
                     IsActive = true,
                     Seen = false,
-                    TypeId = (int)NewsType.GangInvitation
+                    TypeId = (int)NewsType.GangInvitation,
+                    
                 };
                 await _context.AddAsync(gangInvitations);
                 await _context.SaveChangesAsync();
@@ -349,6 +351,7 @@ namespace PlayerBaseApi.Services
                     Name = c.MemberType.Gang.Name,
                     Power = c.MemberType.Gang.Power,
                     ShortName = c.MemberType.Gang.ShortName,
+                    AvatarId = c.MemberType.Gang.AvatarId,
                     Owner = new GangMemberInfo()
                     {
                         Power = owner.Power,
@@ -390,6 +393,7 @@ namespace PlayerBaseApi.Services
                     gangMember.MemberType.Gang.Description = req.Data.Description;
                     gangMember.MemberType.Gang.ShortName = req.Data.ShortName;
                     gangMember.MemberType.Gang.Name = req.Data.Name;
+                    gangMember.MemberType.Gang.AvatarId = req.Data.AvatarId;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     _logger.LogInformation(info.ToString());

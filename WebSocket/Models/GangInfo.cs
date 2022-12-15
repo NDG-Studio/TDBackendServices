@@ -9,6 +9,7 @@
         public long Power { get; set; }
         public GangMemberInfo Owner { get; set; }
         public int Capacity { get; set; }
+        public int AvatarId { get; set; } = 0;
         public int MemberCount { get; set; }
     }
 }

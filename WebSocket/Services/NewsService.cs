@@ -111,6 +111,8 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
@@ -120,6 +122,8 @@ namespace PlayerBaseApi.Services
                                 ProcessDate = req.ArrivedDate,
                                 TCoord = DbService.GetUserCoordinate(req.TargetUserId).Result.Data,
                                 TUsername = req.TargetUserName,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
@@ -137,6 +141,8 @@ namespace PlayerBaseApi.Services
                                  IsActive = true,
                                  TypeId = (int)NewsType.Scout,
                                  ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
+                                 AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                  AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
                                      .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                  AUsername = req.SenderUserName,
@@ -146,6 +152,8 @@ namespace PlayerBaseApi.Services
                                  ProcessDate = req.ArrivedDate,
                                  TCoord = DbService.GetUserCoordinate(req.TargetUserId).Result.Data,
                                  TUsername = req.TargetUserName,
+                                 TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                  TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                      .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                  TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
@@ -167,6 +175,8 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
@@ -180,6 +190,8 @@ namespace PlayerBaseApi.Services
                                 TWall = scoutedData.WallLevel,
                                 TUsername = req.TargetUserName,
                                 TUserId = req.TargetUserId,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
@@ -199,6 +211,8 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
@@ -212,6 +226,8 @@ namespace PlayerBaseApi.Services
                                 TWall = scoutedData.WallLevel,
                                 TUsername = req.TargetUserName,
                                 TUserId = req.TargetUserId,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
@@ -255,6 +271,8 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
@@ -264,6 +282,8 @@ namespace PlayerBaseApi.Services
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
@@ -280,6 +300,8 @@ namespace PlayerBaseApi.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
@@ -289,6 +311,8 @@ namespace PlayerBaseApi.Services
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
@@ -310,6 +334,8 @@ namespace PlayerBaseApi.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
@@ -331,6 +357,8 @@ namespace PlayerBaseApi.Services
                                 TUsername = resultData.TargetUsername,
                                 TScrap = resultData.DefenserScrap,
                                 VictorySide = req.WinnerSide,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
@@ -351,6 +379,8 @@ namespace PlayerBaseApi.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
@@ -372,6 +402,8 @@ namespace PlayerBaseApi.Services
                                 TUsername = resultData.TargetUsername,
                                 TScrap = resultData.DefenserScrap,
                                 VictorySide = req.WinnerSide,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
@@ -394,6 +426,8 @@ namespace PlayerBaseApi.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
@@ -415,6 +449,8 @@ namespace PlayerBaseApi.Services
                                 TUsername = resultData2.TargetUsername,
                                 TScrap = resultData2.DefenserScrap,
                                 VictorySide = req.WinnerSide,
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                    .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)

@@ -19,6 +19,7 @@ namespace WebSocket.Entities
         /// </summary>
         public int Level { get; set; } = 1;
         public int Capacity { get; set; } = 10;
+        public int AvatarId { get; set; } = 0;
         public int MemberCount { get; set; } = 10;
         public int RaidCapacity { get; set; } = 3;
         public long Power { get; set; } = 0;
