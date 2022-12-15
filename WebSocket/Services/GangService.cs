@@ -486,6 +486,62 @@ namespace PlayerBaseApi.Services
             return response;
         }
         
+        public async Task<TDResponse> SetGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SetGangMemberType");
+            try
+            {
+                var memberTypeId = new Guid(req.Data.Id);
+                var query = await _context.MemberType
+                    .Where(l => l.Id == memberTypeId && l.IsActive).FirstOrDefaultAsync();
+
+                query.Name = req.Data.Name;
+                query.CanKick = req.Data.CanKick;
+                query.GateManager = req.Data.GateManager;
+                query.CanAcceptMember = req.Data.CanAcceptMember;
+                query.CanDistributeMoney = req.Data.CanDistributeMoney;
+                query.CanStartWar = req.Data.CanStartWar;
+                query.CanMemberChangeType = req.Data.CanMemberChangeType;
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+        
+        public async Task<TDResponse> ChangeGangMemberType(BaseRequest<ChangeGangMemberTypeRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ChangeGangMemberType");
+            try
+            {
+                var memberTypeId = new Guid(req.Data.GangMemberTypeId);
+                var query = await _context.MemberType
+                    .Where(l => l.Id == memberTypeId).FirstOrDefaultAsync();
+
+                var gangMember =
+                    await _context.GangMember.Where(l => l.UserId == req.Data.UserId).FirstOrDefaultAsync();
+                if (query!=null&& gangMember!=null)
+                {
+                    gangMember.MemberTypeId = memberTypeId;
+                    await _context.SaveChangesAsync();
+                }
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+        
         
         private static async Task<LootRunResponse?> GetPlayerBaseInfo(long userId, string token, InfoDto info)
         {

@@ -129,6 +129,50 @@ public class GangController : ControllerBase
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangMemberTypes(req, user);
     }
+    
+    /// <summary>
+    /// Kullanicinin gangine ait GangMemberTypelarini doner
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest
+    /// <br/>
+    /// Output: TDResponse &lt; List &lt; GetGangMemberTypes &gt; &gt;
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("GetGangMemberTypes")]
+    public async Task<TDResponse> SetGangMemberType([FromBody] BaseRequest<MemberTypeDTO> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.SetGangMemberType(req, user);
+    }    
+    
+    /// <summary>
+    /// Gang owneri diger bir gang uyesinin membertypeini degistirmek icin kullanir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; ChangeGangMemberTypeRequest &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("ChangeGangMemberType")]
+    public async Task<TDResponse> ChangeGangMemberType([FromBody] BaseRequest<ChangeGangMemberTypeRequest> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.ChangeGangMemberType(req, user);
+    }
 
 
     /// <summary>
