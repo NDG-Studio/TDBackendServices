@@ -466,7 +466,7 @@ namespace PlayerBaseApi.Services
 
                 var duration = buildingUpgradeTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0);
                 var cost = buildingUpgradeTime?.ScrapCount ?? 99999999;
-                var buff = await GetPlayersTotalBuff(user.Id);
+                var buff = await BuffHelper.GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
                 buildingUpgradeTime!.UpgradeDuration = duration;
@@ -549,7 +549,7 @@ namespace PlayerBaseApi.Services
                 var buildingUpdateTime = await _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1).FirstOrDefaultAsync();
                 var duration = buildingUpdateTime?.UpgradeDuration ?? new TimeSpan(2, 0, 0);
                 var cost = buildingUpdateTime?.ScrapCount ?? 99999999;
-                var buff = await GetPlayersTotalBuff(user.Id);
+                var buff = await BuffHelper.GetPlayersTotalBuff(user.Id);
                 duration += duration * buff.BuildingUpgradeDurationMultiplier;
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
                 var conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
@@ -2547,7 +2547,7 @@ namespace PlayerBaseApi.Services
                     TroopTrainingPerHour = playerTroops.TrainingPerHour,
                     BarrackFullDuration = playerTroops.MaxDuration
                 };
-                response.Data.CollectedTroops += (int)(response.Data.CollectedTroops * (await GetPlayersTotalBuff(user.Id)).TroopTrainingMultiplier);
+                response.Data.CollectedTroops += (int)(response.Data.CollectedTroops * (await BuffHelper.GetPlayersTotalBuff(user.Id)).TroopTrainingMultiplier);
                 playerTroops.LastTroopCollect = DateTimeOffset.Now;
                 playerTroops.TroopCount += response.Data.CollectedTroops;
 
@@ -3168,6 +3168,27 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
+                var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                if (targetPlayerbaseInfo == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var targetBuffs = await BuffHelper.GetPlayersTotalBuff(req.Data.TargetUserId);
+
+                if (targetBuffs.CityShieldActive)
+                {
+                    info.AddInfo(OperationMessages.TargetHasCityShield);
+                    response.SetError(OperationMessages.TargetHasCityShield);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                
+
                 var attackList =await  _context.Attack
                     .Where(l => l.IsActive && l.AttackerUserId == user.Id )
                     .ToListAsync();
@@ -3305,79 +3326,6 @@ namespace PlayerBaseApi.Services
         #region PRIVATE FUNCTIONS
 
 
-        /// <summary>
-        /// HeroId gönderilmezse veya null gönderilirse hero buffları eklenmez
-        /// </summary>
-        /// <param name="userId">bufflarına ulaşılmak istenen userın id değeri</param>
-        /// <param name="heroId">heroya bağlı bufflara ulaşabilmek için gerekli olan heroId</param>
-        /// <returns>Tüm buffların değerlerinin toplamı olan tek bir buff objesi döner</returns>
-        private async Task<Buff> GetPlayersTotalBuff(long userId, int? heroId = null)
-        {
-            List<Buff> playerBuffs = new List<Buff>();
-
-            if (heroId != null)
-            {
-                var heroSkillBuffs = await _context.PlayerHeroSkillLevel
-                    .Include(l => l.HeroSkillLevel).ThenInclude(l => l.Buff)
-                    .Where(l => l.UserId == userId && l.HeroSkillLevel.HeroSkill.HeroId == heroId)
-                    .Select(l => l.HeroSkillLevel.Buff).ToListAsync();
-
-                var heroTalentBuffs = await _context.PlayerTalentTreeNode
-                    .Include(l => l.TalentTreeNode).ThenInclude(l => l.Buff)
-                    .Where(l => l.UserId == userId)
-                    .Select(l => l.TalentTreeNode.Buff).ToListAsync();
-
-                var playerHeroLevel = await _context.PlayerHero
-                    .Where(l => l.UserId == userId && l.HeroId == heroId)
-                    .Select(l => l.CurrentLevel).FirstOrDefaultAsync();
-                var heroLevelBuffs = await _context.HeroLevelThreshold
-                    .Include(l => l.Buff)
-                    .Where(h => h.HeroId == heroId && h.Level == playerHeroLevel)
-                    .Select(l => l.Buff).ToListAsync();
-
-                playerBuffs.AddRange(heroSkillBuffs);
-                playerBuffs.AddRange(heroTalentBuffs);
-                playerBuffs.AddRange(heroLevelBuffs);
-            }
-
-            var researchBuffs = await _context.PlayerResearchNode
-                .Include(l => l.ResearchNode).ThenInclude(l => l.Buff)
-                .Where(l => l.UserId == userId)
-                .Select(l => l.ResearchNode.Buff).ToListAsync();
-
-            playerBuffs.AddRange(researchBuffs);
-
-
-
-            return new Buff()
-            {
-                Id = playerBuffs.Count,
-                Name = "user total buff",
-                Description = "",
-                LootBluePrintMultiplier = playerBuffs.Sum(l => l.LootBluePrintMultiplier),
-                LootCapacity = playerBuffs.Sum(l => l.LootCapacity),
-                LootDurationMultiplier = playerBuffs.Sum(l => l.LootDurationMultiplier),
-                LootGemMultiplier = playerBuffs.Sum(l => l.LootGemMultiplier),
-                LootPerfectRunMultiplier = playerBuffs.Sum(l => l.LootPerfectRunMultiplier),
-                LootScrapMultiplier = playerBuffs.Sum(l => l.LootScrapMultiplier),
-                PrisonCapacityMultiplier = playerBuffs.Sum(l => l.PrisonCapacityMultiplier),
-                PrisonCostMultiplier = playerBuffs.Sum(l => l.PrisonCostMultiplier),
-                PrisonExecutionEarnMultiplier = playerBuffs.Sum(l => l.PrisonExecutionEarnMultiplier),
-                PrisonTrainingCostMultiplier = playerBuffs.Sum(l => l.PrisonTrainingCostMultiplier),
-                PrisonTrainingDurationMultiplier = playerBuffs.Sum(l => l.PrisonTrainingDurationMultiplier),
-                BuildingUpgradeDurationMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeDurationMultiplier),
-                TroopTrainingMultiplier = playerBuffs.Sum(l => l.TroopTrainingMultiplier),
-                AttackMultiplier = playerBuffs.Sum(l => l.AttackMultiplier),
-                BaseResourceMultiplier = playerBuffs.Sum(l => l.BaseResourceMultiplier),
-                BuildingUpgradeCostMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeCostMultiplier),
-                DefenseMultiplier = playerBuffs.Sum(l => l.DefenseMultiplier),
-                SpyFakerMultiplier = playerBuffs.Sum(l => l.SpyFakerMultiplier),
-                TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopCapacityMultiplier),
-                AutoLootRunActive = playerBuffs.Any(l => l.AutoLootRunActive),
-                CityShieldActive = playerBuffs.Any(l => l.CityShieldActive),
-                SpyProtectionActive = playerBuffs.Any(l => l.SpyProtectionActive)
-            };
-        }
         private async Task<LootRunDoneInfoDTO> GetLootGainedResource(PlayerHero playerHero, DateTimeOffset StartDate, DateTimeOffset EndDate)
         {
 

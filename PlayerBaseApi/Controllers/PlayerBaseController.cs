@@ -827,10 +827,5 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.GetLootRunPointLeaderBoard(req, user);
         }
         
-
-
-
-
-
     }
 }
