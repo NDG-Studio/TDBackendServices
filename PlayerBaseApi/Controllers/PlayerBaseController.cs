@@ -691,6 +691,48 @@ namespace PlayerBaseApi.Controllers
         
         
         /// <summary>
+        /// Baska bir playerin base'ine toplu saldiri yapmak icin cagirilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>Not: Test icin distance hesaplamasi yapilmaksizin ayarlandi
+        /// Input: BaseRequest &lt; CreateRallyRequest &gt;  NOT: user'in idsi, kullanilacak heronun idsi, asker sayisi, katilim bekleme suresi ve distance degeri alinir
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("CreateRally")]
+        public async Task<TDResponse> CreateRally([FromBody] BaseRequest<CreateRallyRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.CreateRally(req, user);
+        }          
+        
+        /// <summary>
+        /// Baska bir playerin base'ine yapilan toplu saldiriya katilmak icin cagirilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>Not: Test icin distance hesaplamasi yapilmaksizin ayarlandi
+        /// Input: BaseRequest &lt; JoinRallyRequest &gt;  NOT: RallyId , kullanilacak heronun idsi, asker sayisi ve distance degeri alinir
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("JoinRally")]
+        public async Task<TDResponse> JoinRally([FromBody] BaseRequest<JoinRallyRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.JoinRally(req, user);
+        }     
+        
+        /// <summary>
         /// Baska bir playerin base'ine saldiri yapmak icin cagirilir
         /// </summary>
         /// <remarks>
@@ -709,6 +751,28 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.AttackPlayer(req, user);
+        }        
+        
+        
+        /// <summary>
+        /// Katilabilecegin rally listesini gormek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest 
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; RallyDTO &gt; &gt; 
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetRallyList")]
+        public async Task<TDResponse<List<RallyDTO>>> GetRallyList([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetRallyList(req, user);
         }
 
         

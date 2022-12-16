@@ -18,5 +18,5 @@ public class Attack
     public DateTimeOffset? ComeBackDate { get; set; } = null;
     public string? ResultData { get; set; } = null;
     public bool IsActive { get; set; } = true;
-    // public virtual ICollection<AttackDetail> AttackDetailList { get; set; }
+
 }

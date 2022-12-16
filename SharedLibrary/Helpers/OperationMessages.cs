@@ -48,5 +48,6 @@ namespace SharedLibrary.Helpers
         public const string WrongCoordinate = "Hatalı koordinat!!";
         public const string GangInviteTimeout = "Davet artık geçersiz!!";
         public const string TargetHasCityShield = "Saldırmak istediğiniz kullanıcının kalkanı var. Saldıramazsınız!!";
+        public const string CantJoinRally = "Bu rallye artık katılamazsınız!";
     }
 }

@@ -1,7 +1,4 @@
-﻿
-using System.Diagnostics.CodeAnalysis;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Text;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -3168,7 +3165,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
                 if (targetPlayerbaseInfo == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -3188,11 +3185,17 @@ namespace PlayerBaseApi.Services
                 }
 
                 
-
+                var heroOnRally = await _context.RallyPart.Where(l =>
+                        l.IsActive && l.UserId == user.Id && l.HeroId == req.Data.AttackerHeroId)
+                    .AnyAsync();
+                var heroOnLoot = await _context.PlayerHeroLoot
+                    .Where(l => l.IsActive && l.PlayerHero.HeroId == req.Data.AttackerHeroId 
+                                           && l.PlayerHero.UserId == user.Id)
+                    .AnyAsync();
                 var attackList =await  _context.Attack
                     .Where(l => l.IsActive && l.AttackerUserId == user.Id )
                     .ToListAsync();
-                if (attackList.Any(l=>l.AttackerHeroId == req.Data.AttackerHeroId))
+                if (attackList.Any(l=>l.AttackerHeroId == req.Data.AttackerHeroId) || heroOnRally || heroOnLoot)
                 {
                     info.AddInfo(OperationMessages.PlayerHeroBusy);
                     response.SetError(OperationMessages.PlayerHeroBusy);
@@ -3257,6 +3260,313 @@ namespace PlayerBaseApi.Services
 
         }
         
+        public async Task<TDResponse> CreateRally(BaseRequest<CreateRallyRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "CreateRally");
+            try
+            {
+                //todo: kac tane aktif attack var kontrol edilecek
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
+                var leaderPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                if (targetPlayerbaseInfo == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var targetBuffs = await BuffHelper.GetPlayersTotalBuff(req.Data.TargetUserId);
+
+                if (targetBuffs.CityShieldActive)
+                {
+                    info.AddInfo(OperationMessages.TargetHasCityShield);
+                    response.SetError(OperationMessages.TargetHasCityShield);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                
+
+                var rallyList =await  _context.RallyPart
+                    .Where(l => l.IsActive && l.UserId == user.Id )
+                    .ToListAsync();
+                var heroOnAttack = await _context.Attack.Where(l =>
+                        l.IsActive && l.AttackerUserId == user.Id && l.AttackerHeroId == req.Data.AttackerHeroId)
+                    .AnyAsync();
+                var heroOnLoot = await _context.PlayerHeroLoot
+                    .Where(l => l.IsActive && l.PlayerHero.HeroId == req.Data.AttackerHeroId 
+                                           && l.PlayerHero.UserId == user.Id)
+                    .AnyAsync();
+                if (rallyList.Any(l=>l.HeroId == req.Data.AttackerHeroId) || heroOnAttack || heroOnLoot)
+                {
+                    info.AddInfo(OperationMessages.PlayerHeroBusy);
+                    response.SetError(OperationMessages.PlayerHeroBusy);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var pt = (await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id)
+                    .FirstOrDefaultAsync());
+
+                var playerPrisons = await _context.PlayerPrison
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                var playerHospital = await _context.PlayerHospital
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
+                var playerTroop = await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
+                {
+                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
+                    response.SetError(OperationMessages.PlayerIsUnderProtection);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var leaderCoord = (await GetUserCoordinate(user.Id)).Data;
+                var targetCoord = (await GetUserCoordinate(req.Data.TargetUserId)).Data;
+                var targetGangInfo = (await GetGangInfoForRally(req.Data.TargetUserId)).Data;
+                var leaderGangInfo = (await GetGangInfoForRally(user.Id)).Data;
+                
+                var now = DateTimeOffset.UtcNow;
+                var rally = new Rally()
+                {
+                    TargetUserId = req.Data.TargetUserId,
+                    Date= now,
+                    RallyStartDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute),
+                    LeaderUsername = user.Username,
+                    LeaderAvatarId = leaderPlayerbaseInfo?.AvatarId??0,
+                    TargetUsername = targetPlayerbaseInfo.Username,
+                    WarDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(2),
+                    ComeBackDate = now+ TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4),
+                    LeaderUserId = user.Id,
+                    LeaderUserCoord = leaderCoord,
+                    TargetUserCoord = targetCoord,
+                    LeaderGangId = leaderGangInfo.Id.ToString(),
+                    LeaderGangName = $"[{leaderGangInfo.ShortName}]{leaderGangInfo.Name}",
+                    LeaderGangAvatarId = leaderGangInfo.AvatarId,                    
+                    TargetGangId = targetGangInfo.Id.ToString(),
+                    TargetGangName = $"[{targetGangInfo.ShortName}]{targetGangInfo.Name}",
+                    TargetGangAvatarId = targetGangInfo.AvatarId,
+                    WinnerSide = null,
+                    IsActive = true,
+                    TargetAvatarId = targetPlayerbaseInfo.AvatarId??0
+                };
+                
+                await _context.AddAsync(rally);
+                await _context.SaveChangesAsync();
+
+                var rallyPart = new RallyPart()
+                {
+                    RallyId = rally.Id,
+                    ArriveDate = now,
+                    HeroId = req.Data.AttackerHeroId,
+                    IsActive = true,
+                    Username=leaderPlayerbaseInfo?.Username??"--",
+                    TroopCount = req.Data.AttackerTroopCount,
+                    UserId = user.Id,
+                    SenderAvatarId = leaderPlayerbaseInfo?.AvatarId??0,
+                    ComeBackDate = now+ TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4)
+                    
+                };
+                await _context.AddAsync(rallyPart);
+                pt.TroopCount -= rallyPart.TroopCount;
+                await _context.SaveChangesAsync();
+                
+
+                var dbRally = await _context.Rally.Where(l => l.Id == rally.Id).FirstOrDefaultAsync();
+                if (dbRally==null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                RallyHelper.NewRally(dbRally);
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+                
+        public async Task<TDResponse> JoinRally(BaseRequest<JoinRallyRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "JoinRally");
+            try
+            {
+                //todo: kac tane aktif attack var kontrol edilecek
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var rallyList =await  _context.RallyPart
+                    .Where(l => l.IsActive && l.UserId == user.Id )
+                    .ToListAsync();
+                var heroOnAttack = await _context.Attack.Where(l =>
+                        l.IsActive && l.AttackerUserId == user.Id && l.AttackerHeroId == req.Data.AttackerHeroId)
+                    .AnyAsync();
+                var heroOnLoot = await _context.PlayerHeroLoot
+                    .Where(l => l.IsActive && l.PlayerHero.HeroId == req.Data.AttackerHeroId 
+                                           && l.PlayerHero.UserId == user.Id)
+                    .AnyAsync();
+                if (rallyList.Any(l=>l.HeroId == req.Data.AttackerHeroId) || heroOnAttack || heroOnLoot)
+                {
+                    info.AddInfo(OperationMessages.PlayerHeroBusy);
+                    response.SetError(OperationMessages.PlayerHeroBusy);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var pt = (await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id)
+                    .FirstOrDefaultAsync());
+
+                var playerPrisons = await _context.PlayerPrison
+                    .Where(l => l.UserId == user.Id ).AnyAsync();
+                var playerHospital = await _context.PlayerHospital
+                    .Where(l => l.UserId == user.Id ).AnyAsync();                       
+                var playerBaseInfo = await _context.PlayerBaseInfo
+                    .Where(l => l.UserId == user.Id ).FirstOrDefaultAsync();       
+                if (playerPrisons || playerHospital || pt==null)
+                {
+                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
+                    response.SetError(OperationMessages.PlayerIsUnderProtection);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
+                {
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                
+                var rally = await _context.Rally.Where(l => l.Id == req.Data.RallyId).FirstOrDefaultAsync();
+                var gangInfo = (await GetGangInfoForRally(user.Id)).Data;
+                if (gangInfo==null || gangInfo.Id.ToString() != rally?.LeaderGangId)
+                {
+                    info.AddInfo(OperationMessages.CantJoinRally);
+                    response.SetError(OperationMessages.CantJoinRally);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var now = DateTimeOffset.UtcNow;
+                var arriveDate = now + TimeSpan.FromSeconds(30);
+                if (rally==null || !rally.IsActive || rally.RallyStartDate <= arriveDate)
+                {
+                    info.AddInfo(OperationMessages.CantJoinRally);
+                    response.SetError(OperationMessages.CantJoinRally);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var rallyPart = new RallyPart()
+                {
+                    RallyId = rally.Id,
+                    ArriveDate = arriveDate,
+                    HeroId = req.Data.AttackerHeroId,
+                    IsActive = true,
+                    Username=playerBaseInfo?.Username??"--",
+                    TroopCount = req.Data.AttackerTroopCount,
+                    UserId = user.Id,
+                    SenderAvatarId = playerBaseInfo?.AvatarId??0,
+                    ComeBackDate = rally.WarDate + TimeSpan.FromMinutes(4)
+
+                };
+                await _context.AddAsync(rallyPart);
+                
+                pt.TroopCount -= rallyPart.TroopCount;
+                await _context.SaveChangesAsync();
+                var dbRally = await _context.Rally.Where(l => l.Id == rally.Id).FirstOrDefaultAsync();
+                if (dbRally==null)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                RallyHelper.NewRally(dbRally);
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+                        
+        public async Task<TDResponse<List<RallyDTO>>> GetRallyList(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<RallyDTO>> response = new TDResponse<List<RallyDTO>>();
+            var info = InfoDetail.CreateInfo(req, "JoinRally");
+            try
+            {
+                var gangInfo = (await GetGangInfoForRally(user.Id)).Data;
+                if (gangInfo==null )
+                {
+                    info.AddInfo(OperationMessages.Success);
+                    response.SetSuccess();
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var rallyList =await  _context.Rally
+                    .Where(l => l.IsActive && l.LeaderGangId==gangInfo.Id.ToString())
+                    .ToListAsync();
+                response.Data = rallyList.Select(l => RallyHelper.MapRallyDTO(l)).ToList();
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+      
         public async Task<TDResponse<InteractionsDTO>> GetActiveInteractionsForSocket(BaseRequest req, UserDto user)
         {
             TDResponse<InteractionsDTO> response = new TDResponse<InteractionsDTO>();
@@ -3363,7 +3673,80 @@ namespace PlayerBaseApi.Services
             return calculated;
         }
 
+        private async Task<TDResponse<string>> GetUserCoordinate(long id)
+        {
+            var handler = new HttpClientHandler();
 
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Environment.GetEnvironmentVariable("MapiApiUrl") + "/api/Map/GetUserCoordinate"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = id,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<string>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
+        private async Task<TDResponse<GangInfo>> GetGangInfoForRally(long id)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Environment.GetEnvironmentVariable("WebSocketUrl") + "/api/Gang/GetGangInfoForRally"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = id,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<GangInfo>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
         #endregion
 
 

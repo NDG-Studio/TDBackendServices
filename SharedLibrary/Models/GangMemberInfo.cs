@@ -1,4 +1,4 @@
-﻿namespace WebSocket.Models
+﻿namespace SharedLibrary.Models
 {
     public class GangMemberInfo
     {

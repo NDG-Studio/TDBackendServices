@@ -95,6 +95,7 @@ services:
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
             - WebSocketUrl=http://websocket
+            - MapApiUrl=http://mapapi
     mapapi:
         #networks:
         #    - isolation-network

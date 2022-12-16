@@ -369,6 +369,54 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
+        public async Task<TDResponse<GangInfo>> GetGangInfoForRally(BaseRequest<long> req)
+        {
+            TDResponse<GangInfo> response = new TDResponse<GangInfo>();
+            var info = InfoDetail.CreateInfo(req, "GetGangInfoForRally");
+            try
+            {
+                var userId = req.Data;
+                var c = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                if (c == null)
+                {
+                    response.Data = null;
+                    response.SetSuccess(OperationMessages.Success);
+                    return response;
+                }
+                var owner = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                response.Data = new GangInfo()
+                {
+                    Id = c.MemberType.Gang.Id,
+                    Capacity = c.MemberType.Gang.Capacity,
+                    Description = c.MemberType.Gang.Description,
+                    MemberCount = c.MemberType.Gang.MemberCount,
+                    Name = c.MemberType.Gang.Name,
+                    Power = c.MemberType.Gang.Power,
+                    ShortName = c.MemberType.Gang.ShortName,
+                    AvatarId = c.MemberType.Gang.AvatarId,
+                    Owner = new GangMemberInfo()
+                    {
+                        Power = owner.Power,
+                        MemberTypeName = owner.MemberType.Name,
+                        UserName = owner.UserName,
+                        UserId = owner.UserId
+                    }
+                };
+
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
         public async Task<TDResponse> EditGang(BaseRequest<GangEditDTO> req, UserDto user)
         {
             TDResponse response = new TDResponse();

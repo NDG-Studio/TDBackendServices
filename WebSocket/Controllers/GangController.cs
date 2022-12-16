@@ -82,6 +82,28 @@ public class GangController : ControllerBase
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangInfo(req, user);
     }
+    
+    /// <summary>
+    /// Verilen userId degeri ile Gang infoyu doner
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// data = gang uyesi olan herhangi bir user id 
+    /// <br/>
+    /// Input: BaseRequest &lt; long &gt;
+    /// <br/>
+    /// Output: TDResponse &lt; GangInfo &gt;
+    /// </remarks>
+    //[OnlyApps]
+    [HttpPost("GetGangInfoForRally")]
+    public async Task<TDResponse<GangInfo>> GetGangInfoForRally([FromBody] BaseRequest<long> req)
+    {
+
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.GetGangInfoForRally(req);
+    }
 
 
 

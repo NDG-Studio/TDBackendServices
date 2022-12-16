@@ -70,6 +70,8 @@ namespace PlayerBaseApi
         public DbSet<PlayerTDRewardHistory> PlayerTDRewardHistory { get; set; }
         public DbSet<Scout> Scout { get; set; }
         public DbSet<Attack> Attack { get; set; }
+        public DbSet<Rally> Rally { get; set; }
+        public DbSet<RallyPart> RallyPart { get; set; }
 
 
 
