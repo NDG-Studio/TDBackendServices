@@ -106,7 +106,7 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangMembers(req, user);
-    }    
+    }
     
     /// <summary>
     /// Kullanicinin gangine ait GangMemberTypelarini doner
@@ -131,25 +131,47 @@ public class GangController : ControllerBase
     }
     
     /// <summary>
-    /// Kullanicinin gangine ait GangMemberTypelarini doner
+    /// GangMemberTypei editlemek için kullanilir
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
     /// <br/>
     /// <br/>
     /// <br/>
-    /// Input: BaseRequest
+    /// Input: BaseRequest &lt; MemberTypeDTO; &gt;
     /// <br/>
-    /// Output: TDResponse &lt; List &lt; GetGangMemberTypes &gt; &gt;
+    /// Output: TDResponse
     /// </remarks>
     [LoginRequired]
-    [HttpPost("GetGangMemberTypes")]
+    [HttpPost("SetGangMemberType")]
     public async Task<TDResponse> SetGangMemberType([FromBody] BaseRequest<MemberTypeDTO> req)
     {
         var user = (HttpContext.Items["User"] as UserDto);
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.SetGangMemberType(req, user);
+    }
+    
+    /// <summary>
+    /// Kullanicinin gangine ait GangMemberType olusturur
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; MemberTypeDTO; &gt;
+    /// <br/>
+    /// Output: TDResponse 
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("AddGangMemberType")]
+    public async Task<TDResponse> AddGangMemberType([FromBody] BaseRequest<MemberTypeDTO> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.AddGangMemberType(req, user);
     }    
     
     /// <summary>
@@ -220,6 +242,6 @@ public class GangController : ControllerBase
         return await _gangService.EditGang(req, user);
     }
 
- 
+    
     
 }

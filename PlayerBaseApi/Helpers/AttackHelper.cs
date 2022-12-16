@@ -15,8 +15,8 @@ public class AttackHelper
     private static int WALL_POWER = 1;
     public static void Start(ILoggerProvider logger)
     {
-        TROOP_POWER=Int32.Parse(Environment.GetEnvironmentVariable("TROOP_POWER"));
-        WALL_POWER=Int32.Parse(Environment.GetEnvironmentVariable("WALL_POWER"));
+        TROOP_POWER=Int32.Parse(Environment.GetEnvironmentVariable("TROOPPOWER")??"1");
+        WALL_POWER=Int32.Parse(Environment.GetEnvironmentVariable("WALLPOWER")??"1");
          new Thread(new ThreadStart(CheckAttack)).Start();
             
     }
@@ -45,6 +45,10 @@ public class AttackHelper
                         .Select(l=>l.Username).FirstOrDefault()??"",
                     DefenserUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.TargetUserId)
                         .Select(l=>l.Username).FirstOrDefault()??"",
+                    AttackerAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
+                        .Select(l=>l.AvatarId).FirstOrDefault()??0,
+                    DefenserAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
+                        .Select(l=>l.AvatarId).FirstOrDefault()??0
 
                 },
                 Info = new InfoDto()
@@ -99,7 +103,7 @@ public class AttackHelper
                             var TplayerBasePlacement = _context.PlayerBasePlacement
                                 .Where(l => l.UserId == s.TargetUserId && (l.BuildingTypeId == 3 || l.BuildingTypeId == 10))
                                 .ToList();
-                            var TbarracksLevel = TplayerBasePlacement.Where(l => l.BuildingTypeId == 10)
+                            var TbarracksLevel = TplayerBasePlacement.Where(l => l.BuildingTypeId == 10 )
                                 .Select(l => l.BuildingLevel).FirstOrDefault();                    
                             var TwallLevel = TplayerBasePlacement.Where(l => l.BuildingTypeId == 3)
                                 .Select(l => l.BuildingLevel).FirstOrDefault();
@@ -115,10 +119,12 @@ public class AttackHelper
                             var ABuffs = BuffHelper.GetPlayersTotalBuff(s.AttackerUserId, s.AttackerHeroId).Result;
                             var TBuffs = BuffHelper.GetPlayersTotalBuff(s.TargetUserId, -1).Result;
 
-                            APower += (int)(s.AttackerTroopCount * TROOP_POWER * ABuffs.AttackMultiplier);
-                            TPower += (int)(TplayerTroop.TroopCount * TROOP_POWER * TBuffs.DefenseMultiplier);
-                            TPower += TwallLevel * WALL_POWER;
-
+                            
+                            APower = (int)(s.AttackerTroopCount * TROOP_POWER * (ABuffs.AttackMultiplier<=1?1:ABuffs.AttackMultiplier));
+                            TPower = (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.DefenseMultiplier<=1?1:TBuffs.DefenseMultiplier));
+                            TPower = TPower + (TwallLevel * WALL_POWER);
+                            Console.WriteLine("ATTACKER-Power-"+s.AttackerUserId+":"+APower);
+                            Console.WriteLine("Defenser-Power-"+s.TargetUserId+":"+TPower);
                             
                             AttackSideEnum winnerSide = APower - TPower > 0 ? AttackSideEnum.Attacker : AttackSideEnum.Defenser;
                             int powerDiff = Math.Abs(APower - TPower);
@@ -149,7 +155,10 @@ public class AttackHelper
                                     AttackersDeadTroop = ADead,
                                     AttackersWoundedTroop = AWounded,
                                     DefenserScrap = TplayerBaseInfo.Scraps,
-                                    TargetsTroop = TplayerTroop.TroopCount
+                                    TargetsTroop = TplayerTroop.TroopCount,
+                                    TargetAvatarId = TplayerBaseInfo.AvatarId??0,
+                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0
+                                    
                                 };
                                 
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
@@ -192,7 +201,9 @@ public class AttackHelper
                                     AttackersDeadTroop = ADead,
                                     AttackersWoundedTroop = AWounded,
                                     DefenserScrap = TplayerBaseInfo.Scraps,
-                                    TargetsTroop = TplayerTroop.TroopCount
+                                    TargetsTroop = TplayerTroop.TroopCount,
+                                    TargetAvatarId = TplayerBaseInfo.AvatarId??0,
+                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0
                                 };
                                 
                                 s.WinnerSide = (byte)AttackSideEnum.Defenser;
@@ -238,7 +249,9 @@ public class AttackHelper
                                             .Select(l=>l.Username).FirstOrDefault()??"",
                                         DefenserUsername = _context.PlayerBaseInfo
                                             .Where(l=>l.UserId==s.TargetUserId)
-                                            .Select(l=>l.Username).FirstOrDefault()??""
+                                            .Select(l=>l.Username).FirstOrDefault()??"",
+                                        AttackerAvatarId = AplayerBaseInfo.AvatarId??0,
+                                        DefenserAvatarId = TplayerBaseInfo.AvatarId??0
                                     },
                                     Info = new InfoDto()
                                     {
@@ -304,7 +317,9 @@ public class AttackHelper
                                     AttackerUserId = rS.AttackerUserId,
                                     DefenserUserId = rS.TargetUserId,
                                     AttackerUsername = attackerPlayerBaseInfo.Username,
-                                    DefenserUsername = defenserPlayerBaseInfo.Username
+                                    DefenserUsername = defenserPlayerBaseInfo.Username,
+                                    AttackerAvatarId = attackerPlayerBaseInfo.AvatarId??0,
+                                    DefenserAvatarId = defenserPlayerBaseInfo.AvatarId??0
                                 },
                                 Info = new InfoDto()
                                 {

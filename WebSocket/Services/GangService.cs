@@ -12,8 +12,6 @@ using SharedLibrary.Models.Loot;
 using System.Net.Http.Headers;
 using System.Text;
 using WebSocket.Enums;
-using System.Numerics;
-using System.Security.Cryptography;
 
 namespace PlayerBaseApi.Services
 {
@@ -503,6 +501,57 @@ namespace PlayerBaseApi.Services
                 query.CanDistributeMoney = req.Data.CanDistributeMoney;
                 query.CanStartWar = req.Data.CanStartWar;
                 query.CanMemberChangeType = req.Data.CanMemberChangeType;
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }        
+        
+        public async Task<TDResponse> AddGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddGangMemberType");
+            try
+            {
+                var gangId = await _context.GangMember.Include(l=>l.MemberType)
+                    .Where(l => l.UserId == user.Id).Select(l => l.MemberType.GangId)
+                    .FirstOrDefaultAsync();
+                if (gangId==null)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (await _context.MemberType.Where(l=>l.GangId==gangId && l.Name == req.Data.Name).AnyAsync())
+                {
+                    response.SetError(OperationMessages.DuplicateRecord);
+                    info.AddInfo(OperationMessages.DuplicateRecord);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var ent = new MemberType()
+                {
+                    Name = req.Data.Name,
+                    CanKick = req.Data.CanKick,
+                    GateManager = req.Data.GateManager,
+                    CanAcceptMember = req.Data.CanAcceptMember,
+                    CanDistributeMoney = req.Data.CanDistributeMoney,
+                    CanStartWar = req.Data.CanStartWar,
+                    CanMemberChangeType = req.Data.CanMemberChangeType,
+                    GangId =gangId,
+                    IsActive = true
+                };
+
+                _context.Add(ent);
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
             }
             catch (Exception e)

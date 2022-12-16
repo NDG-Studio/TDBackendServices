@@ -6,7 +6,9 @@ public class AttackInfoDTO
     public int AttackerTroopCount { get; set; }
     public int AttackerHeroId { get; set; }
     public long AttackerUserId { get; set; }
+    public int AttackerAvatarId { get; set; }
     public string AttackerUsername { get; set; }
+    public int DefenserAvatarId { get; set; }
     public long DefenserUserId { get; set; }
     public string DefenserUsername { get; set; }
     public byte? WinnerSide { get; set; } 

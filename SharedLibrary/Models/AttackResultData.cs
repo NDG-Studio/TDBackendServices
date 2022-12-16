@@ -9,6 +9,8 @@ public class AttackResultData
     public int TargetsTroop { get; set; }
     public string TargetUsername { get; set; }
     public long TargetUserId { get; set; }
+    public int SenderAvatarId { get; set; }
+    public int TargetAvatarId { get; set; }
     public long SenderUserId { get; set; }
     public string SenderUsername { get; set; }
     public int  BarracksLevel { get; set; }
