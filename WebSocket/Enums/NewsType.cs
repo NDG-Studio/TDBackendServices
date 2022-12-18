@@ -7,6 +7,7 @@
         Announcment=3,
         GangInvitation=4,
         Scout=5,
-        Attack=6
+        Attack=6,
+        Rally=7
     }
 }

@@ -20,7 +20,6 @@ public class RallyDTO
     public string? LeaderUsername { get; set; }
     public string? TargetUserCoord { get; set; }
     public string? LeaderUserCoord { get; set; }
-    public int? TargetTroopCount { get; set; }
     public int? TargetsWoundedTroop { get; set; }
     public int? TargetBarracksLevel { get; set; }
     public int? LootedScrap { get; set; }
@@ -29,6 +28,9 @@ public class RallyDTO
     public int? PrisonerCount { get; set; }
     public int? TargetWallLevel { get; set; }
     public int? TargetsDeadTroop { get; set; }
+    public int? ATotalWoundedTroop { get; set; }
+    public int? ATotalTroop { get; set; }
+    public int? ATotalDeadTroop { get; set; }
     public byte? WinnerSide { get; set; } = (byte)AttackSideEnum.Defenser;
     public string? RallyStartDate { get; set; } = null;
     public string? WarDate { get; set; } = null;

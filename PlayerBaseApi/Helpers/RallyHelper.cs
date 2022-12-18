@@ -135,6 +135,9 @@ public class RallyHelper
                                 s.TargetScrap = TplayerBaseInfo.Scraps;
                                 s.TargetsTroop = TplayerTroop.TroopCount;
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
+                                s.ATotalTroop = ATotalTroops;
+                                s.ATotalDeadTroop = ATotalDead;
+                                s.ATotalWoundedTroop = ATotalWounded;
                                 TplayerBaseInfo.Scraps -= s.LootedScrap??0;
 
                                 foreach (var part in s.RallyParts)
@@ -161,43 +164,7 @@ public class RallyHelper
                             }
                             else // defenser wins 
                             {
-                                // int TDead = RandomHelper.GetRandomInt(0, (TplayerTroop.TroopCount - troopDiff) / 4);
-                                // int TWounded = TplayerTroop.TroopCount - troopDiff - TDead;
-                                // int ATotalDead = RandomHelper.GetRandomInt(0,ATotalTroops/3);
-                                // int ATotalWounded = ATotalTroops-ATotalDead;
-                                // int TotalLootedScrap = 0;
-                                //
-                                // var attackResultData = new AttackResultData()
-                                // {
-                                //     TargetUsername = TplayerBaseInfo.Username,
-                                //     TargetUserId = TplayerBaseInfo.UserId,
-                                //     TargetsWoundedTroop = TWounded,
-                                //     TargetsDeadTroop = TDead,
-                                //     BarracksLevel = TbarracksLevel,
-                                //     WallLevel = TwallLevel,
-                                //     LootedScrap = 0,
-                                //     PrisonerCount = 0,
-                                //     SenderUserId = AplayerBaseInfo.UserId,
-                                //     SenderUsername = AplayerBaseInfo.Username,
-                                //     AttackersDeadTroop = ADead,
-                                //     AttackersWoundedTroop = AWounded,
-                                //     DefenserScrap = TplayerBaseInfo.Scraps,
-                                //     TargetsTroop = TplayerTroop.TroopCount,
-                                //     TargetAvatarId = TplayerBaseInfo.AvatarId??0,
-                                //     SenderAvatarId = AplayerBaseInfo.AvatarId??0
-                                // };
-                                //
-                                // s.WinnerSide = (byte)AttackSideEnum.Defenser;
-                                // if (s !=null )
-                                // {
-                                //     s.ResultData = JsonConvert.SerializeObject(attackResultData,Formatting.Indented, new JsonSerializerSettings
-                                //     {
-                                //         NullValueHandling = NullValueHandling.Ignore,
-                                //         DefaultValueHandling = DefaultValueHandling.Ignore,
-                                //         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                                //     });
-                                // }
-                                
+
                                 int TDead = RandomHelper.GetRandomInt(0, (TplayerTroop.TroopCount - troopDiff) / 4);
                                 int TWounded = TplayerTroop.TroopCount - troopDiff - TDead;
                                 
@@ -213,6 +180,9 @@ public class RallyHelper
                                 s.TargetScrap = TplayerBaseInfo.Scraps;
                                 s.TargetsTroop = TplayerTroop.TroopCount;
                                 s.WinnerSide = (byte)AttackSideEnum.Defenser;
+                                s.ATotalTroop = ATotalTroops;
+                                s.ATotalDeadTroop = ATotalDead;
+                                s.ATotalWoundedTroop = ATotalTroops-ATotalDead;
 
                                 foreach (var part in s.RallyParts)
                                 {
@@ -252,6 +222,9 @@ public class RallyHelper
                                 dbEnt.TargetScrap = s.TargetScrap;
                                 dbEnt.TargetsTroop = s.TargetsTroop;
                                 dbEnt.WinnerSide = s.WinnerSide;
+                                dbEnt.ATotalTroop = s.ATotalTroop;
+                                dbEnt.ATotalDeadTroop = s.ATotalDeadTroop;
+                                dbEnt.ATotalWoundedTroop = s.ATotalWoundedTroop;
                                 dbEnt.RallyParts = s.RallyParts; //TODO: rally partlarini kaydedecek mi kontrol et
                                 _context.SaveChanges();
                                 
@@ -359,7 +332,7 @@ public class RallyHelper
         using (HttpClient client = new HttpClient(handler))
         {
 
-            var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/News/SendAttackNews"),
+            var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/News/SendRallyNews"),
                 new StringContent(JsonConvert.SerializeObject(
                     req
                 ), Encoding.UTF8, "application/json")).Result;
@@ -416,7 +389,6 @@ public class RallyHelper
             TargetBarracksLevel = r.TargetBarracksLevel,
             TargetsDeadTroop = r.TargetsDeadTroop,
             TargetsWoundedTroop = r.TargetsWoundedTroop,
-            TargetTroopCount = r.TargetTroopCount,
             TargetUserCoord = r.TargetUserCoord,
             TargetUserId = r.TargetUserId,
             TargetWallLevel = r.TargetWallLevel,
@@ -425,7 +397,11 @@ public class RallyHelper
             TargetGangId = r.TargetGangId,
             TargetGangName = r.TargetGangName,
             LeaderGangAvatarId = r.LeaderGangAvatarId,
-            TargetGangAvatarId = r.TargetGangAvatarId
+            TargetGangAvatarId = r.TargetGangAvatarId,
+            ATotalTroop = r.ATotalTroop,
+            ATotalDeadTroop = r.ATotalDeadTroop,
+            ATotalWoundedTroop = r.ATotalWoundedTroop
+            
             
         };
     }

@@ -22,15 +22,17 @@ public class Rally
     public string? LeaderUsername { get; set; }
     public string? TargetUserCoord { get; set; }
     public string? LeaderUserCoord { get; set; }
-    public int? TargetTroopCount { get; set; }
     public int? TargetsWoundedTroop { get; set; }
+    public int? ATotalWoundedTroop { get; set; }
     public int? TargetBarracksLevel { get; set; }
     public int? LootedScrap { get; set; }
     public int? TargetScrap { get; set; }
     public int? TargetsTroop { get; set; }
+    public int? ATotalTroop { get; set; }
     public int? PrisonerCount { get; set; }
     public int? TargetWallLevel { get; set; }
     public int? TargetsDeadTroop { get; set; }
+    public int? ATotalDeadTroop { get; set; }
     public byte? WinnerSide { get; set; } = (byte)AttackSideEnum.Defenser;
     public DateTimeOffset? RallyStartDate { get; set; } = null;
     public DateTimeOffset? WarDate { get; set; } = null;
