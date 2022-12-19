@@ -17,6 +17,7 @@ namespace WebSocket.Entities
         public bool CanDestroyGang { get; set; } = false;
         public bool CanEditGang { get; set; } = false;
         public bool IsActive { get; set; } = true;
+        public int PoolScore { get; set; } = 0;
         public Guid GangId { get; set; }
 
         [ForeignKey("GangId")]

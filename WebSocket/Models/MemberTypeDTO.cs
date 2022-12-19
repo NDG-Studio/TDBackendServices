@@ -11,4 +11,5 @@ public class MemberTypeDTO
     public bool GateManager { get; set; } = false;
     public bool CanDistributeMoney { get; set; } = false;
     public bool CanAcceptMember { get; set; } = false;
+    public int PoolScore { get; set; } = 0;
 }

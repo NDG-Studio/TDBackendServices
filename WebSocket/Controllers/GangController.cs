@@ -217,6 +217,51 @@ public class GangController : ControllerBase
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.ChangeGangMemberType(req, user);
     }
+    
+    /// <summary>
+    /// Yetkili gang uyesi diger membertypelarin pool dagitimini degistirmek icin kullanir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; List &lt; SetMemberTypePoolRequest &gt; &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("SetMemberTypePool")]
+    public async Task<TDResponse> SetMemberTypePool([FromBody] BaseRequest<List<SetMemberTypePoolRequest>> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.SetMemberTypePool(req, user);
+    }
+
+    
+    /// <summary>
+    /// Id si verilen gange basvuru yapmak icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; string &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("SendGangApplication")]
+    public async Task<TDResponse> SendGangApplication([FromBody] BaseRequest<string> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.SendGangApplication(req, user);
+    }
 
 
     /// <summary>

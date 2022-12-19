@@ -13,6 +13,8 @@ namespace WebSocket.Interfaces
         Task<TDResponse> SetGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user);
         Task<TDResponse> AddGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user);
         Task<TDResponse> ChangeGangMemberType(BaseRequest<List<ChangeGangMemberTypeRequest>> req, UserDto user);
+        Task<TDResponse> SetMemberTypePool(BaseRequest<List<SetMemberTypePoolRequest>> req, UserDto user);
+        Task<TDResponse> SendGangApplication(BaseRequest<string> req, UserDto user);
         Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user);
         Task<TDResponse> AcceptGangInvitation(BaseRequest<GangInvitationResponse> req, UserDto user);
         Task<TDResponse> KickMember(BaseRequest<long> req, UserDto user);

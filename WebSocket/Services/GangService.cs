@@ -81,7 +81,8 @@ namespace PlayerBaseApi.Services
                     var memberType = new MemberType()
                     {
                         Name = "Member",
-                        GangId = gang.Id
+                        GangId = gang.Id,
+                        PoolScore = 2
                     };
                     var ownerType = new MemberType()
                     {
@@ -94,7 +95,8 @@ namespace PlayerBaseApi.Services
                         GateManager = true,
                         CanDestroyGang = true,
                         CanEditGang = true,
-                        IsActive = true
+                        IsActive = true,
+                        PoolScore = 2
                     };                    
                     
                     var vpType = new MemberType()
@@ -108,7 +110,8 @@ namespace PlayerBaseApi.Services
                         GateManager = true,
                         CanDestroyGang = false,
                         CanEditGang = false,
-                        IsActive = true
+                        IsActive = true,
+                        PoolScore = 2
                     };                    
                     var generalType = new MemberType()
                     {
@@ -121,7 +124,8 @@ namespace PlayerBaseApi.Services
                         GateManager = true,
                         CanDestroyGang = false,
                         CanEditGang = false,
-                        IsActive = true
+                        IsActive = true,
+                        PoolScore = 2
                     };                    
                     var captainType = new MemberType()
                     {
@@ -134,7 +138,8 @@ namespace PlayerBaseApi.Services
                         GateManager = false,
                         CanDestroyGang = false,
                         CanEditGang = false,
-                        IsActive = true
+                        IsActive = true,
+                        PoolScore = 2
                     };
                     await _context.AddAsync(memberType);
                     await _context.AddAsync(ownerType);
@@ -617,7 +622,8 @@ namespace PlayerBaseApi.Services
                         CanDistributeMoney = l.CanDistributeMoney,
                         CanDestroyGang = l.CanDestroyGang,
                         CanEditGang = l.CanEditGang,
-                        CanMemberChangeType = l.CanMemberChangeType
+                        CanMemberChangeType = l.CanMemberChangeType,
+                        PoolScore = l.PoolScore
                     }).ToListAsync();
                 response.Data = query;
                 response.SetSuccess();
@@ -694,6 +700,7 @@ namespace PlayerBaseApi.Services
                     CanDistributeMoney = req.Data.CanDistributeMoney,
                     CanDestroyGang = req.Data.CanDestroyGang,
                     CanMemberChangeType = req.Data.CanMemberChangeType,
+                    PoolScore = req.Data.PoolScore,
                     GangId =gangId,
                     CanEditGang = req.Data.CanEditGang,
                     IsActive = true
@@ -740,7 +747,131 @@ namespace PlayerBaseApi.Services
                 _logger.LogError(info.ToString());
             }
             return response;
+        }        
+        
+        public async Task<TDResponse> SetMemberTypePool(BaseRequest<List<SetMemberTypePoolRequest>> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SetMemberTypePool");
+            try
+            {
+                var canManageMoney = await _context.GangMember
+                    .Include(l=>l.MemberType)
+                    .Where(l => l.UserId == user.Id && l.MemberType.IsActive)
+                    .Select(l=>l.MemberType.CanDistributeMoney)
+                    .FirstOrDefaultAsync();
+                if (!canManageMoney)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var totalPoolScore = req.Data.Sum(l => l.PoolScore);
+                if (totalPoolScore != 10 )
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                foreach (var changed in req.Data)
+                {
+                    var memberTypeId = new Guid(changed.MemberTypeId);
+                    var query = await _context.MemberType
+                        .Where(l => l.Id == memberTypeId).FirstOrDefaultAsync();
+
+                    if (query!=null)
+                    {
+                        query.PoolScore = changed.PoolScore;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                response.SetSuccess();
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
         }
+        
+                
+        public async Task<TDResponse> SendGangApplication(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SendGangApplication");
+            try
+            {
+
+                var gangId = new Guid(req.Data);
+                var gang = await _context.Gang.Where(l => l.IsActive && l.Id == gangId).FirstOrDefaultAsync();
+                if (gang==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (gang.GangEntryTypeId == (int)GangEntryType.FreeForAll)
+                {
+                    if (gang.Capacity>gang.MemberCount)
+                    {
+                        //todo: burada dogrudan eklenecek
+                    }
+                    else
+                    {
+                        response.SetError(OperationMessages.GangCapacityFull);
+                        info.AddInfo(OperationMessages.GangCapacityFull);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                }
+                
+
+                var now = DateTimeOffset.UtcNow;
+                var exist = await _context.GangApplication.Where(l =>
+                    l.GangId == gangId && l.UserId == user.Id && now - l.Date < TimeSpan.FromDays(30)).FirstOrDefaultAsync();
+                if (exist!=null)
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var ent = new GangApplication()
+                {
+                    Date = now,
+                    GangId = gangId,
+                    UserId = user.Id
+                };
+                var allExist = await _context.GangApplication.Where(l => l.UserId == user.Id && l.GangId == gangId)
+                    .ToListAsync();
+                _context.RemoveRange(allExist);
+                await _context.SaveChangesAsync();
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }        
+        
+        
         
         
         private static async Task<LootRunResponse?> GetPlayerBaseInfo(long userId, string token, InfoDto info)
