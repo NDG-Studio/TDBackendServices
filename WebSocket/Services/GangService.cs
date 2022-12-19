@@ -91,12 +91,56 @@ namespace PlayerBaseApi.Services
                         CanDistributeMoney = true,
                         CanKick = true,
                         CanMemberChangeType = true,
-                        CanStartWar = true,
                         GateManager = true,
+                        CanDestroyGang = true,
+                        CanEditGang = true,
+                        IsActive = true
+                    };                    
+                    
+                    var vpType = new MemberType()
+                    {
+                        Name = "Vice President",
+                        GangId = gang.Id,
+                        CanAcceptMember = true,
+                        CanDistributeMoney = true,
+                        CanKick = true,
+                        CanMemberChangeType = true,
+                        GateManager = true,
+                        CanDestroyGang = false,
+                        CanEditGang = false,
+                        IsActive = true
+                    };                    
+                    var generalType = new MemberType()
+                    {
+                        Name = "General",
+                        GangId = gang.Id,
+                        CanAcceptMember = true,
+                        CanDistributeMoney = false,
+                        CanKick = true,
+                        CanMemberChangeType = false,
+                        GateManager = true,
+                        CanDestroyGang = false,
+                        CanEditGang = false,
+                        IsActive = true
+                    };                    
+                    var captainType = new MemberType()
+                    {
+                        Name = "Captain",
+                        GangId = gang.Id,
+                        CanAcceptMember = true,
+                        CanDistributeMoney = false,
+                        CanKick = false,
+                        CanMemberChangeType = false,
+                        GateManager = false,
+                        CanDestroyGang = false,
+                        CanEditGang = false,
                         IsActive = true
                     };
                     await _context.AddAsync(memberType);
                     await _context.AddAsync(ownerType);
+                    await _context.AddAsync(vpType);
+                    await _context.AddAsync(generalType);
+                    await _context.AddAsync(captainType);
                     await _context.SaveChangesAsync();
 
                     var gangMember = new GangMember()
@@ -124,7 +168,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse> AcceptGangInvitation(BaseRequest<GangInvitationResponse> req, UserDto user)
         {
             TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "GetPlayerBaseInfo");
+            var info = InfoDetail.CreateInfo(req, "AcceptGangInvitation");
             try
             {
                 if (req.Data == null)
@@ -434,12 +478,66 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanMemberChangeType)
+                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanEditGang)
                 {
                     gangMember.MemberType.Gang.Description = req.Data.Description;
                     gangMember.MemberType.Gang.ShortName = req.Data.ShortName;
                     gangMember.MemberType.Gang.Name = req.Data.Name;
                     gangMember.MemberType.Gang.AvatarId = req.Data.AvatarId;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                response.SetError(OperationMessages.PlayerNotHavePermission);
+                info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                _logger.LogInformation(info.ToString());
+                return response;
+                
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }        
+        
+        public async Task<TDResponse> KickMember(BaseRequest<long> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "EditGang");
+            try
+            {
+                var gangMember = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive ).FirstOrDefaultAsync();
+                
+                if (gangMember == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanKick)
+                {
+                    var kickedBoy = await _context.GangMember
+                        .Where(l => l.UserId == req.Data && l.MemberType.Name != "Owner")
+                        .FirstOrDefaultAsync();
+                    if (kickedBoy == null)
+                    {
+                        response.SetError(OperationMessages.PlayerNotHavePermission);
+                        info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    _context.Remove(kickedBoy);
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     _logger.LogInformation(info.ToString());
@@ -517,7 +615,8 @@ namespace PlayerBaseApi.Services
                         GateManager = l.GateManager,
                         CanAcceptMember = l.CanAcceptMember,
                         CanDistributeMoney = l.CanDistributeMoney,
-                        CanStartWar = l.CanStartWar,
+                        CanDestroyGang = l.CanDestroyGang,
+                        CanEditGang = l.CanEditGang,
                         CanMemberChangeType = l.CanMemberChangeType
                     }).ToListAsync();
                 response.Data = query;
@@ -547,8 +646,9 @@ namespace PlayerBaseApi.Services
                 query.GateManager = req.Data.GateManager;
                 query.CanAcceptMember = req.Data.CanAcceptMember;
                 query.CanDistributeMoney = req.Data.CanDistributeMoney;
-                query.CanStartWar = req.Data.CanStartWar;
                 query.CanMemberChangeType = req.Data.CanMemberChangeType;
+                query.CanDestroyGang = req.Data.CanDestroyGang;
+                query.CanEditGang = req.Data.CanEditGang;
                 response.SetSuccess();
             }
             catch (Exception e)
@@ -592,9 +692,10 @@ namespace PlayerBaseApi.Services
                     GateManager = req.Data.GateManager,
                     CanAcceptMember = req.Data.CanAcceptMember,
                     CanDistributeMoney = req.Data.CanDistributeMoney,
-                    CanStartWar = req.Data.CanStartWar,
+                    CanDestroyGang = req.Data.CanDestroyGang,
                     CanMemberChangeType = req.Data.CanMemberChangeType,
                     GangId =gangId,
+                    CanEditGang = req.Data.CanEditGang,
                     IsActive = true
                 };
 
@@ -610,23 +711,25 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
-        
-        public async Task<TDResponse> ChangeGangMemberType(BaseRequest<ChangeGangMemberTypeRequest> req, UserDto user)
+        public async Task<TDResponse> ChangeGangMemberType(BaseRequest<List<ChangeGangMemberTypeRequest>> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "ChangeGangMemberType");
             try
             {
-                var memberTypeId = new Guid(req.Data.GangMemberTypeId);
-                var query = await _context.MemberType
-                    .Where(l => l.Id == memberTypeId).FirstOrDefaultAsync();
-
-                var gangMember =
-                    await _context.GangMember.Where(l => l.UserId == req.Data.UserId).FirstOrDefaultAsync();
-                if (query!=null&& gangMember!=null)
+                foreach (var changed in req.Data)
                 {
-                    gangMember.MemberTypeId = memberTypeId;
-                    await _context.SaveChangesAsync();
+                    var memberTypeId = new Guid(changed.GangMemberTypeId);
+                    var query = await _context.MemberType
+                        .Where(l => l.Id == memberTypeId).FirstOrDefaultAsync();
+
+                    var gangMember =
+                        await _context.GangMember.Where(l => l.UserId == changed.UserId).FirstOrDefaultAsync();
+                    if (query!=null&& gangMember!=null)
+                    {
+                        gangMember.MemberTypeId = memberTypeId;
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 response.SetSuccess();
             }

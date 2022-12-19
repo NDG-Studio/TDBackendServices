@@ -204,13 +204,13 @@ public class GangController : ControllerBase
     /// <br/>
     /// <br/>
     /// <br/>
-    /// Input: BaseRequest &lt; ChangeGangMemberTypeRequest &gt;
+    /// Input: BaseRequest &lt; List &lt; ChangeGangMemberTypeRequest &gt; &gt;
     /// <br/>
     /// Output: TDResponse
     /// </remarks>
     [LoginRequired]
     [HttpPost("ChangeGangMemberType")]
-    public async Task<TDResponse> ChangeGangMemberType([FromBody] BaseRequest<ChangeGangMemberTypeRequest> req)
+    public async Task<TDResponse> ChangeGangMemberType([FromBody] BaseRequest<List<ChangeGangMemberTypeRequest>> req)
     {
         var user = (HttpContext.Items["User"] as UserDto);
         req.SetUser(user.Id);
@@ -243,7 +243,7 @@ public class GangController : ControllerBase
 
 
     /// <summary>
-    /// Gang invitationu kabul veya reddetmek icin kullanilir
+    /// Gangin bilgilerini degistirmek icin kullanilir
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
@@ -262,6 +262,29 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.EditGang(req, user);
+    }
+
+    
+    /// <summary>
+    /// Gang uyesini gangden atmak icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; long &gt; Not: long => Atilmak istenen userin idsi
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("KickMember")]
+    public async Task<TDResponse> KickMember([FromBody] BaseRequest<long> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.KickMember(req, user);
     }
 
     

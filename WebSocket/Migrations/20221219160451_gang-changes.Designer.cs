@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebSocket;
@@ -11,9 +12,10 @@ using WebSocket;
 namespace WebSocket.Migrations
 {
     [DbContext(typeof(WebSocketContext))]
-    partial class WebSocketContextModelSnapshot : ModelSnapshot
+    [Migration("20221219160451_gang-changes")]
+    partial class gangchanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
