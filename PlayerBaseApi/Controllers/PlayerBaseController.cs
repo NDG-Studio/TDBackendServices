@@ -934,7 +934,7 @@ namespace PlayerBaseApi.Controllers
         /// <remarks>
         /// <br/>
         /// </remarks>
-        [HttpPost("GetLootRunPointLeaderBoard")]
+        [HttpPost("GetLootRunRankedByUserId")]
         public async Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId([FromBody] BaseRequest<long> req)
         {
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
