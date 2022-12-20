@@ -1,18 +1,10 @@
 ﻿
 using Newtonsoft.Json;
-using PlayerBaseApi.Services;
 using Riptide;
 using SharedLibrary.Models;
-using System.Net.Security;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Xml.Linq;
-using WebSocket.Entities;
 using WebSocket.Enums;
 using WebSocket.Helpers;
-using WebSocket.Interfaces;
 using WebSocket.Models;
 
 namespace WebSocket.Socket

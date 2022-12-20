@@ -331,6 +331,29 @@ public class GangController : ControllerBase
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.KickMember(req, user);
     }
+    
+    
+    /// <summary>
+    /// Gang uyesini gangden atmak icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; int &gt; :Page size
+    /// <br/>
+    /// Output: TDResponse  :
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("GetGangs")]
+    public async Task<TDResponse<Paging<GangInfo>>> GetGangs([FromBody] BaseRequest<int> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.GetGangs(req, user);
+    }
 
     
     

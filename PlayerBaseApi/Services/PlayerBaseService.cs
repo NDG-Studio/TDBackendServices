@@ -2810,6 +2810,41 @@ namespace PlayerBaseApi.Services
             return response;
 
         }        
+                
+        public async Task<TDResponse<LeaderBoardItem>> GetBaseLevelRankedByUserId(BaseRequest<long> req)
+        {
+            TDResponse<LeaderBoardItem> response = new TDResponse<LeaderBoardItem>();
+            var info = InfoDetail.CreateInfo(req, "GetBaseLevelRankedByUserId");
+            try
+            {
+
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == req.Data)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.BaseLevel,
+                            UserId = l.UserId,
+                        }).FirstOrDefaultAsync();
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.BaseLevel > ownValue.Value || (l.BaseLevel == ownValue.Value && l.UserId < req.Data) )
+                    .OrderByDescending(l => l.BaseLevel).ThenBy(l => l.Id).CountAsync()) + 1;
+
+                response.Data = ownValue;
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }        
         
         public async Task<TDResponse<Paging<LeaderBoardItem>>> GetKillTroopLeaderBoard(BaseRequest<int> req, UserDto user)
         {
@@ -2850,6 +2885,43 @@ namespace PlayerBaseApi.Services
                     .OrderByDescending(l => l.KillCount).ThenBy(l => l.Id).CountAsync()) + 1;
                 
                 response.Data.PagingData.Add(ownValue);
+                
+                
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+                
+        public async Task<TDResponse<LeaderBoardItem>> GetKillTroopRankedByUserId(BaseRequest<long> req)
+        {
+            TDResponse<LeaderBoardItem> response = new TDResponse<LeaderBoardItem>();
+            var info = InfoDetail.CreateInfo(req, "GetKillTroopRankedByUserId");
+            try
+            {
+
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == req.Data)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.KillCount,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync();
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.KillCount > ownValue.Value || (l.KillCount == ownValue.Value && l.UserId < req.Data) )
+                    .OrderByDescending(l => l.KillCount).ThenBy(l => l.Id).CountAsync()) + 1;
+
+                response.Data = ownValue;
                 
                 
                 
@@ -2921,6 +2993,42 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
+        }                
+        
+        public async Task<TDResponse<LeaderBoardItem>> GetLootedScrapRankedByUserId(BaseRequest<long> req)
+        {
+            TDResponse<LeaderBoardItem> response = new TDResponse<LeaderBoardItem>();
+            var info = InfoDetail.CreateInfo(req, "GetLootedScrapRankedByUserId");
+            try
+            {
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == req.Data)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.LootedScrap,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync();
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootedScrap > ownValue.Value || (l.LootedScrap == ownValue.Value && l.UserId < req.Data) )
+                    .OrderByDescending(l => l.LootedScrap).ThenBy(l => l.Id).CountAsync()) + 1;
+                
+                response.Data=ownValue;
+                
+                
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
         }
         public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user)
         {
@@ -2964,6 +3072,41 @@ namespace PlayerBaseApi.Services
                 
                 
                 
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        
+        public async Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId(BaseRequest<long> req)
+        {
+            TDResponse<LeaderBoardItem> response = new TDResponse<LeaderBoardItem>();
+            var info = InfoDetail.CreateInfo(req, "GetLootRunRankedByUserId");
+            try
+            {
+                var ownValue =
+                    await _context.PlayerBaseInfo
+                        .Where(l => l.UserId == req.Data)
+                        .Select(l => new LeaderBoardItem()
+                        {
+                            Username = l.Username,
+                            Value = l.LootRunPoint,
+                            UserId = l.UserId
+                        }).FirstOrDefaultAsync();
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootRunPoint > ownValue.Value || (l.LootRunPoint == ownValue.Value && l.UserId < req.Data) )
+                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.Id).CountAsync()) + 1;
+                
+                response.Data = ownValue;
+
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

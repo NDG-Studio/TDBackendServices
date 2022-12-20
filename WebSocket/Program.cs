@@ -9,7 +9,7 @@ using WebSocket.Helpers;
 using WebSocket.MapperProfiles;
 using System.Configuration;
 using WebSocket.Interfaces;
-using PlayerBaseApi.Services;
+using WebSocket.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();

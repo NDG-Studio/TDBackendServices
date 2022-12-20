@@ -74,8 +74,6 @@ namespace PlayerBaseApi.Controllers
         [HttpPost("GetOtherPlayersBaseInfo")]
         public async Task<TDResponse<PlayerBaseInfoDTO>> GetOtherPlayersBaseInfo([FromBody] BaseRequest<long> req)
         {
-            // var user = (HttpContext.Items["User"] as UserDto);
-            // req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetOtherPlayersBaseInfo(req);
         }
@@ -842,6 +840,19 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetBaseLevelLeaderBoard(req, user);
         }        
+                
+        /// <summary>
+        /// Base leveline gore sirali leaderboardu cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("GetBaseLevelRankedByUserId")]
+        public async Task<TDResponse<LeaderBoardItem>> GetBaseLevelRankedByUserId([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetBaseLevelRankedByUserId(req);
+        }        
         
         /// <summary>
         /// Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
@@ -858,6 +869,19 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetKillTroopLeaderBoard(req, user);
         }        
+                
+        /// <summary>
+        /// Kill sayisine gore ranked cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("GetKillTroopRankedByUserId")]
+        public async Task<TDResponse<LeaderBoardItem>> GetKillTroopRankedByUserId([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetKillTroopRankedByUserId(req);
+        }        
         
         /// <summary>
         /// Savaslardan lootlananlara gore sirali leaderboardu cekmek icin kullanilir
@@ -873,6 +897,19 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetLootedScrapLeaderBoard(req, user);
+        }
+        
+        /// <summary>
+        /// Savaslardan lootlananlara gore ranked cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("GetLootedScrapRankedByUserId")]
+        public async Task<TDResponse<LeaderBoardItem>> GetLootedScrapRankedByUserId([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootedScrapRankedByUserId(req);
         }        
         
         /// <summary>
@@ -889,6 +926,19 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetLootRunPointLeaderBoard(req, user);
+        }
+                
+        /// <summary>
+        /// Lootrundan lootlananlara gore ranked cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("GetLootRunPointLeaderBoard")]
+        public async Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetLootRunRankedByUserId(req);
         }
         
     }

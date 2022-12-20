@@ -12,7 +12,7 @@ using SharedLibrary.Models.Loot;
 using WebSocket;
 using WebSocket.Socket;
 
-namespace PlayerBaseApi.Services
+namespace WebSocket.Services
 {
     public class NewsService : INewsService
     {
@@ -362,8 +362,8 @@ namespace PlayerBaseApi.Services
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
-                                    .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
-                                
+                                    .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault()
+
                             });
                             await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.DefenserUserId);

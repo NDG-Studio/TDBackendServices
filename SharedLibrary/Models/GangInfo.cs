@@ -11,5 +11,6 @@
         public int Capacity { get; set; }
         public int AvatarId { get; set; } = 0;
         public int MemberCount { get; set; }
+        public int GangEntryTypeId { get; set; } 
     }
 }

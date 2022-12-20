@@ -65,10 +65,14 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<InteractionsDTO>> GetActiveInteractionsForSocket(BaseRequest req, UserDto user);
         Task<TDResponse> ChangeAvatar(BaseRequest<int> req, UserDto user);
         Task<TDResponse<Paging<LeaderBoardItem>>> GetBaseLevelLeaderBoard(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<LeaderBoardItem>> GetBaseLevelRankedByUserId(BaseRequest<long> req);
         Task<TDResponse> ChangeBio(BaseRequest<string> req, UserDto user);
         Task<TDResponse<PlayerBaseInfoDTO>> GetOtherPlayersBaseInfo(BaseRequest<long> req);
         Task<TDResponse<Paging<LeaderBoardItem>>> GetKillTroopLeaderBoard(BaseRequest<int> req, UserDto user);        
+        Task<TDResponse<LeaderBoardItem>> GetKillTroopRankedByUserId(BaseRequest<long> req);        
         Task<TDResponse<Paging<LeaderBoardItem>>> GetLootedScrapLeaderBoard(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<LeaderBoardItem>> GetLootedScrapRankedByUserId(BaseRequest<long> req);
         Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId(BaseRequest<long> req);
     }
 }

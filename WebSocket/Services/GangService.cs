@@ -13,7 +13,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using WebSocket.Enums;
 
-namespace PlayerBaseApi.Services
+namespace WebSocket.Services
 {
     public class GangService : IGangService
     {
@@ -252,7 +252,6 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-
         private async Task<TDResponse> CreateGangChat(BaseRequest<Guid> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -295,8 +294,6 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
-        
-        
         public async Task<TDResponse> SendGangInvitation(BaseRequest<long> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -399,6 +396,7 @@ namespace PlayerBaseApi.Services
                     Power = c.MemberType.Gang.Power,
                     ShortName = c.MemberType.Gang.ShortName,
                     AvatarId = c.MemberType.Gang.AvatarId,
+                    GangEntryTypeId=c.MemberType.Gang.GangEntryTypeId,
                     Owner = new GangMemberInfo()
                     {
                         Power = owner.Power,
@@ -510,8 +508,7 @@ namespace PlayerBaseApi.Services
                 _logger.LogError(info.ToString());
             }
             return response;
-        }        
-        
+        }
         public async Task<TDResponse> KickMember(BaseRequest<long> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -565,8 +562,6 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
-    
-
         public async Task<TDResponse<List<GangMemberInfo>>> GetGangMembers(BaseRequest<string> req, UserDto user)
         {
             TDResponse<List<GangMemberInfo>> response = new TDResponse<List<GangMemberInfo>>();
@@ -636,7 +631,6 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
-        
         public async Task<TDResponse> SetGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -664,8 +658,7 @@ namespace PlayerBaseApi.Services
                 _logger.LogError(info.ToString());
             }
             return response;
-        }        
-        
+        }
         public async Task<TDResponse> AddGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -747,8 +740,7 @@ namespace PlayerBaseApi.Services
                 _logger.LogError(info.ToString());
             }
             return response;
-        }        
-        
+        }
         public async Task<TDResponse> SetMemberTypePool(BaseRequest<List<SetMemberTypePoolRequest>> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -798,8 +790,6 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
-        
-                
         public async Task<TDResponse> SendGangApplication(BaseRequest<string> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -844,11 +834,27 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
+                var userInfo = GetOtherPlayersBaseInfo(user.Id).Result;
+                var baselevelRanked = GetBaseLevelRankedByUserId(user.Id).Result;
+                var killTroopRanked = GetKillTroopRankedByUserId(user.Id).Result;
+                var lootedScrapRanked = GetLootedScrapRankedByUserId(user.Id).Result;
+                var lootRunRanked = GetLootRunPointLeaderBoard(user.Id).Result;
+                
                 var ent = new GangApplication()
                 {
                     Date = now,
                     GangId = gangId,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    Username = user.Username,
+                    Coordinate = DbService.GetUserCoordinate(user.Id).Result.Data ?? "",
+                    UserAvatarId = userInfo.AvatarId ?? 0,
+                    Rank1 = baselevelRanked.OwnRanked.ToString() + "/" +baselevelRanked.Value.ToString(),
+                    Rank2 = killTroopRanked.OwnRanked.ToString() + "/" +killTroopRanked.Value.ToString(),
+                    Rank3 = lootedScrapRanked.OwnRanked.ToString() + "/" +lootedScrapRanked.Value.ToString(),
+                    Rank4 = lootRunRanked.OwnRanked.ToString() + "/" +lootRunRanked.Value.ToString(),
+                    
+
+
                 };
                 var allExist = await _context.GangApplication.Where(l => l.UserId == user.Id && l.GangId == gangId)
                     .ToListAsync();
@@ -869,12 +875,61 @@ namespace PlayerBaseApi.Services
             }
             return response;
 
-        }        
+        }
         
+        public async Task<TDResponse<Paging<GangInfo>>> GetGangs(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<Paging<GangInfo>> response = new TDResponse<Paging<GangInfo>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangs");
+            try
+            {
+                response.Data = new Paging<GangInfo>();
+                response.Data.PageIndex = req.Data;
+                
+                response.Data.PagingData = await _context.Gang
+                    .OrderByDescending(l => l.Name).ThenBy(l => l.Id)
+                    .Skip(req.Data*10)
+                    .Take(10)
+                    .Select(l=>new GangInfo()
+                    {
+                        Capacity = l.Capacity,
+                        Description = l.Description,
+                        Id = l.Id,
+                        Name = l.Name,
+                        Owner = new GangMemberInfo()
+                        {
+                            Power = l.Power,
+                            UserId = l.OwnerId,
+                            UserName = l.OwnerName,
+                            MemberTypeName = "Owner"
+                        },
+                        Power = l.Power,
+                        AvatarId = l.AvatarId,
+                        MemberCount = l.MemberCount,
+                        ShortName = l.ShortName,
+                        GangEntryTypeId = l.GangEntryTypeId
+                    }).ToListAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         
-        
-        
-        private static async Task<LootRunResponse?> GetPlayerBaseInfo(long userId, string token, InfoDto info)
+
+
+        #region Private Functions
+
+                
+        private static async Task<PlayerBaseInfoDTO> GetOtherPlayersBaseInfo(long userId)
         {
             var handler = new HttpClientHandler();
 
@@ -884,21 +939,171 @@ namespace PlayerBaseApi.Services
 
             using (HttpClient client = new HttpClient(handler))
             {
-                client.DefaultRequestHeaders.Authorization
-                         = new AuthenticationHeaderValue("Bearer", token);
-
-                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetActiveLootRunsForSocket"),
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetOtherPlayersBaseInfo"),
                     new StringContent(JsonConvert.SerializeObject(
-                        new BaseRequest<string>()
+                        new BaseRequest<long>()
                         {
-                            Data = token,
-                            Info = info
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
                         }
                         ), Encoding.UTF8, "application/json")).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
-                    var res = JsonConvert.DeserializeObject<TDResponse<LootRunResponse>>(content)?.Data;
+                    var res = JsonConvert.DeserializeObject<TDResponse<PlayerBaseInfoDTO>>(content)?.Data;
+                    return res;
+                }
+                return null;
+            }
+        }
+        private static async Task<LeaderBoardItem> GetBaseLevelRankedByUserId(long userId)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetBaseLevelRankedByUserId"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<LeaderBoardItem>>(content)?.Data;
+                    return res;
+                }
+                return null;
+            }
+        }
+        private static async Task<LeaderBoardItem> GetKillTroopRankedByUserId(long userId)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetKillTroopRankedByUserId"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<LeaderBoardItem>>(content)?.Data;
+                    return res;
+                }
+                return null;
+            }
+        }
+        private static async Task<LeaderBoardItem> GetLootedScrapRankedByUserId(long userId)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetLootedScrapRankedByUserId"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<LeaderBoardItem>>(content)?.Data;
+                    return res;
+                }
+                return null;
+            }
+        }
+        private static async Task<LeaderBoardItem> GetLootRunPointLeaderBoard(long userId)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetLootRunPointLeaderBoard"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_socket_",
+                                OsVersion = "_socket_",
+                                AppVersion = "_socket_",
+                                DeviceModel = "_socket_",
+                                DeviceType = "_socket_",
+                                UserId = 0,
+                                Ip = "_socket_"
+                            }
+                        }
+                        ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<LeaderBoardItem>>(content)?.Data;
                     return res;
                 }
                 return null;
@@ -942,6 +1147,9 @@ namespace PlayerBaseApi.Services
             }
             return response;
         }
+
+
+        #endregion
 
 
 
