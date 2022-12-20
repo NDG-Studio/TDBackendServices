@@ -1752,7 +1752,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var playerHero = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId).FirstOrDefaultAsync();
+                var playerHero = await _context.PlayerHero.Include(l=>l.Hero).Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId).FirstOrDefaultAsync();
                 if (playerHero == null) //TODO: 2 HERO GÖNDERME İŞLEMİ SONRA YAPILACAK
                 {
                     response.SetError(OperationMessages.PlayerHaveNoHero);
@@ -1790,6 +1790,8 @@ namespace PlayerBaseApi.Services
                     BluePrintCount = LootRandomer.GetRandomBlueprint(lootLevel.MinBlueprintCount, totalBluePrintMultiplier),
                     StartDate = DateTimeOffset.Now.ToString(),
                     EndDate = (DateTimeOffset.Now + (lootLevel.LootDuration + lootLevel.LootDuration * totalDurationMultiplier)).ToString(),
+                    HeroId = playerHero.HeroId,
+                    HeroName = playerHero.Hero.Name
                 };
 
                 #endregion

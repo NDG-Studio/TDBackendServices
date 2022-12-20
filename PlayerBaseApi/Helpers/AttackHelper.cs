@@ -157,8 +157,10 @@ public class AttackHelper
                                     DefenserScrap = TplayerBaseInfo.Scraps,
                                     TargetsTroop = TplayerTroop.TroopCount,
                                     TargetAvatarId = TplayerBaseInfo.AvatarId??0,
-                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0
-                                    
+                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0,
+                                    AttackerPower = APower,
+                                    DefenserPower = TPower
+
                                 };
                                 
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
@@ -203,7 +205,9 @@ public class AttackHelper
                                     DefenserScrap = TplayerBaseInfo.Scraps,
                                     TargetsTroop = TplayerTroop.TroopCount,
                                     TargetAvatarId = TplayerBaseInfo.AvatarId??0,
-                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0
+                                    SenderAvatarId = AplayerBaseInfo.AvatarId??0,
+                                    AttackerPower = APower,
+                                    DefenserPower = TPower
                                 };
                                 
                                 s.WinnerSide = (byte)AttackSideEnum.Defenser;
@@ -251,7 +255,9 @@ public class AttackHelper
                                             .Where(l=>l.UserId==s.TargetUserId)
                                             .Select(l=>l.Username).FirstOrDefault()??"",
                                         AttackerAvatarId = AplayerBaseInfo.AvatarId??0,
-                                        DefenserAvatarId = TplayerBaseInfo.AvatarId??0
+                                        DefenserAvatarId = TplayerBaseInfo.AvatarId??0,
+                                        AttackerPower = APower,
+                                        DefenserPower = TPower
                                     },
                                     Info = new InfoDto()
                                     {
@@ -319,7 +325,9 @@ public class AttackHelper
                                     AttackerUsername = attackerPlayerBaseInfo.Username,
                                     DefenserUsername = defenserPlayerBaseInfo.Username,
                                     AttackerAvatarId = attackerPlayerBaseInfo.AvatarId??0,
-                                    DefenserAvatarId = defenserPlayerBaseInfo.AvatarId??0
+                                    DefenserAvatarId = defenserPlayerBaseInfo.AvatarId??0,
+                                    AttackerPower = resData.AttackerPower,
+                                    DefenserPower = resData.DefenserPower
                                 },
                                 Info = new InfoDto()
                                 {

@@ -16,7 +16,9 @@ namespace WebSocket.Entities
         public string? Detail { get; set; } //all
         public string? GainedResources { get; set; } //lootrun =>  type of LootRunDoneInfoDTO
         public long? AUserId { get; set; } 
-        public string? AUsername { get; set; }  
+        public int? ACombatPower { get; set; } 
+        public string? AUsername { get; set; }
+        public int? AUserAvatar { get; set; } = 0;
         public string? ACoord { get; set; }  
         public string? TCoord { get; set; }
         public int AGangAvatarId { get; set; } = 0;
@@ -26,7 +28,9 @@ namespace WebSocket.Entities
         public string? TGangId { get; set; } 
         public string? TGangName { get; set; } //-gangname
         public long? TUserId { get; set; } //targetid
+        public int? TCombatPower { get; set; } 
         public string? TUsername { get; set; } //-tardgetusername
+        public int? TUserAvatar { get; set; } = 0;//-TUserAvatar
         public DateTimeOffset? ProcessDate { get; set; } //ProcessDate
         public int? TTroop { get; set; } //troopcount
         public int? TWall { get; set; } //walllevel

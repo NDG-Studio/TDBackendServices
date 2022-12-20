@@ -5,6 +5,8 @@ public class AttackResultData
     public int TargetsWoundedTroop { get; set; }
     public int AttackersWoundedTroop { get; set; }
     public int AttackersDeadTroop { get; set; }
+    public int? AttackerPower { get; set; } = 0;
+    public int? DefenserPower { get; set; } = 0;
     public int TargetsDeadTroop { get; set; }
     public int TargetsTroop { get; set; }
     public string TargetUsername { get; set; }

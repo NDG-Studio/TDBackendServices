@@ -43,7 +43,8 @@ namespace WebSocket.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                var query = await _context.GangMember.Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                var query = await _context.GangMember
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -483,6 +484,21 @@ namespace WebSocket.Services
                 }
                 if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanEditGang)
                 {
+                    var z = await _context.Gang.Where(l =>
+                        l.Id != gangGuid &&
+                        (
+                            l.Name == req.Data.Name ||
+                            l.Description == req.Data.Description ||
+                            l.ShortName == req.Data.ShortName
+                        )
+                    ).FirstOrDefaultAsync();
+                    if (z!=null)
+                    {
+                        response.SetError(OperationMessages.DuplicateRecord);
+                        info.AddInfo(OperationMessages.DuplicateRecord);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
                     gangMember.MemberType.Gang.Description = req.Data.Description;
                     gangMember.MemberType.Gang.ShortName = req.Data.ShortName;
                     gangMember.MemberType.Gang.Name = req.Data.Name;

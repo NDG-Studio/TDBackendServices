@@ -3,6 +3,8 @@ namespace SharedLibrary.Models;
 public class AttackInfoDTO
 {
     public long Id { get; set; }
+    public int? AttackerPower { get; set; } = 0;
+    public int? DefenserPower { get; set; } = 0;
     public int AttackerTroopCount { get; set; }
     public int AttackerHeroId { get; set; }
     public long AttackerUserId { get; set; }

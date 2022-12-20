@@ -130,6 +130,8 @@ namespace WebSocket.Services
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.TargetUserId,
                                 Id = req.Id.ToString(),
+                                AUserAvatar = req.SenderAvatarId,
+                                TUserAvatar = req.TargetAvatarId
                             });
                              
                              Player.SendNewInteraction(req.TargetUserId,new NewsDTO()
@@ -160,6 +162,8 @@ namespace WebSocket.Services
                                      .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                  TUserId = req.TargetUserId,
                                  Id = req.Id.ToString(),
+                                 AUserAvatar = req.SenderAvatarId,
+                                 TUserAvatar = req.TargetAvatarId
                              });
 
                             break;
@@ -196,6 +200,8 @@ namespace WebSocket.Services
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                                AUserAvatar = req.SenderAvatarId,
+                                TUserAvatar = req.TargetAvatarId
                                 
                             });
                             await _context.SaveChangesAsync();
@@ -232,6 +238,8 @@ namespace WebSocket.Services
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                                AUserAvatar = req.SenderAvatarId,
+                                TUserAvatar = req.TargetAvatarId
                                 
                             });
                             await _context.SaveChangesAsync();
@@ -290,6 +298,10 @@ namespace WebSocket.Services
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.DefenserUserId,
                                 Id = req.Id.ToString(),
+                                AUserAvatar = req.AttackerAvatarId,
+                                TUserAvatar = req.DefenserAvatarId,
+                                ACombatPower = req.AttackerPower,
+                                TCombatPower = req.DefenserPower
                             });
                             Player.SendNewInteraction(req.DefenserUserId,new NewsDTO()
                             {
@@ -319,6 +331,10 @@ namespace WebSocket.Services
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.DefenserUserId,
                                 Id = req.Id.ToString(),
+                                AUserAvatar = req.AttackerAvatarId,
+                                TUserAvatar = req.DefenserAvatarId,
+                                ACombatPower = req.AttackerPower,
+                                TCombatPower = req.DefenserPower
                             });
                             break;                        
                         case (not null, true):
@@ -362,7 +378,11 @@ namespace WebSocket.Services
                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
-                                    .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault()
+                                    .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                                AUserAvatar = req.AttackerAvatarId,
+                                TUserAvatar = req.DefenserAvatarId,
+                                ACombatPower = req.AttackerPower,
+                                TCombatPower = req.DefenserPower
 
                             });
                             await _context.SaveChangesAsync();
@@ -408,6 +428,10 @@ namespace WebSocket.Services
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                                AUserAvatar = req.AttackerAvatarId,
+                                TUserAvatar = req.DefenserAvatarId,
+                                ACombatPower = req.AttackerPower,
+                                TCombatPower = req.DefenserPower
                             });
                             await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);
@@ -455,6 +479,10 @@ namespace WebSocket.Services
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
+                                AUserAvatar = req.AttackerAvatarId,
+                                TUserAvatar = req.DefenserAvatarId,
+                                ACombatPower = req.AttackerPower,
+                                TCombatPower = req.DefenserPower
                             });
                             await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);

@@ -1,5 +1,6 @@
 
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PlayerBaseApi.Entities;
 using PlayerBaseApi.Models;
@@ -20,32 +21,41 @@ public class ScoutHelper
     public static void AddScoutList(Scout s)
     {
         ScoutList.Add(s);
-        var ccc = SendScoutInfo(new BaseRequest<ScoutInfoDTO>()
+        using (var _context = new PlayerBaseContext())
         {
-            Data = new ScoutInfoDTO()
+            var ccc = SendScoutInfo(new BaseRequest<ScoutInfoDTO>()
             {
-                ArrivedDate = s.ArrivedDate.ToString(),
-                ScoutedData = s.ScoutedData,
-                IsActive = s.IsActive,
-                ComeBackDate = s.ComeBackDate.ToString(),
-                SenderUserId = s.SenderUserId,
-                TargetUserId = s.TargetUserId,
-                SenderUserName = s.SenderUsername,
-                TargetUserName = s.TargetUsername,
-                Id = s.Id
-            },
-            Info = new InfoDto()
-            {
-                Ip = "",
-                AppVersion = "",
-                DeviceId = "",
-                DeviceModel = "",
-                DeviceType = "",
-                OsVersion = "",
-                UserId = 111
-            }
-        }).Result;
-        Console.WriteLine(ccc.Message+"--");
+                Data = new ScoutInfoDTO()
+                {
+                    ArrivedDate = s.ArrivedDate.ToString(),
+                    ScoutedData = s.ScoutedData,
+                    IsActive = s.IsActive,
+                    ComeBackDate = s.ComeBackDate.ToString(),
+                    SenderUserId = s.SenderUserId,
+                    TargetUserId = s.TargetUserId,
+                    SenderUserName = s.SenderUsername,
+                    TargetUserName = s.TargetUsername,
+                    Id = s.Id,
+                    TargetAvatarId = _context.PlayerBaseInfo
+                        .Where(l => l.UserId == s.TargetUserId).Select(l => l.AvatarId).FirstOrDefault(),
+                    SenderAvatarId = _context.PlayerBaseInfo
+                        .Where(l => l.UserId == s.SenderUserId).Select(l => l.AvatarId).FirstOrDefault(),
+                },
+                Info = new InfoDto()
+                {
+                    Ip = "",
+                    AppVersion = "",
+                    DeviceId = "",
+                    DeviceModel = "",
+                    DeviceType = "",
+                    OsVersion = "",
+                    UserId = 111
+                }
+            }).Result;
+            Console.WriteLine(ccc.Message+"--");
+        }
+
+        
     }
     
     
@@ -88,8 +98,6 @@ public class ScoutHelper
                             WallLevel = wallLevel,
                             SenderUserId = s.SenderUserId,
                             SenderUsername = s.SenderUsername,
-                            
-                            
                         };
                         var dbEnt =_context.Scout.Where(l => l.Id == s.Id).FirstOrDefault();
                         if (dbEnt != null)
@@ -110,6 +118,10 @@ public class ScoutHelper
                                     TargetUserId = dbEnt.TargetUserId,
                                     SenderUserName = dbEnt.SenderUsername,
                                     TargetUserName = dbEnt.TargetUsername,
+                                    TargetAvatarId =  _context.PlayerBaseInfo
+                                        .Where(l=>l.UserId==dbEnt.TargetUserId).Select(l=>l.AvatarId).FirstOrDefault(),                                    
+                                    SenderAvatarId =  _context.PlayerBaseInfo
+                                        .Where(l=>l.UserId==dbEnt.SenderUserId).Select(l=>l.AvatarId).FirstOrDefault(),
                                     Id = dbEnt.Id
                                 },
                                 Info = new InfoDto()

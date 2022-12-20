@@ -4,6 +4,8 @@ public class ScoutInfoDTO
 {
         public long Id { get; set; }
         public long SenderUserId { get; set; }
+        public int? SenderAvatarId { get; set; } = 0;
+        public int? TargetAvatarId { get; set; } = 0;
         public string? SenderUserName { get; set; }
         public long TargetUserId { get; set; }
         public string? TargetUserName { get; set; }
