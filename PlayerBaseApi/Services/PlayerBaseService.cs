@@ -7,6 +7,7 @@ using PlayerBaseApi.Enums;
 using PlayerBaseApi.Helpers;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
+using SharedLibrary.Enums;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using SharedLibrary.Models.Loot;
@@ -167,45 +168,51 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                switch (req.Data!.BuildingTypeId)
-                {
-                    case 4://Hospital
-                        var phospital = new PlayerHospital()
-                        {
-                            HospitalLevelId = 1,
-                            InjuredCount = 0,
-                            InHealingCount = 0,
-                            HealingDoneDate = null,
-                            UserId = user.Id
-                        };
-                        await _context.AddAsync(phospital);
-                        break;
-                    case 5://prison
-                        var pprison = new PlayerPrison()
-                        {
-                            PrisonLevelId = 1,
-                            PrisonerCount = 0,
-                            InTrainingPrisonerCount = 0,
-                            TrainingDoneDate = null,
-                            UserId = user.Id
-                        };
-                        await _context.AddAsync(pprison);
-                        break;
-                    case 10://military base
-                        var pTroop = new PlayerTroop()
-                        {
-                            TroopCount = 0,
-                            UserId = user.Id,
-                            LastTroopCollect = DateTimeOffset.Now,
-                            MaxDuration = TimeSpan.FromHours(12),
-                            TrainingPerHour = 100
-                        };
-                        await _context.AddAsync(pTroop);
-                        break;
 
-                    default:
-                        break;
-                }
+                #region Old_creator
+
+                // switch (req.Data!.BuildingTypeId)
+                // {
+                //     case 4://Hospital
+                //         var phospital = new PlayerHospital()
+                //         {
+                //             HospitalLevelId = 1,
+                //             InjuredCount = 0,
+                //             InHealingCount = 0,
+                //             HealingDoneDate = null,
+                //             UserId = user.Id
+                //         };
+                //         await _context.AddAsync(phospital);
+                //         break;
+                //     case 5://prison
+                //         var pprison = new PlayerPrison()
+                //         {
+                //             PrisonLevelId = 1,
+                //             PrisonerCount = 0,
+                //             InTrainingPrisonerCount = 0,
+                //             TrainingDoneDate = null,
+                //             UserId = user.Id
+                //         };
+                //         await _context.AddAsync(pprison);
+                //         break;
+                //     case 10://military base
+                //         var pTroop = new PlayerTroop()
+                //         {
+                //             TroopCount = 0,
+                //             UserId = user.Id,
+                //             LastTroopCollect = DateTimeOffset.Now,
+                //             MaxDuration = TimeSpan.FromHours(12),
+                //             TrainingPerHour = 100
+                //         };
+                //         await _context.AddAsync(pTroop);
+                //         break;
+                //
+                //     default:
+                //         break;
+                // }
+
+                #endregion
+                
                 var ent = new PlayerBasePlacement();
                 ent.BuildingLevel = 1;
                 ent.BuildingTypeId = req.Data!.BuildingTypeId;
@@ -336,6 +343,28 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetOtherPlayersBaseInfo");
             try
             {
+                if (req.Data == (long)FakeId.TutorialEnemy)
+                {
+                    response.Data = new PlayerBaseInfoDTO()
+                    {
+                        Fuel = 0,
+                        UserId = (long)FakeId.TutorialEnemy,
+                        Gems = 0,
+                        Scraps = 10000,
+                        BluePrints = 0,
+                        EpicHeroCards = 0,
+                        LastBaseCollect = DateTimeOffset.UtcNow.ToString(),
+                        Username = "Emanuel",
+                        RareHeroCards = 0,
+                        LegendaryHeroCards = 0,
+                        Bio = "Regular guy",
+                        BaseLevel = 1,
+                        IsApe = false,
+                        AvatarId = 3
+                        
+                    };
+                    return response;
+                }
                 if (req?.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -3301,6 +3330,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "AttackPlayer");
             try
             {
+                bool isFake = req.Data.TargetUserId==(long)FakeId.TutorialEnemy;
                 //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
@@ -3311,7 +3341,7 @@ namespace PlayerBaseApi.Services
                 }
 
                 var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
-                if (targetPlayerbaseInfo == null)
+                if (targetPlayerbaseInfo == null && !isFake)
                 {
                     info.AddInfo(OperationMessages.InputError);
                     response.SetError(OperationMessages.InputError);
@@ -3319,17 +3349,20 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-                var targetBuffs = await BuffHelper.GetPlayersTotalBuff(req.Data.TargetUserId);
-
-                if (targetBuffs.CityShieldActive)
+                if (!isFake)
                 {
-                    info.AddInfo(OperationMessages.TargetHasCityShield);
-                    response.SetError(OperationMessages.TargetHasCityShield);
-                    _logger.LogInformation(info.ToString());
-                    return response;
+                    var targetBuffs = await BuffHelper.GetPlayersTotalBuff(req.Data.TargetUserId);
+
+                    if (targetBuffs.CityShieldActive)
+                    {
+                        info.AddInfo(OperationMessages.TargetHasCityShield);
+                        response.SetError(OperationMessages.TargetHasCityShield);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
                 }
 
-                
+
                 var heroOnRally = await _context.RallyPart.Where(l =>
                         l.IsActive && l.UserId == user.Id && l.HeroId == req.Data.AttackerHeroId)
                     .AnyAsync();
@@ -3352,27 +3385,30 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == user.Id)
                     .FirstOrDefaultAsync());
 
-                var playerPrisons = await _context.PlayerPrison
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
-                var playerHospital = await _context.PlayerHospital
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
-                var playerTroop = await _context.PlayerTroop
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
-                if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
+                if (!isFake)
                 {
-                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
-                    response.SetError(OperationMessages.PlayerIsUnderProtection);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
+                    var playerPrisons = await _context.PlayerPrison
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                    var playerHospital = await _context.PlayerHospital
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
+                    var playerTroop = await _context.PlayerTroop
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                    if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
+                    {
+                        info.AddInfo(OperationMessages.PlayerIsUnderProtection);
+                        response.SetError(OperationMessages.PlayerIsUnderProtection);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
                 
                 
-                if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
-                {
-                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
-                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
-                    _logger.LogInformation(info.ToString());
-                    return response;
+                    if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
+                    {
+                        info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                        response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
                 }
                 var att = new Attack()
                 {

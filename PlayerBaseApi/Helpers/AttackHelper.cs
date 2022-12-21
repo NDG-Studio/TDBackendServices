@@ -44,11 +44,11 @@ public class AttackHelper
                     AttackerUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
                         .Select(l=>l.Username).FirstOrDefault()??"",
                     DefenserUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.TargetUserId)
-                        .Select(l=>l.Username).FirstOrDefault()??"",
+                        .Select(l=>l.Username).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?"Emmanuel":""),
                     AttackerAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
                         .Select(l=>l.AvatarId).FirstOrDefault()??0,
                     DefenserAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-                        .Select(l=>l.AvatarId).FirstOrDefault()??0
+                        .Select(l=>l.AvatarId).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?3:0)
 
                 },
                 Info = new InfoDto()
@@ -94,6 +94,83 @@ public class AttackHelper
                     {
                         try
                         {
+                            if (s.TargetUserId==(long)FakeId.TutorialEnemy)//FAKE ATTACK
+                            {
+                                var _AplayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == s.AttackerUserId)
+                                    .FirstOrDefault();
+                                var _AplayerTroop = _context.PlayerTroop.Where(l => l.UserId == s.AttackerUserId).FirstOrDefault();
+                                var _APlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel).Where(l => l.UserId == s.AttackerUserId).FirstOrDefault();
+
+                                var attackResultData = new AttackResultData()
+                                {
+                                    TargetUsername = "Emmanuel",
+                                    TargetUserId = s.TargetUserId,
+                                    TargetsWoundedTroop = 625,
+                                    TargetsDeadTroop = 375,
+                                    BarracksLevel = 1,
+                                    WallLevel = 1,
+                                    LootedScrap = 5000,
+                                    PrisonerCount = 0,
+                                    SenderUserId = s.AttackerUserId,
+                                    SenderUsername = _AplayerBaseInfo.Username,
+                                    AttackersDeadTroop = 875,
+                                    AttackersWoundedTroop = 125,
+                                    DefenserScrap = 10000,
+                                    TargetsTroop = 1000,
+                                    TargetAvatarId = 3,
+                                    SenderAvatarId = _AplayerBaseInfo.AvatarId??0,
+                                    AttackerPower = 50520,
+                                    DefenserPower = 42367
+
+                                };
+                                s.WinnerSide = (byte)AttackSideEnum.Attacker;
+                                
+                            var _dbEnt =_context.Attack.Where(l => l.Id == s.Id).FirstOrDefault();
+                            if (_dbEnt != null)
+                            {
+                                _dbEnt.ResultData = s.ResultData;
+                                _dbEnt.WinnerSide = s.WinnerSide;
+                                _context.SaveChanges();
+                                var xxx=SendAttackInfo(new BaseRequest<AttackInfoDTO>()
+                                {
+                                    Data = new AttackInfoDTO()
+                                    {
+                                        IsActive = _dbEnt.IsActive,
+                                        ComeBackDate = _dbEnt.ComeBackDate.ToString(),
+                                        DefenserUserId = _dbEnt.TargetUserId,
+                                        Id = _dbEnt.Id,
+                                        ArriveDate = _dbEnt.ArriveDate.ToString(),
+                                        ResultData = _dbEnt.ResultData,
+                                        WinnerSide = _dbEnt.WinnerSide,
+                                        AttackerHeroId = _dbEnt.AttackerHeroId,
+                                        AttackerTroopCount = _dbEnt.AttackerTroopCount,
+                                        AttackerUserId = _dbEnt.AttackerUserId,
+                                        AttackerUsername = _context.PlayerBaseInfo
+                                            .Where(l=>l.UserId==s.AttackerUserId)
+                                            .Select(l=>l.Username).FirstOrDefault()??"",
+                                        DefenserUsername = "Emmanuel",
+                                        AttackerAvatarId = _AplayerBaseInfo.AvatarId??0,
+                                        DefenserAvatarId = 3,
+                                        AttackerPower = 50520,
+                                        DefenserPower = 42367
+                                    },
+                                    Info = new InfoDto()
+                                    {
+                                        Ip = "",
+                                        AppVersion = "",
+                                        DeviceId = "",
+                                        DeviceModel = "",
+                                        DeviceType = "",
+                                        OsVersion = "",
+                                        UserId = 111
+                                    }
+                                }).Result;
+                                Console.WriteLine("--SendFAKEAttackInfo-");
+                            }
+                            
+
+                                continue;
+                            }
                             #region ATTACK ALGORITHM
 
                             var TplayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == s.TargetUserId)
@@ -286,8 +363,11 @@ public class AttackHelper
                     var rmvList= _context.Attack.Where(l=>l.ComeBackDate <= now && l.ResultData != null && l.IsActive).ToList();
                     if (rmvList.Count>0)
                     {
+                        
                         foreach (var rS in rmvList)
-                        {                         
+                        {                      
+                           
+                            
                             rS.IsActive = false;
                             var attackerPlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel).Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
                             var attackerPlayerTroops = _context.PlayerTroop.Where(l => l.UserId == rS.AttackerUserId).FirstOrDefault();
@@ -303,11 +383,12 @@ public class AttackHelper
                             attackerPlayerBaseInfo.Scraps += resData.LootedScrap;
                             attackerPlayerTroops.TroopCount += rS.AttackerTroopCount - resData.AttackersDeadTroop -
                                                                resData.AttackersWoundedTroop;
-                            attackerPlayerPrison.PrisonerCount = Math.Min(
-                                attackerPlayerPrison.PrisonerCount + resData.PrisonerCount,
-                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount);
-                            _context.SaveChanges();
                             
+                            attackerPlayerPrison.PrisonerCount = Math.Min(
+                                                                attackerPlayerPrison.PrisonerCount + resData.PrisonerCount,
+                                                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount);
+                            
+                            _context.SaveChanges();
                             var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
                             {
                                 Data = new AttackInfoDTO()

@@ -449,6 +449,45 @@ namespace PlayerBaseApi
                     Bio = "-",
                     AvatarId = 0
                 };
+                var playerTroop = await PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerTroop==null)
+                {
+                    var ent = new PlayerTroop()
+                    {
+                        UserId = user.Id,
+                        TroopCount = 0,
+                        LastTroopCollect = DateTimeOffset.Now-TimeSpan.FromHours(13),
+                        MaxDuration = TimeSpan.FromHours(12),
+                        TrainingPerHour = 100
+                    };
+                    await AddAsync(ent);
+                }                
+                var playerHospital = await PlayerHospital.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerHospital==null)
+                {
+                    var ent = new PlayerHospital()
+                    {
+                        HospitalLevelId = 1,
+                        InjuredCount = 0,
+                        InHealingCount = 0,
+                        HealingDoneDate = null,
+                        UserId = user.Id
+                    };
+                    await AddAsync(ent);
+                }                
+                var playerPrison = await PlayerPrison.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerPrison==null)
+                {
+                    var ent = new PlayerPrison()
+                    {
+                        PrisonLevelId = 1,
+                        PrisonerCount = 0,
+                        InTrainingPrisonerCount = 0,
+                        TrainingDoneDate = null,
+                        UserId = user.Id
+                    };
+                    await AddAsync(ent);
+                }
                 await AddAsync(playerBaseInfo);
                 await SaveChangesAsync();
             }

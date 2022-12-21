@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using SharedLibrary.Models.Loot;
 using System.Net.Http.Headers;
 using System.Text;
+using SharedLibrary.Enums;
 using WebSocket.Enums;
 
 namespace WebSocket.Services
@@ -374,6 +375,29 @@ namespace WebSocket.Services
             var info = InfoDetail.CreateInfo(req, "GetGangInfo");
             try
             {
+                if (req.Data == (long)FakeId.TutorialEnemy)
+                {
+                    response.Data = new GangInfo()
+                    {
+                        Id = new Guid("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"),
+                        Capacity = 10,
+                        Description = "We will drink your blood with our bare hands. Leave us alone!",
+                        MemberCount = 5,
+                        Name = "Lucky",
+                        Power = 9999,
+                        ShortName = "UGR",
+                        AvatarId = "1.1.2",
+                        GangEntryTypeId=(int)GangEntryType.InviteOnly,
+                        Owner = new GangMemberInfo()
+                        {
+                            Power = 666,
+                            MemberTypeName = "Owner",
+                            UserName = "US. D",
+                            UserId = (long)FakeId.USD
+                        }
+                    };
+                    return response;
+                }
                 var userId = req.Data ?? user.Id;
                 var c = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
