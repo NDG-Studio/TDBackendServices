@@ -124,7 +124,12 @@ public class AttackHelper
 
                                 };
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
-                                
+                                s.ResultData=JsonConvert.SerializeObject(attackResultData,Formatting.Indented, new JsonSerializerSettings
+                                {
+                                    NullValueHandling = NullValueHandling.Ignore,
+                                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                                });
                             var _dbEnt =_context.Attack.Where(l => l.Id == s.Id).FirstOrDefault();
                             if (_dbEnt != null)
                             {

@@ -379,7 +379,7 @@ namespace WebSocket.Services
                 {
                     response.Data = new GangInfo()
                     {
-                        Id = new Guid("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"),
+                        Id = new Guid("00000000-0000-0000-0000-000000000000"),
                         Capacity = 10,
                         Description = "We will drink your blood with our bare hands. Leave us alone!",
                         MemberCount = 5,

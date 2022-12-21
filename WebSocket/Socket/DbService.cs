@@ -136,7 +136,13 @@ namespace WebSocket.Socket
                         Date = l.Date.ToString(),
                         IsCollected = l.IsCollected,
                         Seen = l.Seen,
-                        IsActive = l.IsActive
+                        IsActive = l.IsActive,
+                        TUserAvatar = l.TUserAvatar,
+                        ACombatPower = l.ACombatPower,
+                        AUserAvatar = l.AUserAvatar,
+                        TCombatPower = l.TCombatPower,
+                        AGangAvatarId = l.AGangAvatarId,
+                        TGangAvatarId = l.TGangAvatarId
                     })
                     .ToListAsync();
                 userActivity.LastNewsCheck = DateTimeOffset.UtcNow;

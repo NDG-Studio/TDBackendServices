@@ -3414,8 +3414,8 @@ namespace PlayerBaseApi.Services
                 {
                     TargetUserId = req.Data.TargetUserId,
                     
-                    ArriveDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
-                    ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
+                    ArriveDate = DateTimeOffset.UtcNow + ( isFake? TimeSpan.FromSeconds(10) : TimeSpan.FromMinutes(2)),
+                    ComeBackDate = DateTimeOffset.UtcNow + ( isFake? TimeSpan.FromSeconds(20) : TimeSpan.FromMinutes(4)),
                     AttackerUserId = user.Id,
                     WinnerSide = null,
                     AttackerHeroId = req.Data.AttackerHeroId,
