@@ -2689,6 +2689,79 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<int?>> GetFirstTimeTutorial(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse<int?> response = new TDResponse<int?>();
+            var info = InfoDetail.CreateInfo(req, "GetFirstTimeTutorial");
+            try
+            {
+                var bt = await _context.FirstTimeTutorial
+                    .Where(l => l.UserId == user.Id && l.Action == req.Data)
+                    .FirstOrDefaultAsync();
+                response.Data = bt?.State;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse> FirstTimeTutorialDone(BaseRequest<string> req, UserDto user)
+        {
+            TDResponse<int?> response = new TDResponse<int?>();
+            var info = InfoDetail.CreateInfo(req, "FirstTimeTutorialDone");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var bt = await _context.FirstTimeTutorial
+                    .Where(l => l.UserId == user.Id && l.Action == req.Data)
+                    .FirstOrDefaultAsync();
+                
+                if (bt==null)
+                {
+                    await _context.AddAsync(
+                        new FirstTimeTutorial()
+                        {
+                            UserId = user.Id,
+                            Action = req.Data,
+                            State = 0
+                        }
+                        );
+                }
+                else
+                {
+                    bt.State++;
+                }
+                
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
         #endregion
 
         #region TD REWARD UTILS

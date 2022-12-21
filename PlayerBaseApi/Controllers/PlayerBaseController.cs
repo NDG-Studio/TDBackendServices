@@ -941,5 +941,35 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.GetLootRunRankedByUserId(req);
         }
         
+        /// <summary>
+        /// string olarak verilen actionin yapilip yapilmadigini kontrol icin cagirilir. Daha once kullanilmadiysa null doner.
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("GetFirstTimeTutorial")]
+        public async Task<TDResponse<int?>> GetFirstTimeTutorial([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetFirstTimeTutorial(req,user);
+        }        
+        
+        /// <summary>
+        /// string olarak verilen actionin yapildigini kaydetmek icin cagirilir.
+        /// </summary>
+        /// <remarks>
+        /// <br/>
+        /// </remarks>
+        [HttpPost("FirstTimeTutorialDone")]
+        public async Task<TDResponse> FirstTimeTutorialDone([FromBody] BaseRequest<string> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.FirstTimeTutorialDone(req,user);
+        }
+        
     }
 }

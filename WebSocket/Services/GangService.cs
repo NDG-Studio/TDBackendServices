@@ -527,6 +527,7 @@ namespace WebSocket.Services
                     gangMember.MemberType.Gang.ShortName = req.Data.ShortName;
                     gangMember.MemberType.Gang.Name = req.Data.Name;
                     gangMember.MemberType.Gang.AvatarId = req.Data.AvatarId;
+                    gangMember.MemberType.Gang.GangEntryTypeId = req.Data.GangEntryTypeId;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     _logger.LogInformation(info.ToString());

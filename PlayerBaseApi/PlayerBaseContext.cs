@@ -72,6 +72,7 @@ namespace PlayerBaseApi
         public DbSet<Attack> Attack { get; set; }
         public DbSet<Rally> Rally { get; set; }
         public DbSet<RallyPart> RallyPart { get; set; }
+        public DbSet<FirstTimeTutorial> FirstTimeTutorial { get; set; }
 
 
 
