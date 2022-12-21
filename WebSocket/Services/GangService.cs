@@ -644,9 +644,11 @@ namespace WebSocket.Services
             var info = InfoDetail.CreateInfo(req, "GetGangInfo");
             try
             {
-                var gangId =await _context.GangMember.Where(l => l.UserId == user.Id).Select(l=>l.Id).FirstOrDefaultAsync();
+                var gangId =await _context.GangMember
+                    .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == user.Id).Select(l=>l.MemberType.Gang.Id).FirstOrDefaultAsync();
                 var query = await _context.MemberType
-                    .Where(l => l.Gang.Id == gangId && l.Gang.IsActive && l.Name != "Owner")
+                    .Where(l => l.Gang.Id == gangId && l.Gang.IsActive)
                     .Select(l => new MemberTypeDTO()
                     {
                         Id = l.Id.ToString(),
@@ -671,25 +673,32 @@ namespace WebSocket.Services
             }
             return response;
         }
-        public async Task<TDResponse> SetGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user)
+        public async Task<TDResponse> SetGangMemberType(BaseRequest<List<MemberTypeDTO>> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "SetGangMemberType");
             try
             {
-                var memberTypeId = new Guid(req.Data.Id);
-                var query = await _context.MemberType
-                    .Where(l => l.Id == memberTypeId && l.IsActive).FirstOrDefaultAsync();
-
-                query.Name = req.Data.Name;
-                query.CanKick = req.Data.CanKick;
-                query.GateManager = req.Data.GateManager;
-                query.CanAcceptMember = req.Data.CanAcceptMember;
-                query.CanDistributeMoney = req.Data.CanDistributeMoney;
-                query.CanMemberChangeType = req.Data.CanMemberChangeType;
-                query.CanDestroyGang = req.Data.CanDestroyGang;
-                query.CanEditGang = req.Data.CanEditGang;
-                response.SetSuccess();
+                foreach (var mem in req.Data)
+                {
+                    var memberTypeId = new Guid(mem.Id);
+                    var query = await _context.MemberType
+                        .Where(l => l.Id == memberTypeId && l.IsActive).FirstOrDefaultAsync();
+                    if (query.Name=="Owner")
+                    {
+                        continue;
+                    }
+                    query.Name = mem.Name;
+                    query.CanKick = mem.CanKick;
+                    query.GateManager = mem.GateManager;
+                    query.CanAcceptMember = mem.CanAcceptMember;
+                    query.CanDistributeMoney = mem.CanDistributeMoney;
+                    query.CanMemberChangeType = mem.CanMemberChangeType;
+                    query.CanDestroyGang = mem.CanDestroyGang;
+                    query.CanEditGang = mem.CanEditGang;
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                }
             }
             catch (Exception e)
             {
