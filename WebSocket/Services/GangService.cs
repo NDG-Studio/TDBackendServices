@@ -76,7 +76,8 @@ namespace WebSocket.Services
                         Name = req.Data.Name,
                         Description = req.Data.Description,
                         OwnerId = user.Id,
-                        OwnerName = user.Username
+                        OwnerName = user.Username,
+                        GangEntryTypeId = (int)GangEntryType.FreeForAll
                     };
                     await _context.AddAsync(gang);
                     await _context.SaveChangesAsync();
