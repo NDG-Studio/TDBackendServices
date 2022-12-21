@@ -153,7 +153,7 @@ public class GangController : ControllerBase
     }
     
     /// <summary>
-    /// GangMemberTypei editlemek için kullanilir
+    /// GangMemberTypei editlemek için kullanilir Owner disindakiler atilir
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
@@ -166,7 +166,7 @@ public class GangController : ControllerBase
     /// </remarks>
     [LoginRequired]
     [HttpPost("SetGangMemberType")]
-    public async Task<TDResponse> SetGangMemberType([FromBody] BaseRequest<MemberTypeDTO> req)
+    public async Task<TDResponse> SetGangMemberType([FromBody] BaseRequest<List<MemberTypeDTO>> req)
     {
         var user = (HttpContext.Items["User"] as UserDto);
         req.SetUser(user.Id);

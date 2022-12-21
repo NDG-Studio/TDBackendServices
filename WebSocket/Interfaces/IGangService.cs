@@ -10,7 +10,7 @@ namespace WebSocket.Interfaces
         Task<TDResponse<GangInfo>> GetGangInfoForRally(BaseRequest<long> req);
         Task<TDResponse<List<GangMemberInfo>>> GetGangMembers(BaseRequest<string> req, UserDto user);
         Task<TDResponse<List<MemberTypeDTO>>> GetGangMemberTypes(BaseRequest req, UserDto user);
-        Task<TDResponse> SetGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user);
+        Task<TDResponse> SetGangMemberType(BaseRequest<List<MemberTypeDTO>> req, UserDto user);
         Task<TDResponse> AddGangMemberType(BaseRequest<MemberTypeDTO> req, UserDto user);
         Task<TDResponse> ChangeGangMemberType(BaseRequest<List<ChangeGangMemberTypeRequest>> req, UserDto user);
         Task<TDResponse> SetMemberTypePool(BaseRequest<List<SetMemberTypePoolRequest>> req, UserDto user);
