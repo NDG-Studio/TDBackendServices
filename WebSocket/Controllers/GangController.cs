@@ -334,7 +334,7 @@ public class GangController : ControllerBase
     
     
     /// <summary>
-    /// Gang uyesini gangden atmak icin kullanilir
+    /// Gang leri cekmek icin kullanilir
     /// </summary>
     /// <remarks>
     /// ### DETAILS ###
@@ -343,7 +343,7 @@ public class GangController : ControllerBase
     /// <br/>
     /// Input: BaseRequest &lt; int &gt; :Page size
     /// <br/>
-    /// Output: TDResponse  :
+    /// Output: TDResponse &lt; Paging &lt; GangInfo &gt; &gt;
     /// </remarks>
     [LoginRequired]
     [HttpPost("GetGangs")]
@@ -353,6 +353,28 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangs(req, user);
+    }    
+    
+    /// <summary>
+    /// Gang uyesini gangden atmak icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; int &gt; :Page size
+    /// <br/>
+    /// Output: TDResponse &lt; Paging &lt; GangApplicationDTO &gt; &gt;
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("GetGangApplications")]
+    public async Task<TDResponse<Paging<GangApplicationDTO>>> GetGangApplications([FromBody] BaseRequest<int> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.GetGangApplications(req, user);
     }
 
     

@@ -973,6 +973,50 @@ namespace WebSocket.Services
             return response;
 
         }
+        public async Task<TDResponse<Paging<GangApplicationDTO>>> GetGangApplications(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse<Paging<GangApplicationDTO>> response = new TDResponse<Paging<GangApplicationDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangApplications");
+            try
+            {
+                var gangId = await _context.GangMember
+                    .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.MemberType.IsActive)
+                    .Select(l => l.MemberType.GangId).FirstOrDefaultAsync();
+                response.Data = new Paging<GangApplicationDTO>();
+                response.Data.PageIndex = req.Data;
+                
+                response.Data.PagingData = await _context.GangApplication
+                    .Where(l=>l.GangId==gangId)
+                    .OrderByDescending(l => l.Date).ThenBy(l => l.Id)
+                    .Skip(req.Data*10)
+                    .Take(10)
+                    .Select(l=>new GangApplicationDTO()
+                    {
+                        Date = l.Date.ToString(),
+                        Rank1 = l.Rank1,
+                        Coordinate = l.Coordinate,
+                        Rank2 = l.Rank2,
+                        Rank3 = l.Rank3,
+                        Username = l.Username,
+                        UserId = l.UserId,
+                        Rank4 = l.Rank4,
+                        UserAvatarId = l.UserAvatarId
+                    }).ToListAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         
 
 

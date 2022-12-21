@@ -20,5 +20,6 @@ namespace WebSocket.Interfaces
         Task<TDResponse> KickMember(BaseRequest<long> req, UserDto user);
         Task<TDResponse> EditGang(BaseRequest<GangEditDTO> req, UserDto user);
         Task<TDResponse<Paging<GangInfo>>> GetGangs(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<Paging<GangApplicationDTO>>> GetGangApplications(BaseRequest<int> req, UserDto user);
     }
 }
