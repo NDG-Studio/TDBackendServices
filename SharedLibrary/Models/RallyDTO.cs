@@ -9,11 +9,11 @@ public class RallyDTO
     public int TargetAvatarId { get; set; } = 0;
     public int LeaderAvatarId { get; set; } = 0;
     public string? TargetGangId { get; set; }
-    public int? TargetGangAvatarId { get; set; }
+    public string? TargetGangAvatarId { get; set; } = "";
     public string? TargetGangName { get; set; }
     
     public string? LeaderGangId { get; set; }
-    public int? LeaderGangAvatarId { get; set; }
+    public string? LeaderGangAvatarId { get; set; } = "";
     public string? LeaderGangName { get; set; }
     public long LeaderUserId { get; set; }
     public string? TargetUsername { get; set; }

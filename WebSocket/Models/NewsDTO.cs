@@ -15,10 +15,10 @@ namespace WebSocket.Models
         public int? AUserAvatar { get; set; }
         public string? ACoord { get; set; }  
         public string? TCoord { get; set; }
-        public int AGangAvatarId { get; set; } = 0;
+        public string? AGangAvatarId { get; set; } = "";
         public string? AGangId { get; set; }  
         public string? AGangName { get; set; } 
-        public int TGangAvatarId { get; set; } = 0;
+        public string? TGangAvatarId { get; set; } = "";
         public string? TGangId { get; set; } 
         public string? TGangName { get; set; } //-gangname
         public long? TUserId { get; set; } //targetid
