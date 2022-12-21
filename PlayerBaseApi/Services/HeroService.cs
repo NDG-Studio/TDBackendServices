@@ -380,6 +380,82 @@ namespace PlayerBaseApi.Services
 
         }
 
+        
+        public async Task<TDResponse> ExchangeTalentAndCard(BaseRequest<ExchangeTalentAndCardRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ExchangeTalentAndCard");
+            try
+            {
+                var pq = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == req.Data.HeroId).FirstOrDefaultAsync();
+                if (pq == null)
+                {
+                    response.SetError(OperationMessages.PlayerHaveNoHero);
+                    info.AddInfo(OperationMessages.PlayerHaveNoHero);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (pq.TalentPoint != 0 || pq.CurrentLevel != pq.Hero.MaxLevel)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var pb = await _context.PlayerBaseInfo
+                    .Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+
+                switch ((HeroRarity)pq.Hero.Rarity)
+                {
+                    case HeroRarity.Rare:
+                        if (pb.RareHeroCards<req.Data.Count*10)
+                        {
+                            response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                            info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+
+                        pb.RareHeroCards -= req.Data.Count * 10;
+                        break;
+                    case HeroRarity.Epic:
+                        if (pb.EpicHeroCards<req.Data.Count*10)
+                        {
+                            response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                            info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        pb.EpicHeroCards -= req.Data.Count * 10;
+                        break;
+                    case HeroRarity.Legendary:
+                        if (pb.LegendaryHeroCards<req.Data.Count*10)
+                        {
+                            response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                            info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                        pb.LegendaryHeroCards -= req.Data.Count * 10;
+                        break;
+                }
+
+                pq.TalentPoint += req.Data.Count;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
 
         public async Task<TDResponse<List<HeroSkillDTO>>> GetHeroSkillsByHeroId(BaseRequest<int> req, UserDto user) //TODO: yeterli skill point var mı bakılacak
         {

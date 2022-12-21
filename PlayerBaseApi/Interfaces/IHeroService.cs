@@ -16,5 +16,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<bool>> UseHeroExp(BaseRequest<UseHeroExperienceRequest> req, UserDto user);
         Task<TDResponse> BuyHeroByHeroId(BaseRequest<int> req, UserDto user);
         Task<TDResponse<List<UsableItemDTO>>> GetPlayersHeroXpItems(BaseRequest req, UserDto user);
+        Task<TDResponse> ExchangeTalentAndCard(BaseRequest<ExchangeTalentAndCardRequest> req, UserDto user);
     }
 }

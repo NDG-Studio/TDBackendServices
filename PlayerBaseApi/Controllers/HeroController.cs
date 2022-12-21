@@ -163,6 +163,30 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _heroService.BuyHeroByHeroId(req, user);
+        }   
+        
+        /// <summary>
+        /// Oyuncu sahip oldugu herocardlar ile talentpoint alabilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// BaseRequest.Data.Count = alinmak istenen talentpoint sayisi
+        /// BaseRequest.Data.HeroId = talentpoint alinmak istenen heronun idsi
+        /// <br/>
+        /// Input: BaseRequest &lt; ExchangeTalentAndCardRequest &gt;
+        /// <br/>
+        /// Output: TDResponse       Not: islem basarili ise haserror 'false' doner
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("ExchangeTalentAndCard")]
+        public async Task<TDResponse> ExchangeTalentAndCard([FromBody] BaseRequest<ExchangeTalentAndCardRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _heroService.ExchangeTalentAndCard(req, user);
         }        
         
 
