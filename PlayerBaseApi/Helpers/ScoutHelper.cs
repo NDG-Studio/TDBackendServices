@@ -161,7 +161,7 @@ public class ScoutHelper
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                Console.WriteLine(e.InnerException);
             }
         }
     }

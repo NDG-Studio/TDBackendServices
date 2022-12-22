@@ -3370,7 +3370,14 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                
+
+                if (!(await _context.PlayerBaseInfo.Where(l=>l.UserId==req.Data.TargetUserId).AnyAsync()))
+                {
+                    info.AddInfo(OperationMessages.InputError+"nasi");
+                    response.SetError(OperationMessages.InputError+"nasi");
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 var ent = new Scout()
                 {
                     TargetUserId = req.Data.TargetUserId,

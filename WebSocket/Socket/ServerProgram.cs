@@ -102,6 +102,7 @@ namespace WebSocket.Socket
             while (isRunning)
             {
                 server.Update();
+                Console.Write(".");
 
                 Thread.Sleep(10);
             }
