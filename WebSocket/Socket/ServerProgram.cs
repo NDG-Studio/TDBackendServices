@@ -13,7 +13,7 @@ namespace WebSocket.Socket
         private static bool isRunning = false;
         public static void Start(ILoggerProvider logger)
         {
-            RiptideLogger.Initialize(logger.CreateLogger("").SocketLog, true);
+            RiptideLogger.Initialize(logger.CreateLogger("_socket_").SocketLog, true);
             
             Message.MaxPayloadSize = 30000;
             new Thread(new ThreadStart(Update)).Start();

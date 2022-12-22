@@ -375,6 +375,29 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangApplications(req, user);
+    }    
+    
+    
+    /// <summary>
+    /// Gang applicationi kabul/red etmek icin kullanilir.
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; ApplicationAcceptRequest &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("AcceptGangApplication")]
+    public async Task<TDResponse> AcceptGangApplication([FromBody] BaseRequest<ApplicationAcceptRequest> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.AcceptGangApplication(req, user);
     }
 
     

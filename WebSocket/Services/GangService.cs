@@ -5,11 +5,8 @@ using WebSocket.Interfaces;
 using WebSocket.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
-using WebSocket;
 using WebSocket.Socket;
 using Newtonsoft.Json;
-using SharedLibrary.Models.Loot;
-using System.Net.Http.Headers;
 using System.Text;
 using SharedLibrary.Enums;
 using WebSocket.Enums;
@@ -224,6 +221,14 @@ namespace WebSocket.Services
                     return response;
                 }
 
+                if (invitedGang.MemberCount==invitedGang.Capacity)
+                {
+                    response.SetError(OperationMessages.GangCapacityFull);
+                    info.AddInfo(OperationMessages.GangCapacityFull);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
                 var memberTypeId = await _context.MemberType.Where(l => l.GangId == gangGuid && l.Name == "Member")
                     .FirstOrDefaultAsync();
                 if (memberTypeId==null)
@@ -240,6 +245,7 @@ namespace WebSocket.Services
                     UserName = user.Username,
                     Power = 0//todo: power hesaplaması yapılacak
                 };
+                invitedGang.MemberCount++;
                 await _context.AddAsync(gangMember);
                 await _context.SaveChangesAsync();
                 await JoinGangChat(new BaseRequest<Guid>() { Info = req.Info, Data = invitedGang.Id }, user);
@@ -395,11 +401,13 @@ namespace WebSocket.Services
                             MemberTypeName = "Owner",
                             UserName = "US. D",
                             UserId = (long)FakeId.USD
-                        }
+                        },
+                        MemberType = null
                     };
                     return response;
                 }
                 var userId = req.Data ?? user.Id;
+                var isOwnGang = req.Data == null;
                 var c = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
                     .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
@@ -429,7 +437,22 @@ namespace WebSocket.Services
                         MemberTypeName = owner.MemberType.Name,
                         UserName = owner.UserName,
                         UserId = owner.UserId
-                    }
+                    },
+                    MemberType = isOwnGang ? new MemberTypeDTO()
+                    {
+                        Id = c.MemberType.Id.ToString(),
+                        Name = c.MemberType.Name,
+                        CanKick = c.MemberType.CanKick,
+                        GateManager = c.MemberType.GateManager,
+                        CanAcceptMember = c.MemberType.CanAcceptMember,
+                        CanDistributeMoney = c.MemberType.CanDistributeMoney,
+                        CanDestroyGang = c.MemberType.CanDestroyGang,
+                        CanEditGang = c.MemberType.CanEditGang,
+                        CanMemberChangeType = c.MemberType.CanMemberChangeType,
+                        PoolScore = c.MemberType.PoolScore
+                        
+                    }:null
+                    
                 };
 
                 response.SetSuccess();
@@ -926,6 +949,89 @@ namespace WebSocket.Services
             }
             return response;
 
+        }
+                
+        public async Task<TDResponse> AcceptGangApplication(BaseRequest<ApplicationAcceptRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AcceptGangApplication");
+            try
+            {
+
+                var gangAppId = new Guid(req.Data.ApplicationId);
+                var gangApp = await _context.GangApplication
+                    .Include(l=>l.Gang)
+                    .Where(l => l.Id == gangAppId).FirstOrDefaultAsync();
+                if (gangApp==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!req.Data.IsAccept)
+                {
+                    _context.Remove(gangApp);
+                    await _context.SaveChangesAsync();
+
+                    response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
+                }
+                
+                var gangMember = await _context.GangMember
+                    .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == gangApp.UserId && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                    .FirstOrDefaultAsync();
+                if (gangMember != null)
+                {
+                    response.SetError(OperationMessages.PlayerAllreadyGangMember);
+                    info.AddInfo(OperationMessages.PlayerAllreadyGangMember);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var memberTypeId = await _context.MemberType.Where(l => l.GangId == gangApp.GangId && l.Name == "Member")
+                    .FirstOrDefaultAsync();
+                if (memberTypeId==null)
+                {
+                    response.SetError(OperationMessages.GangInviteTimeout);
+                    info.AddInfo(OperationMessages.GangInviteTimeout);
+                    _logger.LogInformation(info.ToString());
+                    return response; 
+                }
+
+                if (memberTypeId.Gang.MemberCount==memberTypeId.Gang.Capacity)
+                {
+                    response.SetError(OperationMessages.GangCapacityFull);
+                    info.AddInfo(OperationMessages.GangCapacityFull);
+                    _logger.LogInformation(info.ToString());
+                    return response; 
+                }
+
+                await _context.AddAsync(new GangMember()
+                {
+                    Power = 0,
+                    UserName = gangApp.Username,
+                    UserId = gangApp.UserId,
+                    MemberTypeId = memberTypeId.Id
+                });
+                memberTypeId.Gang.MemberCount++;
+                _context.Remove(gangApp);
+                await _context.SaveChangesAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
         }
         
         public async Task<TDResponse<Paging<GangInfo>>> GetGangs(BaseRequest<int> req, UserDto user)

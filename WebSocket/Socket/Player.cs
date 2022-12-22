@@ -307,45 +307,53 @@ namespace WebSocket.Socket
 
         private static UserDto? Checkuser(string token, InfoDto info)
         {
-            var handler = new HttpClientHandler();
-
-            handler.ServerCertificateCustomValidationCallback =
-            (
-message,
-cert,
-chain,
-errors
-             ) =>
-            { return true; }; //TODO: Prodda silinmeli
-
-            using (HttpClient client = new HttpClient(handler))
+            try
             {
-                //var request = new HttpRequestMessage
-                //{
-                //    Method = HttpMethod.Post,
-                //    RequestUri = new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken"),
-                //    Content = new StringContent((new BaseRequest<string>() { Data = token, Info = info }).ToString()!, Encoding.UTF8, "application/json")
+                var handler = new HttpClientHandler();
 
-                //};
+                handler.ServerCertificateCustomValidationCallback =
+                    (
+                        message,
+                        cert,
+                        chain,
+                        errors
+                    ) =>
+                    { return true; }; //TODO: Prodda silinmeli
 
-                var response = client.PostAsync(new Uri(IdentityUrl + "/api/user/checkToken"),
-                    new StringContent(JsonConvert.SerializeObject(
-                        new BaseRequest<string>()
-                        {
-                            Data = token,
-                            Info = info
-                        }
+                using (HttpClient client = new HttpClient(handler))
+                {
+                    //var request = new HttpRequestMessage
+                    //{
+                    //    Method = HttpMethod.Post,
+                    //    RequestUri = new Uri(_configuration["IdentityEndpoint"] + "/api/user/checkToken"),
+                    //    Content = new StringContent((new BaseRequest<string>() { Data = token, Info = info }).ToString()!, Encoding.UTF8, "application/json")
+
+                    //};
+
+                    var response = client.PostAsync(new Uri(IdentityUrl + "/api/user/checkToken"),
+                        new StringContent(JsonConvert.SerializeObject(
+                            new BaseRequest<string>()
+                            {
+                                Data = token,
+                                Info = info
+                            }
                         ), Encoding.UTF8, "application/json")).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    var user = JsonConvert.DeserializeObject<TDResponse<UserDto>>(content)?.Data;
-                    return user;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = response.Content.ReadAsStringAsync().Result;
+                        var user = JsonConvert.DeserializeObject<TDResponse<UserDto>>(content)?.Data;
+                        return user;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
-                {
-                    return null;
-                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
             }
         }
 

@@ -11,6 +11,7 @@
         public int Capacity { get; set; }
         public string? AvatarId { get; set; } = "";
         public int MemberCount { get; set; }
-        public int GangEntryTypeId { get; set; } 
+        public int GangEntryTypeId { get; set; }
+        public MemberTypeDTO? MemberType { get; set; }
     }
 }
