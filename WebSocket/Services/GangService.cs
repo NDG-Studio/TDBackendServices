@@ -347,12 +347,15 @@ namespace WebSocket.Services
                 var gangInvitations = new News()
                 {
                     Title = "Gang Invitation",
-                    Detail = $" {user.Username} invites you to join '{query.MemberType.Gang.Name}' gang",
+                    Detail = "-",
                     Date = DateTimeOffset.Now,
                     AGangId = query.MemberType.Gang.Id.ToString(),
                     AGangAvatarId = query.MemberType.Gang.AvatarId,
                     AGangName = $"[{query.MemberType.Gang.ShortName}]{query.MemberType.Gang.Name}",
                     UserId = req.Data,
+                    AUserId = user.Id,
+                    AUsername = user.Username,
+                    AUserAvatar = GetOtherPlayersBaseInfo(user.Id).Result.AvatarId??0,
                     IsActive = true,
                     Seen = false,
                     TypeId = (int)NewsType.GangInvitation,
@@ -401,7 +404,8 @@ namespace WebSocket.Services
                             Power = 666,
                             MemberTypeName = "Owner",
                             UserName = "US. D",
-                            UserId = (long)FakeId.USD
+                            UserId = (long)FakeId.USD,
+                            MemberTypeId = "00000000-0000-0000-0000-000000000000"
                         },
                         MemberType = null
                     };
@@ -421,6 +425,18 @@ namespace WebSocket.Services
                 var owner = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
                     .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                if (c.UserId==user.Id)
+                {
+                    c.UserName = user.Username;
+                }
+
+                if (owner.UserId==user.Id)
+                {
+                    owner.MemberType.Gang.OwnerName = user.Username;
+                }
+
+                await _context.SaveChangesAsync();
+
                 response.Data = new GangInfo()
                 {
                     Id = c.MemberType.Gang.Id,
@@ -437,7 +453,8 @@ namespace WebSocket.Services
                         Power = owner.Power,
                         MemberTypeName = owner.MemberType.Name,
                         UserName = owner.UserName,
-                        UserId = owner.UserId
+                        UserId = owner.UserId,
+                        MemberTypeId = owner.MemberTypeId.ToString()
                     },
                     MemberType = isOwnGang ? new MemberTypeDTO()
                     {
@@ -500,7 +517,8 @@ namespace WebSocket.Services
                         Power = owner.Power,
                         MemberTypeName = owner.MemberType.Name,
                         UserName = owner.UserName,
-                        UserId = owner.UserId
+                        UserId = owner.UserId,
+                        MemberTypeId = owner.MemberTypeId.ToString()
                     }
                 };
 
@@ -651,7 +669,9 @@ namespace WebSocket.Services
                         Power = l.Power,
                         MemberTypeName = l.MemberType.Name,
                         UserName = l.UserName,
-                        UserId = l.UserId
+                        UserId = l.UserId,
+                        MemberTypeId = l.MemberTypeId.ToString()
+                        
                     }).ToListAsync();
                 response.Data = query;
                 response.SetSuccess();
@@ -910,26 +930,30 @@ namespace WebSocket.Services
                 }
 
                 var userInfo = GetOtherPlayersBaseInfo(user.Id).Result;
-                var baselevelRanked = GetBaseLevelRankedByUserId(user.Id).Result;
-                var killTroopRanked = GetKillTroopRankedByUserId(user.Id).Result;
-                var lootedScrapRanked = GetLootedScrapRankedByUserId(user.Id).Result;
-                var lootRunRanked = GetLootRunPointLeaderBoard(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(userInfo));
                 
+                var baseLevelRanked = GetBaseLevelRankedByUserId(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(baseLevelRanked));
+                var killTroopRanked = GetKillTroopRankedByUserId(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(killTroopRanked));
+                var lootedScrapRanked = GetLootedScrapRankedByUserId(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(lootedScrapRanked));
+                var lootRunRanked = GetLootRunPointLeaderBoard(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(lootRunRanked));
+                var coord = DbService.GetUserCoordinate(user.Id).Result.Data ?? "" ;
+                Console.WriteLine("^^"+coord);
                 var ent = new GangApplication()
                 {
                     Date = now,
                     GangId = gangId,
                     UserId = user.Id,
                     Username = user.Username,
-                    Coordinate = DbService.GetUserCoordinate(user.Id).Result.Data ?? "",
-                    UserAvatarId = userInfo.AvatarId ?? 0,
-                    Rank1 = baselevelRanked.OwnRanked.ToString() + "/" +baselevelRanked.Value.ToString(),
+                    Coordinate = coord,
+                    UserAvatarId = userInfo?.AvatarId ?? 0,
+                    Rank1 = baseLevelRanked.OwnRanked.ToString() + "/" +baseLevelRanked.Value.ToString(),
                     Rank2 = killTroopRanked.OwnRanked.ToString() + "/" +killTroopRanked.Value.ToString(),
                     Rank3 = lootedScrapRanked.OwnRanked.ToString() + "/" +lootedScrapRanked.Value.ToString(),
                     Rank4 = lootRunRanked.OwnRanked.ToString() + "/" +lootRunRanked.Value.ToString(),
-                    
-
-
                 };
                 var allExist = await _context.GangApplication.Where(l => l.UserId == user.Id && l.GangId == gangId)
                     .ToListAsync();
@@ -1059,7 +1083,7 @@ namespace WebSocket.Services
                             Power = l.Power,
                             UserId = l.OwnerId,
                             UserName = l.OwnerName,
-                            MemberTypeName = "Owner"
+                            MemberTypeName = "Owner",
                         },
                         Power = l.Power,
                         AvatarId = l.AvatarId,
