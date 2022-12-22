@@ -1101,6 +1101,7 @@ namespace WebSocket.Services
                     .Take(10)
                     .Select(l=>new GangApplicationDTO()
                     {
+                        Id = l.Id.ToString(),
                         Date = l.Date.ToString(),
                         Rank1 = l.Rank1,
                         Coordinate = l.Coordinate,
@@ -1285,7 +1286,7 @@ namespace WebSocket.Services
 
             using (HttpClient client = new HttpClient(handler))
             {
-                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetLootRunPointLeaderBoard"),
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetLootRunRankedByUserId"),
                     new StringContent(JsonConvert.SerializeObject(
                         new BaseRequest<long>()
                         {

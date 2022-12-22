@@ -2,6 +2,7 @@ namespace WebSocket.Models;
 
 public class GangApplicationDTO
 {
+    public string Id { get; set; }
     public long UserId { get; set; }
     public int UserAvatarId { get; set; }
     public string Username { get; set; }
