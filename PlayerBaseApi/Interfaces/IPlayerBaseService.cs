@@ -72,8 +72,8 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<LeaderBoardItem>> GetKillTroopRankedByUserId(BaseRequest<long> req);        
         Task<TDResponse<Paging<LeaderBoardItem>>> GetLootedScrapLeaderBoard(BaseRequest<int> req, UserDto user);
         Task<TDResponse<LeaderBoardItem>> GetLootedScrapRankedByUserId(BaseRequest<long> req);
-        Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user);
-        Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId(BaseRequest<long> req);
+        Task<TDResponse<Paging<LeaderBoardItem>>> GetDefenseKillLeaderBoard(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<LeaderBoardItem>> GetDefenseKillRankedByUserId(BaseRequest<long> req);
         Task<TDResponse<int?>> GetFirstTimeTutorial(BaseRequest<string> req, UserDto user);
         Task<TDResponse> FirstTimeTutorialDone(BaseRequest<string> req, UserDto user);
     }

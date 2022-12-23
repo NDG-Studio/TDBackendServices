@@ -855,7 +855,7 @@ namespace PlayerBaseApi.Controllers
         }        
         
         /// <summary>
-        /// Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
+        /// Attacktaki Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
@@ -871,7 +871,7 @@ namespace PlayerBaseApi.Controllers
         }        
                 
         /// <summary>
-        /// Kill sayisine gore ranked cekmek icin kullanilir
+        /// Attacktaki Kill sayisine gore ranked cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
@@ -913,32 +913,32 @@ namespace PlayerBaseApi.Controllers
         }        
         
         /// <summary>
-        /// Lootrundan lootlananlara gore sirali leaderboardu cekmek icin kullanilir
+        /// Attacktaki Kill sayisine gore sirali leaderboardu cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
         /// </remarks>
         [LoginRequired]
-        [HttpPost("GetLootRunPointLeaderBoard")]
-        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard([FromBody] BaseRequest<int> req)
+        [HttpPost("GetDefenseKillLeaderBoard")]
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetDefenseKillLeaderBoard([FromBody] BaseRequest<int> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.GetLootRunPointLeaderBoard(req, user);
+            return await _playerBaseService.GetDefenseKillLeaderBoard(req, user);
         }
                 
         /// <summary>
-        /// Lootrundan lootlananlara gore ranked cekmek icin kullanilir
+        /// Attacktaki Kill sayisine gore ranked cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// <br/>
         /// </remarks>
-        [HttpPost("GetLootRunRankedByUserId")]
-        public async Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId([FromBody] BaseRequest<long> req)
+        [HttpPost("GetDefenseKillRankedByUserId")]
+        public async Task<TDResponse<LeaderBoardItem>> GetDefenseKillRankedByUserId([FromBody] BaseRequest<long> req)
         {
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.GetLootRunRankedByUserId(req);
+            return await _playerBaseService.GetDefenseKillRankedByUserId(req);
         }
         
         /// <summary>

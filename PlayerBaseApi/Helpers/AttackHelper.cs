@@ -257,6 +257,7 @@ public class AttackHelper
                                 }
                                 TplayerBaseInfo.Scraps -= attackResultData.LootedScrap;
                                 AplayerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
+                                TplayerBaseInfo.DefenseKillCount += attackResultData.AttackersDeadTroop;
                                 AplayerBaseInfo.LootedScrap+=attackResultData.LootedScrap;
                                 TplayerTroop.TroopCount = 0;
                                 TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
@@ -303,6 +304,7 @@ public class AttackHelper
                                     });
                                 }
                                 AplayerBaseInfo.KillCount+=attackResultData.TargetsDeadTroop;
+                                TplayerBaseInfo.KillCount+=attackResultData.AttackersDeadTroop;
                                 TplayerTroop.TroopCount =TplayerTroop.TroopCount - TDead -TWounded;
                                 TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
                                     TPlayerHospital.InjuredCount + attackResultData.TargetsWoundedTroop);

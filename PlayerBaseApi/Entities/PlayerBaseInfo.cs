@@ -18,9 +18,10 @@ namespace PlayerBaseApi.Entities
         public int LegendaryHeroCards { get; set; } = 0;
         public int BluePrints { get; set; } = 0;
         public int Fuel { get; set; } = 0;
+        public int Power { get; set; } = 0;
         public int KillCount { get; set; } = 0;
         public int LootedScrap { get; set; } = 0;
-        public int LootRunPoint { get; set; } = 0;
+        public int DefenseKillCount { get; set; } = 0;
         public DateTimeOffset LastBaseCollect { get; set; }
         public TimeSpan BaseFullDuration { get; set; }
         public bool IsApe { get; set; } = false;

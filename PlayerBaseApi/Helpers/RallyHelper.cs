@@ -152,12 +152,12 @@ public class RallyHelper
                                     part.LootedScrap=(part.TroopCount / ATotalTroops) * TotalLootedScrap;
                                     if (AplayerBaseInfo!=null)
                                     {
-                                        AplayerBaseInfo.KillCount+=(part.TroopCount / ATotalTroops)*ATotalDead;
+                                        AplayerBaseInfo.KillCount+=(part.TroopCount / ATotalTroops)*TDead;
                                         AplayerBaseInfo.LootedScrap += part.LootedScrap;
                                     }
                                 }
-                                
 
+                                TplayerBaseInfo.DefenseKillCount += ATotalDead;
                                 TplayerTroop.TroopCount = 0;
                                 TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
                                     TPlayerHospital.InjuredCount + (s.TargetsWoundedTroop??0));
@@ -196,12 +196,12 @@ public class RallyHelper
                                     part.LootedScrap=(part.TroopCount / ATotalTroops) * TotalLootedScrap;
                                     if (AplayerBaseInfo!=null)
                                     {
-                                        AplayerBaseInfo.KillCount+=(part.TroopCount / ATotalTroops)*ATotalDead;
+                                        AplayerBaseInfo.KillCount+=(part.TroopCount / ATotalTroops)*TDead;
                                         AplayerBaseInfo.LootedScrap += part.LootedScrap;
                                     }
                                 }
                                 
-
+                                TplayerBaseInfo.DefenseKillCount += ATotalDead;
                                 TplayerTroop.TroopCount -= s.TargetsWoundedTroop ?? 0;
                                 TplayerTroop.TroopCount -= s.TargetsDeadTroop ?? 0;
                                 TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,

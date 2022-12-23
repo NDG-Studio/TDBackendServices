@@ -428,6 +428,11 @@ namespace WebSocket.Services
                 if (c.UserId==user.Id)
                 {
                     c.UserName = user.Username;
+                    var playerBaseInfo = GetOtherPlayersBaseInfo(user.Id).Result;
+                    c.Power = playerBaseInfo.Power;
+                    c.MemberType.Gang.Power =
+                        _context.GangMember
+                            .Where(l => l.MemberType.GangId == c.MemberType.GangId).Sum(l=>l.Power);
                 }
 
                 if (owner.UserId==user.Id)
@@ -623,6 +628,11 @@ namespace WebSocket.Services
                         _logger.LogInformation(info.ToString());
                         return response;
                     }
+
+                    _context.Remove(_context.ChatRoomMember
+                        .Where(l => l.UserId == kickedBoy.UserId &&
+                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat));
+                    gangMember.MemberType.Gang.MemberCount-- ;
                     _context.Remove(kickedBoy);
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
@@ -938,8 +948,8 @@ namespace WebSocket.Services
                 Console.WriteLine(JsonConvert.SerializeObject(killTroopRanked));
                 var lootedScrapRanked = GetLootedScrapRankedByUserId(user.Id).Result;
                 Console.WriteLine(JsonConvert.SerializeObject(lootedScrapRanked));
-                var lootRunRanked = GetLootRunPointLeaderBoard(user.Id).Result;
-                Console.WriteLine(JsonConvert.SerializeObject(lootRunRanked));
+                var defenseKill = GetDefenseKillRankedByUserId(user.Id).Result;
+                Console.WriteLine(JsonConvert.SerializeObject(defenseKill));
                 var coord = DbService.GetUserCoordinate(user.Id).Result.Data ?? "" ;
                 Console.WriteLine("^^"+coord);
                 var ent = new GangApplication()
@@ -953,7 +963,7 @@ namespace WebSocket.Services
                     Rank1 = baseLevelRanked.OwnRanked.ToString() + "/" +baseLevelRanked.Value.ToString(),
                     Rank2 = killTroopRanked.OwnRanked.ToString() + "/" +killTroopRanked.Value.ToString(),
                     Rank3 = lootedScrapRanked.OwnRanked.ToString() + "/" +lootedScrapRanked.Value.ToString(),
-                    Rank4 = lootRunRanked.OwnRanked.ToString() + "/" +lootRunRanked.Value.ToString(),
+                    Rank4 = defenseKill.OwnRanked.ToString() + "/" +defenseKill.Value.ToString(),
                 };
                 var allExist = await _context.GangApplication.Where(l => l.UserId == user.Id && l.GangId == gangId)
                     .ToListAsync();
@@ -1300,7 +1310,7 @@ namespace WebSocket.Services
                 return null;
             }
         }
-        private static async Task<LeaderBoardItem> GetLootRunPointLeaderBoard(long userId)
+        private static async Task<LeaderBoardItem> GetDefenseKillRankedByUserId(long userId)
         {
             var handler = new HttpClientHandler();
 
@@ -1310,7 +1320,7 @@ namespace WebSocket.Services
 
             using (HttpClient client = new HttpClient(handler))
             {
-                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetLootRunRankedByUserId"),
+                var response = client.PostAsync(new Uri(Player.PlayerBaseUrl + "/api/PlayerBase/GetDefenseKillRankedByUserId"),
                     new StringContent(JsonConvert.SerializeObject(
                         new BaseRequest<long>()
                         {

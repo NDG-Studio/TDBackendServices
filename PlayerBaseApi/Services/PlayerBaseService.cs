@@ -1534,9 +1534,6 @@ namespace PlayerBaseApi.Services
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
                             gainedResource.HeroId = loot.PlayerHero.HeroId;
                             gainedResource.HeroName = loot.PlayerHero.Hero.Name;
-                            playerBaseInfo.LootRunPoint += gainedResource.BluePrintCount * 3;
-                            playerBaseInfo.LootRunPoint += gainedResource.ScrapCount * 1;
-                            playerBaseInfo.LootRunPoint += gainedResource.GemCount * 5;
                             response.Data.GainedLootRuns.Add(gainedResource);
                         }
                         else
@@ -1564,9 +1561,6 @@ namespace PlayerBaseApi.Services
                             {
                                 ent.IsActive = false;
                                 response.Data.GainedLootRuns.Add(gainedLoots);
-                                playerBaseInfo.LootRunPoint += gainedLoots.BluePrintCount * 3;
-                                playerBaseInfo.LootRunPoint += gainedLoots.ScrapCount * 1;
-                                playerBaseInfo.LootRunPoint += gainedLoots.GemCount * 5;
                             }
                             else
                             {
@@ -1590,9 +1584,6 @@ namespace PlayerBaseApi.Services
                             gainedResource.StartDate = loot.OperationStartDate.ToString();
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
                             response.Data.GainedLootRuns.Add(gainedResource);
-                            playerBaseInfo.LootRunPoint += gainedResource.BluePrintCount * 3;
-                            playerBaseInfo.LootRunPoint += gainedResource.ScrapCount * 1;
-                            playerBaseInfo.LootRunPoint += gainedResource.GemCount * 5;
                         }
                         else
                         {
@@ -3134,23 +3125,23 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetLootRunPointLeaderBoard(BaseRequest<int> req, UserDto user)
+        public async Task<TDResponse<Paging<LeaderBoardItem>>> GetDefenseKillLeaderBoard(BaseRequest<int> req, UserDto user)
         {
             TDResponse<Paging<LeaderBoardItem>> response = new TDResponse<Paging<LeaderBoardItem>>();
-            var info = InfoDetail.CreateInfo(req, "GetLootRunPointLeaderBoard");
+            var info = InfoDetail.CreateInfo(req, "GetDefenseKillLeaderBoard");
             try
             {
                 response.Data = new Paging<LeaderBoardItem>();
                 response.Data.PageIndex = req.Data;
                 
                 response.Data.PagingData = await _context.PlayerBaseInfo
-                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.UserId)
+                    .OrderByDescending(l => l.DefenseKillCount).ThenBy(l => l.UserId)
                     .Skip(req.Data*10)
                     .Take(10)
                     .Select(l=>new LeaderBoardItem()
                     {
                         Username = l.Username,
-                        Value = l.LootRunPoint,
+                        Value = l.DefenseKillCount,
                         UserId = l.UserId
                     }).ToListAsync();
 
@@ -3160,7 +3151,7 @@ namespace PlayerBaseApi.Services
                         .Select(l => new LeaderBoardItem()
                         {
                             Username = l.Username,
-                            Value = l.LootRunPoint,
+                            Value = l.DefenseKillCount,
                             UserId = l.UserId
                         }).FirstOrDefaultAsync()
                     ?? new LeaderBoardItem()
@@ -3169,8 +3160,8 @@ namespace PlayerBaseApi.Services
                         UserId = user.Id,
                         Value = 0
                     };
-                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootRunPoint > ownValue.Value || (l.LootRunPoint == ownValue.Value && l.UserId < user.Id) )
-                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.Id).CountAsync()) + 1;
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.DefenseKillCount > ownValue.Value || (l.DefenseKillCount == ownValue.Value && l.UserId < user.Id) )
+                    .OrderByDescending(l => l.DefenseKillCount).ThenBy(l => l.Id).CountAsync()) + 1;
                 
                 response.Data.PagingData.Add(ownValue);
                 
@@ -3191,10 +3182,10 @@ namespace PlayerBaseApi.Services
         }
         
         
-        public async Task<TDResponse<LeaderBoardItem>> GetLootRunRankedByUserId(BaseRequest<long> req)
+        public async Task<TDResponse<LeaderBoardItem>> GetDefenseKillRankedByUserId(BaseRequest<long> req)
         {
             TDResponse<LeaderBoardItem> response = new TDResponse<LeaderBoardItem>();
-            var info = InfoDetail.CreateInfo(req, "GetLootRunRankedByUserId");
+            var info = InfoDetail.CreateInfo(req, "GetDefenseKillRankedByUserId");
             try
             {
                 var ownValue =
@@ -3203,11 +3194,11 @@ namespace PlayerBaseApi.Services
                         .Select(l => new LeaderBoardItem()
                         {
                             Username = l.Username,
-                            Value = l.LootRunPoint,
+                            Value = l.DefenseKillCount,
                             UserId = l.UserId
                         }).FirstOrDefaultAsync();
-                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.LootRunPoint > ownValue.Value || (l.LootRunPoint == ownValue.Value && l.UserId < req.Data) )
-                    .OrderByDescending(l => l.LootRunPoint).ThenBy(l => l.Id).CountAsync()) + 1;
+                ownValue.OwnRanked = (await _context.PlayerBaseInfo.Where(l => l.DefenseKillCount > ownValue.Value || (l.DefenseKillCount == ownValue.Value && l.UserId < req.Data) )
+                    .OrderByDescending(l => l.DefenseKillCount).ThenBy(l => l.Id).CountAsync()) + 1;
                 
                 response.Data = ownValue;
 
@@ -3296,6 +3287,7 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "GetPlayerTroopInfo");
             try
             {
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerTroops == null)
                 {
@@ -3304,7 +3296,11 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                
                 response.Data = _mapper.Map<PlayerTroopInfoDTO>(playerTroops);
+                playerBaseInfo.Power += response.Data.TroopCount * 42;
+                _context.Update(playerBaseInfo);
+                await _context.SaveChangesAsync();
                 response.Data.OutsideTroops = await _context.Attack
                     .Where(l => l.AttackerUserId == user.Id && l.IsActive).SumAsync(l => l.AttackerTroopCount);
                 response.SetSuccess();
