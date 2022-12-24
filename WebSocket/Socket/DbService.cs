@@ -148,6 +148,10 @@ namespace WebSocket.Socket
                 userActivity.LastNewsCheck = DateTimeOffset.UtcNow;
                 await _context.SaveChangesAsync();
                 Player.SendNewNews(userId, newsQuery);
+                if (newsQuery.Any(l=>l.Seen==false))
+                {
+                    Player.SendNewsRefreshNeeded(userId);
+                }
                 if (g == null)
                 {
                     _context.Dispose();
