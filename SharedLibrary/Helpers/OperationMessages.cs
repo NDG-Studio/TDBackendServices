@@ -33,6 +33,7 @@ namespace SharedLibrary.Helpers
         public const string HealingMustBeDone = "İyileştirme işleminin bitmesini bekleyin!";
         public const string UpgradingMustBeDone = "Bina yükseltme işleminin bitmesini bekleyin!";
         public const string ItemNotUsable = "Bu item kullanılamaz!";
+        public const string ItemNotUsableWhileAttack = "Aktif attack veya rally işlemi varken bu item kullanılamaz!";
         public const string MaxLevel = "Tebrikler son seviyedesiniz.";
         public const string InputError = "Beklenen input değerine ulaşılamadı!!";
         public const string PlayerAllreadyGangMember = "Oyuncu zaten bir çete üyesi!!";
@@ -50,5 +51,6 @@ namespace SharedLibrary.Helpers
         public const string GangCapacityFull = "Gang kapasitesi dolu!";
         public const string TargetHasCityShield = "Saldırmak istediğiniz kullanıcının kalkanı var. Saldıramazsınız!!";
         public const string CantJoinRally = "Bu rallye artık katılamazsınız!";
+        public const string CantJoinGangWithApplication = "Bu gang sadece davet ile üye alıyor!";
     }
 }

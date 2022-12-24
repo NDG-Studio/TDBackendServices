@@ -396,39 +396,46 @@ public class AttackHelper
                                                                 attackerPlayerPrison.PrisonLevel.MaxPrisonerCount);
                             
                             _context.SaveChanges();
-                            var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
-                            {
-                                Data = new AttackInfoDTO()
-                                {
-                                    IsActive = rS.IsActive,
-                                    ComeBackDate = rS.ComeBackDate.ToString(),
-                                    Id = rS.Id,
-                                    ArriveDate = rS.ArriveDate.ToString(),
-                                    ResultData = rS.ResultData,
-                                    WinnerSide = rS.WinnerSide,
-                                    AttackerHeroId = rS.AttackerHeroId,
-                                    AttackerTroopCount = rS.AttackerTroopCount,
-                                    AttackerUserId = rS.AttackerUserId,
-                                    DefenserUserId = rS.TargetUserId,
-                                    AttackerUsername = attackerPlayerBaseInfo.Username,
-                                    DefenserUsername = defenserPlayerBaseInfo.Username,
-                                    AttackerAvatarId = attackerPlayerBaseInfo.AvatarId??0,
-                                    DefenserAvatarId = defenserPlayerBaseInfo.AvatarId??0,
-                                    AttackerPower = resData.AttackerPower,
-                                    DefenserPower = resData.DefenserPower
-                                },
-                                Info = new InfoDto()
-                                {
-                                    Ip = "",
-                                    AppVersion = "",
-                                    DeviceId = "",
-                                    DeviceModel = "",
-                                    DeviceType = "",
-                                    OsVersion = "",
-                                    UserId = 111
-                                }
-                            }).Result;
-                            Console.WriteLine("238---"+ccc.Message);
+
+                            #region ComeBackNews Removed
+
+                            // var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
+                            // {
+                            //     Data = new AttackInfoDTO()
+                            //     {
+                            //         IsActive = rS.IsActive,
+                            //         ComeBackDate = rS.ComeBackDate.ToString(),
+                            //         Id = rS.Id,
+                            //         ArriveDate = rS.ArriveDate.ToString(),
+                            //         ResultData = rS.ResultData,
+                            //         WinnerSide = rS.WinnerSide,
+                            //         AttackerHeroId = rS.AttackerHeroId,
+                            //         AttackerTroopCount = rS.AttackerTroopCount,
+                            //         AttackerUserId = rS.AttackerUserId,
+                            //         DefenserUserId = rS.TargetUserId,
+                            //         AttackerUsername = attackerPlayerBaseInfo.Username,
+                            //         DefenserUsername = defenserPlayerBaseInfo.Username,
+                            //         AttackerAvatarId = attackerPlayerBaseInfo.AvatarId??0,
+                            //         DefenserAvatarId = defenserPlayerBaseInfo.AvatarId??0,
+                            //         AttackerPower = resData.AttackerPower,
+                            //         DefenserPower = resData.DefenserPower
+                            //     },
+                            //     Info = new InfoDto()
+                            //     {
+                            //         Ip = "",
+                            //         AppVersion = "",
+                            //         DeviceId = "",
+                            //         DeviceModel = "",
+                            //         DeviceType = "",
+                            //         OsVersion = "",
+                            //         UserId = 111
+                            //     }
+                            // }).Result;
+                            
+
+                            #endregion
+                            
+                            Console.WriteLine("437---");
                             
                         }
 

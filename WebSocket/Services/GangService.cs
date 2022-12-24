@@ -432,7 +432,8 @@ namespace WebSocket.Services
                     c.Power = playerBaseInfo.Power;
                     c.MemberType.Gang.Power =
                         _context.GangMember
-                            .Where(l => l.MemberType.GangId == c.MemberType.GangId).Sum(l=>l.Power);
+                            .Where(l => l.MemberType.GangId == c.MemberType.GangId && l.UserId!=c.UserId).Sum(l=>l.Power);
+                    c.MemberType.Gang.Power += c.Power;
                 }
 
                 if (owner.UserId==user.Id)
@@ -629,9 +630,9 @@ namespace WebSocket.Services
                         return response;
                     }
 
-                    _context.Remove(_context.ChatRoomMember
+                    _context.Remove(await _context.ChatRoomMember
                         .Where(l => l.UserId == kickedBoy.UserId &&
-                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat));
+                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat).FirstOrDefaultAsync());
                     gangMember.MemberType.Gang.MemberCount-- ;
                     _context.Remove(kickedBoy);
                     await _context.SaveChangesAsync();
@@ -916,7 +917,41 @@ namespace WebSocket.Services
                 {
                     if (gang.Capacity>gang.MemberCount)
                     {
-                        //todo: burada dogrudan eklenecek
+                        var gangMember = await _context.GangMember
+                            .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                            .Where(l => l.UserId == user.Id && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                            .FirstOrDefaultAsync();
+                        if (gangMember != null)
+                        {
+                            response.SetError(OperationMessages.PlayerAllreadyGangMember);
+                            info.AddInfo(OperationMessages.PlayerAllreadyGangMember);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
+                
+                        var memberTypeId = await _context.MemberType.Where(l => l.GangId == gang.Id && l.Name == "Member")
+                            .FirstOrDefaultAsync();
+                        if (memberTypeId==null)
+                        {
+                            response.SetError(OperationMessages.GangInviteTimeout);
+                            info.AddInfo(OperationMessages.GangInviteTimeout);
+                            _logger.LogInformation(info.ToString());
+                            return response; 
+                        }
+                        await _context.AddAsync(new GangMember()
+                        {
+                            Power = 0,
+                            UserName = user.Username,
+                            UserId = user.Id,
+                            MemberTypeId = memberTypeId.Id
+                        });
+                        memberTypeId.Gang.MemberCount++;
+                        await _context.SaveChangesAsync();
+                        response.SetSuccess();
+                        info.AddInfo(OperationMessages.Success);
+                        _logger.LogInformation(info.ToString());
+
+
                     }
                     else
                     {
@@ -926,7 +961,14 @@ namespace WebSocket.Services
                         return response;
                     }
                 }
-                
+
+                if (gang.GangEntryTypeId==(int)GangEntryType.InviteOnly)
+                {
+                    response.SetError(OperationMessages.CantJoinGangWithApplication);
+                    info.AddInfo(OperationMessages.CantJoinGangWithApplication);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
 
                 var now = DateTimeOffset.UtcNow;
                 var exist = await _context.GangApplication.Where(l =>

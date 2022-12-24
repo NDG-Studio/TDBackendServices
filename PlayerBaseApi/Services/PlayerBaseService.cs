@@ -1781,7 +1781,15 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
 
-
+                if ((await _context.Attack.Where(l=>l.AttackerHeroId==playerHero.HeroId && l.AttackerUserId==playerHero.UserId && l.IsActive).AnyAsync())||
+                    (await _context.RallyPart.Where(l=>l.HeroId==playerHero.HeroId && l.UserId==playerHero.UserId && l.IsActive).AnyAsync())
+                    )
+                {
+                    response.SetError(OperationMessages.PlayerHeroBusy);
+                    info.AddInfo(OperationMessages.PlayerHeroBusy);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
 
                 var lootLevelId = await _context.PlayerBasePlacement
                     .Where(l => l.UserId == playerHero.UserId && l.BuildingTypeId == 8)//8 watch tower
@@ -2432,7 +2440,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-
+                
                 Buff buff = new Buff();
                 switch (playerItem.Item.ItemTypeId)
                 {
@@ -2458,6 +2466,19 @@ namespace PlayerBaseApi.Services
                         playerBaseInfo.Fuel += req.Data.Count * playerItem.Item.Value1 ?? 0;
                         break;
                     case ((int)ItemTypeEnum.CityShield):
+                        if (
+                        await _context.Attack.Where(l=>l.IsActive && (l.AttackerUserId==user.Id) || (l.TargetUserId==user.Id && l.ResultData == null)).AnyAsync()
+                        ||
+                        await _context.RallyPart.Where(l=>l.IsActive && (l.UserId==user.Id)).AnyAsync()
+                        ||
+                        await _context.Rally.Where(l=>l.IsActive && (l.TargetUserId==user.Id) && (l.WinnerSide!=null)).AnyAsync()
+                        )
+                        {
+                            response.SetError(OperationMessages.ItemNotUsableWhileAttack);
+                            info.AddInfo(OperationMessages.ItemNotUsableWhileAttack);
+                            _logger.LogInformation(info.ToString());
+                            return response;
+                        }
                         buff = new Buff()
                         {
                             Name = "city-shield-" + user.Username,
@@ -2547,7 +2568,14 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "CollectTroopsFromBarracks");
             try
             {
+                var cou =await _context.PlayerTroop.Where(l => l.UserId == user.Id && l.TroopCount == 0).CountAsync();
+                if (cou>1)
+                {
+                    _context.Remove(await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync());
+                    await _context.SaveChangesAsync();
+                }
                 var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+
                 if ((DateTimeOffset.Now - playerTroops.LastTroopCollect).TotalMilliseconds < (new TimeSpan(0, 1, 0)).TotalMilliseconds)
                 {
                     response.SetError(OperationMessages.NoChanges);
@@ -3298,7 +3326,7 @@ namespace PlayerBaseApi.Services
                 }
                 
                 response.Data = _mapper.Map<PlayerTroopInfoDTO>(playerTroops);
-                playerBaseInfo.Power += response.Data.TroopCount * 42;
+                playerBaseInfo.Power = response.Data.TroopCount * 42;
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
                 response.Data.OutsideTroops = await _context.Attack
