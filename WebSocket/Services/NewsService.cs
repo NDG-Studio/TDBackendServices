@@ -111,22 +111,22 @@ namespace WebSocket.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.SenderUserId,
                                 ProcessDate = req.ArrivedDate,
                                 TCoord = DbService.GetUserCoordinate(req.TargetUserId).Result.Data,
                                 TUsername = req.TargetUserName,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.TargetUserId,
                                 Id = req.Id.ToString(),
@@ -143,22 +143,22 @@ namespace WebSocket.Services
                                  IsActive = true,
                                  TypeId = (int)NewsType.Scout,
                                  ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
-                                 AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                 AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                      .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                 AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                      .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                  AUsername = req.SenderUserName,
-                                 AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                 AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                      .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                  AUserId = req.SenderUserId,
                                  ProcessDate = req.ArrivedDate,
                                  TCoord = DbService.GetUserCoordinate(req.TargetUserId).Result.Data,
                                  TUsername = req.TargetUserName,
-                                 TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                 TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                      .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                 TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                      .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                 TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                      .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                  TUserId = req.TargetUserId,
                                  Id = req.Id.ToString(),
@@ -179,12 +179,12 @@ namespace WebSocket.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.SenderUserId,
                                 ProcessDate = DateTimeOffset.UtcNow,
@@ -194,11 +194,11 @@ namespace WebSocket.Services
                                 TWall = scoutedData.WallLevel,
                                 TUsername = req.TargetUserName,
                                 TUserId = req.TargetUserId,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserAvatar = req.SenderAvatarId,
                                 TUserAvatar = req.TargetAvatarId
@@ -217,12 +217,12 @@ namespace WebSocket.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Scout,
                                 ACoord = DbService.GetUserCoordinate(req.SenderUserId).Result.Data,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.SenderUserName,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.SenderUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.SenderUserId,
                                 ProcessDate = DateTimeOffset.UtcNow,
@@ -232,11 +232,11 @@ namespace WebSocket.Services
                                 TWall = scoutedData.WallLevel,
                                 TUsername = req.TargetUserName,
                                 TUserId = req.TargetUserId,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.TargetUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserAvatar = req.SenderAvatarId,
                                 TUserAvatar = req.TargetAvatarId
@@ -279,22 +279,22 @@ namespace WebSocket.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.DefenserUserId,
                                 Id = req.Id.ToString(),
@@ -312,22 +312,22 @@ namespace WebSocket.Services
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 TUserId = req.DefenserUserId,
                                 Id = req.Id.ToString(),
@@ -350,12 +350,12 @@ namespace WebSocket.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
                                 ADead = resultData.AttackersDeadTroop,
@@ -373,11 +373,11 @@ namespace WebSocket.Services
                                 TUsername = resultData.TargetUsername,
                                 TScrap = resultData.DefenserScrap,
                                 VictorySide = req.WinnerSide,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
@@ -399,12 +399,12 @@ namespace WebSocket.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
                                 ADead = resultData.AttackersDeadTroop,
@@ -422,11 +422,11 @@ namespace WebSocket.Services
                                 TUsername = resultData.TargetUsername,
                                 TScrap = resultData.DefenserScrap,
                                 VictorySide = req.WinnerSide,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
@@ -450,12 +450,12 @@ namespace WebSocket.Services
                                 TypeId = (int)NewsType.Attack,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
-                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                                 AUsername = req.AttackerUsername,
-                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId)
+                                AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
                                 ADead = resultData2.AttackersDeadTroop,
@@ -473,11 +473,11 @@ namespace WebSocket.Services
                                 TUsername = resultData2.TargetUsername,
                                 TScrap = resultData2.DefenserScrap,
                                 VictorySide = req.WinnerSide,
-                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
-                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangId = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId)
+                                TGangName = _context.GangMember.Where(l=>l.UserId==req.DefenserUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,

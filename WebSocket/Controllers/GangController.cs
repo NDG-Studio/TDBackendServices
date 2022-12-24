@@ -330,6 +330,28 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.KickMember(req, user);
+    }    
+    
+    /// <summary>
+    /// Destroy yetkisi olan gangmemberin gangi yok etmesini icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest 
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("DestroyGang")]
+    public async Task<TDResponse> DestroyGang([FromBody] BaseRequest req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.DestroyGang(req, user);
     }
     
     

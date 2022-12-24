@@ -192,18 +192,18 @@ namespace WebSocket.Socket
                         IsActive = true,
                         TypeId = (int)NewsType.Scout,
                         ACoord = DbService.GetUserCoordinate(scout.SenderUserId).Result.Data,
-                        AGangId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId)
+                        AGangId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId && l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         AUsername = scout.SenderUserName,
-                        AGangName = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId)
+                        AGangName = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId &&l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         AUserId = scout.SenderUserId,
                         ProcessDate = scout.ArrivedDate,
                         TCoord = DbService.GetUserCoordinate(scout.TargetUserId).Result.Data,
                         TUsername = scout.TargetUserName,
-                        TGangId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId)
+                        TGangId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId && l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                        TGangName = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId)
+                        TGangName = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         TUserId = scout.TargetUserId,
                         Id = scout.Id.ToString()
@@ -227,18 +227,18 @@ namespace WebSocket.Socket
                         IsActive = true,
                         TypeId = (int)NewsType.Attack,
                         ACoord = DbService.GetUserCoordinate(attack.AttackerUserId).Result.Data,
-                        AGangId = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId)
+                        AGangId = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         AUsername = attack.AttackerUsername,
-                        AGangName = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId)
+                        AGangName = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         AUserId = attack.AttackerUserId,
                         ProcessDate = attack.ArriveDate,
                         TCoord = DbService.GetUserCoordinate(attack.DefenserUserId).Result.Data,
                         TUsername = attack.DefenserUsername,
-                        TGangId = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId)
+                        TGangId = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
-                        TGangName = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId)
+                        TGangName = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         TUserId = attack.DefenserUserId,
                         Id = attack.Id.ToString(),
@@ -339,7 +339,7 @@ namespace WebSocket.Socket
                 var globalChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat && l.IsActive).FirstOrDefaultAsync();
                 var serverChat = await _context.ChatRoom.Where(l => l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat && l.IsActive).FirstOrDefaultAsync();
                 var raceChatId = await _context.ChatRoom.Where(l => (player.IsApe ? (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ApeChat) : (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.HumanChat)) && l.IsActive).FirstOrDefaultAsync();
-                var gangId = await _context.GangMember.Include(l => l.MemberType).ThenInclude(l => l.Gang).Where(l => l.UserId == player.UniqueId && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                var gangId = await _context.GangMember.Include(l => l.MemberType).ThenInclude(l => l.Gang).Where(l => l.UserId == player.UniqueId && l.MemberType.IsActive && l.MemberType.Gang.IsActive&& l.IsActive)
                     .Select(l => l.MemberType.GangId.ToString()).FirstOrDefaultAsync();
                 if (gangId != null)
                 {

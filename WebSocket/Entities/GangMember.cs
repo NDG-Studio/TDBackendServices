@@ -12,6 +12,7 @@ namespace WebSocket.Entities
         public string UserName { get; set; }
         public long Power { get; set; } = 0;
         public Guid MemberTypeId { get; set; }
+        public bool IsActive { get; set; } = true;
 
 
         [ForeignKey("MemberTypeId")]

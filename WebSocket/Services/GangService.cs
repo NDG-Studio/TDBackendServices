@@ -42,7 +42,7 @@ namespace WebSocket.Services
                     return response;
                 }
                 var query = await _context.GangMember
-                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -201,7 +201,7 @@ namespace WebSocket.Services
                     response.SetSuccess();
                     return response;
                 }
-                var query = await _context.GangMember.Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                var query = await _context.GangMember.Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (query != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -319,8 +319,8 @@ namespace WebSocket.Services
                 }
                 var query = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
-                var queryForInvitation = await _context.GangMember.Where(l => l.UserId == req.Data && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
+                var queryForInvitation = await _context.GangMember.Where(l => l.UserId == req.Data && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (queryForInvitation != null)
                 {
                     response.SetError(OperationMessages.PlayerAllreadyGangMember);
@@ -415,7 +415,7 @@ namespace WebSocket.Services
                 var isOwnGang = req.Data == null;
                 var c = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (c == null)
                 {
                     response.Data = null;
@@ -424,7 +424,7 @@ namespace WebSocket.Services
                 }
                 var owner = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (c.UserId==user.Id)
                 {
                     c.UserName = user.Username;
@@ -432,7 +432,7 @@ namespace WebSocket.Services
                     c.Power = playerBaseInfo.Power;
                     c.MemberType.Gang.Power =
                         _context.GangMember
-                            .Where(l => l.MemberType.GangId == c.MemberType.GangId && l.UserId!=c.UserId).Sum(l=>l.Power);
+                            .Where(l => l.MemberType.GangId == c.MemberType.GangId && l.UserId!=c.UserId&& l.IsActive).Sum(l=>l.Power);
                     c.MemberType.Gang.Power += c.Power;
                 }
 
@@ -498,7 +498,7 @@ namespace WebSocket.Services
                 var userId = req.Data;
                 var c = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == userId && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 if (c == null)
                 {
                     response.Data = null;
@@ -507,7 +507,7 @@ namespace WebSocket.Services
                 }
                 var owner = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == c.MemberType.Gang.OwnerId && l.MemberType.Gang.IsActive&& l.IsActive).FirstOrDefaultAsync();
                 response.Data = new GangInfo()
                 {
                     Id = c.MemberType.Gang.Id,
@@ -547,7 +547,7 @@ namespace WebSocket.Services
                 var gangGuid = new Guid(req.Data.Id);
                 var gangMember = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.MemberType.Gang.Id==gangGuid).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.MemberType.Gang.Id==gangGuid&& l.IsActive).FirstOrDefaultAsync();
                 if (gangMember == null)
                 {
                     response.SetError(OperationMessages.DbItemNotFound);
@@ -607,7 +607,7 @@ namespace WebSocket.Services
             {
                 var gangMember = await _context.GangMember
                     .Include(l => l.MemberType).ThenInclude(l => l.Gang)
-                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive ).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.IsActive).FirstOrDefaultAsync();
                 
                 if (gangMember == null)
                 {
@@ -620,7 +620,7 @@ namespace WebSocket.Services
                 if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanKick || gangMember.UserId == req.Data)
                 {
                     var kickedBoy = await _context.GangMember
-                        .Where(l => l.UserId == req.Data && l.MemberType.Name != "Owner")
+                        .Where(l => l.UserId == req.Data && l.MemberType.Name != "Owner"&& l.IsActive)
                         .FirstOrDefaultAsync();
                     if (kickedBoy == null)
                     {
@@ -630,11 +630,73 @@ namespace WebSocket.Services
                         return response;
                     }
 
-                    _context.Remove(await _context.ChatRoomMember
+                    kickedBoy.IsActive = false;
+                    var chatRoomMember = await _context.ChatRoomMember
                         .Where(l => l.UserId == kickedBoy.UserId &&
-                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat).FirstOrDefaultAsync());
+                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat && l.IsActive).FirstOrDefaultAsync();
+                    if (chatRoomMember!=null)
+                    {
+                        chatRoomMember.IsActive = false;
+                    }
                     gangMember.MemberType.Gang.MemberCount-- ;
-                    _context.Remove(kickedBoy);
+                    await _context.SaveChangesAsync();
+                    response.SetSuccess();
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                
+                response.SetError(OperationMessages.PlayerNotHavePermission);
+                info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                _logger.LogInformation(info.ToString());
+                return response;
+                
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+        public async Task<TDResponse> DestroyGang(BaseRequest req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "DestroyGang");
+            try
+            {
+                var gangMember = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive&& l.IsActive ).FirstOrDefaultAsync();
+                
+                if (gangMember == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanDestroyGang)
+                {
+                    var chatRoom=await _context.ChatRoomMember
+                        .Where(l => l.UserId == user.Id &&
+                                    l.ChatRoom.ChatRoomTypeId == (int)ChatRoomTypeEnum.GangChat).Select(l => l.ChatRoom)
+                        .FirstOrDefaultAsync();
+                    chatRoom.IsActive = false;
+                    var chatRoomMembers =
+                        await _context.ChatRoomMember.Where(l => l.ChatRoomId == chatRoom.Id).ToListAsync();
+                    chatRoomMembers.ForEach(l=>l.IsActive=false);
+
+                    gangMember.MemberType.Gang.IsActive = false;
+                    var gangMembersTypes =await _context.MemberType.Where(l => l.GangId == gangMember.MemberType.GangId)
+                        .ToListAsync();
+                    gangMembersTypes.ForEach(l=>l.IsActive=false);
+                    var gangMembers = await _context.GangMember
+                        .Where(l => l.MemberType.GangId == gangMember.MemberType.GangId).ToListAsync();
+                    gangMembers.ForEach(l=>l.IsActive=false);
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
                     _logger.LogInformation(info.ToString());
@@ -673,7 +735,7 @@ namespace WebSocket.Services
                 var gangId = new Guid(req.Data);
                 var query = await _context.GangMember
                     .Include(l => l.MemberType)
-                    .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive && l.MemberType.Name != "Owner")
+                    .Where(l => l.MemberType.Gang.Id == gangId && l.MemberType.Gang.IsActive && l.MemberType.Name != "Owner"&& l.IsActive)
                     .OrderByDescending(l => l.Power).ThenBy(l => l.UserName)
                     .Select(l => new GangMemberInfo()
                     {
@@ -703,7 +765,7 @@ namespace WebSocket.Services
             {
                 var gangId =await _context.GangMember
                     .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
-                    .Where(l => l.UserId == user.Id).Select(l=>l.MemberType.Gang.Id).FirstOrDefaultAsync();
+                    .Where(l => l.UserId == user.Id&& l.IsActive).Select(l=>l.MemberType.Gang.Id).FirstOrDefaultAsync();
                 var query = await _context.MemberType
                     .Where(l => l.Gang.Id == gangId && l.Gang.IsActive)
                     .Select(l => new MemberTypeDTO()
@@ -772,7 +834,7 @@ namespace WebSocket.Services
             try
             {
                 var gangId = await _context.GangMember.Include(l=>l.MemberType)
-                    .Where(l => l.UserId == user.Id).Select(l => l.MemberType.GangId)
+                    .Where(l => l.UserId == user.Id&& l.IsActive).Select(l => l.MemberType.GangId)
                     .FirstOrDefaultAsync();
                 if (gangId==null)
                 {
@@ -830,7 +892,7 @@ namespace WebSocket.Services
                         .Where(l => l.Id == memberTypeId).FirstOrDefaultAsync();
 
                     var gangMember =
-                        await _context.GangMember.Where(l => l.UserId == changed.UserId).FirstOrDefaultAsync();
+                        await _context.GangMember.Where(l => l.UserId == changed.UserId&& l.IsActive).FirstOrDefaultAsync();
                     if (query!=null&& gangMember!=null)
                     {
                         gangMember.MemberTypeId = memberTypeId;
@@ -855,7 +917,7 @@ namespace WebSocket.Services
             {
                 var canManageMoney = await _context.GangMember
                     .Include(l=>l.MemberType)
-                    .Where(l => l.UserId == user.Id && l.MemberType.IsActive)
+                    .Where(l => l.UserId == user.Id && l.MemberType.IsActive&& l.IsActive)
                     .Select(l=>l.MemberType.CanDistributeMoney)
                     .FirstOrDefaultAsync();
                 if (!canManageMoney)
@@ -919,7 +981,7 @@ namespace WebSocket.Services
                     {
                         var gangMember = await _context.GangMember
                             .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
-                            .Where(l => l.UserId == user.Id && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                            .Where(l => l.UserId == user.Id && l.MemberType.IsActive && l.MemberType.Gang.IsActive&& l.IsActive)
                             .FirstOrDefaultAsync();
                         if (gangMember != null)
                         {
@@ -1059,7 +1121,7 @@ namespace WebSocket.Services
                 
                 var gangMember = await _context.GangMember
                     .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
-                    .Where(l => l.UserId == gangApp.UserId && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                    .Where(l => l.UserId == gangApp.UserId && l.MemberType.IsActive && l.MemberType.Gang.IsActive&& l.IsActive)
                     .FirstOrDefaultAsync();
                 if (gangMember != null)
                 {
@@ -1185,7 +1247,7 @@ namespace WebSocket.Services
             {
                 var gangId = await _context.GangMember
                     .Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
-                    .Where(l => l.UserId == user.Id && l.MemberType.Gang.IsActive && l.MemberType.IsActive)
+                    .Where(l => l.UserId == user.Id&& l.IsActive && l.MemberType.Gang.IsActive && l.MemberType.IsActive)
                     .Select(l => l.MemberType.GangId).FirstOrDefaultAsync();
                 response.Data = new Paging<GangApplicationDTO>();
                 response.Data.PageIndex = req.Data;
