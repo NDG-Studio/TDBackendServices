@@ -2556,6 +2556,38 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        public async Task<TDResponse<List<long>>> GetCityShields(BaseRequest<List<long>> req)
+        {
+            TDResponse<List<long>> response = new TDResponse<List<long>>();
+            var info = InfoDetail.CreateInfo(req, "UseItem");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var arr = req.Data.ToArray();
+                var now = DateTimeOffset.UtcNow;
+                response.Data = await _context.PlayerBuff
+                    .Where(l => l.EndDate > now && l.Buff.CityShieldActive && arr.Contains(l.UserId))
+                    .Select(l => l.UserId).ToListAsync();
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
 
         #endregion
 

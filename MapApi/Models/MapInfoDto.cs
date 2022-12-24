@@ -11,5 +11,6 @@
         public long UserId { get; set; }
         public int AreaId { get; set; }
         public int BaseLevel { get; set; }
+        public bool ActiveShield { get; set; } = false;
     }
 }

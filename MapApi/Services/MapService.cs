@@ -329,7 +329,14 @@ namespace MapApi.Services
                 l.UserId != user.Id
                 );
 
+                
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
+                var shieldRes = await GetCityShields(response.Data.Select(l => l.UserId).ToList());
+                if (!shieldRes.HasError)
+                {
+                    response.Data.ForEach(l => l.ActiveShield = shieldRes.Data.Contains(l.UserId));
+                }
+                
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -476,6 +483,44 @@ namespace MapApi.Services
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
                     var res = JsonConvert.DeserializeObject<TDResponse<PlayerBaseInfoDTO>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }        
+        
+        private static async Task<TDResponse<List<long>>> GetCityShields(List<long> userIdList)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Environment.GetEnvironmentVariable("PlayerbaseUrl") + "/api/playerbase/GetCityShields"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<List<long>>()
+                        {
+                            Data = userIdList,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_mapapi_",
+                                OsVersion = "_mapapi_",
+                                AppVersion = "_mapapi_",
+                                DeviceModel = "_mapapi_",
+                                DeviceType = "_mapapi_",
+                                UserId = 0,
+                                Ip = "_mapapi_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<List<long>>>(content);
                     return res;
                 }
                 return null;

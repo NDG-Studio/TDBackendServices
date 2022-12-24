@@ -602,7 +602,7 @@ namespace WebSocket.Services
         public async Task<TDResponse> KickMember(BaseRequest<long> req, UserDto user)
         {
             TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "EditGang");
+            var info = InfoDetail.CreateInfo(req, "KickMember");
             try
             {
                 var gangMember = await _context.GangMember
@@ -617,7 +617,7 @@ namespace WebSocket.Services
                     return response;
                 }
                 
-                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanKick)
+                if (gangMember.MemberType.Name=="Owner" || gangMember.MemberType.CanKick || gangMember.UserId == req.Data)
                 {
                     var kickedBoy = await _context.GangMember
                         .Where(l => l.UserId == req.Data && l.MemberType.Name != "Owner")

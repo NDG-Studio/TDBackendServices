@@ -76,5 +76,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<LeaderBoardItem>> GetDefenseKillRankedByUserId(BaseRequest<long> req);
         Task<TDResponse<int?>> GetFirstTimeTutorial(BaseRequest<string> req, UserDto user);
         Task<TDResponse> FirstTimeTutorialDone(BaseRequest<string> req, UserDto user);
+        Task<TDResponse<List<long>>> GetCityShields(BaseRequest<List<long>> req);
     }
 }

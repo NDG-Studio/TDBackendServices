@@ -86,6 +86,14 @@ namespace PlayerBaseApi.Controllers
             return await _playerBaseService.UpdateOrCreatePlayerBaseInfo(req);
         }
 
+        //[OnlyApps]
+        [HttpPost("GetCityShields")]
+        public async Task<TDResponse<List<long>>> GetCityShields([FromBody] BaseRequest<List<long>> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetCityShields(req);
+        }
+
         [LoginRequired]
         [HttpPost("UpgradeBuildingInfo")]
         public async Task<TDResponse<BuildingUpgradeTimeDTO>> UpgradeBuildingInfo([FromBody] BaseRequest<int> req)
