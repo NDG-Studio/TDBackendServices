@@ -8,6 +8,7 @@
         GangInvitation=4,
         Scout=5,
         Attack=6,
-        Rally=7
+        Rally=7,
+        GangApplicationDone=8
     }
 }

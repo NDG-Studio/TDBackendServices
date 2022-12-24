@@ -1098,6 +1098,26 @@ namespace WebSocket.Services
                 _context.Remove(gangApp);
                 await _context.SaveChangesAsync();
 
+                var acceptNews = new News()
+                {
+                    Title = "Your Gang Application Has Been Accepted",
+                    Detail = "-",
+                    Date = DateTimeOffset.Now,
+                    AGangId = memberTypeId.Gang.Id.ToString(),
+                    AGangAvatarId = memberTypeId.Gang.AvatarId,
+                    AGangName = $"[{memberTypeId.Gang.ShortName}]{memberTypeId.Gang.Name}",
+                    UserId = gangApp.UserId,
+                    AUserId = user.Id,
+                    AUsername = user.Username,
+                    AUserAvatar = GetOtherPlayersBaseInfo(user.Id).Result.AvatarId ?? 0,
+                    IsActive = true,
+                    Seen = false,
+                    TypeId = (int)NewsType.GangApplicationDone,
+                };
+                await _context.AddAsync(acceptNews);
+                await _context.SaveChangesAsync();
+                Player.SendNewsRefreshNeeded(gangApp.UserId);
+
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
