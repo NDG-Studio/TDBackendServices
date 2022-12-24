@@ -38,6 +38,7 @@ public class AttackHelper
                     ResultData = attack.ResultData,
                     WinnerSide = attack.WinnerSide,
                     AttackerHeroId = attack.AttackerHeroId,
+                    AttackerHeroName= _context.Hero.Where(l=>l.Id==attack.AttackerHeroId).Select(l=>l.Name).FirstOrDefault()??"",
                     AttackerTroopCount = attack.AttackerTroopCount,
                     AttackerUserId = attack.AttackerUserId,
                     DefenserUserId = attack.TargetUserId,
@@ -148,6 +149,7 @@ public class AttackHelper
                                         ResultData = _dbEnt.ResultData,
                                         WinnerSide = _dbEnt.WinnerSide,
                                         AttackerHeroId = _dbEnt.AttackerHeroId,
+                                        AttackerHeroName= _context.Hero.Where(l=>l.Id==_dbEnt.AttackerHeroId).Select(l=>l.Name).FirstOrDefault()??"",
                                         AttackerTroopCount = _dbEnt.AttackerTroopCount,
                                         AttackerUserId = _dbEnt.AttackerUserId,
                                         AttackerUsername = _context.PlayerBaseInfo
@@ -330,6 +332,7 @@ public class AttackHelper
                                         ResultData = dbEnt.ResultData,
                                         WinnerSide = dbEnt.WinnerSide,
                                         AttackerHeroId = dbEnt.AttackerHeroId,
+                                        AttackerHeroName= _context.Hero.Where(l=>l.Id==dbEnt.AttackerHeroId).Select(l=>l.Name).FirstOrDefault()??"",
                                         AttackerTroopCount = dbEnt.AttackerTroopCount,
                                         AttackerUserId = dbEnt.AttackerUserId,
                                         AttackerUsername = _context.PlayerBaseInfo

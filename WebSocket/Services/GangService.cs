@@ -159,6 +159,9 @@ namespace WebSocket.Services
                     await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
                     await CreateGangChat(new BaseRequest<Guid>() { Info = req.Info, Data = gang.Id }, user);
+                    response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
+                    _logger.LogInformation(info.ToString());
                 }
             }
             catch (Exception e)
@@ -251,6 +254,8 @@ namespace WebSocket.Services
                 await _context.SaveChangesAsync();
                 await JoinGangChat(new BaseRequest<Guid>() { Info = req.Info, Data = invitedGang.Id }, user);
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
                 
             }
             catch (Exception e)
@@ -364,6 +369,8 @@ namespace WebSocket.Services
                 await _context.AddAsync(gangInvitations);
                 await _context.SaveChangesAsync();
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
 
 
                 Player.SendNewsRefreshNeeded(req.Data);
@@ -480,6 +487,8 @@ namespace WebSocket.Services
                 };
 
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -529,6 +538,8 @@ namespace WebSocket.Services
                 };
 
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -641,6 +652,7 @@ namespace WebSocket.Services
                     gangMember.MemberType.Gang.MemberCount-- ;
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -699,6 +711,7 @@ namespace WebSocket.Services
                     gangMembers.ForEach(l=>l.IsActive=false);
                     await _context.SaveChangesAsync();
                     response.SetSuccess();
+                    info.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -900,6 +913,8 @@ namespace WebSocket.Services
                     }
                 }
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -949,6 +964,8 @@ namespace WebSocket.Services
                     }
                 }
                 response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
             {
@@ -1012,6 +1029,7 @@ namespace WebSocket.Services
                         response.SetSuccess();
                         info.AddInfo(OperationMessages.Success);
                         _logger.LogInformation(info.ToString());
+                        return response;
 
 
                     }
@@ -1064,10 +1082,10 @@ namespace WebSocket.Services
                     Username = user.Username,
                     Coordinate = coord,
                     UserAvatarId = userInfo?.AvatarId ?? 0,
-                    Rank1 = baseLevelRanked.OwnRanked.ToString() + "/" +baseLevelRanked.Value.ToString(),
-                    Rank2 = killTroopRanked.OwnRanked.ToString() + "/" +killTroopRanked.Value.ToString(),
-                    Rank3 = lootedScrapRanked.OwnRanked.ToString() + "/" +lootedScrapRanked.Value.ToString(),
-                    Rank4 = defenseKill.OwnRanked.ToString() + "/" +defenseKill.Value.ToString(),
+                    Rank1 = baseLevelRanked.OwnRanked.ToString(),
+                    Rank2 = killTroopRanked.OwnRanked.ToString(),
+                    Rank3 = lootedScrapRanked.OwnRanked.ToString(),
+                    Rank4 = defenseKill.OwnRanked.ToString(),
                 };
                 var allExist = await _context.GangApplication.Where(l => l.UserId == user.Id && l.GangId == gangId)
                     .ToListAsync();
@@ -1203,6 +1221,7 @@ namespace WebSocket.Services
                 response.Data.PageIndex = req.Data;
                 
                 response.Data.PagingData = await _context.Gang
+                    .Where(l=>l.IsActive)
                     .OrderByDescending(l => l.Name).ThenBy(l => l.Id)
                     .Skip(req.Data*10)
                     .Take(10)

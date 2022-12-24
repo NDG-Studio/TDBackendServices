@@ -10,5 +10,6 @@
         public int TalentPoint { get; set; }
         public int SkillPoint { get; set; }
         public string? EndDate { get; set; }
+        public BuffDTO TotalBuff { get; set; }
     }
 }

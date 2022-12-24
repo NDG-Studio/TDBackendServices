@@ -411,6 +411,9 @@ namespace WebSocket.Socket
             {
                 var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.ActiveInteraction);
                 m.AddModel(message);
+                Console.WriteLine(message.ATroop);
+                Console.WriteLine(message.AHeroId);
+                Console.WriteLine(message.AHeroName);
                 ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
             }
             catch (Exception e)

@@ -112,6 +112,8 @@ namespace WebSocket.Socket
                         GainedResources = l.GainedResources,
                         ADead = l.ADead,
                         ACoord = l.ACoord,
+                        AHeroId = l.AHeroId,
+                        AHeroName = l.AHeroName,
                         TCoord = l.TCoord,
                         APrisoner = l.APrisoner,
                         ATroop = l.ATroop,
@@ -233,6 +235,9 @@ namespace WebSocket.Socket
                         AGangName = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         AUserId = attack.AttackerUserId,
+                        AHeroId = attack.AttackerHeroId,
+                        AHeroName = attack.AttackerHeroName,
+                        ATroop = attack.AttackerTroopCount,
                         ProcessDate = attack.ArriveDate,
                         TCoord = DbService.GetUserCoordinate(attack.DefenserUserId).Result.Data,
                         TUsername = attack.DefenserUsername,
@@ -295,7 +300,7 @@ namespace WebSocket.Socket
                 Message lootMessage = Message.Create(MessageSendMode.Reliable, MessageEndpointId.ActiveLootRuns);
                 lootMessage.AddModel(res.ActiveLootRuns);
                 ServerProgram.server.Send(lootMessage, ServerProgram.server.Clients.First(l => l.Id == player.Id));
-                if (sendNews)
+                if (sendNews && res.GainedLootRuns!=null && res.GainedLootRuns.Count>0)
                 {
                     Player.SendNewsRefreshNeeded(player.UniqueId);
                 }

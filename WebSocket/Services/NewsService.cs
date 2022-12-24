@@ -287,6 +287,8 @@ namespace WebSocket.Services
                                 AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
+                                AHeroId = req.AttackerHeroId,
+                                AHeroName = req.AttackerHeroName,
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
@@ -320,6 +322,8 @@ namespace WebSocket.Services
                                 AGangName = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
                                     .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                                 AUserId = req.AttackerUserId,
+                                AHeroId = req.AttackerHeroId,
+                                AHeroName = req.AttackerHeroName,
                                 ProcessDate = req.ArriveDate,
                                 TCoord = DbService.GetUserCoordinate(req.DefenserUserId).Result.Data,
                                 TUsername = req.DefenserUsername,
@@ -334,7 +338,8 @@ namespace WebSocket.Services
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
                                 ACombatPower = req.AttackerPower,
-                                TCombatPower = req.DefenserPower
+                                TCombatPower = req.DefenserPower,
+                                ATroop = req.AttackerTroopCount,
                             });
                             break;                        
                         case (not null, true):
@@ -348,6 +353,8 @@ namespace WebSocket.Services
                                 Detail = $"Results of '{req.AttackerUsername}'s attack ",
                                 IsActive = true,
                                 TypeId = (int)NewsType.Attack,
+                                AHeroId = req.AttackerHeroId,
+                                AHeroName = req.AttackerHeroName,
                                 ACoord = DbService.GetUserCoordinate(req.AttackerUserId).Result.Data,
                                 ATroop = req.AttackerTroopCount,
                                 AGangAvatarId = _context.GangMember.Where(l=>l.UserId==req.AttackerUserId&& l.IsActive)
@@ -382,7 +389,8 @@ namespace WebSocket.Services
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
                                 ACombatPower = req.AttackerPower,
-                                TCombatPower = req.DefenserPower
+                                TCombatPower = req.DefenserPower,
+                                
 
                             });
                             await _context.SaveChangesAsync();
@@ -431,7 +439,10 @@ namespace WebSocket.Services
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
                                 ACombatPower = req.AttackerPower,
-                                TCombatPower = req.DefenserPower
+                                TCombatPower = req.DefenserPower,
+                                AHeroId = req.AttackerHeroId,
+                                AHeroName = req.AttackerHeroName,
+                                
                             });
                             await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);
@@ -482,7 +493,9 @@ namespace WebSocket.Services
                                 AUserAvatar = req.AttackerAvatarId,
                                 TUserAvatar = req.DefenserAvatarId,
                                 ACombatPower = req.AttackerPower,
-                                TCombatPower = req.DefenserPower
+                                TCombatPower = req.DefenserPower,
+                                AHeroId = req.AttackerHeroId,
+                                AHeroName = req.AttackerHeroName
                             });
                             await _context.SaveChangesAsync();
                             Player.SendNewsRefreshNeeded(req.AttackerUserId);

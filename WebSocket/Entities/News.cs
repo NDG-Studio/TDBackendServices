@@ -15,7 +15,9 @@ namespace WebSocket.Entities
         public string? Title { get; set; } //all
         public string? Detail { get; set; } //all
         public string? GainedResources { get; set; } //lootrun =>  type of LootRunDoneInfoDTO
-        public long? AUserId { get; set; } 
+        public long? AUserId { get; set; } = null;
+        public int? AHeroId { get; set; } = null;
+        public string? AHeroName { get; set; }
         public int? ACombatPower { get; set; } 
         public string? AUsername { get; set; }
         public int? AUserAvatar { get; set; } = 0;

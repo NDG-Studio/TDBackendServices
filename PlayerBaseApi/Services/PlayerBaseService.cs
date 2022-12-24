@@ -3911,6 +3911,7 @@ namespace PlayerBaseApi.Services
                     ResultData = l.ResultData,
                     WinnerSide = l.WinnerSide,
                     AttackerHeroId = l.AttackerHeroId,
+                    AttackerHeroName= _context.Hero.Where(k=>k.Id==l.AttackerHeroId).Select(k=>k.Name).FirstOrDefault()??"",
                     AttackerTroopCount = l.AttackerTroopCount,
                     AttackerUserId = l.AttackerUserId,
                     DefenserUserId = l.TargetUserId,

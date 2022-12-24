@@ -7,6 +7,7 @@ public class AttackInfoDTO
     public int? DefenserPower { get; set; } = 0;
     public int AttackerTroopCount { get; set; }
     public int AttackerHeroId { get; set; }
+    public string AttackerHeroName { get; set; }
     public long AttackerUserId { get; set; }
     public int AttackerAvatarId { get; set; }
     public string AttackerUsername { get; set; }
