@@ -12,6 +12,7 @@
         SendScoutInfo =20,
         SeenNews=21,
         ActiveInteraction=22,
+        GangApplicationCount=23,
 
         #region CHAT
 

@@ -61,6 +61,38 @@ namespace WebSocket.Socket
                     await SendNews(_context, player.UniqueId, userActivity,null);
                     await SendChatRooms(_context, player, userActivity);
                     await SendActiveInteractions(_context, player);
+                    await SendGangApplications(_context, player);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        
+        public static async Task SendGangApplications(WebSocketContext? _context, Player player)
+        {
+            try
+            {
+                var g = _context;
+                if (_context == null)
+                {
+                    _context = new WebSocketContext();
+                }
+
+                var gangMember = await _context.GangMember
+                    .Where(l => l.UserId == player.UniqueId && l.IsActive && l.MemberType.IsActive &&
+                                l.MemberType.Gang.IsActive)
+                    .FirstOrDefaultAsync();
+                if (gangMember!=null && gangMember.MemberType.CanAcceptMember )
+                {
+                    var gangAppCount = await _context.GangApplication
+                        .Where(l => l.GangId == gangMember.MemberType.GangId).CountAsync();
+                    Player.SendGangApplicationCount(player.UniqueId,gangAppCount);
+                }
+                if (g == null)
+                {
+                    _context.Dispose();
                 }
             }
             catch (Exception e)
