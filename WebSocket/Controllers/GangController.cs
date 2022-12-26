@@ -375,6 +375,26 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangs(req, user);
+    }       
+    
+    /// <summary>
+    /// Userlarin gang avatarlarini cekmek icin kullanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; int &gt; :Page size
+    /// <br/>
+    /// Output: TDResponse &lt; List &lt; KeyValuePair -long,string- &gt; &gt;
+    /// </remarks>
+    //[OnlyApps]
+    [HttpPost("GetGangAvatarsByUserIdList")]
+    public async Task<TDResponse<List<KeyValuePair<long,string>>>> GetGangAvatarsByUserIdList([FromBody] BaseRequest<List<long>> req)
+    {
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.GetGangAvatarsByUserIdList(req);
     }    
     
     /// <summary>

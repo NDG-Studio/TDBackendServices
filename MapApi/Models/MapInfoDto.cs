@@ -12,5 +12,6 @@
         public int AreaId { get; set; }
         public int BaseLevel { get; set; }
         public bool ActiveShield { get; set; } = false;
+        public string? GangAvatar { get; set; } = null;
     }
 }

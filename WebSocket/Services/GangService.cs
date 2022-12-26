@@ -1302,6 +1302,34 @@ namespace WebSocket.Services
             }
             return response;
 
+        }        
+        
+        public async Task<TDResponse<List<KeyValuePair<long,string>>>> GetGangAvatarsByUserIdList(BaseRequest<List<long>> req)
+        {
+            TDResponse<List<KeyValuePair<long,string>>> response = new TDResponse<List<KeyValuePair<long,string>>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangAvatarsByUserIdList");
+            try
+            {
+                List<KeyValuePair<long,string>> avatarList = await _context.GangMember
+                    .Include(l => l.MemberType).ThenInclude(l => l.Gang)
+                    .Where(l => req.Data.Contains(l.UserId) && l.IsActive && l.MemberType.Gang.IsActive &&
+                                l.MemberType.IsActive)
+                    .Select(l => new KeyValuePair<long, string>(l.UserId, l.MemberType.Gang.AvatarId))
+                    .ToListAsync();
+
+                response.Data=avatarList;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
         }
         
 

@@ -116,6 +116,7 @@ services:
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
             - PlayerbaseUrl=http://playerbaseapi
+            - WebSocketUrl=http://websocket
             - WALL_POWER=100
             - TROOP_POWER=1
     websocket:
