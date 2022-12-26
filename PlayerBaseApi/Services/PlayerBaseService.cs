@@ -2603,7 +2603,7 @@ namespace PlayerBaseApi.Services
                 var cou =await _context.PlayerTroop.Where(l => l.UserId == user.Id && l.TroopCount == 0).CountAsync();
                 if (cou>1)
                 {
-                    _context.Remove(await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync());
+                    _context.Remove(await _context.PlayerTroop.Where(l => l.UserId == user.Id).OrderByDescending(l=>l.LastTroopCollect).FirstOrDefaultAsync());
                     await _context.SaveChangesAsync();
                 }
                 var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
@@ -3348,6 +3348,13 @@ namespace PlayerBaseApi.Services
             try
             {
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                var cou =await _context.PlayerTroop.Where(l => l.UserId == user.Id && l.TroopCount == 0).CountAsync();
+                if (cou>1)
+                {
+                    _context.Remove(await _context.PlayerTroop.Where(l => l.UserId == user.Id).OrderByDescending(l=>l.LastTroopCollect).FirstOrDefaultAsync());
+                    await _context.SaveChangesAsync();
+                }
+                
                 var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerTroops == null)
                 {

@@ -1094,6 +1094,20 @@ namespace WebSocket.Services
                 await _context.AddAsync(ent);
                 await _context.SaveChangesAsync();
 
+                #region SendNotification
+
+                var gangMembers =await _context.GangMember
+                    .Where(l => l.MemberType.CanAcceptMember && l.IsActive && l.MemberType.IsActive &&
+                                l.MemberType.GangId == gangId)
+                    .Select(l => l.UserId).ToListAsync();
+
+                var gangAppsCount = await _context.GangApplication.Where(l => l.GangId == gangId)
+                    .CountAsync();
+
+                    gangMembers.ForEach(l=>Player.SendGangApplicationCount(l,gangAppsCount));
+                    
+                #endregion
+
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -1135,6 +1149,7 @@ namespace WebSocket.Services
                     response.SetSuccess();
                     info.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(info.ToString());
+                    return response;
                 }
                 
                 var gangMember = await _context.GangMember

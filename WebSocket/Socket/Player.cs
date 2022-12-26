@@ -431,9 +431,15 @@ namespace WebSocket.Socket
         
         public static void SendGangApplicationCount(long userId,int applicationCount)
         {
-            Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GangApplicationCount);
-            message.AddInt(applicationCount);
-            ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            try
+            {
+                Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.GangApplicationCount);
+                message.AddInt(applicationCount);
+                ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public static bool SendNewsRefreshNeeded(long userId)

@@ -81,7 +81,8 @@ namespace WebSocket.Socket
                 }
 
                 var gangMember = await _context.GangMember
-                    .Where(l => l.UserId == player.UniqueId && l.IsActive && l.MemberType.IsActive &&
+                    .Include(l=>l.MemberType)
+                    .Where(l => l.UserId == player.UniqueId && l.IsActive && l.MemberType.IsActive && 
                                 l.MemberType.Gang.IsActive)
                     .FirstOrDefaultAsync();
                 if (gangMember!=null && gangMember.MemberType.CanAcceptMember )
