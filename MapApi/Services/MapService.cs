@@ -341,7 +341,11 @@ namespace MapApi.Services
                 if (!gangAvatars.HasError)
                 {
                     var dict = gangAvatars.Data.ToDictionary(x => x.Key, x => x.Value);
-                    response.Data.ForEach(l => l.GangAvatar = dict[l.UserId]);
+                    response.Data.ForEach((l) =>
+                        {
+                            l.GangAvatar = dict.TryGetValue(l.UserId, out var c) ? c : null;
+                        }
+                    );
                 }
                 
                 response.SetSuccess();
