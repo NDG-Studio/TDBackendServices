@@ -9,7 +9,6 @@ using WebSocket.Models;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using SharedLibrary.Models.Loot;
-using WebSocket;
 using WebSocket.Socket;
 
 namespace WebSocket.Services
@@ -258,7 +257,6 @@ namespace WebSocket.Services
         }
 
 
-        
         public async Task<TDResponse> SendAttackNews(AttackInfoDTO req)
         {
             TDResponse response = new TDResponse();
@@ -529,74 +527,117 @@ namespace WebSocket.Services
                     switch ((req.WinnerSide, req.IsActive))
                     { 
                         case (null,true):
-                            var nws=new News()
+                                
+                                foreach (var part in req.RallyParts)
                                 {
-                                    Title = $"Rally (not necessary)",
-                                    Seen = false,
-                                    Date = DateTimeOffset.UtcNow,
-                                    Detail = $"not necessary",
-                                    IsActive = true,
-                                    TypeId = (int)NewsType.Rally,
-                                    ACoord = req.LeaderUserCoord,
-                                    AGangAvatarId = req.LeaderGangAvatarId,
-                                    AGangId = req.LeaderGangId,
-                                    AUsername = req.LeaderUsername,
-                                    AGangName = req.LeaderGangName,
-                                    AUserId = req.LeaderUserId,
-                                    ProcessDate = req.WarDate?.ToDateTimeOffsetUtc(),
-                                    TCoord = req.TargetUserCoord,
-                                    TUsername = req.TargetUsername,
-                                    TGangAvatarId = req.TargetGangAvatarId,
-                                    TGangId = req.TargetGangId,
-                                    TGangName = req.TargetGangName,
-                                    TUserId = req.TargetUserId,
-                                    UserId = req.TargetUserId
-                                };
-                            _context.Add(nws);
-                            await _context.SaveChangesAsync();
-                            if (nws.UserId!=null)
-                            {
-                                Player.SendNewsRefreshNeeded(nws.TUserId.Value);
-                            }
-                            break;                        
+                                    var nws = new NewsDTO()
+                                    {
+                                        Title = $"Rally (not necessary)",
+                                        Seen = false,
+                                        Date = DateTimeOffset.UtcNow.ToString(),
+                                        Detail = $"not necessary",
+                                        IsActive = true,
+                                        TypeId = (int)NewsType.Rally,
+                                        ACoord = req.LeaderUserCoord,
+                                        AGangAvatarId = req.LeaderGangAvatarId,
+                                        AGangId = req.LeaderGangId,
+                                        AUsername = req.LeaderUsername,
+                                        AGangName = req.LeaderGangName,
+                                        AUserId = req.LeaderUserId,
+                                        ProcessDate = req.WarDate,
+                                        TCoord = req.TargetUserCoord,
+                                        TUsername = req.TargetUsername,
+                                        TGangAvatarId = req.TargetGangAvatarId,
+                                        TGangId = req.TargetGangId,
+                                        TGangName = req.TargetGangName,
+                                        TUserId = req.TargetUserId,
+                                        TDead = req.TargetsDeadTroop,
+                                        TPrisoner = 0,
+                                        ADead = part.DeadTroop,
+                                        APrisoner = part.PrisonerCount,
+                                        AWounded = part.WoundedTroop,
+                                        ATroop = part.TroopCount,
+                                        TTroop = req.TargetsTroop,
+                                        WarLoot = part.LootedScrap,
+                                        TWounded = req.TargetsWoundedTroop,
+                                        TWall = req.TargetWallLevel,
+                                        TScrap = req.TargetScrap,
+                                        VictorySide = req.WinnerSide,
+                                    };
+                                    Player.SendNewInteraction(part.UserId, nws);
+                                    
+                                }
+                                var nwsDefenser = new NewsDTO()
+                                    {
+                                        Title = $"Rally (not necessary)",
+                                        Seen = false,
+                                        Date = DateTimeOffset.UtcNow.ToString(),
+                                        Detail = $"not necessary",
+                                        IsActive = true,
+                                        TypeId = (int)NewsType.Rally,
+                                        ACoord = req.LeaderUserCoord,
+                                        AGangAvatarId = req.LeaderGangAvatarId,
+                                        AGangId = req.LeaderGangId,
+                                        AUsername = req.LeaderUsername,
+                                        AGangName = req.LeaderGangName,
+                                        AUserId = req.LeaderUserId,
+                                        ProcessDate = req.WarDate,
+                                        TCoord = req.TargetUserCoord,
+                                        TUsername = req.TargetUsername,
+                                        TGangAvatarId = req.TargetGangAvatarId,
+                                        TGangId = req.TargetGangId,
+                                        TGangName = req.TargetGangName,
+                                        TUserId = req.TargetUserId,
+                                    };
+                                Player.SendNewInteraction(req.TargetUserId, nwsDefenser);
+                                if (req.LeaderGangId!=null)
+                                {
+                                    var gangGuid = new Guid(req.LeaderGangId);
+                                    var members=await _context.GangMember
+                                        .Where(l => l.MemberType.GangId == gangGuid && l.IsActive &&
+                                                    l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                                        .Select(l => l.UserId).ToListAsync();
+                                    members.ForEach(Player.SendNewRallyNotification);
+                                }
+                                
+                                break;                        
                         case (not null,true):
-                            foreach (var part in req.RallyParts)
+                            foreach (var attackerNews in req.RallyParts.Select(part => new News()
+                                     {
+                                         Title = $"RALLY MISSION {(req.WinnerSide==(byte)AttackSideEnum.Attacker ? "SUCCEED" : "FAILED")}",
+                                         Seen = false,
+                                         Date = DateTimeOffset.UtcNow,
+                                         Detail = $"Results of your attack",
+                                         IsActive = true,
+                                         TypeId = (int)NewsType.Rally,
+                                         ACoord = req.LeaderUserCoord,
+                                         AGangAvatarId = req.LeaderGangAvatarId,
+                                         AGangId = req.LeaderGangId,
+                                         AUsername = req.LeaderUsername,
+                                         AGangName = req.LeaderGangName,
+                                         AUserId = req.LeaderUserId,
+                                         ProcessDate = req.WarDate?.ToDateTimeOffsetUtc(),
+                                         TCoord = req.TargetUserCoord,
+                                         TUsername = req.TargetUsername,
+                                         TGangAvatarId = req.TargetGangAvatarId,
+                                         TGangId = req.TargetGangId,
+                                         TGangName = req.TargetGangName,
+                                         TUserId = req.TargetUserId,
+                                         TDead = req.TargetsDeadTroop,
+                                         TPrisoner = 0,
+                                         ADead = part.DeadTroop,
+                                         APrisoner = part.PrisonerCount,
+                                         AWounded = part.WoundedTroop,
+                                         ATroop = part.TroopCount,
+                                         TTroop = req.TargetsTroop,
+                                         WarLoot = part.LootedScrap,
+                                         TWounded = req.TargetsWoundedTroop,
+                                         TWall = req.TargetWallLevel,
+                                         TScrap = req.TargetScrap,
+                                         UserId = part.UserId,
+                                         VictorySide = req.WinnerSide,
+                                     }))
                             {
-                                var attackerNews=new News()
-                                {
-                                    Title = $"RALLY MISSION {(req.WinnerSide==(byte)AttackSideEnum.Attacker ? "SUCCEED" : "FAILED")}",
-                                    Seen = false,
-                                    Date = DateTimeOffset.UtcNow,
-                                    Detail = $"Results of your attack",
-                                    IsActive = true,
-                                    TypeId = (int)NewsType.Rally,
-                                    ACoord = req.LeaderUserCoord,
-                                    AGangAvatarId = req.LeaderGangAvatarId,
-                                    AGangId = req.LeaderGangId,
-                                    AUsername = req.LeaderUsername,
-                                    AGangName = req.LeaderGangName,
-                                    AUserId = req.LeaderUserId,
-                                    ProcessDate = req.WarDate?.ToDateTimeOffsetUtc(),
-                                    TCoord = req.TargetUserCoord,
-                                    TUsername = req.TargetUsername,
-                                    TGangAvatarId = req.TargetGangAvatarId,
-                                    TGangId = req.TargetGangId,
-                                    TGangName = req.TargetGangName,
-                                    TUserId = req.TargetUserId,
-                                    TDead = req.TargetsDeadTroop,
-                                    TPrisoner = 0,
-                                    ADead = part.DeadTroop,
-                                    APrisoner = part.PrisonerCount,
-                                    AWounded = part.WoundedTroop,
-                                    ATroop = part.TroopCount,
-                                    TTroop = req.TargetsTroop,
-                                    WarLoot = part.LootedScrap,
-                                    TWounded = req.TargetsWoundedTroop,
-                                    TWall = req.TargetWallLevel,
-                                    TScrap = req.TargetScrap,
-                                    UserId = part.UserId,
-                                    VictorySide = req.WinnerSide,
-                                };
                                 _context.Add(attackerNews);
                                 await _context.SaveChangesAsync();
                                 if (attackerNews.UserId!=null)
@@ -651,6 +692,23 @@ namespace WebSocket.Services
                 }
                 
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse> SendRallyNeedRefresh(RallyDTO req)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                req.RallyParts.ForEach(l=> Player.SendRallyNeedRefresh(l.UserId));
+                
             }
             catch (Exception e)
             {

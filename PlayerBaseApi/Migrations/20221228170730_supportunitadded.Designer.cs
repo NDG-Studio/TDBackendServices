@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221228170730_supportunitadded")]
+    partial class supportunitadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1301,36 +1303,6 @@ namespace PlayerBaseApi.Migrations
                     b.ToTable("PlayerResearchNode");
                 });
 
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerScout", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("InTrainingCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ScoutLevelId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SpyCount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("TrainingDoneDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScoutLevelId");
-
-                    b.ToTable("PlayerScout");
-                });
-
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>
                 {
                     b.Property<int>("Id")
@@ -1843,28 +1815,6 @@ namespace PlayerBaseApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Scout");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.ScoutLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Level")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("TrainingCostPerUnit")
-                        .HasColumnType("double precision");
-
-                    b.Property<TimeSpan>("TrainingDurationPerUnit")
-                        .HasColumnType("interval");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ScoutLevel");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.SupportUnit", b =>
@@ -2405,17 +2355,6 @@ namespace PlayerBaseApi.Migrations
                         .IsRequired();
 
                     b.Navigation("ResearchNode");
-                });
-
-            modelBuilder.Entity("PlayerBaseApi.Entities.PlayerScout", b =>
-                {
-                    b.HasOne("PlayerBaseApi.Entities.ScoutLevel", "ScoutLevel")
-                        .WithMany()
-                        .HasForeignKey("ScoutLevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ScoutLevel");
                 });
 
             modelBuilder.Entity("PlayerBaseApi.Entities.PlayerTalentTreeNode", b =>

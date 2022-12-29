@@ -38,6 +38,9 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerHospitalDTO>> GetHospitalInfo(BaseRequest req, UserDto user);
         Task<TDResponse> HealingRequest(BaseRequest<int> req, UserDto user);
         Task<TDResponse<int>> HealingDoneRequest(BaseRequest req, UserDto user);
+        Task<TDResponse<PlayerScoutDTO>> GetScoutInfo(BaseRequest req, UserDto user);
+        Task<TDResponse> SpyTrainingRequest(BaseRequest<int> req, UserDto user);
+        Task<TDResponse<int>> SpyTrainingDoneRequest(BaseRequest req, UserDto user);
 
         Task<TDResponse<MarketDTO>> GetMarket(BaseRequest req, UserDto user);
         Task<TDResponse> BuyMarketItem(BaseRequest<BuyMarketItemRequest> req, UserDto user);
@@ -52,6 +55,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<string>> SpeedUpHealing(BaseRequest<SpeedUpRequest> req, UserDto user);
         Task<TDResponse<CollectTroopResponse>> CollectTroopsFromBarracks(BaseRequest req, UserDto user);
         Task<TDResponse<PlayerTroopInfoDTO>> GetPlayerTroopInfo(BaseRequest req, UserDto user);
+        Task<TDResponse<PlayerTroopInfoDTOv2>> GetPlayerTroopInfoV2(BaseRequest req, UserDto user);
         Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user);
         Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user);
         Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
@@ -77,5 +81,8 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<int?>> GetFirstTimeTutorial(BaseRequest<string> req, UserDto user);
         Task<TDResponse> FirstTimeTutorialDone(BaseRequest<string> req, UserDto user);
         Task<TDResponse<List<long>>> GetCityShields(BaseRequest<List<long>> req);
+
+        Task<TDResponse> SendSupportUnit(BaseRequest<SupportUnitRequest> req, UserDto user);
+        Task<TDResponse> GetSupportUnitBackById(BaseRequest<long> req, UserDto user);
     }
 }

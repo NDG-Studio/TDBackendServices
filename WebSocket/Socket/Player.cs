@@ -422,6 +422,19 @@ namespace WebSocket.Socket
                 Console.WriteLine(e.Message);
             }
         }
+        public static void SendNewRallyNotification(long userId)
+        {
+            try
+            {
+                var m = Message.Create(MessageSendMode.Reliable, MessageEndpointId.NewRallyNotification);
+                ServerProgram.server.Send(m, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+        }
 
         public static void SendAllNewsRefreshNeeded()
         {
@@ -442,6 +455,19 @@ namespace WebSocket.Socket
             }
         }
 
+        public static void SendRallyNeedRefresh(long userId)
+        {
+            try
+            {
+                Message message = Message.Create(MessageSendMode.Reliable, MessageEndpointId.RallyNeedRefresh);
+                ServerProgram.server.Send(message, ServerProgram.server.Clients.First(l => l.Id == list[userId].Id));
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+        
         public static bool SendNewsRefreshNeeded(long userId)
         {
             try

@@ -92,6 +92,7 @@ var cc = app.Services.GetRequiredService<ILoggerProvider>();
 ScoutHelper.Start(cc);
 AttackHelper.Start(cc);
 RallyHelper.Start(cc);
+SupportUnitHelper.Start(cc);
 app.UseCors("ALLACCESSPOLICY");
 app.UseMiddleware<ApiMiddleware>();
 //app.UseHttpsRedirection();

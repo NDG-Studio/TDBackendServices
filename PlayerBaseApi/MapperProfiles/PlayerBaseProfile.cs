@@ -71,6 +71,11 @@ namespace PlayerBaseApi.MapperProfiles
                 .MapFrom(
                     source => source.HealingDoneDate != null ? source.HealingDoneDate.ToString() : null));
 
+            CreateMap<PlayerScout, PlayerScoutDTO>()
+                .ForMember(dest => dest.TrainingDoneDate, operations => operations
+                .MapFrom(
+                    source => source.TrainingDoneDate != null ? source.TrainingDoneDate.ToString() : null));
+
             CreateMap<HospitalLevel, HospitalLevelDTO>();
             CreateMap<MarketItem, UsableItemDTO>();
 
@@ -92,6 +97,11 @@ namespace PlayerBaseApi.MapperProfiles
                     source => source.Text.Split("_,_",StringSplitOptions.None).ToList()));
 
             CreateMap<PlayerTroop, PlayerTroopInfoDTO>()
+                .ForMember(dest => dest.LastTroopCollect, operations => operations
+                .MapFrom(
+                    source => source.LastTroopCollect != null ? source.LastTroopCollect.ToString() : null));
+            
+            CreateMap<PlayerTroop, PlayerTroopInfoDTOv2>()
                 .ForMember(dest => dest.LastTroopCollect, operations => operations
                 .MapFrom(
                     source => source.LastTroopCollect != null ? source.LastTroopCollect.ToString() : null));

@@ -73,6 +73,9 @@ namespace PlayerBaseApi
         public DbSet<Rally> Rally { get; set; }
         public DbSet<RallyPart> RallyPart { get; set; }
         public DbSet<FirstTimeTutorial> FirstTimeTutorial { get; set; }
+        public DbSet<SupportUnit> SupportUnit { get; set; }
+        public DbSet<PlayerScout> PlayerScout { get; set; }
+        public DbSet<ScoutLevel> ScoutLevel { get; set; }
 
 
 
@@ -472,6 +475,19 @@ namespace PlayerBaseApi
                         InjuredCount = 0,
                         InHealingCount = 0,
                         HealingDoneDate = null,
+                        UserId = user.Id
+                    };
+                    await AddAsync(ent);
+                }                
+                var playerScout = await PlayerScout.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerScout==null)
+                {
+                    var ent = new PlayerScout()
+                    {
+                        ScoutLevelId = 1,
+                        SpyCount = 0,
+                        InTrainingCount = 0,
+                        TrainingDoneDate = null,
                         UserId = user.Id
                     };
                     await AddAsync(ent);

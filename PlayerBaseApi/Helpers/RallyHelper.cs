@@ -303,7 +303,12 @@ public class RallyHelper
                         }
 
                     }
-                    
+
+                    var rmvRallies = _context.Rally
+                        .Include(l => l.RallyParts)
+                        .Where(l => !l.RallyParts.Any(o => o.IsActive)).ToList();
+                    rmvRallies.ForEach(l=>l.IsActive=false);
+                    _context.SaveChanges();
                     RallyList.RemoveAll(l => l.WinnerSide != null);
                 }
                 
@@ -348,19 +353,20 @@ public class RallyHelper
 
     public static RallyDTO MapRallyDTO(Rally r)
     {
-        return new RallyDTO()
+        var rally = new RallyDTO();
+
         {
-            Id = r.Id,
-            Date = r.Date.ToString(),
-            IsActive = r.IsActive,
-            LeaderUsername = r.LeaderUsername,
-            LootedScrap = r.LootedScrap,
-            PrisonerCount = r.PrisonerCount,
-            RallyParts = r.RallyParts.Select(l => new RallyPartDTO()
+            rally.Id = r.Id;
+            rally.Date = r.Date.ToString();
+            rally.IsActive = r.IsActive;
+            rally.LeaderUsername = r.LeaderUsername;
+            rally.LootedScrap = r.LootedScrap;
+            rally.PrisonerCount = r.PrisonerCount;
+            rally.RallyParts = r.RallyParts?.Select(l => new RallyPartDTO()
             {
                 Id = l.Id,
                 Username = l.Username,
-                ArriveDate = l.ArriveDate.ToString(),
+                ArriveDate = l.ArriveDate?.ToString(),
                 BarracksLevel = l.BarracksLevel,
                 DeadTroop = l.DeadTroop,
                 HeroId = l.HeroId,
@@ -372,38 +378,38 @@ public class RallyHelper
                 UserId = l.UserId,
                 WallLevel = l.WallLevel,
                 WoundedTroop = l.WoundedTroop,
-                ComeBackDate = l.ComeBackDate.ToString(),
+                ComeBackDate = l.ComeBackDate?.ToString(),
                 SenderAvatarId = l.SenderAvatarId
-            }).ToList(),
-            TargetScrap = r.TargetScrap,
-            TargetsTroop = r.TargetsTroop,
-            TargetUsername = r.TargetUsername,
-            WarDate = r.WarDate.ToString(),
-            WinnerSide = r.WinnerSide,
-            ComeBackDate = r.ComeBackDate.ToString(),
-            LeaderAvatarId = r.LeaderAvatarId,
-            LeaderUserCoord = r.LeaderUserCoord,
-            LeaderUserId = r.LeaderUserId,
-            RallyStartDate = r.RallyStartDate.ToString(),
-            TargetAvatarId = r.TargetAvatarId,
-            TargetBarracksLevel = r.TargetBarracksLevel,
-            TargetsDeadTroop = r.TargetsDeadTroop,
-            TargetsWoundedTroop = r.TargetsWoundedTroop,
-            TargetUserCoord = r.TargetUserCoord,
-            TargetUserId = r.TargetUserId,
-            TargetWallLevel = r.TargetWallLevel,
-            LeaderGangId = r.LeaderGangId,
-            LeaderGangName = r.LeaderGangName,
-            TargetGangId = r.TargetGangId,
-            TargetGangName = r.TargetGangName,
-            LeaderGangAvatarId = r.LeaderGangAvatarId,
-            TargetGangAvatarId = r.TargetGangAvatarId,
-            ATotalTroop = r.ATotalTroop,
-            ATotalDeadTroop = r.ATotalDeadTroop,
-            ATotalWoundedTroop = r.ATotalWoundedTroop
-            
+            }).ToList() ?? new List<RallyPartDTO>();
+            rally.TargetScrap = r.TargetScrap;
+            rally.TargetsTroop = r.TargetsTroop;
+            rally.TargetUsername = r.TargetUsername;
+            rally.WarDate = r.WarDate.ToString();
+            rally.WinnerSide = r.WinnerSide;
+            rally.ComeBackDate = r.ComeBackDate.ToString();
+            rally.LeaderAvatarId = r.LeaderAvatarId;
+            rally.LeaderUserCoord = r.LeaderUserCoord;
+            rally.LeaderUserId = r.LeaderUserId;
+            rally.RallyStartDate = r.RallyStartDate?.ToString();
+            rally.TargetAvatarId = r.TargetAvatarId;
+            rally.TargetBarracksLevel = r.TargetBarracksLevel;
+            rally.TargetsDeadTroop = r.TargetsDeadTroop;
+            rally.TargetsWoundedTroop = r.TargetsWoundedTroop;
+            rally.TargetUserCoord = r.TargetUserCoord;
+            rally.TargetUserId = r.TargetUserId;
+            rally.TargetWallLevel = r.TargetWallLevel;
+            rally.LeaderGangId = r.LeaderGangId;
+            rally.LeaderGangName = r.LeaderGangName;
+            rally.TargetGangId = r.TargetGangId;
+            rally.TargetGangName = r.TargetGangName;
+            rally.LeaderGangAvatarId = r.LeaderGangAvatarId;
+            rally.TargetGangAvatarId = r.TargetGangAvatarId;
+            rally.ATotalTroop = r.ATotalTroop;
+            rally.ATotalDeadTroop = r.ATotalDeadTroop;
+            rally.ATotalWoundedTroop = r.ATotalWoundedTroop;
             
         };
+        return rally;
     }
     
     

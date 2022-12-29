@@ -13,6 +13,8 @@
         SeenNews=21,
         ActiveInteraction=22,
         GangApplicationCount=23,
+        RallyNeedRefresh=24,
+        NewRallyNotification=25,
 
         #region CHAT
 

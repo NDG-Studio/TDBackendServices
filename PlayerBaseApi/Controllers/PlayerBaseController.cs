@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PlayerBaseApi.Entities;
 using PlayerBaseApi.Interfaces;
 using PlayerBaseApi.Models;
 using PlayerBaseApi.Services;
@@ -404,7 +405,7 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetHospitalInfo(req, user);
         }
-                
+
         [LoginRequired]
         [HttpPost("HealingRequest")]
         public async Task<TDResponse> HealingRequest([FromBody] BaseRequest<int> req)
@@ -583,6 +584,27 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetPlayerTroopInfo(req, user);
+        }
+        
+        /// <summary>
+        /// Player troop bilgisini doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse&lt; PlayerTroopInfoDTOV2 &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerTroopInfoV2")]
+        public async Task<TDResponse<PlayerTroopInfoDTOv2>> GetPlayerTroopInfoV2([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetPlayerTroopInfoV2(req, user);
         }
 
 
@@ -955,6 +977,7 @@ namespace PlayerBaseApi.Controllers
         /// <remarks>
         /// <br/>
         /// </remarks>
+        [LoginRequired]
         [HttpPost("GetFirstTimeTutorial")]
         public async Task<TDResponse<int?>> GetFirstTimeTutorial([FromBody] BaseRequest<string> req)
         {
@@ -970,6 +993,7 @@ namespace PlayerBaseApi.Controllers
         /// <remarks>
         /// <br/>
         /// </remarks>
+        [LoginRequired]
         [HttpPost("FirstTimeTutorialDone")]
         public async Task<TDResponse> FirstTimeTutorialDone([FromBody] BaseRequest<string> req)
         {
@@ -977,6 +1001,111 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.FirstTimeTutorialDone(req,user);
+        }
+                
+        /// <summary>
+        /// Baska bir gang uyesine reinforce gondermek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; SupportUnitRequest &gt;
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SendSupportUnit")]
+        public async Task<TDResponse> SendSupportUnit([FromBody] BaseRequest<SupportUnitRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SendSupportUnit(req,user);
+        }
+        
+        /// <summary>
+        /// Idsi verilen reinforce islemini geri cagirmak icin kullanilir.
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; long &gt;
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetSupportUnitBackById")]
+        public async Task<TDResponse> GetSupportUnitBackById([FromBody] BaseRequest<long> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetSupportUnitBackById(req,user);
+        }
+        
+        /// <summary>
+        /// playerin scout level ve spy bilgisini doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest 
+        /// <br/>
+        /// Output: TDResponse &lt; PlayerScoutDTO &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetScoutInfo")]
+        public async Task<TDResponse<PlayerScoutDTO>> GetScoutInfo([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetScoutInfo(req, user);
+        }
+
+        /// <summary>
+        /// player spy egitimi baslatmak yapmak icin kullanir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; int &gt; not:egitilecek spy sayisi
+        /// <br/>
+        /// Output: TDResponse 
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpyTrainingRequest")]
+        public async Task<TDResponse> SpyTrainingRequest([FromBody] BaseRequest<int> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpyTrainingRequest(req, user);
+        }
+        
+        /// <summary>
+        /// player egitim suresi dolmus spylari birligine eklemek icin kullanir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest 
+        /// <br/>
+        /// Output: TDResponse &lt; int &gt; not:egitilen spy sayisi
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SpyTrainingDoneRequest")]
+        public async Task<TDResponse<int>> SpyTrainingDoneRequest([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.SpyTrainingDoneRequest(req, user);
         }
         
     }

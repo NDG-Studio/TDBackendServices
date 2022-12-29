@@ -744,6 +744,11 @@ namespace PlayerBaseApi.Services
                         var phospital = await _context.PlayerHospital.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                         phospital.HospitalLevelId++;
                         await _context.SaveChangesAsync();
+                        break;                    
+                    case 8://scout
+                        var pscout = await _context.PlayerScout.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                        pscout.ScoutLevelId++;
+                        await _context.SaveChangesAsync();
                         break;
                     case 1://base
                         var playerbaseInfo = await _context.PlayerBaseInfo.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
@@ -962,6 +967,15 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "UpgradeResearchNode");
             try
             {
+                
+                if (await _context.PlayerResearchNode.AnyAsync(l=>l.UserId==user.Id && l.UpdateEndDate !=null))
+                {
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
                 var currentNode = await _context.PlayerResearchNode.Include(l => l.ResearchNode).Where(l => l.UserId == user.Id && l.ResearchNodeId == req.Data).FirstOrDefaultAsync();
                 if (currentNode != null && currentNode.UpdateEndDate != null)
                 {
@@ -977,6 +991,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+
                 //TODO:Condition kontrolleri yapılacak
                 if (currentNode == null)
                 {
@@ -2163,6 +2178,129 @@ namespace PlayerBaseApi.Services
 
         #endregion
 
+        #region SCOUT UTILS
+        public async Task<TDResponse<PlayerScoutDTO>> GetScoutInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerScoutDTO> response = new TDResponse<PlayerScoutDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetScoutInfo");
+            try
+            {
+                var query = _context.PlayerScout.Include(l => l.ScoutLevel).Where(l => l.UserId == user.Id);
+                var pscout = await _mapper.ProjectTo<PlayerScoutDTO>(query).FirstOrDefaultAsync();
+                if (pscout == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                response.Data = pscout;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
+        public async Task<TDResponse> SpyTrainingRequest(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SpyTrainingRequest");
+            try
+            {
+                var query = await _context.PlayerScout.Include(l => l.ScoutLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                if (req.Data < 1)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                if (query.InTrainingCount != 0)
+                {
+                    response.SetError(OperationMessages.TrainingMustBeDone);
+                    info.AddInfo(OperationMessages.TrainingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerBaseInfo.Scraps < (int)(req.Data * query.ScoutLevel.TrainingCostPerUnit))
+                {
+                    response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                    info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                query.InTrainingCount += req.Data;
+                query.TrainingDoneDate = DateTimeOffset.Now + (query.ScoutLevel.TrainingDurationPerUnit * req.Data);
+                playerBaseInfo.Scraps -= (int)(req.Data * query.ScoutLevel.TrainingCostPerUnit);
+                _context.Update(playerBaseInfo);
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse<int>> SpyTrainingDoneRequest(BaseRequest req, UserDto user)
+        {
+            TDResponse<int> response = new TDResponse<int>();
+            var info = InfoDetail.CreateInfo(req, "SpyTrainingDoneRequest");
+            try
+            {
+                var query = await _context.PlayerScout.Include(l => l.ScoutLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                var playerScout = await _context.PlayerScout.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query.InTrainingCount == 0)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if ((query.TrainingDoneDate - DateTimeOffset.Now).Value.TotalMilliseconds > 0)
+                {
+                    response.SetError(OperationMessages.TrainingMustBeDone);
+                    info.AddInfo(OperationMessages.TrainingMustBeDone);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                playerScout.SpyCount += query.InTrainingCount;
+                response.Data = query.InTrainingCount;
+                query.InTrainingCount = 0;
+                query.TrainingDoneDate = null;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
+        #endregion
 
         #region MARKET UTILS
 
@@ -3365,11 +3503,197 @@ namespace PlayerBaseApi.Services
                 }
                 
                 response.Data = _mapper.Map<PlayerTroopInfoDTO>(playerTroops);
+                // var attacks = await _context.Attack.Where(l => l.IsActive && l.AttackerUserId == user.Id).ToListAsync();
+                // attacks.ForEach(l=>
+                //         response.Data.OutSideTroops.Add(new TroopUnitDTO()
+                //         {
+                //             TroopCount = l.AttackerTroopCount,
+                //             IsAttack = true,
+                //             HeroId = l.AttackerHeroId,
+                //             Coord = GetUserCoordinate(l.TargetUserId).Result.Data,
+                //             HeroName = _context.Hero.Where(k=>k.Id==l.AttackerHeroId).Select(k=>k.Name).FirstOrDefault(),
+                //             TUserId = l.TargetUserId,
+                //             TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.TargetUserId).Select(k=>k.Username).FirstOrDefault(),
+                //             TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.TargetUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                //             ArrivedDate = l.ArriveDate.ToString(),
+                //             ComebackDate = l.ComeBackDate.ToString(),
+                //             Id = l.Id
+                //         })
+                // );
+                // var supports = await _context.SupportUnit
+                //     .Include(l=>l.Hero)
+                //     .Where(l => l.IsActive && l.ClientUserId == user.Id)
+                //     .ToListAsync();
+                // supports.ForEach(l=>
+                //     response.Data.OutSideTroops.Add(new TroopUnitDTO()
+                //     {
+                //         TroopCount = l.TroopCount,
+                //         IsAttack = true,
+                //         HeroId = l.HeroId,
+                //         Coord = GetUserCoordinate(l.HostUserId).Result.Data,
+                //         HeroName = _context.Hero.Where(k=>k.Id==l.Hero.Id).Select(k=>k.Name).FirstOrDefault(),
+                //         TUserId = l.HostUserId,
+                //         TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.HostUserId).Select(k=>k.Username).FirstOrDefault(),
+                //         TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.HostUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                //         ArrivedDate = l.ArrivedDate?.ToString(),
+                //         ComebackDate = l.ComeBackDate?.ToString(),
+                //         Id = l.Id
+                //     })
+                // );
+                // var inSupports = await _context.SupportUnit
+                //     .Include(l=>l.Hero)
+                //     .Where(l => l.IsActive && l.HostUserId == user.Id)
+                //     .ToListAsync();
+                // inSupports.ForEach(l=>
+                //     response.Data.InsideTroops.Add(new TroopUnitDTO()
+                //     {
+                //         TroopCount = l.TroopCount,
+                //         IsAttack = true,
+                //         HeroId = l.HeroId,
+                //         Coord = GetUserCoordinate(l.ClientUserId).Result.Data,
+                //         HeroName = _context.Hero.Where(k=>k.Id==l.Hero.Id).Select(k=>k.Name).FirstOrDefault(),
+                //         TUserId = l.ClientUserId,
+                //         TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.ClientUserId).Select(k=>k.Username).FirstOrDefault(),
+                //         TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.ClientUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                //         ArrivedDate = l.ArrivedDate?.ToString(),
+                //         ComebackDate = l.ComeBackDate?.ToString(),
+                //         Id = l.Id
+                //     })
+                // );
                 playerBaseInfo.Power = response.Data.TroopCount * 42;
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
                 response.Data.OutsideTroops = await _context.Attack
                     .Where(l => l.AttackerUserId == user.Id && l.IsActive).SumAsync(l => l.AttackerTroopCount);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        public async Task<TDResponse<PlayerTroopInfoDTOv2>> GetPlayerTroopInfoV2(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerTroopInfoDTOv2> response = new TDResponse<PlayerTroopInfoDTOv2>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerTroopInfoV2");
+            try
+            {
+                var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
+                var cou =await _context.PlayerTroop.Where(l => l.UserId == user.Id && l.TroopCount == 0).CountAsync();
+                if (cou>1)
+                {
+                    _context.Remove(await _context.PlayerTroop.Where(l => l.UserId == user.Id).OrderByDescending(l=>l.LastTroopCollect).FirstOrDefaultAsync());
+                    await _context.SaveChangesAsync();
+                }
+                
+                var playerTroops = await _context.PlayerTroop.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerTroops == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                response.Data = _mapper.Map<PlayerTroopInfoDTOv2>(playerTroops);
+                response.Data.InsideTroops = new List<TroopUnitDTO>();
+                response.Data.InsideTroops.Add(new TroopUnitDTO()
+                {
+                    TroopCount = response.Data.TroopCount,
+                    Id = null,
+                    HeroId = null,
+                    Coord = null,
+                    ArrivedDate = null,
+                    ComebackDate = null,
+                    HeroName = null,
+                    TUserId = null,
+                    TUserName = null,
+                    TroopType = null,
+                    TUserAvatarId = 0
+                });
+                var attacks = await _context.Attack.Where(l => l.IsActive && l.AttackerUserId == user.Id).ToListAsync();
+                attacks.ForEach(l=>
+                        response.Data.OutSideTroops.Add(new TroopUnitDTO()
+                        {
+                            TroopCount = l.AttackerTroopCount,
+                            TroopType = (int)TroopTypeEnum.Attack,
+                            HeroId = l.AttackerHeroId,
+                            Coord = GetUserCoordinate(l.TargetUserId).Result.Data,
+                            HeroName = _context.Hero.Where(k=>k.Id==l.AttackerHeroId).Select(k=>k.Name).FirstOrDefault(),
+                            TUserId = l.TargetUserId,
+                            TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.TargetUserId).Select(k=>k.Username).FirstOrDefault(),
+                            TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.TargetUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                            ArrivedDate = l.ArriveDate.ToString(),
+                            ComebackDate = l.ComeBackDate.ToString(),
+                            Id = l.Id
+                        })
+                );                
+                var rallies = await _context.RallyPart.Include(l=>l.Rally).Where(l => l.IsActive && l.UserId == user.Id).ToListAsync();
+                rallies.ForEach(l=>
+                        response.Data.OutSideTroops.Add(new TroopUnitDTO()
+                        {
+                            TroopCount = l.TroopCount,
+                            TroopType = (int)TroopTypeEnum.Rally,
+                            HeroId = l.HeroId,
+                            Coord = GetUserCoordinate(l.Rally.TargetUserId).Result.Data,
+                            HeroName = _context.Hero.Where(k=>k.Id==l.HeroId).Select(k=>k.Name).FirstOrDefault(),
+                            TUserId = l.Rally.TargetUserId,
+                            TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.Rally.TargetUserId).Select(k=>k.Username).FirstOrDefault(),
+                            TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.Rally.TargetUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                            ArrivedDate = l.ArriveDate.ToString(),
+                            ComebackDate = l.ComeBackDate.ToString(),
+                            Id = l.Id
+                        })
+                );
+                var supports = await _context.SupportUnit
+                    .Include(l=>l.Hero)
+                    .Where(l => l.IsActive && l.ClientUserId == user.Id)
+                    .ToListAsync();
+                supports.ForEach(l=>
+                    response.Data.OutSideTroops.Add(new TroopUnitDTO()
+                    {
+                        TroopCount = l.TroopCount,
+                        TroopType = (int)TroopTypeEnum.Support,
+                        HeroId = l.HeroId,
+                        Coord = GetUserCoordinate(l.HostUserId).Result.Data,
+                        HeroName = _context.Hero.Where(k=>k.Id==l.Hero.Id).Select(k=>k.Name).FirstOrDefault(),
+                        TUserId = l.HostUserId,
+                        TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.HostUserId).Select(k=>k.Username).FirstOrDefault(),
+                        TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.HostUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                        ArrivedDate = l.ArrivedDate?.ToString(),
+                        ComebackDate = l.ComeBackDate?.ToString(),
+                        Id = l.Id
+                    })
+                );
+                var inSupports = await _context.SupportUnit
+                    .Include(l=>l.Hero)
+                    .Where(l => l.IsActive && l.HostUserId == user.Id)
+                    .ToListAsync();
+                inSupports.ForEach(l=>
+                    response.Data.InsideTroops.Add(new TroopUnitDTO()
+                    {
+                        TroopCount = l.TroopCount,
+                        TroopType = (int)TroopTypeEnum.Support,
+                        HeroId = l.HeroId,
+                        Coord = GetUserCoordinate(l.ClientUserId).Result.Data,
+                        HeroName = _context.Hero.Where(k=>k.Id==l.Hero.Id).Select(k=>k.Name).FirstOrDefault(),
+                        TUserId = l.ClientUserId,
+                        TUserName = _context.PlayerBaseInfo.Where(k=>k.Id==l.ClientUserId).Select(k=>k.Username).FirstOrDefault(),
+                        TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.Id==l.ClientUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
+                        ArrivedDate = l.ArrivedDate?.ToString(),
+                        ComebackDate = l.ComeBackDate?.ToString(),
+                        Id = l.Id
+                    })
+                );
+                playerBaseInfo.Power = response.Data.InsideTroops.Where(l=>l.TroopType==null).Select(l=>l.TroopCount).FirstOrDefault() * 42;
+                _context.Update(playerBaseInfo);
+                await _context.SaveChangesAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -3583,7 +3907,173 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-        
+        public async Task<TDResponse> SendSupportUnit(BaseRequest<SupportUnitRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "SendSupportUnit");
+            try
+            {
+                bool isFake = req.Data.TargetUserId==(long)FakeId.TutorialEnemy;
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
+                if (targetPlayerbaseInfo == null && !isFake)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+
+                var heroOnRally = await _context.RallyPart.Where(l =>
+                        l.IsActive && l.UserId == user.Id && l.HeroId == req.Data.SenderHeroId)
+                    .AnyAsync();                
+                var heroOnSupport = await _context.SupportUnit.Where(l =>
+                        l.IsActive && l.ClientUserId == user.Id && l.HeroId == req.Data.SenderHeroId)
+                    .AnyAsync();
+                var heroOnLoot = await _context.PlayerHeroLoot
+                    .Where(l => l.IsActive && l.PlayerHero.HeroId == req.Data.SenderHeroId 
+                                           && l.PlayerHero.UserId == user.Id)
+                    .AnyAsync();
+                var attackList =await  _context.Attack
+                    .Where(l => l.IsActive && l.AttackerUserId == user.Id )
+                    .ToListAsync();
+                if (attackList.Any(l=>l.AttackerHeroId == req.Data.SenderHeroId) || heroOnRally || heroOnLoot || heroOnSupport)
+                {
+                    info.AddInfo(OperationMessages.PlayerHeroBusy);
+                    response.SetError(OperationMessages.PlayerHeroBusy);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var pt = (await _context.PlayerTroop
+                    .Where(l => l.UserId == user.Id)
+                    .FirstOrDefaultAsync());
+
+                if (!isFake)
+                {
+                    var playerPrisons = await _context.PlayerPrison
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                    var playerHospital = await _context.PlayerHospital
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
+                    var playerTroop = await _context.PlayerTroop
+                        .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
+                    if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
+                    {
+                        info.AddInfo(OperationMessages.PlayerIsUnderProtection);
+                        response.SetError(OperationMessages.PlayerIsUnderProtection);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                
+                
+                    if (pt==null || pt.TroopCount<req.Data.SenderTroopCount || req.Data.SenderTroopCount==0)
+                    {
+                        info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
+                        response.SetError(OperationMessages.PlayerDoesNotHaveResource);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                }
+
+                var now = DateTimeOffset.UtcNow;
+                var spu = new SupportUnit()
+                {
+                    HostUserId = req.Data.TargetUserId,
+                    SendedDate = now,
+                    ArrivedDate = now + ( isFake? TimeSpan.FromSeconds(10) : TimeSpan.FromMinutes(2)),
+                    ComeBackDate = now + ( isFake? TimeSpan.FromSeconds(20) : TimeSpan.FromMinutes(4)),
+                    ClientUserId = user.Id,
+                    State = (int)SupportUnitState.Pending,
+                    HeroId = req.Data.SenderHeroId,
+                    TroopCount = req.Data.SenderTroopCount,
+                    IsActive = true
+                };
+                
+                pt.TroopCount -= spu.TroopCount;
+                
+                
+                await _context.AddAsync(spu);
+                await _context.SaveChangesAsync();
+                
+                SupportUnitHelper.NewSupport(spu);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        public async Task<TDResponse> GetSupportUnitBackById(BaseRequest<long> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "GetSupportUnitBackById");
+            try
+            {
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var spu = await _context.SupportUnit.Where(l => l.Id == req.Data).FirstOrDefaultAsync();
+
+                if (spu==null || spu.State == (int)SupportUnitState.Returning)
+                {
+                    info.AddInfo(OperationMessages.ProcessAllreadyExist);
+                    response.SetError(OperationMessages.ProcessAllreadyExist);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }                
+                
+                if (!spu.IsActive)
+                {
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var now = DateTimeOffset.UtcNow;
+                spu.ComeBackDate = spu.State == (int)SupportUnitState.Pending
+                    ? now + (now - spu.SendedDate)
+                    : now + TimeSpan.FromMinutes(2);
+                spu.State = (int)SupportUnitState.Returning;
+                await _context.SaveChangesAsync();
+                
+                
+                SupportUnitHelper.ComebackSupport(spu);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+
         public async Task<TDResponse> CreateRally(BaseRequest<CreateRallyRequest> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -3649,13 +4139,6 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
                 var playerTroop = await _context.PlayerTroop
                     .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
-                if (playerPrisons!=2 || playerHospital!=2 || playerTroop!=2)
-                {
-                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
-                    response.SetError(OperationMessages.PlayerIsUnderProtection);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
                 
                 
                 if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
@@ -3687,7 +4170,7 @@ namespace PlayerBaseApi.Services
                     TargetUserCoord = targetCoord,
                     LeaderGangId = leaderGangInfo.Id.ToString(),
                     LeaderGangName = $"[{leaderGangInfo.ShortName}]{leaderGangInfo.Name}",
-                    LeaderGangAvatarId = leaderGangInfo.AvatarId,                    
+                    LeaderGangAvatarId = leaderGangInfo.AvatarId,
                     TargetGangId = targetGangInfo.Id.ToString(),
                     TargetGangName = $"[{targetGangInfo.ShortName}]{targetGangInfo.Name}",
                     TargetGangAvatarId = targetGangInfo.AvatarId,
@@ -3709,9 +4192,16 @@ namespace PlayerBaseApi.Services
                     TroopCount = req.Data.AttackerTroopCount,
                     UserId = user.Id,
                     SenderAvatarId = leaderPlayerbaseInfo?.AvatarId??0,
-                    ComeBackDate = now+ TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4)
+                    ComeBackDate = now+ TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4),
+                    WallLevel = 0,
+                    PrisonerCount = 0,
+                    BarracksLevel = 0,
+                    DeadTroop = 0,
+                    LootedScrap = 0,
+                    WoundedTroop = 0,
                     
                 };
+                rally.ATotalTroop = rallyPart.TroopCount;
                 await _context.AddAsync(rallyPart);
                 pt.TroopCount -= rallyPart.TroopCount;
                 await _context.SaveChangesAsync();
@@ -3782,13 +4272,6 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == user.Id ).AnyAsync();                       
                 var playerBaseInfo = await _context.PlayerBaseInfo
                     .Where(l => l.UserId == user.Id ).FirstOrDefaultAsync();       
-                if (playerPrisons || playerHospital || pt==null)
-                {
-                    info.AddInfo(OperationMessages.PlayerIsUnderProtection);
-                    response.SetError(OperationMessages.PlayerIsUnderProtection);
-                    _logger.LogInformation(info.ToString());
-                    return response;
-                }
                 
                 
                 if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
@@ -3846,7 +4329,9 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 
-                RallyHelper.NewRally(dbRally);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)
@@ -3863,7 +4348,7 @@ namespace PlayerBaseApi.Services
         public async Task<TDResponse<List<RallyDTO>>> GetRallyList(BaseRequest req, UserDto user)
         {
             TDResponse<List<RallyDTO>> response = new TDResponse<List<RallyDTO>>();
-            var info = InfoDetail.CreateInfo(req, "JoinRally");
+            var info = InfoDetail.CreateInfo(req, "GetRallyList");
             try
             {
                 var gangInfo = (await GetGangInfoForRally(user.Id)).Data;
@@ -3875,6 +4360,7 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 var rallyList =await  _context.Rally
+                    .Include(l=>l.RallyParts)
                     .Where(l => l.IsActive && l.LeaderGangId==gangInfo.Id.ToString())
                     .ToListAsync();
                 response.Data = rallyList.Select(l => RallyHelper.MapRallyDTO(l)).ToList();
