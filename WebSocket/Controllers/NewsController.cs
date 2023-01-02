@@ -50,6 +50,13 @@ public class NewsController : ControllerBase
     public async Task<TDResponse> SendRallyNews([FromBody] BaseRequest<RallyDTO> req)
     {
         return await _newsService.SendRallyNews(req.Data);
+    }    
+    
+    //[OnlyApps]
+    [HttpPost("SendRallyNews")]
+    public async Task<TDResponse> SendSupportNews([FromBody] BaseRequest<SupportUnitDTO> req)
+    {
+        return await _newsService.SendSupportNews(req.Data);
     }
     
     [HttpPost("CollectLootRunByNewsId")]

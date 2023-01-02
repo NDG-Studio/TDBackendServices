@@ -10,6 +10,7 @@ namespace WebSocket.Interfaces
         Task<TDResponse> SendScoutNews(ScoutInfoDTO req);
         Task<TDResponse> SendAttackNews(AttackInfoDTO req);
         Task<TDResponse> SendRallyNews(RallyDTO req);
+        Task<TDResponse> SendSupportNews(SupportUnitDTO req);
         Task<TDResponse> CollectLootRunByNewsId(string newsId);
     }
 }

@@ -534,7 +534,7 @@ namespace WebSocket.Services
                                     {
                                         Title = $"Rally (not necessary)",
                                         Seen = false,
-                                        Date = DateTimeOffset.UtcNow.ToString(),
+                                        Date = req.RallyStartDate??"",
                                         Detail = $"not necessary",
                                         IsActive = true,
                                         TypeId = (int)NewsType.Rally,
@@ -692,6 +692,96 @@ namespace WebSocket.Services
                 }
                 
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                response.SetError(OperationMessages.DbError);
+            }
+            return response;
+
+        }
+        
+        public async Task<TDResponse> SendSupportNews(SupportUnitDTO req)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+
+                using (var _context = new WebSocketContext())
+                {
+                    switch (((SupportUnitState)req.State, req.IsActive))
+                    { 
+                        case (SupportUnitState.Pending,true):
+                                
+                                    var nws = new NewsDTO()
+                                    {
+                                        Title = $"Reinforce (not necessary)",
+                                        Seen = false,
+                                        Date = DateTimeOffset.UtcNow.ToString(),
+                                        Detail = $"not necessary",
+                                        IsActive = true,
+                                        TypeId = (int)NewsType.Reinforcement,
+                                        ACoord = req.ClientCoord,
+                                        AGangAvatarId = null,
+                                        AGangId = null,
+                                        AUsername = req.ClientUsername ,
+                                        AGangName = null,
+                                        AUserId = req.ClientUserId,
+                                        ProcessDate = req.ArrivedDate,
+                                        TCoord = req.HostCoord,
+                                        TUsername = req.HostUsername,
+                                        TGangAvatarId = null,
+                                        TGangId = null,
+                                        TGangName = null,
+                                        TUserId = req.HostUserId,
+                                        TDead = null,
+                                        TPrisoner = 0,
+                                        ADead = null,
+                                        TUserAvatar = req.HostAvatarId,
+                                        AUserAvatar = req.ClientAvatarId,
+                                        AHeroId = req.HeroId,
+                                        AHeroName = req.HeroName
+                                    };
+                                    Player.SendNewInteraction(req.ClientUserId, nws);
+                                    Player.SendNewInteraction(req.HostUserId, nws);
+                                
+                                break;                        
+                        case (SupportUnitState.Returning,true):
+                            var nwsR = new NewsDTO()
+                            {
+                                Title = $"Reinforce (not necessary)",
+                                Seen = false,
+                                Date = DateTimeOffset.UtcNow.ToString(),
+                                Detail = $"not necessary",
+                                IsActive = true,
+                                TypeId = (int)NewsType.Reinforcement,
+                                ACoord = req.ClientCoord,
+                                AGangAvatarId = null,
+                                AGangId = null,
+                                AUsername = req.ClientUsername ,
+                                AGangName = null,
+                                AUserId = req.ClientUserId,
+                                ProcessDate = req.ArrivedDate,
+                                TCoord = req.HostCoord,
+                                TUsername = req.HostUsername,
+                                TGangAvatarId = null,
+                                TGangId = null,
+                                TGangName = null,
+                                TUserId = req.HostUserId,
+                                TDead = null,
+                                TPrisoner = 0,
+                                ADead = null,
+                                TUserAvatar = req.HostAvatarId,
+                                AUserAvatar = req.ClientAvatarId,
+                                AHeroId = req.HeroId,
+                                AHeroName = req.HeroName
+                            };
+                            Player.SendNewInteraction(req.ClientUserId, nwsR);
+                            Player.SendNewInteraction(req.HostUserId, nwsR);
+                            break;
+                    }
+                }
             }
             catch (Exception e)
             {

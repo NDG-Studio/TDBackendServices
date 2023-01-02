@@ -75,7 +75,7 @@ namespace PlayerBaseApi.MapperProfiles
                 .ForMember(dest => dest.TrainingDoneDate, operations => operations
                 .MapFrom(
                     source => source.TrainingDoneDate != null ? source.TrainingDoneDate.ToString() : null));
-
+            CreateMap<ScoutLevel, ScoutLevelDTO>();
             CreateMap<HospitalLevel, HospitalLevelDTO>();
             CreateMap<MarketItem, UsableItemDTO>();
 

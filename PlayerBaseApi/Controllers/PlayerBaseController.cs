@@ -715,6 +715,27 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.ScoutPlayer(req, user);
+        }             
+        
+        /// <summary>
+        /// Baska bir playerin base'ine scout yapmak icin cagirilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>Not: Test icin distance hesaplamasi yapilmaksizin 2 dk gidis 2 dk gelis olarak ayarlandi
+        /// Input: BaseRequest &lt; ScoutRequestV2 &gt;  NOT: user'in idsi ve distance degeri alinir
+        /// <br/>
+        /// Output: TDResponse &lt; ScoutDTO &gt; Not: suan data null donuyor ne donecegine karar veremedim
+        /// </remarks>Task<TDResponse> ScoutPlayerV2(BaseRequest<ScoutRequestV2> req, UserDto user)
+        [LoginRequired]
+        [HttpPost("ScoutPlayerV2")]
+        public async Task<TDResponse> ScoutPlayerV2([FromBody] BaseRequest<ScoutRequestV2> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.ScoutPlayerV2(req, user);
         }        
         
         

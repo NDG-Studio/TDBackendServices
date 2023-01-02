@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PlayerBaseApi;
@@ -11,9 +12,10 @@ using PlayerBaseApi;
 namespace PlayerBaseApi.Migrations
 {
     [DbContext(typeof(PlayerBaseContext))]
-    partial class PlayerBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221230075422_scout-changed")]
+    partial class scoutchanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1890,15 +1892,8 @@ namespace PlayerBaseApi.Migrations
                     b.Property<DateTimeOffset?>("ArrivedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ClientAvatarId")
-                        .HasColumnType("integer");
-
                     b.Property<long>("ClientUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("ClientUsername")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("ComeBackDate")
                         .HasColumnType("timestamp with time zone");
@@ -1909,19 +1904,8 @@ namespace PlayerBaseApi.Migrations
                     b.Property<int>("HeroId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("HeroName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("HostAvatarId")
-                        .HasColumnType("integer");
-
                     b.Property<long>("HostUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("HostUsername")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");

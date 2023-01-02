@@ -9,6 +9,7 @@
         Scout=5,
         Attack=6,
         Rally=7,
-        GangApplicationDone=8
+        GangApplicationDone=8,
+        Reinforcement=9
     }
 }

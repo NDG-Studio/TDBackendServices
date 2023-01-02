@@ -3780,6 +3780,79 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
                 
                 ScoutHelper.AddScoutList(ent);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }       
+        public async Task<TDResponse> ScoutPlayerV2(BaseRequest<ScoutRequestV2> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "ScoutPlayerV2");
+            try
+            {
+                //todo: kac tane aktif scoutu var kontrol edilecek
+                if (req.Data == null)
+                {
+                    info.AddInfo(OperationMessages.InputError);
+                    response.SetError(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!(await _context.PlayerBaseInfo.Where(l=>l.UserId==req.Data.TargetUserId).AnyAsync()))
+                {
+                    info.AddInfo(OperationMessages.InputError+"nasi");
+                    response.SetError(OperationMessages.InputError+"nasi");
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var playerScout = await _context.PlayerScout.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerScout==null)
+                {
+                    
+                    playerScout = new PlayerScout()
+                    {
+                        TrainingDoneDate = null,
+                        UserId = user.Id,
+                        ScoutLevelId = await _context.PlayerBasePlacement
+                            .Where(l=>l.UserId==user.Id && l.BuildingTypeId==8)
+                            .Select(l=>l.BuildingLevel).FirstOrDefaultAsync(),
+                        SpyCount = 0,
+                        InTrainingCount = 0
+                    };
+                    await _context.AddAsync(playerScout);
+                    await _context.SaveChangesAsync();
+                }
+                var ent = new Scout()
+                {
+                    TargetUserId = req.Data.TargetUserId,
+                    TargetUsername = await _context.PlayerBaseInfo.Where(l=>l.UserId==req.Data.TargetUserId).Select(l=>l.Username).FirstOrDefaultAsync(),
+                    ArrivedDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(2),
+                    ComeBackDate = DateTimeOffset.UtcNow + TimeSpan.FromMinutes(4),
+                    SenderUserId = user.Id,
+                    AttackerSpyCount = req.Data.SpyCount,
+                    SenderUsername = user.Username
+
+                };
+
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+                
+                ScoutHelperV2.AddScoutList(ent);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)
@@ -3923,6 +3996,7 @@ namespace PlayerBaseApi.Services
                 }
 
                 var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
+                var senderPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (targetPlayerbaseInfo == null && !isFake)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -3956,7 +4030,15 @@ namespace PlayerBaseApi.Services
                 var pt = (await _context.PlayerTroop
                     .Where(l => l.UserId == user.Id)
                     .FirstOrDefaultAsync());
-
+                var playerHero = await _context.PlayerHero.Include(l=>l.Hero)
+                    .Where(l => l.UserId == user.Id && l.HeroId == req.Data.SenderHeroId).FirstOrDefaultAsync();
+                if (playerHero==null)
+                {
+                    info.AddInfo(OperationMessages.PlayerHaveNoHero);
+                    response.SetError(OperationMessages.PlayerHaveNoHero);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
                 if (!isFake)
                 {
                     var playerPrisons = await _context.PlayerPrison
@@ -3994,7 +4076,14 @@ namespace PlayerBaseApi.Services
                     State = (int)SupportUnitState.Pending,
                     HeroId = req.Data.SenderHeroId,
                     TroopCount = req.Data.SenderTroopCount,
-                    IsActive = true
+                    IsActive = true,
+                    ClientAvatarId = senderPlayerbaseInfo.AvatarId??0,
+                    ClientUsername = senderPlayerbaseInfo.Username,
+                    HostUsername = targetPlayerbaseInfo.Username,
+                    HeroName = playerHero.Hero.Name,
+                    HostAvatarId = targetPlayerbaseInfo.AvatarId??0,
+                    Wounded = 0,
+                    Dead = 0
                 };
                 
                 pt.TroopCount -= spu.TroopCount;

@@ -1,6 +1,6 @@
-﻿namespace PlayerBaseApi.Enums
+﻿namespace SharedLibrary.Enums
 {
-    enum SupportUnitState:int
+    public enum SupportUnitState:int
     {
         Stay = 1,
         Pending = 2,

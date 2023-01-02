@@ -8,4 +8,5 @@ public class PlayerScoutDTO
     public int SpyCount { get; set; }
     public string? TrainingDoneDate { get; set; }
     public int InTrainingCount { get; set; }
+    public ScoutLevelDTO ScoutLevel { get; set; }
 }

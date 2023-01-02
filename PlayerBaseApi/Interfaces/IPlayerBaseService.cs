@@ -62,6 +62,7 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<List<PlayerItemDTO>>> GetTDWaveRewardsByWaveId(BaseRequest<int> req, UserDto user);
         Task<TDResponse> GetTDWaveRewardsDoneByWaveId(BaseRequest<int> req, UserDto user);
         Task<TDResponse<ScoutDTO>> ScoutPlayer(BaseRequest<ScoutRequest> req, UserDto user);
+        Task<TDResponse> ScoutPlayerV2(BaseRequest<ScoutRequestV2> req, UserDto user);
         Task<TDResponse<AttackInfoDTO>> AttackPlayer(BaseRequest<AttackRequest> req, UserDto user);
         Task<TDResponse> CreateRally(BaseRequest<CreateRallyRequest> req, UserDto user);
         Task<TDResponse> JoinRally(BaseRequest<JoinRallyRequest> req, UserDto user);
