@@ -4071,7 +4071,7 @@ namespace PlayerBaseApi.Services
                     HostUserId = req.Data.TargetUserId,
                     SendedDate = now,
                     ArrivedDate = now + ( isFake? TimeSpan.FromSeconds(10) : TimeSpan.FromMinutes(2)),
-                    ComeBackDate = now + ( isFake? TimeSpan.FromSeconds(20) : TimeSpan.FromMinutes(4)),
+                    ComeBackDate = null,
                     ClientUserId = user.Id,
                     State = (int)SupportUnitState.Pending,
                     HeroId = req.Data.SenderHeroId,
@@ -4083,7 +4083,9 @@ namespace PlayerBaseApi.Services
                     HeroName = playerHero.Hero.Name,
                     HostAvatarId = targetPlayerbaseInfo.AvatarId??0,
                     Wounded = 0,
-                    Dead = 0
+                    Dead = 0,
+                    HostCoord = (await GetUserCoordinate(req.Data.TargetUserId)).Data,
+                    ClientCoord = (await GetUserCoordinate(user.Id)).Data
                 };
                 
                 pt.TroopCount -= spu.TroopCount;
@@ -4472,6 +4474,8 @@ namespace PlayerBaseApi.Services
             response.Data = new InteractionsDTO();
             response.Data.ActiveAttackList = new List<AttackInfoDTO>();
             response.Data.ActiveScoutList = new List<ScoutInfoDTO>();
+            response.Data.ActiveRallyList = new List<RallyDTO>();
+            response.Data.ActiveSupportUnitList = new List<SupportUnitDTO>();
             var info = InfoDetail.CreateInfo(req, "GetActiveInteractionsForSocket");
             try
             {
@@ -4482,6 +4486,15 @@ namespace PlayerBaseApi.Services
                 
                 var scoutList =await  _context.Scout
                     .Where(l => l.IsActive && l.SenderUserId == user.Id || l.TargetUserId==user.Id )
+                    .ToListAsync();       
+                
+                var rallyList =await  _context.RallyPart
+                    .Include(l=>l.Rally).ThenInclude(l=>l.RallyParts)
+                    .Where(l => l.IsActive && l.UserId == user.Id || l.Rally.TargetUserId==user.Id ).Select(l=>l.Rally)
+                    .ToListAsync();
+                
+                var supList =await  _context.SupportUnit
+                    .Where(l => l.IsActive && (l.ClientUserId == user.Id || l.HostUserId==user.Id) && l.State != (int)SupportUnitState.Stay  )
                     .ToListAsync();
 
                 response.Data.ActiveAttackList = attackList.Select(l => new AttackInfoDTO()
@@ -4502,6 +4515,8 @@ namespace PlayerBaseApi.Services
                     
                 }).ToList();
 
+                response.Data.ActiveRallyList = rallyList.Select(l => RallyHelper.MapRallyDTO(l)).ToList();
+
                 response.Data.ActiveScoutList = scoutList.Select(s => new ScoutInfoDTO()
                 {
                     ArrivedDate = s.ArrivedDate.ToString(),
@@ -4512,7 +4527,40 @@ namespace PlayerBaseApi.Services
                     TargetUserId = s.TargetUserId,
                     SenderUserName = s.SenderUsername,
                     TargetUserName = s.TargetUsername,
-                    Id = s.Id
+                    AttackerSpyCount = s.AttackerSpyCount,
+                    Id = s.Id,
+                    DefenserSpyCount = s.DefenserSpyCount,
+                    SenderAvatarId = _context.PlayerBaseInfo.Where(k=>k.UserId==s.SenderUserId)
+                        .Select(k=>k.AvatarId).FirstOrDefault()??0,                    
+                    TargetAvatarId = _context.PlayerBaseInfo.Where(k=>k.UserId==s.TargetUserId)
+                        .Select(k=>k.AvatarId).FirstOrDefault()??0,
+                    AttackerDeadSpyCount = s.AttackerDeadSpyCount,
+                    DefenserDeadSpyCount = s.DefenserDeadSpyCount
+                    
+                }).ToList();
+
+                response.Data.ActiveSupportUnitList = supList.Select(l => new SupportUnitDTO()
+                {
+                    Id = l.Id,
+                    HeroId = l.HeroId,
+                    IsActive = l.IsActive,
+                    Dead = l.Dead,
+                    State = l.State,
+                    Wounded = l.Wounded,
+                    ArrivedDate =l.ArrivedDate.ToString(),
+                    ClientCoord = l.ClientCoord??"",
+                    TroopCount = l.TroopCount,
+                    ClientUsername = l.ClientUsername,
+                    HeroName = l.HeroName,
+                    HostCoord = l.HostCoord??"",
+                    HostUsername = l.HostUsername,
+                    SendedDate = l.SendedDate.ToString(),
+                    ClientAvatarId = l.ClientAvatarId,
+                    ClientUserId = l.ClientUserId,
+                    ComeBackDate = l.ComeBackDate.ToString(),
+                    HostAvatarId = l.HostAvatarId,
+                    HostUserId = l.HostUserId
+
                 }).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

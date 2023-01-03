@@ -24,43 +24,41 @@ public class SupportUnitHelper
         SupportUnitList.Add(supU);
         using (var _context = new PlayerBaseContext())
         {
-            // var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
-            // {
-            //     Data = new AttackInfoDTO()
-            //     {
-            //         IsActive = supU.IsActive,
-            //         ComeBackDate = supU.ComeBackDate.ToString(),
-            //         Id = attack.Id,
-            //         ArriveDate = attack.ArriveDate.ToString(),
-            //         ResultData = attack.ResultData,
-            //         WinnerSide = attack.WinnerSide,
-            //         AttackerHeroId = attack.AttackerHeroId,
-            //         AttackerHeroName= _context.Hero.Where(l=>l.Id==attack.AttackerHeroId).Select(l=>l.Name).FirstOrDefault()??"",
-            //         AttackerTroopCount = attack.AttackerTroopCount,
-            //         AttackerUserId = attack.AttackerUserId,
-            //         DefenserUserId = attack.TargetUserId,
-            //         AttackerUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.Username).FirstOrDefault()??"",
-            //         DefenserUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.TargetUserId)
-            //             .Select(l=>l.Username).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?"Emmanuel":""),
-            //         AttackerAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.AvatarId).FirstOrDefault()??0,
-            //         DefenserAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.AvatarId).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?3:0)
-            //
-            //     },
-            //     Info = new InfoDto()
-            //     {
-            //         Ip = "",
-            //         AppVersion = "",
-            //         DeviceId = "",
-            //         DeviceModel = "",
-            //         DeviceType = "",
-            //         OsVersion = "",
-            //         UserId = 111
-            //     }
-            // }).Result;
-            // Console.WriteLine(ccc.Message+"--");
+            var ccc = SendSupportNews(new BaseRequest<SupportUnitDTO>()
+            {
+                Data = new SupportUnitDTO()
+                {
+                    IsActive = supU.IsActive,
+                    ComeBackDate = supU.ComeBackDate.ToString(),
+                    HostUsername = supU.HostUsername,
+                    Id = supU.Id,
+                    HostAvatarId = supU.HostAvatarId,
+                    State = supU.State,
+                    Wounded = supU.Wounded,
+                    ArrivedDate = supU.ArrivedDate.ToString(),
+                    TroopCount = supU.TroopCount,
+                    Dead = supU.Dead,
+                    ClientUserId = supU.ClientUserId,
+                    ClientCoord = supU.ClientCoord??"",
+                    ClientAvatarId = supU.ClientAvatarId,
+                    HostCoord = supU.HostCoord??"",
+                    ClientUsername = supU.ClientUsername,
+                    HeroId = supU.HeroId,
+                    HeroName = supU.HeroName,
+                    SendedDate = supU.SendedDate.ToString(),
+                    HostUserId = supU.HostUserId
+                },
+                Info = new InfoDto()
+                {
+                    Ip = "",
+                    AppVersion = "",
+                    DeviceId = "",
+                    DeviceModel = "",
+                    DeviceType = "",
+                    OsVersion = "",
+                    UserId = 111
+                }
+            }).Result;
         }
 
     }
@@ -75,43 +73,41 @@ public class SupportUnitHelper
         SupportUnitList.Add(supU);
         using (var _context = new PlayerBaseContext())
         {
-            // var ccc = SendAttackInfo(new BaseRequest<AttackInfoDTO>()
-            // {
-            //     Data = new AttackInfoDTO()
-            //     {
-            //         IsActive = supU.IsActive,
-            //         ComeBackDate = supU.ComeBackDate.ToString(),
-            //         Id = attack.Id,
-            //         ArriveDate = attack.ArriveDate.ToString(),
-            //         ResultData = attack.ResultData,
-            //         WinnerSide = attack.WinnerSide,
-            //         AttackerHeroId = attack.AttackerHeroId,
-            //         AttackerHeroName= _context.Hero.Where(l=>l.Id==attack.AttackerHeroId).Select(l=>l.Name).FirstOrDefault()??"",
-            //         AttackerTroopCount = attack.AttackerTroopCount,
-            //         AttackerUserId = attack.AttackerUserId,
-            //         DefenserUserId = attack.TargetUserId,
-            //         AttackerUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.Username).FirstOrDefault()??"",
-            //         DefenserUsername = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.TargetUserId)
-            //             .Select(l=>l.Username).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?"Emmanuel":""),
-            //         AttackerAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.AvatarId).FirstOrDefault()??0,
-            //         DefenserAvatarId = _context.PlayerBaseInfo.Where(l=>l.UserId==attack.AttackerUserId)
-            //             .Select(l=>l.AvatarId).FirstOrDefault()??(attack.TargetUserId==(long)FakeId.TutorialEnemy?3:0)
-            //
-            //     },
-            //     Info = new InfoDto()
-            //     {
-            //         Ip = "",
-            //         AppVersion = "",
-            //         DeviceId = "",
-            //         DeviceModel = "",
-            //         DeviceType = "",
-            //         OsVersion = "",
-            //         UserId = 111
-            //     }
-            // }).Result;
-            // Console.WriteLine(ccc.Message+"--");
+            var ccc = SendSupportNews(new BaseRequest<SupportUnitDTO>()
+            {
+                Data = new SupportUnitDTO()
+                {
+                    IsActive = supU.IsActive,
+                    ComeBackDate = supU.ComeBackDate.ToString(),
+                    HostUsername = supU.HostUsername,
+                    Id = supU.Id,
+                    HostAvatarId = supU.HostAvatarId,
+                    State = supU.State,
+                    Wounded = supU.Wounded,
+                    ArrivedDate = supU.ArrivedDate.ToString(),
+                    TroopCount = supU.TroopCount,
+                    Dead = supU.Dead,
+                    ClientUserId = supU.ClientUserId,
+                    ClientCoord = supU.ClientCoord??"",
+                    ClientAvatarId = supU.ClientAvatarId,
+                    HostCoord = supU.HostCoord??"",
+                    ClientUsername = supU.ClientUsername,
+                    HeroId = supU.HeroId,
+                    HeroName = supU.HeroName,
+                    SendedDate = supU.SendedDate.ToString(),
+                    HostUserId = supU.HostUserId
+                },
+                Info = new InfoDto()
+                {
+                    Ip = "",
+                    AppVersion = "",
+                    DeviceId = "",
+                    DeviceModel = "",
+                    DeviceType = "",
+                    OsVersion = "",
+                    UserId = 111
+                }
+            }).Result;
         }
     }
     
@@ -129,7 +125,7 @@ public class SupportUnitHelper
             try
             {
                 var now = DateTimeOffset.UtcNow;
-                var doneList=SupportUnitList.Where(l =>l.ArrivedDate <= now).ToList();
+                var doneList=SupportUnitList.Where(l =>l.ArrivedDate <= now && l.ComeBackDate==null).ToList();
                 using (var _context = new PlayerBaseContext())
                 {
                     foreach (var s in doneList)
@@ -153,7 +149,7 @@ public class SupportUnitHelper
                     SupportUnitList.RemoveAll(l => l.ArrivedDate <= now);
                     
                     now=DateTimeOffset.UtcNow;
-                    var rmvList= _context.SupportUnit.Where(l=>l.ComeBackDate <= now && l.IsActive).ToList();
+                    var rmvList= _context.SupportUnit.Where(l=>l.ComeBackDate <= now && l.IsActive && l.ComeBackDate != null).ToList();
                     if (rmvList.Count>0)
                     {
                         foreach (var s in rmvList)
@@ -190,7 +186,7 @@ public class SupportUnitHelper
     
         
         
-    private static async Task<TDResponse> SendAttackInfo(BaseRequest<AttackInfoDTO> req)
+    private static async Task<TDResponse> SendSupportNews(BaseRequest<SupportUnitDTO> req)
     {
         var handler = new HttpClientHandler();
 
@@ -201,7 +197,7 @@ public class SupportUnitHelper
         using (HttpClient client = new HttpClient(handler))
         {
 
-            var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/News/SendAttackNews"),
+            var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/News/SendSupportNews"),
                 new StringContent(JsonConvert.SerializeObject(
                     req
                 ), Encoding.UTF8, "application/json")).Result;

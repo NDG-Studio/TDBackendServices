@@ -1,9 +1,7 @@
 
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PlayerBaseApi.Entities;
-using PlayerBaseApi.Models;
 using SharedLibrary.Models;
 
 namespace PlayerBaseApi;
@@ -105,7 +103,7 @@ public class ScoutHelperV2
                             SenderUserId = s.SenderUserId,
                             SenderUsername = s.SenderUsername,
                         };
-                        s.DefenserSpyCount = s.DefenserSpyCount;
+                        s.DefenserSpyCount = playerScout.SpyCount;
                         if (playerScout.SpyCount<s.AttackerSpyCount)
                         {
                             scoutData = new ScoutedData()

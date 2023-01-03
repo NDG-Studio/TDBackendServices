@@ -226,22 +226,32 @@ namespace WebSocket.Socket
                         Detail = $"not necessary",
                         IsActive = true,
                         TypeId = (int)NewsType.Scout,
-                        ACoord = DbService.GetUserCoordinate(scout.SenderUserId).Result.Data,
-                        AGangId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId && l.IsActive)
+                        ACoord = GetUserCoordinate(scout.SenderUserId).Result.Data,
+                        AGangAvatarId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId&& l.IsActive)
+                            .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
+                        AGangId = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         AUsername = scout.SenderUserName,
-                        AGangName = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId &&l.IsActive)
+                        AGangName = _context.GangMember.Where(l=>l.UserId==scout.SenderUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         AUserId = scout.SenderUserId,
+                        ADead = scout.AttackerDeadSpyCount,
+                        TDead = scout.DefenserDeadSpyCount,
+                        TWounded = scout.DefenserSpyCount,
+                        AWounded = scout.AttackerSpyCount,
                         ProcessDate = scout.ArrivedDate,
-                        TCoord = DbService.GetUserCoordinate(scout.TargetUserId).Result.Data,
+                        TCoord = GetUserCoordinate(scout.TargetUserId).Result.Data,
                         TUsername = scout.TargetUserName,
-                        TGangId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId && l.IsActive)
+                        TGangAvatarId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId&& l.IsActive)
+                            .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
+                        TGangId = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         TGangName = _context.GangMember.Where(l=>l.UserId==scout.TargetUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         TUserId = scout.TargetUserId,
-                        Id = scout.Id.ToString()
+                        Id = scout.Id.ToString(),
+                        AUserAvatar = scout.SenderAvatarId,
+                        TUserAvatar = scout.TargetAvatarId
                     });
 
                 }
@@ -262,6 +272,8 @@ namespace WebSocket.Socket
                         IsActive = true,
                         TypeId = (int)NewsType.Attack,
                         ACoord = DbService.GetUserCoordinate(attack.AttackerUserId).Result.Data,
+                        AGangAvatarId = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId&& l.IsActive)
+                            .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                         AGangId = _context.GangMember.Where(l=>l.UserId==attack.AttackerUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         AUsername = attack.AttackerUsername,
@@ -270,18 +282,94 @@ namespace WebSocket.Socket
                         AUserId = attack.AttackerUserId,
                         AHeroId = attack.AttackerHeroId,
                         AHeroName = attack.AttackerHeroName,
-                        ATroop = attack.AttackerTroopCount,
                         ProcessDate = attack.ArriveDate,
-                        TCoord = DbService.GetUserCoordinate(attack.DefenserUserId).Result.Data,
+                        TCoord = GetUserCoordinate(attack.DefenserUserId).Result.Data,
                         TUsername = attack.DefenserUsername,
+                        TGangAvatarId = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId&& l.IsActive)
+                            .Select(l=>l.MemberType.Gang.AvatarId).FirstOrDefault(),
                         TGangId = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId&& l.IsActive)
                             .Select(l=>l.MemberType.Gang.Id).FirstOrDefault().ToString(),
                         TGangName = _context.GangMember.Where(l=>l.UserId==attack.DefenserUserId&& l.IsActive)
                             .Select(l=>$"[{l.MemberType.Gang.ShortName}]{l.MemberType.Gang.Name}").FirstOrDefault(),
                         TUserId = attack.DefenserUserId,
                         Id = attack.Id.ToString(),
+                        AUserAvatar = attack.AttackerAvatarId,
+                        TUserAvatar = attack.DefenserAvatarId,
+                        ACombatPower = attack.AttackerPower,
+                        TCombatPower = attack.DefenserPower
                     });
 
+                }
+
+                foreach (var rally in allInteractions.ActiveRallyList)
+                {
+                    if (player.UniqueId==rally.TargetUserId)
+                    {
+                        Player.SendNewInteraction(player.UniqueId, new NewsDTO()
+                        {
+                            Title = $"Rally (not necessary)",
+                            Seen = false,
+                            Date = DateTimeOffset.UtcNow.ToString(),
+                            Detail = $"not necessary",
+                            IsActive = true,
+                            TypeId = (int)NewsType.Rally,
+                            ACoord = rally.LeaderUserCoord,
+                            AGangAvatarId = rally.LeaderGangAvatarId,
+                            AGangId = rally.LeaderGangId,
+                            AUsername = rally.LeaderUsername,
+                            AGangName = rally.LeaderGangName,
+                            AUserId = rally.LeaderUserId,
+                            ProcessDate = rally.WarDate,
+                            TCoord = rally.TargetUserCoord,
+                            TUsername = rally.TargetUsername,
+                            TGangAvatarId = rally.TargetGangAvatarId,
+                            TGangId = rally.TargetGangId,
+                            TGangName = rally.TargetGangName,
+                            TUserId = rally.TargetUserId,
+                        });
+                    }
+                    else
+                    {
+                        var part = rally.RallyParts.FirstOrDefault(l => l.UserId == player.UniqueId);
+                        if (part==null)
+                        {
+                            continue;
+                        }
+                        Player.SendNewInteraction(player.UniqueId, new NewsDTO()
+                        {
+                           Title = $"Rally (not necessary)",
+                           Seen = false,
+                           Date = rally.RallyStartDate??"",
+                           Detail = $"not necessary",
+                           IsActive = true,
+                           TypeId = (int)NewsType.Rally,
+                           ACoord = rally.LeaderUserCoord,
+                           AGangAvatarId = rally.LeaderGangAvatarId,
+                           AGangId = rally.LeaderGangId,
+                           AUsername = rally.LeaderUsername,
+                           AGangName = rally.LeaderGangName,
+                           AUserId = rally.LeaderUserId,
+                           ProcessDate = rally.WarDate,
+                           TCoord = rally.TargetUserCoord,
+                           TUsername = rally.TargetUsername,
+                           TGangAvatarId = rally.TargetGangAvatarId,
+                           TGangId = rally.TargetGangId,
+                           TGangName = rally.TargetGangName,
+                           TUserId = rally.TargetUserId,
+                           TDead = rally.TargetsDeadTroop,
+                           TPrisoner = 0,
+                           ADead = part.DeadTroop,
+                           APrisoner = part.PrisonerCount,
+                           AWounded = part.WoundedTroop,
+                           ATroop = part.TroopCount,
+                           TTroop = rally.TargetsTroop,
+                           WarLoot = part.LootedScrap,
+                           TWounded = rally.TargetsWoundedTroop,
+                           TWall = rally.TargetWallLevel,
+                           TScrap = rally.TargetScrap,
+                           VictorySide = rally.WinnerSide, 
+                        });
+                    }
                 }
                 if (g == null)
                 {

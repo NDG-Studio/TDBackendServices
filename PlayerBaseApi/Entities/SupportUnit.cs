@@ -14,6 +14,8 @@ public class SupportUnit
     public string ClientUsername { get; set; }
     public long ClientUserId { get; set; } = 0;
     public int ClientAvatarId { get; set; } = 0;
+    public string? ClientCoord { get; set; } = null;
+    public string? HostCoord { get; set; } = null;
     public int HeroId { get; set; } = 0;
     public string HeroName { get; set; }
     public int TroopCount { get; set; } = 0;

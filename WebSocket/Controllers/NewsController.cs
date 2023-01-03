@@ -53,7 +53,7 @@ public class NewsController : ControllerBase
     }    
     
     //[OnlyApps]
-    [HttpPost("SendRallyNews")]
+    [HttpPost("SendSupportNews")]
     public async Task<TDResponse> SendSupportNews([FromBody] BaseRequest<SupportUnitDTO> req)
     {
         return await _newsService.SendSupportNews(req.Data);
