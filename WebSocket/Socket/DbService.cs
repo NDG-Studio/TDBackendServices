@@ -6,6 +6,7 @@ using SharedLibrary.Helpers;
 using SharedLibrary.Models.Loot;
 using System.Net.Http.Headers;
 using System.Text;
+using SharedLibrary.Enums;
 using WebSocket.Entities;
 using WebSocket.Enums;
 using WebSocket.Helpers;
@@ -98,7 +99,7 @@ namespace WebSocket.Socket
             }
             catch (Exception e)
             {
-
+                // ignored
             }
         }
 
@@ -371,6 +372,40 @@ namespace WebSocket.Socket
                         });
                     }
                 }
+                
+                foreach (var sup in allInteractions.ActiveSupportUnitList)
+                {
+                        Player.SendNewInteraction(player.UniqueId, new NewsDTO()
+                        {
+                            Title = $"Reinforce (not necessary)",
+                            Seen = false,
+                            Date = DateTimeOffset.UtcNow.ToString(),
+                            Detail = $"not necessary",
+                            IsActive = true,
+                            TypeId = (int)NewsType.Reinforcement,
+                            ACoord = sup.ClientCoord,
+                            AGangAvatarId = null,
+                            AGangId = null,
+                            AUsername = sup.ClientUsername ,
+                            AGangName = null,
+                            AUserId = sup.ClientUserId,
+                            ProcessDate = sup.State == (int)SupportUnitState.Pending ? sup.ArrivedDate : sup.ComeBackDate,
+                            TCoord = sup.HostCoord,
+                            TUsername = sup.HostUsername,
+                            TGangAvatarId = null,
+                            TGangId = null,
+                            TGangName = null,
+                            TUserId = sup.HostUserId,
+                            TDead = null,
+                            TPrisoner = 0,
+                            ADead = null,
+                            TUserAvatar = sup.HostAvatarId,
+                            AUserAvatar = sup.ClientAvatarId,
+                            AHeroId = sup.HeroId,
+                            AHeroName = sup.HeroName
+                        });
+                    
+                }
                 if (g == null)
                 {
                     _context.Dispose();
@@ -378,7 +413,7 @@ namespace WebSocket.Socket
             }
             catch (Exception e)
             {
-
+                // ignored
             }
         }
         public static async Task RefreshLootRuns(WebSocketContext? _context, Player player, UserActivity? userActivity, bool sendNews = false)
@@ -791,8 +826,7 @@ namespace WebSocket.Socket
             var handler = new HttpClientHandler();
 
             handler.ServerCertificateCustomValidationCallback =
-                (message, cert, chain, errors) =>
-                    { return true; }; //TODO: Prodda silinmeli
+                (message, cert, chain, errors) => true; //TODO: Prodda silinmeli
 
             using (HttpClient client = new HttpClient(handler))
             {

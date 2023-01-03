@@ -12,6 +12,7 @@ namespace PlayerBaseApi.Helpers;
 public class RallyHelper
 {
     public static List<Rally> RallyList = new List<Rally>();
+    public static List<RallyPart> AbortedRallyParts = new List<RallyPart>();
     private static int TROOP_POWER = 1;
     private static int WALL_POWER = 1;
     
@@ -49,7 +50,35 @@ public class RallyHelper
         }
 
     }
-    
+    public static void ChangeRally(Rally rally)
+    {
+        var exist = RallyList.Where(l => l.Id == rally.Id).FirstOrDefault();
+        if (exist!=null)
+        {
+            RallyList.Remove(exist);
+        }
+        
+        RallyList.Add(rally);
+        using (var _context = new PlayerBaseContext())
+        {
+            var ccc = SendRallyInfo(new BaseRequest<RallyDTO>()
+            {
+                Data = MapRallyDTO(rally),
+                Info = new InfoDto()
+                {
+                    Ip = "",
+                    AppVersion = "",
+                    DeviceId = "",
+                    DeviceModel = "",
+                    DeviceType = "",
+                    OsVersion = "",
+                    UserId = 111
+                }
+            }).Result;
+            Console.WriteLine(ccc.Message+"--");
+        }
+    }    
+
 
     private static void CheckRally()
     {
@@ -72,7 +101,7 @@ public class RallyHelper
                         {
                             #region ATTACK ALGORITHM
 
-                            s.RallyParts = _context.RallyPart.Where(l => l.RallyId == s.Id).ToList();
+                            s.RallyParts = _context.RallyPart.Where(l => l.RallyId == s.Id && l.IsActive && !l.IsAbort).ToList();
                             var TplayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == s.TargetUserId)
                                 .FirstOrDefault();
                             var TplayerTroop = _context.PlayerTroop.Where(l => l.UserId == s.TargetUserId).FirstOrDefault();
@@ -259,7 +288,7 @@ public class RallyHelper
                     
                     now=DateTimeOffset.UtcNow;
                     var rmvList= _context.RallyPart.Include(l=>l.Rally)
-                        .Where(l=>l.ComeBackDate <= now && l.Rally.WinnerSide != null && l.IsActive).ToList();
+                        .Where(l=>l.ComeBackDate <= now && l.Rally.WinnerSide != null && l.IsActive && !l.IsAbort).ToList();
                     if (rmvList.Count>0)
                     {
                         foreach (RallyPart r in rmvList)
@@ -302,6 +331,32 @@ public class RallyHelper
                             
                         }
 
+                    }
+                    var abortPartList= _context.RallyPart.Include(l=>l.Rally)
+                        .Where(l=>l.ComeBackDate <= now && l.IsAbort && l.IsActive).ToList();
+                    if (abortPartList.Count>0)
+                    {
+                        foreach (RallyPart r in abortPartList)
+                        { 
+                            r.IsActive = false;
+                            var attackerPlayerTroops = _context.PlayerTroop.Where(l => l.UserId == r.UserId).FirstOrDefault();
+                            attackerPlayerTroops.TroopCount += r.TroopCount - r.DeadTroop - r.WoundedTroop;
+                            _context.SaveChanges();
+                            // var ccc = SendRallyInfo(new BaseRequest<RallyDTO>()
+                            // {
+                            //     Data = MapRallyDTO(r.Rally),
+                            //     Info = new InfoDto()
+                            //     {
+                            //         Ip = "",
+                            //         AppVersion = "",
+                            //         DeviceId = "",
+                            //         DeviceModel = "",
+                            //         DeviceType = "",
+                            //         OsVersion = "",
+                            //         UserId = 111
+                            //     }
+                            // }).Result;
+                        }
                     }
 
                     var rmvRallies = _context.Rally
@@ -379,7 +434,8 @@ public class RallyHelper
                 WallLevel = l.WallLevel,
                 WoundedTroop = l.WoundedTroop,
                 ComeBackDate = l.ComeBackDate?.ToString(),
-                SenderAvatarId = l.SenderAvatarId
+                SenderAvatarId = l.SenderAvatarId,
+                IsAbort = l.IsAbort
             }).ToList() ?? new List<RallyPartDTO>();
             rally.TargetScrap = r.TargetScrap;
             rally.TargetsTroop = r.TargetsTroop;
@@ -407,7 +463,8 @@ public class RallyHelper
             rally.ATotalTroop = r.ATotalTroop;
             rally.ATotalDeadTroop = r.ATotalDeadTroop;
             rally.ATotalWoundedTroop = r.ATotalWoundedTroop;
-            
+            rally.IsAbort = r.IsAbort;
+
         };
         return rally;
     }

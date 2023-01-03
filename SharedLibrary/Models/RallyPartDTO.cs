@@ -18,4 +18,5 @@ public class RallyPartDTO
     public int LootedScrap { get; set; }
     public int PrisonerCount { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsAbort { get; set; } = false;
 }

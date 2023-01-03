@@ -22,6 +22,7 @@ public class RallyPart
     public int WallLevel { get; set; }
     public int LootedScrap { get; set; }
     public int PrisonerCount { get; set; }
+    public bool IsAbort { get; set; } = false;
     public bool IsActive { get; set; } = true;
     
     [ForeignKey("RallyId")]

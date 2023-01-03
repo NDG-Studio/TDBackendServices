@@ -38,6 +38,7 @@ public class Rally
     public DateTimeOffset? WarDate { get; set; } = null;
     public DateTimeOffset? ComeBackDate { get; set; } = null;
     public DateTimeOffset Date { get; set; }
+    public bool IsAbort { get; set; } = false;
     public bool IsActive { get; set; } = true;
     public virtual ICollection<RallyPart> RallyParts { get; set; }
 }

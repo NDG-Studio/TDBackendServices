@@ -779,6 +779,46 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.JoinRally(req, user);
+        }
+                
+        /// <summary>
+        /// Baska bir playerin base'ine yapilan toplu saldiridan birini atmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// Input: BaseRequest &lt; long &gt;  NOT: RallyPart id
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("KickRallyPart")]
+        public async Task<TDResponse> KickRallyPart([FromBody] BaseRequest<long> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.KickRallyPart(req, user);
+        }     
+                        
+        /// <summary>
+        /// Baska bir playerin base'ine yapilan toplu saldiridan birini atmak icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// Input: BaseRequest &lt; long &gt;  NOT: RallyPart id
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("AbortRally")]
+        public async Task<TDResponse> AbortRally([FromBody] BaseRequest<long> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.AbortRally(req, user);
         }     
         
         /// <summary>

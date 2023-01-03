@@ -37,5 +37,6 @@ public class RallyDTO
     public string? ComeBackDate { get; set; } = null;
     public string Date { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsAbort { get; set; } = false;
     public List<RallyPartDTO> RallyParts { get; set; }
 }
