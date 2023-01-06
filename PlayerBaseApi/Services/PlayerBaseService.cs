@@ -52,7 +52,7 @@ namespace PlayerBaseApi.Services
                         BuildingTypeId = 10,
                         BuildingLevel = 1,
                         CoordX = -2.5,
-                        CoordY = 0.8,
+                        CoordY = 2.5,
                         UpdateEndDate = null,
                         UserId = user.Id
                     });
@@ -61,7 +61,7 @@ namespace PlayerBaseApi.Services
                         BuildingTypeId = 7,
                         BuildingLevel = 1,
                         CoordX = 2.5,
-                        CoordY = 7.5,
+                        CoordY = 2.5,
                         UpdateEndDate = null,
                         UserId = user.Id
                     });                    
