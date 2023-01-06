@@ -496,6 +496,9 @@ namespace PlayerBaseApi.Services
                 }
 
                 var buildingUpgradeTimeQuery = _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1);
+                var buildingInitial = await _context.BuildingUpgradeTime
+                    .Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1)
+                    .FirstOrDefaultAsync();
 
                 var buildingUpgradeTime = await _mapper.ProjectTo<BuildingUpgradeTimeDTO>(buildingUpgradeTimeQuery).FirstOrDefaultAsync();
 
@@ -507,6 +510,8 @@ namespace PlayerBaseApi.Services
                 cost += (int)(cost * buff.BuildingUpgradeCostMultiplier);
                 buildingUpgradeTime!.UpgradeDuration = duration;
                 buildingUpgradeTime!.ScrapCount = cost;
+                buildingUpgradeTime.OldPower = buildingInitial.Power;
+                buildingUpgradeTime.OldDescription = buildingInitial.Description;
                 var conditions = await _mapper.ProjectTo<BuildingUpgradeConditionDTO>(
                     _context.BuildingUpgradeCondition
                         .Include(l => l.PrereqBuildingType)
