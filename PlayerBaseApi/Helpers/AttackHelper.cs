@@ -204,8 +204,8 @@ public class AttackHelper
                             var TBuffs = BuffHelper.GetPlayersTotalBuff(s.TargetUserId, -1).Result;
 
                             
-                            APower = (int)(s.AttackerTroopCount * TROOP_POWER * (ABuffs.AttackMultiplier<=1?1:ABuffs.AttackMultiplier));
-                            TPower = (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.DefenseMultiplier<=1?1:TBuffs.DefenseMultiplier));
+                            APower = (int)(s.AttackerTroopCount * TROOP_POWER * (ABuffs.TroopDamageMultiplier<=1?1:ABuffs.TroopDamageMultiplier));
+                            TPower = (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.TroopDefenseMultiplier<=1?1:TBuffs.TroopDefenseMultiplier));
                             TPower = TPower + (TwallLevel * WALL_POWER);
                             Console.WriteLine("ATTACKER-Power-"+s.AttackerUserId+":"+APower);
                             Console.WriteLine("Defenser-Power-"+s.TargetUserId+":"+TPower);

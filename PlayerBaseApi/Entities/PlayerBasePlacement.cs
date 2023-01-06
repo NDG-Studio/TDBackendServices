@@ -13,6 +13,7 @@ namespace PlayerBaseApi.Entities
         public DateTimeOffset? UpdateEndDate { get; set; } = null;
         public double CoordX { get; set; }
         public double CoordY { get; set; }
+        //public string GenericCode { get; set; } //Todo:duvar icin model ismi verilecek 
 
         [ForeignKey("BuildingTypeId")]
         public BuildingType BuildingType { get; set; }

@@ -8,11 +8,11 @@ namespace PlayerBaseApi.Entities
         [Key]
         public int Id { get; set; }
         public long UserId { get; set; }
-        public int TalentTreeNodeId { get; set; }
+        public int TalentTreeNodeLevelId { get; set; }
         public int Level { get; set; }
 
-        [ForeignKey("TalentTreeNodeId")]
-        public TalentTreeNode TalentTreeNode { get; set; }
+        [ForeignKey("TalentTreeNodeLevelId")]
+        public TalentTreeNodeLevel TalentTreeNodeLevel { get; set; }
 
     }
 }

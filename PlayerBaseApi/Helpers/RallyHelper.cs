@@ -128,14 +128,14 @@ public class RallyHelper
                             {
                                 var ABuffs = BuffHelper.GetPlayersTotalBuff(rallyPart.UserId, rallyPart.HeroId).Result;
                                 ATotalTroops += rallyPart.TroopCount;
-                                APower += (int)(rallyPart.TroopCount * TROOP_POWER * (ABuffs.AttackMultiplier <= 1 ? 1: ABuffs.AttackMultiplier));
+                                APower += (int)(rallyPart.TroopCount * TROOP_POWER * (ABuffs.TroopDamageMultiplier <= 1 ? 1: ABuffs.TroopDamageMultiplier));
                                 Console.WriteLine("ATTACKER-Power-"+rallyPart.UserId+":"+APower);
                             }
                  
 
                             
                             
-                            TPower += (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.DefenseMultiplier<=1?1:TBuffs.DefenseMultiplier));
+                            TPower += (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.TroopDefenseMultiplier<=1?1:TBuffs.TroopDefenseMultiplier));
                             TPower += (TwallLevel * WALL_POWER);
                             
                             Console.WriteLine("Defenser-Power-"+s.TargetUserId+":"+TPower);

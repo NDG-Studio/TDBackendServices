@@ -10,7 +10,6 @@ namespace PlayerBaseApi.Entities
         public string Name { get; set; }
         public int HeroId { get; set; }
         public int TalentTreeId { get; set; }
-        public int BuffId { get; set; }
         public int PlaceId { get; set; }
         public string Description { get; set; }
         public string ThumbnailUrl { get; set; }
@@ -21,9 +20,6 @@ namespace PlayerBaseApi.Entities
         public Hero Hero { get; set; }
 
         [ForeignKey("TalentTreeId")]
-        public TalentTree TalentTree { get; set; }        
-        
-        [ForeignKey("BuffId")]
-        public Buff Buff { get; set; }
+        public TalentTree TalentTree { get; set; }
     }
 }

@@ -282,10 +282,13 @@ namespace PlayerBaseApi.Services
                 var qlist = await _mapper.ProjectTo<TalentTreeDTO>(talentTrees).ToListAsync();
                 for (int i = 0; i < qlist.Count; i++)
                 {
-                    var qq = _context.TalentTreeNode.Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data).OrderBy(l => l.PlaceId);
-                    var playerTalentTree = await _context.PlayerTalentTreeNode.Where(l => l.TalentTreeNode.TalentTreeId == qlist[i].Id && l.UserId == user.Id).ToListAsync();
+                    var qq = _context.TalentTreeNode
+                        .Where(l => l.IsActive && l.TalentTreeId == qlist[i].Id && l.HeroId == req.Data).OrderBy(l => l.PlaceId);
+                    var playerTalentTree = await _context.PlayerTalentTreeNode
+                        .Include(l=>l.TalentTreeNodeLevel).ThenInclude(l=>l.Buff)
+                        .Where(l => l.TalentTreeNodeLevel.TalentTreeNode.TalentTreeId == qlist[i].Id && l.UserId == user.Id).ToListAsync();
                     qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
-                    qlist[i].NodeList.ForEach(l => l.CurrentLevel = playerTalentTree.Where(k => k.TalentTreeNodeId == l.Id).Select(o => o.Level).FirstOrDefault());
+                    qlist[i].NodeList.ForEach(l => l.TalentTreeNodeLevel = _mapper.Map<TalentTreeNodeLevel,TalentTreeNodeLevelDTO>(playerTalentTree.Where(k => k.TalentTreeNodeLevelId == l.Id).Select(l=>l.TalentTreeNodeLevel).FirstOrDefault()));
                 }
                 response.Data = qlist;
                 response.SetSuccess();
@@ -309,10 +312,16 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "AddHeroTalentNodeByNodeId");
             try
             {
-                var existEnt = await _context.PlayerTalentTreeNode.Include(l => l.TalentTreeNode).Where(l => l.TalentTreeNodeId == req.Data && l.UserId == user.Id).FirstOrDefaultAsync();
+                var existEnt = await _context.PlayerTalentTreeNode
+                    .Include(l => l.TalentTreeNodeLevel)
+                    .ThenInclude(l=>l.TalentTreeNode)
+                    .Where(l => l.TalentTreeNodeLevel.TalentTreeNodeId == req.Data && l.UserId == user.Id)
+                    .FirstOrDefaultAsync();
                 if (existEnt != null)
                 {
-                    var pq = await _context.PlayerHero.Where(l => l.UserId == user.Id && l.HeroId == existEnt.TalentTreeNode.HeroId).FirstOrDefaultAsync();
+                    var pq = await _context.PlayerHero
+                        .Where(l => l.UserId == user.Id && l.HeroId == existEnt.TalentTreeNodeLevel.TalentTreeNode.HeroId)
+                        .FirstOrDefaultAsync();
                     if (pq!.TalentPoint < 1)
                     {
                         response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -320,7 +329,7 @@ namespace PlayerBaseApi.Services
                         _logger.LogInformation(info.ToString());
                         return response;
                     }
-                    if (existEnt.TalentTreeNode.Capacity == existEnt.Level)
+                    if (existEnt.TalentTreeNodeLevel.TalentTreeNode.Capacity == existEnt.Level)
                     {
                         response.SetError(OperationMessages.HeroAllreadyMaxLevel);
                         info.AddInfo(OperationMessages.HeroAllreadyMaxLevel);
@@ -330,10 +339,16 @@ namespace PlayerBaseApi.Services
                     }
                     pq.TalentPoint--;
                     existEnt.Level++;
+                    existEnt.TalentTreeNodeLevelId = await _context.TalentTreeNodeLevel
+                        .Where(l => l.TalentTreeNodeId == existEnt.TalentTreeNodeLevel.TalentTreeNodeId &&
+                                    l.Level == existEnt.Level).Select(l => l.Id).FirstOrDefaultAsync();
                 }
                 else
                 {
-                    var ttn = await _context.TalentTreeNode.Include(l => l.Hero).Where(l => l.IsActive && l.Id == req.Data).FirstOrDefaultAsync();
+                    var ttn = await _context.TalentTreeNode
+                        .Include(l => l.Hero)
+                        .Where(l => l.IsActive && l.Id == req.Data)
+                        .FirstOrDefaultAsync();
                     if (ttn == null)
                     {
                         response.SetError(OperationMessages.DbItemNotFound);
@@ -361,7 +376,9 @@ namespace PlayerBaseApi.Services
                     var ent = new PlayerTalentTreeNode()
                     {
                         Level = 1,
-                        TalentTreeNodeId = req.Data,
+                        TalentTreeNodeLevelId = await _context.TalentTreeNodeLevel
+                            .Where(l => l.TalentTreeNodeId == req.Data &&
+                                        l.Level == 1).Select(l => l.Id).FirstOrDefaultAsync(),
                         UserId = user.Id
                     };
                     pq.TalentPoint--;

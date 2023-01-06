@@ -2647,7 +2647,7 @@ namespace PlayerBaseApi.Services
                         {
                             Name = "def-increase-" + user.Username,
                             Description = "def-increase-" + user.Username,
-                            DefenseMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                            TroopDefenseMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
                         };
                         break;
                     case ((int)ItemTypeEnum.AttackIncrease):
@@ -2655,7 +2655,7 @@ namespace PlayerBaseApi.Services
                         {
                             Name = "atk-increase-" + user.Username,
                             Description = "atk-increase-" + user.Username,
-                            AttackMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                            TroopDamageMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
                         };
                         break;
                     case ((int)ItemTypeEnum.SpyProtection):

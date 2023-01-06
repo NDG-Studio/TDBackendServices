@@ -17,6 +17,7 @@ namespace PlayerBaseApi.MapperProfiles
 
             CreateMap<TalentTree, TalentTreeDTO>();
             CreateMap<TalentTreeNode, TalentTreeNodeDTO>();
+            CreateMap<TalentTreeNodeLevel, TalentTreeNodeLevelDTO>();
             CreateMap<HeroSkill, HeroSkillDTO>();
         }
 

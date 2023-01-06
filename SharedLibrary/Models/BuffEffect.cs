@@ -1,14 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PlayerBaseApi.Entities
+namespace SharedLibrary.Models
 {
-    public class Buff
+    public class BuffEffect
     {
-        [Key]
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Description { get; set; } = "";
-
+    
         #region BUILDING BUFFS
 
         /// <summary>
@@ -240,5 +234,5 @@ namespace PlayerBaseApi.Entities
         #endregion
 
 
-    }
+    }    
 }

@@ -49,6 +49,7 @@ namespace PlayerBaseApi
         public DbSet<PlayerHeroSkillLevel> PlayerHeroSkillLevel { get; set; }
         public DbSet<TalentTree> TalentTree { get; set; }
         public DbSet<TalentTreeNode> TalentTreeNode { get; set; }
+        public DbSet<TalentTreeNodeLevel> TalentTreeNodeLevel { get; set; }
         public DbSet<PlayerTalentTreeNode> PlayerTalentTreeNode { get; set; }
         public DbSet<LootLevel> LootLevel { get; set; }
         public DbSet<PlayerHeroLoot> PlayerHeroLoot { get; set; }
@@ -76,6 +77,7 @@ namespace PlayerBaseApi
         public DbSet<SupportUnit> SupportUnit { get; set; }
         public DbSet<PlayerScout> PlayerScout { get; set; }
         public DbSet<ScoutLevel> ScoutLevel { get; set; }
+        
 
 
 
