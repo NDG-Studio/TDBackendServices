@@ -42,8 +42,8 @@ namespace PlayerBaseApi.Services
                     {
                         BuildingTypeId = 1,
                         BuildingLevel = 1,
-                        CoordX = 0,
-                        CoordY = 0,
+                        CoordX = -2.76,
+                        CoordY = -2.31,
                         UpdateEndDate = null,
                         UserId = user.Id
                     });
@@ -51,8 +51,8 @@ namespace PlayerBaseApi.Services
                     {
                         BuildingTypeId = 10,
                         BuildingLevel = 1,
-                        CoordX = -2.021312952041626,
-                        CoordY = 5.305946350097656,
+                        CoordX = -2.5,
+                        CoordY = 0.8,
                         UpdateEndDate = null,
                         UserId = user.Id
                     });
@@ -60,8 +60,8 @@ namespace PlayerBaseApi.Services
                     {
                         BuildingTypeId = 7,
                         BuildingLevel = 1,
-                        CoordX = 2.5266411304473877,
-                        CoordY = 6.063939094543457,
+                        CoordX = 2.5,
+                        CoordY = 7.5,
                         UpdateEndDate = null,
                         UserId = user.Id
                     });                    
@@ -69,8 +69,8 @@ namespace PlayerBaseApi.Services
                     {
                         BuildingTypeId = 11,
                         BuildingLevel = 1,
-                        CoordX = 2.16818,
-                        CoordY = -0.7227267,
+                        CoordX = 2.5,
+                        CoordY = -2.5,
                         UpdateEndDate = null,
                         UserId = user.Id
                         
