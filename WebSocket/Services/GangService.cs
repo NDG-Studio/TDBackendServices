@@ -159,8 +159,8 @@ namespace WebSocket.Services
                     await _context.AddAsync(gangMember);
                     await _context.SaveChangesAsync();
                     await CreateGangChat(new BaseRequest<Guid>() { Info = req.Info, Data = gang.Id }, user);
-                    response.SetSuccess();
-                    info.AddInfo(OperationMessages.Success);
+                    response.SetSuccess(OperationMessages.OnGangCreatedSuccess);
+                    info.AddInfo(OperationMessages.OnGangCreatedSuccess);
                     _logger.LogInformation(info.ToString());
                 }
             }
@@ -368,8 +368,8 @@ namespace WebSocket.Services
                 };
                 await _context.AddAsync(gangInvitations);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.gangInvitationOnDoneSuccess);
+                info.AddInfo(OperationMessages.gangInvitationOnDoneSuccess);
                 _logger.LogInformation(info.ToString());
 
 
@@ -589,7 +589,8 @@ namespace WebSocket.Services
                     gangMember.MemberType.Gang.AvatarId = req.Data.AvatarId;
                     gangMember.MemberType.Gang.GangEntryTypeId = req.Data.GangEntryTypeId;
                     await _context.SaveChangesAsync();
-                    response.SetSuccess();
+                    response.SetSuccess(OperationMessages.GangEditFunctSuccess);
+                    info.AddInfo(OperationMessages.GangEditFunctSuccess);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -651,8 +652,8 @@ namespace WebSocket.Services
                     }
                     gangMember.MemberType.Gang.MemberCount-- ;
                     await _context.SaveChangesAsync();
-                    response.SetSuccess();
-                    info.AddInfo(OperationMessages.Success);
+                    response.SetSuccess(OperationMessages.KickMemberSuccess);
+                    info.AddInfo(OperationMessages.KickMemberSuccess);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -710,8 +711,8 @@ namespace WebSocket.Services
                         .Where(l => l.MemberType.GangId == gangMember.MemberType.GangId).ToListAsync();
                     gangMembers.ForEach(l=>l.IsActive=false);
                     await _context.SaveChangesAsync();
-                    response.SetSuccess();
-                    info.AddInfo(OperationMessages.Success);
+                    response.SetSuccess(OperationMessages.DestroyGangSuccess);
+                    info.AddInfo(OperationMessages.DestroyGangSuccess);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -829,7 +830,9 @@ namespace WebSocket.Services
                     query.CanDestroyGang = mem.CanDestroyGang;
                     query.CanEditGang = mem.CanEditGang;
                     await _context.SaveChangesAsync();
-                    response.SetSuccess();
+                    response.SetSuccess(OperationMessages.SetMemberTypesSuccess);
+                    info.AddInfo(OperationMessages.SetMemberTypesSuccess);
+                    _logger.LogInformation(info.ToString());
                 }
             }
             catch (Exception e)
@@ -912,8 +915,8 @@ namespace WebSocket.Services
                         await _context.SaveChangesAsync();
                     }
                 }
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ChangeMemberTypeSuccess);
+                info.AddInfo(OperationMessages.ChangeMemberTypeSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1065,15 +1068,10 @@ namespace WebSocket.Services
                 Console.WriteLine(JsonConvert.SerializeObject(userInfo));
                 
                 var baseLevelRanked = GetBaseLevelRankedByUserId(user.Id).Result;
-                Console.WriteLine(JsonConvert.SerializeObject(baseLevelRanked));
                 var killTroopRanked = GetKillTroopRankedByUserId(user.Id).Result;
-                Console.WriteLine(JsonConvert.SerializeObject(killTroopRanked));
                 var lootedScrapRanked = GetLootedScrapRankedByUserId(user.Id).Result;
-                Console.WriteLine(JsonConvert.SerializeObject(lootedScrapRanked));
                 var defenseKill = GetDefenseKillRankedByUserId(user.Id).Result;
-                Console.WriteLine(JsonConvert.SerializeObject(defenseKill));
                 var coord = DbService.GetUserCoordinate(user.Id).Result.Data ?? "" ;
-                Console.WriteLine("^^"+coord);
                 var ent = new GangApplication()
                 {
                     Date = now,
@@ -1108,8 +1106,8 @@ namespace WebSocket.Services
                     
                 #endregion
 
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SengGangApplicationSuccess);
+                info.AddInfo(OperationMessages.SengGangApplicationSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1213,8 +1211,8 @@ namespace WebSocket.Services
                 await _context.SaveChangesAsync();
                 Player.SendNewsRefreshNeeded(gangApp.UserId);
 
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ApplicationAcceptSuccess);
+                info.AddInfo(OperationMessages.ApplicationAcceptSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)

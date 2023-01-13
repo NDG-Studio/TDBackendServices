@@ -537,8 +537,8 @@ namespace IdentityApi.Services
                 userEnt.Username = req.Data;
                 await _context.SaveChangesAsync();
                 response.Data = userEnt.Username;
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ChangeNameSuccess);
+                info.AddInfo(OperationMessages.ChangeNameSuccess);
                 _logger.LogInformation(info.ToString());
 
 

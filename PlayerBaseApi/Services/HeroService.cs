@@ -230,8 +230,8 @@ namespace PlayerBaseApi.Services
                 }
                 pH.TalentPoint += pH.CurrentLevel - oldLevel;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.UseHeroExpSuccess);
+                info.AddInfo(OperationMessages.UseHeroExpSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -390,8 +390,8 @@ namespace PlayerBaseApi.Services
                     await _context.AddAsync(ent);
                 }
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.AddHeroTalentNodeByNodeIDSuccess);
+                info.AddInfo(OperationMessages.AddHeroTalentNodeByNodeIDSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -605,8 +605,8 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.UpgradeHeroSkillSuccess);
+                info.AddInfo(OperationMessages.UpgradeHeroSkillSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -695,8 +695,8 @@ namespace PlayerBaseApi.Services
                 });
 
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.BuyHeroByHeroIdSuccess);
+                info.AddInfo(OperationMessages.BuyHeroByHeroIdSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)

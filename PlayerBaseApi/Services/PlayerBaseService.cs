@@ -231,8 +231,8 @@ namespace PlayerBaseApi.Services
                 ent.UserId = user.Id;
                 await _context.AddAsync(ent);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SetAddPlayerBaseBuildingSuccess);
+                info.AddInfo(OperationMessages.SetAddPlayerBaseBuildingSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -626,8 +626,8 @@ namespace PlayerBaseApi.Services
                 query.UpdateEndDate = DateTimeOffset.Now.Add(duration);
                 await _context.SaveChangesAsync();
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SetUpgradeBuildingRequestSuccess);
+                info.AddInfo(OperationMessages.SetUpgradeBuildingRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -709,8 +709,8 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
 
                 response.Data = playerBuilding.UpdateEndDate.ToString();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SpeedUpBuildingUpgradeSuccess);
+                info.AddInfo(OperationMessages.SpeedUpBuildingUpgradeSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
@@ -777,8 +777,8 @@ namespace PlayerBaseApi.Services
                 }
 
                 response.Data = _mapper.Map<PlayerBasePlacementDTO>(query);
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SetUpgradeBuildingDoneRequestSuccess);
+                info.AddInfo(OperationMessages.SetUpgradeBuildingDoneRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1027,8 +1027,8 @@ namespace PlayerBaseApi.Services
                     playerResource.BluePrints -= necessaries.BluePrintCount;
                     currentNode.UpdateEndDate = DateTimeOffset.Now + necessaries.Duration;
                     await _context.SaveChangesAsync();
-                    response.SetSuccess();
-                    info.AddInfo(OperationMessages.Success);
+                    response.SetSuccess(OperationMessages.UpgradeResearchNodeSuccess);
+                    info.AddInfo(OperationMessages.UpgradeResearchNodeSuccess);
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
@@ -1116,8 +1116,8 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
 
                 response.Data = currentNode.UpdateEndDate.ToString();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SpeedUpResearchNodeSuccess);
+                info.AddInfo(OperationMessages.SpeedUpResearchNodeSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
@@ -1162,8 +1162,8 @@ namespace PlayerBaseApi.Services
                 currentNode.CurrentLevel++;
                 currentNode.UpdateEndDate = null;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.UpgradeResearchNodeDoneSuccess);
+                info.AddInfo(OperationMessages.UpgradeResearchNodeDoneSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1247,8 +1247,8 @@ namespace PlayerBaseApi.Services
                 response.Data = (int)(req.Data * query.PrisonLevel.ExecutionEarnPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ExecutePrisonerSuccess);
+                info.AddInfo(OperationMessages.ExecutePrisonerSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1315,8 +1315,8 @@ namespace PlayerBaseApi.Services
                 playerBaseInfo.Scraps -= (int)(req.Data * query.PrisonLevel.TrainingCostPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.PrisonerTrainingReqSuccess);
+                info.AddInfo(OperationMessages.PrisonerTrainingReqSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -1398,8 +1398,8 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
 
                 response.Data = playerPrison.TrainingDoneDate.ToString();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SpeedUpTrainingSuccess);
+                info.AddInfo(OperationMessages.SpeedUpTrainingSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
@@ -1441,8 +1441,8 @@ namespace PlayerBaseApi.Services
                 query.InTrainingPrisonerCount = 0;
                 query.TrainingDoneDate = null;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.PrisonerTrainingDoneReqSuccess);
+                info.AddInfo(OperationMessages.PrisonerTrainingDoneReqSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -2059,8 +2059,8 @@ namespace PlayerBaseApi.Services
                 playerBaseInfo.Scraps -= (int)(req.Data * query.HospitalLevel.HealingCostPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.HealingRequestSuccess);
+                info.AddInfo(OperationMessages.HealingRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -2142,8 +2142,8 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
 
                 response.Data = playerHospital.HealingDoneDate.ToString();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SpeedUpHealingSuccess);
+                info.AddInfo(OperationMessages.SpeedUpHealingSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
@@ -2185,8 +2185,8 @@ namespace PlayerBaseApi.Services
                 query.InHealingCount = 0;
                 query.HealingDoneDate = null;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.HealingDoneRequestSuccess);
+                info.AddInfo(OperationMessages.HealingDoneRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -2277,8 +2277,8 @@ namespace PlayerBaseApi.Services
                 playerBaseInfo.Scraps -= (int)(req.Data * query.ScoutLevel.TrainingCostPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ScoutTrainingRequestSuccess);
+                info.AddInfo(OperationMessages.ScoutTrainingRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -2319,8 +2319,8 @@ namespace PlayerBaseApi.Services
                 query.InTrainingCount = 0;
                 query.TrainingDoneDate = null;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ScoutTrainingDoneRequestSuccess);
+                info.AddInfo(OperationMessages.ScoutTrainingDoneRequestSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -2456,8 +2456,8 @@ namespace PlayerBaseApi.Services
                 _context.Update(playerBaseInfo);
                 await _context.AddAsync(history);
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.BuyMarketDTOSuccess);
+                info.AddInfo(OperationMessages.BuyMarketDTOSuccess);
                 _logger.LogInformation(info.ToString());
 
 
@@ -2714,8 +2714,8 @@ namespace PlayerBaseApi.Services
 
                 await _context.SaveChangesAsync();
 
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.UseItemFuncSuccess);
+                info.AddInfo(OperationMessages.UseItemFuncSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -3547,8 +3547,8 @@ namespace PlayerBaseApi.Services
 
                 playerBaseInfo.AvatarId = req.Data;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ChangeAvatarPlayerBaseSuccess);
+                info.AddInfo(OperationMessages.ChangeAvatarPlayerBaseSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -3578,8 +3578,8 @@ namespace PlayerBaseApi.Services
 
                 playerBaseInfo.Bio = req.Data;
                 await _context.SaveChangesAsync();
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.ChangeDiscriptionSuccess);
+                info.AddInfo(OperationMessages.ChangeDiscriptionSuccess);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
@@ -4081,6 +4081,9 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
                 
                 AttackHelper.NewAttack(att);
+                response.SetSuccess(OperationMessages.AttackEventDTOSuccess);
+                info.AddInfo(OperationMessages.AttackEventDTOSuccess);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)
@@ -4207,8 +4210,8 @@ namespace PlayerBaseApi.Services
                 await _context.SaveChangesAsync();
                 
                 SupportUnitHelper.NewSupport(spu);
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.SendReinforcementEventOnDoneSuccess);
+                info.AddInfo(OperationMessages.SendReinforcementEventOnDoneSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
@@ -4421,6 +4424,9 @@ namespace PlayerBaseApi.Services
                 }
                 
                 RallyHelper.NewRally(dbRally);
+                response.SetSuccess(OperationMessages.RallyEventOnDoneSuccess);
+                info.AddInfo(OperationMessages.RallyEventOnDoneSuccess);
+                _logger.LogInformation(info.ToString());
 
             }
             catch (Exception e)
@@ -4538,8 +4544,8 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 
-                response.SetSuccess();
-                info.AddInfo(OperationMessages.Success);
+                response.SetSuccess(OperationMessages.JoinRallyEventOnDoneSuccess);
+                info.AddInfo(OperationMessages.JoinRallyEventOnDoneSuccess);
                 _logger.LogInformation(info.ToString());
 
             }
