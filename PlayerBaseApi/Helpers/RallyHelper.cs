@@ -300,7 +300,7 @@ public class RallyHelper
                             var defenserPlayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == r.Rally.TargetUserId).FirstOrDefault();
                             var attackerPlayerPrison = _context.PlayerPrison.Include(l=>l.PrisonLevel).Where(l => l.UserId == r.UserId).FirstOrDefault();
                             
-
+                            var ABuffs = BuffHelper.GetPlayersTotalBuff(r.UserId).Result;
                             attackerPlayerHospital.InjuredCount = Math.Min(
                                 attackerPlayerHospital.HospitalLevel.HospitalCapacity,
                                 attackerPlayerHospital.InjuredCount + r.WoundedTroop);
@@ -310,7 +310,7 @@ public class RallyHelper
                                                                r.WoundedTroop;
                             attackerPlayerPrison.PrisonerCount = Math.Min(
                                 attackerPlayerPrison.PrisonerCount + r.PrisonerCount,
-                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount);
+                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount + (int)(attackerPlayerPrison.PrisonLevel.MaxPrisonerCount * ABuffs.PrisonCapacityMultiplier));
                             _context.SaveChanges();
                             
                             var ccc = SendRallyInfo(new BaseRequest<RallyDTO>()

@@ -394,9 +394,10 @@ public class AttackHelper
                             attackerPlayerTroops.TroopCount += rS.AttackerTroopCount - resData.AttackersDeadTroop -
                                                                resData.AttackersWoundedTroop;
                             
+                            var ABuffs = BuffHelper.GetPlayersTotalBuff(rS.AttackerUserId).Result;
                             attackerPlayerPrison.PrisonerCount = Math.Min(
                                                                 attackerPlayerPrison.PrisonerCount + resData.PrisonerCount,
-                                                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount);
+                                                                attackerPlayerPrison.PrisonLevel.MaxPrisonerCount + (int)(attackerPlayerPrison.PrisonLevel.MaxPrisonerCount * ABuffs.PrisonCapacityMultiplier) );
                             
                             _context.SaveChanges();
 

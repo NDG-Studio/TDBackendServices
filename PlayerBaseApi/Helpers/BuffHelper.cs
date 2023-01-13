@@ -62,7 +62,8 @@ namespace PlayerBaseApi.Helpers
                 playerBuffs.AddRange(playerBuff);
                 return new BuffEffect()
                 {
-                                     LootBluePrintMultiplier = playerBuffs.Sum(l => l.LootBluePrintMultiplier),
+                                     
+                    LootBluePrintMultiplier = playerBuffs.Sum(l => l.LootBluePrintMultiplier),
                     LootCapacity = playerBuffs.Sum(l => l.LootCapacity),
                     LootDurationMultiplier = playerBuffs.Sum(l => l.LootDurationMultiplier),
                     LootGemMultiplier = playerBuffs.Sum(l => l.LootGemMultiplier),
@@ -80,7 +81,7 @@ namespace PlayerBaseApi.Helpers
                     BuildingUpgradeCostMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeCostMultiplier),
                     TroopDefenseMultiplier = playerBuffs.Sum(l => l.TroopDefenseMultiplier),
                     SpyFakerMultiplier = playerBuffs.Sum(l => l.SpyFakerMultiplier),
-                    TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopCapacityMultiplier),
+                    TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopScrapCapacityMultiplier),
                     AutoLootRunActive = playerBuffs.Any(l => l.AutoLootRunActive),
                     CityShieldActive = playerBuffs.Any(l => l.CityShieldActive),
                     SpyProtectionActive = playerBuffs.Any(l => l.SpyProtectionActive),
@@ -88,7 +89,7 @@ namespace PlayerBaseApi.Helpers
                     CriticDamageChance = playerBuffs.Sum(l => l.CriticDamageChance),
                     AttackChance = playerBuffs.Sum(l=>l.AttackChance),
                     DamageDiffrence = playerBuffs.Sum(l=>l.DamageDiffrence),
-                    FirstTime = playerBuffs.Sum(l=>l.FirstTime),
+                    FirstTimeDamage= playerBuffs.Where(l=>l.FirstTimeDamage!=null).Select(l=>l.FirstTimeDamage).ToList()!,
                     HealChance = playerBuffs.Sum(l=>l.HealChance),
                     SkillDamage = playerBuffs.Sum(l=>l.SkillDamage),
                     AfterBattleHealth = playerBuffs.Sum(l=>l.AfterBattleHealth),
@@ -97,7 +98,6 @@ namespace PlayerBaseApi.Helpers
                     BaseDefenseMultiplier = playerBuffs.Sum(l=>l.BaseDefenseMultiplier),
                     BeingPrisonerMultiplier = playerBuffs.Sum(l=>l.BeingPrisonerMultiplier),
                     DamageDiffrenceNeutral = playerBuffs.Sum(l=>l.DamageDiffrenceNeutral),
-                    DamageWithTime = playerBuffs.Sum(l=>l.DamageWithTime),
                     GettingPrisonerMultiplier = playerBuffs.Sum(l=>l.GettingPrisonerMultiplier),
                     HealingCostMultiplier = playerBuffs.Sum(l=>l.HealingCostMultiplier),
                     HeroBelowHealth = playerBuffs.Sum(l=>l.HeroBelowHealth),
@@ -125,12 +125,10 @@ namespace PlayerBaseApi.Helpers
                     LootRunDurationMultiplier = playerBuffs.Sum(l=>l.LootRunDurationMultiplier),
                     OtherGangDamageMultiplier = playerBuffs.Sum(l=>l.OtherGangDamageMultiplier),
                     TroopMarchingSpeedMultiplier = playerBuffs.Sum(l=>l.TroopMarchingSpeedMultiplier),
-                    AfterActiveSkillImmuneSecond = playerBuffs.Sum(l=>l.AfterActiveSkillImmuneSecond),
+                    AfterActiveSkillImmuneSecond = playerBuffs.Max(l=>l.AfterActiveSkillImmuneSecond),
                     OtherGangDefenseMultiplier = playerBuffs.Sum(l=>l.OtherGangDefenseMultiplier),
                     SpyProductionTimeMultiplier = playerBuffs.Sum(l=>l.SpyProductionTimeMultiplier),
                     SupportUnitTroopCapacityMultiplier = playerBuffs.Sum(l=>l.SupportUnitTroopCapacityMultiplier),
-                    
-                    
                 };
             }
         }
@@ -194,7 +192,7 @@ namespace PlayerBaseApi.Helpers
                     BuildingUpgradeCostMultiplier = playerBuffs.Sum(l => l.BuildingUpgradeCostMultiplier),
                     TroopDefenseMultiplier = playerBuffs.Sum(l => l.TroopDefenseMultiplier),
                     SpyFakerMultiplier = playerBuffs.Sum(l => l.SpyFakerMultiplier),
-                    TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopCapacityMultiplier),
+                    TroopCapacityMultiplier = playerBuffs.Sum(l => l.TroopScrapCapacityMultiplier),
                     AutoLootRunActive = playerBuffs.Any(l => l.AutoLootRunActive),
                     CityShieldActive = playerBuffs.Any(l => l.CityShieldActive),
                     SpyProtectionActive = playerBuffs.Any(l => l.SpyProtectionActive),
@@ -202,7 +200,7 @@ namespace PlayerBaseApi.Helpers
                     CriticDamageChance = playerBuffs.Sum(l => l.CriticDamageChance),
                     AttackChance = playerBuffs.Sum(l=>l.AttackChance),
                     DamageDiffrence = playerBuffs.Sum(l=>l.DamageDiffrence),
-                    FirstTime = playerBuffs.Sum(l=>l.FirstTime),
+                    FirstTimeDamage= playerBuffs.Where(l=>l.FirstTimeDamage!=null).Select(l=>l.FirstTimeDamage).ToList()!,
                     HealChance = playerBuffs.Sum(l=>l.HealChance),
                     SkillDamage = playerBuffs.Sum(l=>l.SkillDamage),
                     AfterBattleHealth = playerBuffs.Sum(l=>l.AfterBattleHealth),
@@ -211,7 +209,6 @@ namespace PlayerBaseApi.Helpers
                     BaseDefenseMultiplier = playerBuffs.Sum(l=>l.BaseDefenseMultiplier),
                     BeingPrisonerMultiplier = playerBuffs.Sum(l=>l.BeingPrisonerMultiplier),
                     DamageDiffrenceNeutral = playerBuffs.Sum(l=>l.DamageDiffrenceNeutral),
-                    DamageWithTime = playerBuffs.Sum(l=>l.DamageWithTime),
                     GettingPrisonerMultiplier = playerBuffs.Sum(l=>l.GettingPrisonerMultiplier),
                     HealingCostMultiplier = playerBuffs.Sum(l=>l.HealingCostMultiplier),
                     HeroBelowHealth = playerBuffs.Sum(l=>l.HeroBelowHealth),
@@ -239,12 +236,13 @@ namespace PlayerBaseApi.Helpers
                     LootRunDurationMultiplier = playerBuffs.Sum(l=>l.LootRunDurationMultiplier),
                     OtherGangDamageMultiplier = playerBuffs.Sum(l=>l.OtherGangDamageMultiplier),
                     TroopMarchingSpeedMultiplier = playerBuffs.Sum(l=>l.TroopMarchingSpeedMultiplier),
-                    AfterActiveSkillImmuneSecond = playerBuffs.Sum(l=>l.AfterActiveSkillImmuneSecond),
+                    AfterActiveSkillImmuneSecond = playerBuffs.Max(l=>l.AfterActiveSkillImmuneSecond),
                     OtherGangDefenseMultiplier = playerBuffs.Sum(l=>l.OtherGangDefenseMultiplier),
                     SpyProductionTimeMultiplier = playerBuffs.Sum(l=>l.SpyProductionTimeMultiplier),
                     SupportUnitTroopCapacityMultiplier = playerBuffs.Sum(l=>l.SupportUnitTroopCapacityMultiplier),
-                    
-                    
+                    SupportUnitTroopCapacity = playerBuffs.Max(l=>l.SupportUnitTroopCapacity),
+                    GangMemberCapacity = playerBuffs.Max(l=>l.GangMemberCapacity),
+
                 };
             }
         }

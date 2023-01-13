@@ -142,6 +142,8 @@ services:
             - PlayerBase_Url=http://playerbaseapi
             - MapApi_Url=http://mapapi
             - Admins=1,2
+            - TROOPPOWER=10
+            - WALLPOWER=10
 
 volumes:
     identitydb_volume:

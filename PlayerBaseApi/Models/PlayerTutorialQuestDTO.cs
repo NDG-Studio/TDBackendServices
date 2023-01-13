@@ -2,10 +2,12 @@
 {
     public class PlayerTutorialQuestDTO
     {
-        public int TutorialQuestId { get; set; }
-        public int StageId { get; set; }
-        public int StageOrderId { get; set; }
+        public int Id { get; set; }
+        public string TutorialQuestName { get; set; }
+        public int OrderId { get; set; }
         public bool IsDone { get; set; } = false;
         public bool IsClaim { get; set; } = false;
+        
+        public List<TutorialQuestGiftDTO> GiftList { get; set; }
     }
 }

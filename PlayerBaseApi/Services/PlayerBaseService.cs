@@ -1195,6 +1195,12 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+
+                var buffy = await BuffHelper.GetPlayersTotalBuff(user.Id);
+                pprison.PrisonLevel.MaxPrisonerCount +=
+                    (int)(pprison.PrisonLevel.MaxPrisonerCount * buffy.PrisonCapacityMultiplier);                
+                pprison.PrisonLevel.TrainingDurationPerUnit +=
+                    (pprison.PrisonLevel.TrainingDurationPerUnit * buffy.PrisonTrainingDurationMultiplier);
                 response.Data = pprison;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -1303,7 +1309,9 @@ namespace PlayerBaseApi.Services
                 }
                 query.PrisonerCount -= req.Data;
                 query.InTrainingPrisonerCount += req.Data;
-                query.TrainingDoneDate = DateTimeOffset.Now + (query.PrisonLevel.TrainingDurationPerUnit * req.Data);
+                var buffy = await BuffHelper.GetPlayersTotalBuff(user.Id);
+                query.TrainingDoneDate = DateTimeOffset.Now + ((query.PrisonLevel.TrainingDurationPerUnit +
+                    (query.PrisonLevel.TrainingDurationPerUnit * buffy.PrisonTrainingDurationMultiplier)) * req.Data);
                 playerBaseInfo.Scraps -= (int)(req.Data * query.PrisonLevel.TrainingCostPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
@@ -2209,6 +2217,10 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                var buffy = await BuffHelper.GetPlayersTotalBuff(user.Id);
+                pscout.ScoutLevel.TrainingDurationPerUnit = (pscout.ScoutLevel.TrainingDurationPerUnit +
+                                                             (pscout.ScoutLevel.TrainingDurationPerUnit *
+                                                              buffy.SpyProductionTimeMultiplier));
                 response.Data = pscout;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -2230,7 +2242,9 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "SpyTrainingRequest");
             try
             {
-                var query = await _context.PlayerScout.Include(l => l.ScoutLevel).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                var query = await _context.PlayerScout.Include(l => l.ScoutLevel)
+                    .Where(l => l.UserId == user.Id)
+                    .FirstOrDefaultAsync();
                 var playerBaseInfo = await _context.GetPlayerBaseInfoByUser(user);
                 if (req.Data < 1)
                 {
@@ -2247,6 +2261,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                var buffy = await BuffHelper.GetPlayersTotalBuff(user.Id);
                 if (playerBaseInfo.Scraps < (int)(req.Data * query.ScoutLevel.TrainingCostPerUnit))
                 {
                     response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -2255,7 +2270,10 @@ namespace PlayerBaseApi.Services
                     return response;
                 }
                 query.InTrainingCount += req.Data;
-                query.TrainingDoneDate = DateTimeOffset.Now + (query.ScoutLevel.TrainingDurationPerUnit * req.Data);
+                query.TrainingDoneDate = DateTimeOffset.Now +
+                                         ((query.ScoutLevel.TrainingDurationPerUnit +
+                                           (query.ScoutLevel.TrainingDurationPerUnit *
+                                            buffy.SpyProductionTimeMultiplier)) * req.Data);
                 playerBaseInfo.Scraps -= (int)(req.Data * query.ScoutLevel.TrainingCostPerUnit);
                 _context.Update(playerBaseInfo);
                 await _context.SaveChangesAsync();
@@ -2676,7 +2694,7 @@ namespace PlayerBaseApi.Services
                         {
                             Name = "troop-capacity-" + user.Username,
                             Description = "troop-capacity-" + user.Username,
-                            TroopCapacityMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
+                            TroopScrapCapacityMultiplier = (double?)playerItem.Item.Value2 / 100 ?? 0.05
                         };
                         break;
 
@@ -2834,52 +2852,44 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
 
         #endregion
 
 
         #region TUTORIAL QUEST UTILS
-        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests(BaseRequest req, UserDto user)//Todo: algoritma daha verimli olabilir
+        public async Task<TDResponse<PlayerTutorialQuestDTO>> GetNextTutorialQuest(BaseRequest req, UserDto user)
         {
-            TDResponse<List<PlayerTutorialQuestDTO>> response = new TDResponse<List<PlayerTutorialQuestDTO>>();
-            var info = InfoDetail.CreateInfo(req, "GetPlayerTutorialQuests");
+            TDResponse<PlayerTutorialQuestDTO> response = new TDResponse<PlayerTutorialQuestDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetNextTutorialQuest");
             try
             {
-                var currentStageId = 1;
+                var currentOrderId = 1;
                 var playerTutorialQuest = await _context.PlayerTutorialQuest
                     .Include(l => l.TutorialQuest)
                     .Where(l => l.UserId == user.Id && l.IsClaim)
-                    .OrderByDescending(l => l.TutorialQuest.StageId).FirstOrDefaultAsync();
+                    .OrderByDescending(l => l.TutorialQuest.OrderId).FirstOrDefaultAsync();
 
                 if (playerTutorialQuest != null)
                 {
-                    currentStageId = playerTutorialQuest.TutorialQuest.StageId;
-                    var isCurruntStage =
-                        (await _context.PlayerTutorialQuest.Where(l => l.UserId == user.Id && l.IsClaim).CountAsync())
-                        <
-                        (await _context.TutorialQuest.Where(l => l.StageId == currentStageId && l.IsActive == true).CountAsync());
-                    currentStageId += isCurruntStage ? 0 : 1;
+                    currentOrderId = playerTutorialQuest.TutorialQuest.OrderId+1;
                 }
 
                 var playerQuest = await _context.PlayerTutorialQuest
                     .Include(l => l.TutorialQuest)
-                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive == true && l.TutorialQuest.StageId == currentStageId).ToListAsync();
+                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive == true && l.TutorialQuest.OrderId == currentOrderId)
+                    .FirstOrDefaultAsync();
 
-                var allQuest = await _context.TutorialQuest.Where(l => l.StageId == currentStageId && l.IsActive).ToListAsync();
-                var resList = new List<PlayerTutorialQuestDTO>();
-                foreach (var tq in allQuest)
-                {
-                    var ptq = playerQuest.FirstOrDefault(l => l.TutorialQuestId == tq.Id);
-                    resList.Add(new PlayerTutorialQuestDTO()
+                var tq = await _context.TutorialQuest.Where(l => l.OrderId == currentOrderId && l.IsActive).FirstOrDefaultAsync();
+                response.Data = new PlayerTutorialQuestDTO()
                     {
-                        TutorialQuestId = tq.Id,
-                        StageId = tq.StageId,
-                        StageOrderId = tq.StageOrderId,
-                        IsClaim = ptq?.IsClaim ?? false,
-                        IsDone = ptq?.IsDone ?? false
-                    });
-                }
-                response.Data = resList;
+                        IsClaim = playerQuest?.IsClaim ?? false,
+                        IsDone = playerQuest?.IsDone ?? false,
+                        Id = tq.Id,
+                        OrderId = tq.OrderId,
+                        TutorialQuestName = tq.Name,
+                        GiftList = await _mapper.ProjectTo<TutorialQuestGiftDTO>(_context.TutorialQuestsGift.Include(l=>l.Item).Where(l=>l.TutorialQuestId==tq.Id && l.IsActive)).ToListAsync()
+                    };
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -2893,7 +2903,94 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-        
+                
+        public async Task<TDResponse> DoneTutorialQuest(BaseRequest<bool> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "DoneTutorialQuest");
+            try
+            {
+                var currentOrderId = 1;
+                var playerTutorialQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.IsClaim)
+                    .OrderByDescending(l => l.TutorialQuest.OrderId).FirstOrDefaultAsync();
+
+                if (playerTutorialQuest != null)
+                {
+                    currentOrderId = playerTutorialQuest.TutorialQuest.OrderId+1;
+                }
+
+                var playerQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive && l.TutorialQuest.OrderId == currentOrderId)
+                    .FirstOrDefaultAsync();
+
+                var tq = await _context.TutorialQuest.Where(l => l.OrderId == currentOrderId && l.IsActive).FirstOrDefaultAsync();
+                if (tq==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerQuest==null)
+                {
+                    var ent = new PlayerTutorialQuest()
+                    {
+                        TutorialQuestId = tq.Id,
+                        UserId = user.Id,
+                        IsClaim = req.Data,
+                        IsDone = true
+                    };
+                    await _context.AddAsync(ent);
+                }
+                else
+                {
+                    playerQuest.IsDone = true;
+                    playerQuest.IsClaim = req.Data;
+                }
+
+                if (req.Data)
+                {
+                    var gifts = await _context.TutorialQuestsGift
+                        .Where(l => l.TutorialQuestId == tq.Id && l.IsActive).ToListAsync();
+                    foreach (var g in gifts)
+                    {
+                        var playerItem = await _context.PlayerItem
+                            .Where(l => l.UserId == user.Id && l.ItemId == g.ItemId).FirstOrDefaultAsync();
+                        if (playerItem==null)
+                        {
+                            await _context.AddAsync(new PlayerItem()
+                            {
+                                Count = g.Count,
+                                UserId = user.Id,
+                                ItemId = g.ItemId
+                            });
+                        }
+                        else
+                        {
+                            playerItem.Count += g.Count;
+                        }
+                    }
+                }
+                
+                await _context.SaveChangesAsync();
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+                
         public async Task<TDResponse<int?>> GetFirstTimeTutorial(BaseRequest<string> req, UserDto user)
         {
             TDResponse<int?> response = new TDResponse<int?>();

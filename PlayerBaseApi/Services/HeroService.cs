@@ -80,7 +80,12 @@ namespace PlayerBaseApi.Services
                 qlist.ThresholdLeft = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel).Select(l => l.Experience).FirstOrDefaultAsync();
                 qlist.ThresholdRight = await _context.HeroLevelThreshold.Where(l => l.HeroId == req.Data && l.Level == qlist.CurrentLevel + 1).Select(l => l.Experience).FirstOrDefaultAsync();
                 response.Data = qlist;
-                response.Data.TotalBuff = _mapper.Map<BuffDTO>(await BuffHelper.GetHeroTotalBuff(user.Id, req.Data));
+                var getBuff = await BuffHelper.GetHeroTotalBuff(user.Id, req.Data);
+                if (getBuff!=null)
+                {
+                    response.Data.TotalBuff = _mapper.Map<BuffDTO>(getBuff);
+                }
+                
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());

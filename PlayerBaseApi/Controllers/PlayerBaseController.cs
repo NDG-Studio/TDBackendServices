@@ -631,7 +631,7 @@ namespace PlayerBaseApi.Controllers
 
 
         /// <summary>
-        /// Playerin tutorial gorevlerini doner 
+        /// Playerin tutorial gorevini doner 
         /// </summary>
         /// <remarks>
         /// ### DETAILS ###
@@ -639,16 +639,37 @@ namespace PlayerBaseApi.Controllers
         /// <br/>
         /// Input: BaseRequest
         /// <br/>
-        /// Output: TDResponse &lt; List &lt; PlayerTutorialQuestDTO &gt; &gt;
+        /// Output: TDResponse &lt; PlayerTutorialQuestDTO &gt;
         /// </remarks>
         [LoginRequired]
-        [HttpPost("GetPlayerTutorialQuests")]
-        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetPlayerTutorialQuests([FromBody] BaseRequest req)
+        [HttpPost("GetNextTutorialQuest")]
+        public async Task<TDResponse<PlayerTutorialQuestDTO>> GetNextTutorialQuest([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
-            return await _playerBaseService.GetPlayerTutorialQuests(req, user);
+            return await _playerBaseService.GetNextTutorialQuest(req, user);
+        }
+        
+        /// <summary>
+        /// Playerin tutorial gorevini bitirmesini saglar
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest  &lt; bool &gt; NOT: claim islemi icin true gonderilir
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("DoneTutorialQuest")]
+        public async Task<TDResponse> DoneTutorialQuest([FromBody] BaseRequest<bool> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.DoneTutorialQuest(req, user);
         }
 
 

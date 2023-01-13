@@ -9,6 +9,7 @@ namespace PlayerBaseApi.Models
         public int Power { get; set; } = 0;
         public int OldPower { get; set; } = 0;
         public string? OldDescription { get; set; } = "";
+        public string? Description { get; set; } = "";
         public List<BuildingUpgradeConditionDTO> Conditions { get; set; } = new List<BuildingUpgradeConditionDTO>();
     }
 }

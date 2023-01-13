@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PlayerBaseApi.Entities;
 using PlayerBaseApi.Enums;
+using PlayerBaseApi.Helpers;
 using SharedLibrary.Entities;
 using SharedLibrary.Models;
 
@@ -521,11 +522,26 @@ namespace PlayerBaseApi
 
             if ((DateTimeOffset.Now - playerBaseInfo.LastBaseCollect).TotalMilliseconds >= (new TimeSpan(0, 1, 0)).TotalMilliseconds)
             {
+
                 var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
                 duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
-
+                
                 playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
                 playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                var playerPrison = await PlayerPrison.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (playerPrison!=null)
+                {
+                    var buffs = await BuffHelper.GetPlayersTotalBuff(user.Id);
+                    playerBaseInfo.Scraps -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
+                                                                          (playerPrison.PrisonerCount *
+                                                                           buffs.PrisonCostMultiplier)));                
+                    playerBaseInfo.Fuel -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
+                                                                        (playerPrison.PrisonerCount *
+                                                                         buffs.PrisonCostMultiplier)));
+                    playerBaseInfo.Scraps = playerBaseInfo.Scraps < 0 ? 0 : playerBaseInfo.Scraps;
+                    playerBaseInfo.Fuel = playerBaseInfo.Fuel < 0 ? 0 : playerBaseInfo.Fuel;
+                }
+                
                 playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
 
                 await SaveChangesAsync();
@@ -551,6 +567,19 @@ namespace PlayerBaseApi
 
                 playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
                 playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                var playerPrison = await PlayerPrison.Where(l => l.UserId == userId).FirstOrDefaultAsync();
+                if (playerPrison!=null)
+                {
+                    var buffs = await BuffHelper.GetPlayersTotalBuff(userId);
+                    playerBaseInfo.Scraps -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
+                                                                          (playerPrison.PrisonerCount *
+                                                                           buffs.PrisonCostMultiplier)));                
+                    playerBaseInfo.Fuel -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
+                                                                        (playerPrison.PrisonerCount *
+                                                                         buffs.PrisonCostMultiplier)));
+                    playerBaseInfo.Scraps = playerBaseInfo.Scraps < 0 ? 0 : playerBaseInfo.Scraps;
+                    playerBaseInfo.Fuel = playerBaseInfo.Fuel < 0 ? 0 : playerBaseInfo.Fuel;
+                }
                 playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
 
                 await SaveChangesAsync();

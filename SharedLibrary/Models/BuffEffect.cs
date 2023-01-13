@@ -168,7 +168,10 @@ namespace SharedLibrary.Models
         public double LootRunCapacityMultiplier { get; set; } //maksimumuna % ekle
         public double LootRunDurationMultiplier { get; set; } //maksimumuna % ekle
         
-        
+        public double SupportUnitTroopCapacity { get; set; } = 0; //support unit (get max)
+        public int GangMemberCapacity { get; set; } = 0;
+
+
         public double SupportUnitTroopCapacityMultiplier { get; set; } //support unit
         public double NeutralUnitCoinMultiplier { get; set; } //war with neutral
         public double TeleportCostMultiplier { get; set; } //base
@@ -213,8 +216,7 @@ namespace SharedLibrary.Models
         public double NeutralDamageMultiplier { get; set; } //war
         public double SkillDamageDefense { get; set; } //war
         public double SkillDamage { get; set; } //war HeroBelowHealth
-        public double DamageWithTime { get; set; } //war FirstTime
-        public int FirstTime { get; set; } //war second DamageWithTime
+        public List<string> FirstTimeDamage { get; set; } = new List<string>(); //war 'second,damagebuff'
         public double CriticDamageChance { get; set; } //war
         public double CriticDamage { get; set; } //war
         public double AfterCriticHeal { get; set; } //war 

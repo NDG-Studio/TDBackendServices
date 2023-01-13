@@ -7,8 +7,7 @@ namespace PlayerBaseApi.Entities
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int StageId { get; set; } = 1;
-        public int StageOrderId { get; set; } = 1;
+        public int OrderId { get; set; } = 1;
         public bool IsActive { get; set; } = true;
     }
 }
