@@ -120,10 +120,8 @@ namespace PlayerBaseApi.Helpers
                 bb.EnemyTroopDamageMultiplier = playerBuffs.Sum(l => l.EnemyTroopDamageMultiplier);
                 bb.HeroMarchingSpeedMultiplier = playerBuffs.Sum(l => l.HeroMarchingSpeedMultiplier);
                 bb.NeutralUnitCoinMultiplier = playerBuffs.Sum(l => l.NeutralUnitCoinMultiplier);
-                bb.LootRunCapacityMultiplier = playerBuffs.Sum(l => l.LootRunCapacityMultiplier);
                 bb.HeroSkillUseTroopGainHealth = playerBuffs.Sum(l => l.HeroSkillUseTroopGainHealth);
                 bb.HeroLevelDamageMultiplier = playerBuffs.Sum(l => l.HeroLevelDamageMultiplier);
-                bb.LootRunDurationMultiplier = playerBuffs.Sum(l => l.LootRunDurationMultiplier);
                 bb.OtherGangDamageMultiplier = playerBuffs.Sum(l => l.OtherGangDamageMultiplier);
                 bb.TroopMarchingSpeedMultiplier = playerBuffs.Sum(l => l.TroopMarchingSpeedMultiplier);
                 bb.AfterActiveSkillImmuneSecond = playerBuffs.Count>0 ? playerBuffs.Select(l=>l.AfterActiveSkillImmuneSecond).Max() : 0;
@@ -240,10 +238,8 @@ namespace PlayerBaseApi.Helpers
                 bb.EnemyTroopDamageMultiplier = playerBuffs.Sum(l => l.EnemyTroopDamageMultiplier);
                 bb.HeroMarchingSpeedMultiplier = playerBuffs.Sum(l => l.HeroMarchingSpeedMultiplier);
                 bb.NeutralUnitCoinMultiplier = playerBuffs.Sum(l => l.NeutralUnitCoinMultiplier);
-                bb.LootRunCapacityMultiplier = playerBuffs.Sum(l => l.LootRunCapacityMultiplier);
                 bb.HeroSkillUseTroopGainHealth = playerBuffs.Sum(l => l.HeroSkillUseTroopGainHealth);
                 bb.HeroLevelDamageMultiplier = playerBuffs.Sum(l => l.HeroLevelDamageMultiplier);
-                bb.LootRunDurationMultiplier = playerBuffs.Sum(l => l.LootRunDurationMultiplier);
                 bb.OtherGangDamageMultiplier = playerBuffs.Sum(l => l.OtherGangDamageMultiplier);
                 bb.TroopMarchingSpeedMultiplier = playerBuffs.Sum(l => l.TroopMarchingSpeedMultiplier);
                 bb.AfterActiveSkillImmuneSecond = playerBuffs.Count>0 ? playerBuffs.Select(l=>l.AfterActiveSkillImmuneSecond).Max() : 0;

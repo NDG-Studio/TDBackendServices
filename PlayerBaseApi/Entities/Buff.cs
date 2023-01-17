@@ -72,7 +72,7 @@ namespace PlayerBaseApi.Entities
         public double LootDurationMultiplier { get; set; } = 0;
 
         /// <summary>[notusable]
-        /// Heronun lootdan gelirken getirebileceği maksimum resource sayısı
+        /// Heronun lootdan gelirken getirebileceği maksimum resource sayısı maksimuma % ekle
         /// </summary>
         public double LootCapacity { get; set; } = 0;
 
@@ -159,17 +159,17 @@ namespace PlayerBaseApi.Entities
         #endregion
 
 
-        /// <summary>
+        /// <summary>[usable]
         /// Base üretimi için katsayı
         /// </summary>
         public double ScrapProductionSpeedMultiplier { get; set; } = 0;
 
-        /// <summary>
+        /// <summary>[usable]
         /// City Shield Duration buff
         /// </summary>
         public bool CityShieldActive { get; set; } = false;
         
-        /// <summary>
+        /// <summary>[deleted]
         /// Auto LootRun Duration buff
         /// </summary>
         public bool AutoLootRunActive { get; set; } = false;
@@ -186,8 +186,6 @@ namespace PlayerBaseApi.Entities
         public double TroopHpMultiplier { get; set; } = 0; //sadece savas
         //public double TroopAttackSpeed { get; set; } //sadece savas
         public double TroopMarchingSpeedMultiplier { get; set; } = 0; //sadece savas (heronunki ile aynı iş)
-        public double LootRunCapacityMultiplier { get; set; } = 0; //maksimumuna % ekle
-        public double LootRunDurationMultiplier { get; set; } = 0; //maksimumuna % ekle
 
 
         public double SupportUnitTroopCapacity { get; set; } = 0; //support unit (get max)

@@ -165,8 +165,6 @@ namespace SharedLibrary.Models
         public double TroopHpMultiplier { get; set; } //sadece savas
         //public double TroopAttackSpeed { get; set; } //sadece savas
         public double TroopMarchingSpeedMultiplier { get; set; } //sadece savas (heronunki ile aynı iş)
-        public double LootRunCapacityMultiplier { get; set; } //maksimumuna % ekle
-        public double LootRunDurationMultiplier { get; set; } //maksimumuna % ekle
         
         public double SupportUnitTroopCapacity { get; set; } = 0; //support unit (get max)
         public int GangMemberCapacity { get; set; } = 0;

@@ -525,21 +525,17 @@ namespace PlayerBaseApi
 
                 var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
                 duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
-                
+                var buffs = await BuffHelper.GetPlayersTotalBuff(user.Id);
                 playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
-                playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.Scraps += (int)(duration.TotalHours * (playerBaseInfo.ResourceProductionPerHour + (playerBaseInfo.ResourceProductionPerHour * buffs.ScrapProductionSpeedMultiplier)));
                 var playerPrison = await PlayerPrison.Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
                 if (playerPrison!=null)
                 {
-                    var buffs = await BuffHelper.GetPlayersTotalBuff(user.Id);
+                    
                     playerBaseInfo.Scraps -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
                                                                           (playerPrison.PrisonerCount *
-                                                                           buffs.PrisonCostMultiplier)));                
-                    playerBaseInfo.Fuel -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
-                                                                        (playerPrison.PrisonerCount *
-                                                                         buffs.PrisonCostMultiplier)));
+                                                                           buffs.PrisonCostMultiplier)));
                     playerBaseInfo.Scraps = playerBaseInfo.Scraps < 0 ? 0 : playerBaseInfo.Scraps;
-                    playerBaseInfo.Fuel = playerBaseInfo.Fuel < 0 ? 0 : playerBaseInfo.Fuel;
                 }
                 
                 playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
@@ -564,21 +560,17 @@ namespace PlayerBaseApi
             {
                 var duration = DateTimeOffset.Now - playerBaseInfo.LastBaseCollect;
                 duration = playerBaseInfo.BaseFullDuration < duration ? playerBaseInfo.BaseFullDuration : duration;
-
+                var buffs = await BuffHelper.GetPlayersTotalBuff(userId);
                 playerBaseInfo.Fuel += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
-                playerBaseInfo.Scraps += (int)(duration.TotalHours * playerBaseInfo.ResourceProductionPerHour);
+                playerBaseInfo.Scraps += (int)(duration.TotalHours * (playerBaseInfo.ResourceProductionPerHour + (playerBaseInfo.ResourceProductionPerHour * buffs.ScrapProductionSpeedMultiplier)));
                 var playerPrison = await PlayerPrison.Where(l => l.UserId == userId).FirstOrDefaultAsync();
                 if (playerPrison!=null)
                 {
-                    var buffs = await BuffHelper.GetPlayersTotalBuff(userId);
+
                     playerBaseInfo.Scraps -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
                                                                           (playerPrison.PrisonerCount *
-                                                                           buffs.PrisonCostMultiplier)));                
-                    playerBaseInfo.Fuel -= (int)(duration.TotalHours * (playerPrison.PrisonerCount +
-                                                                        (playerPrison.PrisonerCount *
-                                                                         buffs.PrisonCostMultiplier)));
+                                                                           buffs.PrisonCostMultiplier)));
                     playerBaseInfo.Scraps = playerBaseInfo.Scraps < 0 ? 0 : playerBaseInfo.Scraps;
-                    playerBaseInfo.Fuel = playerBaseInfo.Fuel < 0 ? 0 : playerBaseInfo.Fuel;
                 }
                 playerBaseInfo.LastBaseCollect = DateTimeOffset.Now;
 
