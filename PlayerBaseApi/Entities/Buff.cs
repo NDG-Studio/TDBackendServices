@@ -146,7 +146,7 @@ namespace PlayerBaseApi.Entities
 
         #region TROOP TRAINING BUFFS
 
-        /// <summary>
+        /// <summary>[usable]
         /// Troop Training Per Hour Multiplier
         /// </summary>
         public double TroopTrainingMultiplier { get; set; } = 0;

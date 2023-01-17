@@ -94,6 +94,14 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetCityShields(req);
         }
+        
+        //[OnlyApps]
+        [HttpPost("GetActiveTowers")]
+        public async Task<TDResponse<List<TowerLevelPair>>> GetActiveTowers([FromBody] BaseRequest<long> req)
+        {
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetActiveTowers(req);
+        }
 
         [LoginRequired]
         [HttpPost("UpgradeBuildingInfo")]

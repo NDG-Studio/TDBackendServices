@@ -497,7 +497,7 @@ namespace PlayerBaseApi.Services
 
                 var buildingUpgradeTimeQuery = _context.BuildingUpgradeTime.Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1);
                 var buildingInitial = await _context.BuildingUpgradeTime
-                    .Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel + 1)
+                    .Where(l => l.BuildingTypeId == req.Data && l.Level == query.BuildingLevel)
                     .FirstOrDefaultAsync();
 
                 var buildingUpgradeTime = await _mapper.ProjectTo<BuildingUpgradeTimeDTO>(buildingUpgradeTimeQuery).FirstOrDefaultAsync();
@@ -836,7 +836,7 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
-
+        
 
         #region RESEARCH UTILS
 
@@ -1175,6 +1175,37 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<List<TowerLevelPair>>> GetActiveTowers(BaseRequest<long> req)
+        {
+            TDResponse<List<TowerLevelPair>> response = new TDResponse<List<TowerLevelPair>>();
+            var info = InfoDetail.CreateInfo(req, "GetActiveTowers");
+            try
+            {
+                var buffy = await BuffHelper.GetPlayersTotalBuff(req.Data);
+                if (buffy != null)
+                {
+                    response.Data = buffy.TowerLevelPairs;
+                }
+                else
+                {
+                    response.Data = new List<TowerLevelPair>();
+                }
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
         #endregion
 
 

@@ -130,6 +130,13 @@ namespace PlayerBaseApi.Helpers
                 bb.OtherGangDefenseMultiplier = playerBuffs.Sum(l => l.OtherGangDefenseMultiplier);
                 bb.SpyProductionTimeMultiplier = playerBuffs.Sum(l => l.SpyProductionTimeMultiplier);
                 bb.SupportUnitTroopCapacityMultiplier = playerBuffs.Sum(l => l.SupportUnitTroopCapacityMultiplier);
+                bb.TowerLevelPairs = playerBuffs
+                    .Where(l => l.TowerId != 0 && l.TowerId != null && l.TowerLevel != null && l.TowerLevel != 0)
+                    .Select(l => new TowerLevelPair()
+                    {
+                        TowerId = l.TowerId??0,
+                        TowerLevel = l.TowerLevel??0
+                    }).ToList();
                 return bb;
             }
         }
@@ -243,6 +250,13 @@ namespace PlayerBaseApi.Helpers
                 bb.OtherGangDefenseMultiplier = playerBuffs.Sum(l => l.OtherGangDefenseMultiplier);
                 bb.SpyProductionTimeMultiplier = playerBuffs.Sum(l => l.SpyProductionTimeMultiplier);
                 bb.SupportUnitTroopCapacityMultiplier = playerBuffs.Sum(l => l.SupportUnitTroopCapacityMultiplier);
+                bb.TowerLevelPairs = playerBuffs
+                    .Where(l => l.TowerId != 0 && l.TowerId != null && l.TowerLevel != null && l.TowerLevel != 0)
+                    .Select(l => new TowerLevelPair()
+                    {
+                        TowerId = l.TowerId??0,
+                        TowerLevel = l.TowerLevel??0
+                    }).ToList();
                 return bb;
             }
         }

@@ -88,5 +88,6 @@ namespace PlayerBaseApi.Interfaces
 
         Task<TDResponse> SendSupportUnit(BaseRequest<SupportUnitRequest> req, UserDto user);
         Task<TDResponse> GetSupportUnitBackById(BaseRequest<long> req, UserDto user);
+        Task<TDResponse<List<TowerLevelPair>>> GetActiveTowers(BaseRequest<long> req);
     }
 }

@@ -190,8 +190,10 @@ namespace SharedLibrary.Models
         public double TowerBuildCostMultiplier { get; set; } //td
         public double TowerRangeMultiplier { get; set; } //td
         public double TowerKillCoinMultiplier { get; set; } //td
-        public int TowerId { get; set; }
-        public int TowerLevel { get; set; }
+        public int TowerId { get; set; } = 0;
+        public int TowerLevel { get; set; } = 0;
+
+        public List<TowerLevelPair> TowerLevelPairs { get; set; } = new List<TowerLevelPair>();
 
 
         #region TalentParameters

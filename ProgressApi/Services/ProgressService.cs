@@ -1,3 +1,4 @@
+using System.Text;
 using ProgressApi.Models;
 using ProgressApi.Entities;
 using ProgressApi.Interfaces;
@@ -5,6 +6,7 @@ using AutoMapper;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ProgressApi.Services
 {
@@ -305,17 +307,39 @@ namespace ProgressApi.Services
                 var quserTowerStatus = _context.UserTowerPlace.Include(l => l.TowerLevel).ThenInclude(l => l.Tower)
                     .Where(l => l.UserId == user.Id && l.WaveId == userWave!.WaveId);
                 var creatableTowers = new List<CreatableTowerDTO>();
+                
+                var towerLevels = Environment.GetEnvironmentVariable("DefaultTowerLevels").Split(',')
+                    .Select(l => new TowerLevelPair
+                    {
+                        TowerId = Int32.Parse(l.Split('-')[0]),
+                        TowerLevel = Int32.Parse(l.Split('-')[1])
+                    }).ToList();
+                var researchTowers = await GetActiveTowerLevels(user.Id);
+                
+                if (researchTowers is { HasError: false, Data: { } })
+                {
+                    towerLevels.AddRange(researchTowers.Data);
+                }
+                
                 var qq = await _context.TowerLevel.Include(l => l.Tower).Where(l => l.Tower.IsActive).OrderBy(l => l.TowerId).ThenBy(l => l.Level).ToListAsync();
 
                 var groupedLevels = qq.GroupBy(l => l.Tower);
-
+                
+                
                 foreach (var tl in groupedLevels)
                 {
+                    var thatTowerLevels = towerLevels.Where(l => l.TowerId == tl.Key.Id).Select(l=>l.TowerLevel).ToList();
+                    // if (thatTowerLevels.Count == 0)
+                    // {
+                    //     continue;
+                    // }
+                    
                     creatableTowers.Add(new CreatableTowerDTO()
                     {
 
                         Tower = _mapper.Map<TowerDTO>(tl.Key),
                         TowerLevelList = _mapper.ProjectTo<TowerLevelDTO>(tl.ToList().AsQueryable()).ToList()
+                    //        .Where(l=>thatTowerLevels.Contains(l.Level)).ToList()
 
                     });
 
@@ -576,6 +600,43 @@ namespace ProgressApi.Services
         }
 
 
+        private static async Task<TDResponse<List<TowerLevelPair>>> GetActiveTowerLevels(long userId)
+        {
+            var handler = new HttpClientHandler();
+
+            handler.ServerCertificateCustomValidationCallback =
+                (message, cert, chain, errors) =>
+                { return true; }; //TODO: Prodda silinmeli
+
+            using (HttpClient client = new HttpClient(handler))
+            {
+
+                var response = client.PostAsync(new Uri(Environment.GetEnvironmentVariable("PlayerBaseUrl") + "/api/PlayerBase/GetActiveTowers"),
+                    new StringContent(JsonConvert.SerializeObject(
+                        new BaseRequest<long>()
+                        {
+                            Data = userId,
+                            Info = new InfoDto()
+                            {
+                                DeviceId = "_mapapi_",
+                                OsVersion = "_mapapi_",
+                                AppVersion = "_mapapi_",
+                                DeviceModel = "_mapapi_",
+                                DeviceType = "_mapapi_",
+                                UserId = 0,
+                                Ip = "_mapapi_"
+                            }
+                        }
+                    ), Encoding.UTF8, "application/json")).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    var res = JsonConvert.DeserializeObject<TDResponse<List<TowerLevelPair>>>(content);
+                    return res;
+                }
+                return null;
+            }
+        }
 
     }
 }
