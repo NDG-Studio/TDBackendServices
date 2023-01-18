@@ -203,7 +203,9 @@ namespace PlayerBaseApi.Entities
 
 
         public double AllTowerDamageMultiplier { get; set; } = 0; //td
+        public double TowerDamageMultiplier { get; set; } = 0; //td
         public double AllTowerAttackSpeedMultiplier { get; set; } = 0; //td
+        public double TowerAttackSpeedMultiplier { get; set; } = 0; //td
         public double TowerBuildCostMultiplier { get; set; } = 0; //td
         public double TowerRangeMultiplier { get; set; } = 0; //td
         public double TowerKillCoinMultiplier { get; set; } = 0; //td

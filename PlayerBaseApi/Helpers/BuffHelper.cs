@@ -135,6 +135,8 @@ namespace PlayerBaseApi.Helpers
                         TowerId = l.TowerId??0,
                         TowerLevel = l.TowerLevel??0
                     }).ToList();
+                bb.AllTowerDamageMultiplier = playerBuffs.Sum(l => l.AllTowerDamageMultiplier);
+                bb.AllTowerAttackSpeedMultiplier = playerBuffs.Sum(l => l.AllTowerAttackSpeedMultiplier);
                 return bb;
             }
         }
@@ -250,9 +252,11 @@ namespace PlayerBaseApi.Helpers
                     .Where(l => l.TowerId != 0 && l.TowerId != null && l.TowerLevel != null && l.TowerLevel != 0)
                     .Select(l => new TowerLevelPair()
                     {
-                        TowerId = l.TowerId??0,
-                        TowerLevel = l.TowerLevel??0
+                        TowerId = l.TowerId ?? 0,
+                        TowerLevel = l.TowerLevel ?? 0
                     }).ToList();
+                bb.AllTowerDamageMultiplier = playerBuffs.Sum(l => l.AllTowerDamageMultiplier);
+                bb.AllTowerAttackSpeedMultiplier = playerBuffs.Sum(l => l.AllTowerAttackSpeedMultiplier);
                 return bb;
             }
         }
