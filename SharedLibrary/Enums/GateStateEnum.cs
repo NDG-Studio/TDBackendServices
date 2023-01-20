@@ -1,4 +1,4 @@
-﻿namespace MapApi.Enums
+﻿namespace SharedLibrary.Enums
 {
     enum GateStateEnum
     {

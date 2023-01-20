@@ -53,6 +53,7 @@ namespace PlayerBaseApi.MapperProfiles
             CreateMap<PrisonLevel, PrisonLevelDTO>();
             CreateMap<Buff, BuffDTO>();
             CreateMap<BuffEffect, BuffDTO>();
+            CreateMap<GateInfo, GateInfoDTO>();
             CreateMap<TutorialQuestsGift, TutorialQuestGiftDTO>();
             CreateMap<PlayerHeroLoot, PlayerHeroLootDTO>()
                 .ForMember(dest => dest.OperationEndDate, operations => operations

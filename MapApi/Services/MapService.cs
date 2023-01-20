@@ -57,7 +57,8 @@ namespace MapApi.Services
             var info = InfoDetail.CreateInfo(req, "GetMapItemTypes");
             try
             {
-                var query =await _context.MapItem.Where(l => l.UserId == req.Data)
+                bool isGate = req.Data <= 0;
+                var query =await _context.MapItem.Where(l => (l.UserId == req.Data && !isGate) || (isGate && l.GateId == req.Data * -1))
                     .Select(l=> $"{l.CoordX},{l.CoordY}").FirstOrDefaultAsync();
 
                 response.Data = query;

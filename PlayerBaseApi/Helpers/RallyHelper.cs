@@ -48,7 +48,6 @@ public class RallyHelper
             }).Result;
             Console.WriteLine(ccc.Message+"--");
         }
-
     }
     public static void ChangeRally(Rally rally)
     {
@@ -101,44 +100,56 @@ public class RallyHelper
                         {
                             #region ATTACK ALGORITHM
 
+                            var isGate = s.TargetUserId <= 0;
                             s.RallyParts = _context.RallyPart.Where(l => l.RallyId == s.Id && l.IsActive && !l.IsAbort).ToList();
-                            var TplayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == s.TargetUserId)
-                                .FirstOrDefault();
-                            var TplayerTroop = _context.PlayerTroop.Where(l => l.UserId == s.TargetUserId).FirstOrDefault();
-                            var TPlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel)
-                                .Where(l => l.UserId == s.TargetUserId).FirstOrDefault();
-                            var TplayerBasePlacement = _context.PlayerBasePlacement
+                            PlayerBaseInfo? TplayerBaseInfo = !isGate ? _context.PlayerBaseInfo.Where(l => l.UserId == s.TargetUserId)
+                                .FirstOrDefault():null;
+                            PlayerTroop? TplayerTroop = !isGate ? _context.PlayerTroop.Where(l => l.UserId == s.TargetUserId)
+                                .FirstOrDefault() : null;
+                            PlayerHospital? TPlayerHospital = !isGate ? _context.PlayerHospital.Include(l=>l.HospitalLevel)
+                                .Where(l => l.UserId == s.TargetUserId).FirstOrDefault(): null;
+                            List<PlayerBasePlacement>? TplayerBasePlacement =!isGate ? _context.PlayerBasePlacement
                                 .Where(l => l.UserId == s.TargetUserId && (l.BuildingTypeId == 3 || l.BuildingTypeId == 10))
-                                .ToList();
-                            var TbarracksLevel = TplayerBasePlacement.Where(l => l.BuildingTypeId == 10 )
-                                .Select(l => l.BuildingLevel).FirstOrDefault();                    
-                            var TwallLevel = TplayerBasePlacement.Where(l => l.BuildingTypeId == 3)
-                                .Select(l => l.BuildingLevel).FirstOrDefault();
+                                .ToList():null;
+                            int? TbarracksLevel =!isGate ? TplayerBasePlacement.Where(l => l.BuildingTypeId == 10 )
+                                .Select(l => l.BuildingLevel).FirstOrDefault() :null;                    
+                            int? TwallLevel = !isGate ? TplayerBasePlacement.Where(l => l.BuildingTypeId == 3)
+                                .Select(l => l.BuildingLevel).FirstOrDefault() :null;
                             
-
-                            // var AplayerTroop = _context.PlayerTroop.Where(l => l.UserId == s.AttackerUserId).FirstOrDefault();
-                            // var APlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel).Where(l => l.UserId == s.AttackerUserId).FirstOrDefault();
-
-
                             int APower = 0;
                             int TPower = 0;
                             var TBuffs = BuffHelper.GetPlayersTotalBuff(s.TargetUserId, -1).Result;
                             var ATotalTroops = 0;
+                            var TTotalTroops = 0;
                             foreach (var rallyPart in s.RallyParts)
                             {
                                 var ABuffs = BuffHelper.GetPlayersTotalBuff(rallyPart.UserId, rallyPart.HeroId).Result;
                                 ATotalTroops += rallyPart.TroopCount;
                                 APower += (int)(rallyPart.TroopCount * TROOP_POWER * (ABuffs.TroopDamageMultiplier <= 1 ? 1: ABuffs.TroopDamageMultiplier));
-                                Console.WriteLine("ATTACKER-Power-"+rallyPart.UserId+":"+APower);
                             }
-                 
 
+
+                            var supports = _context.SupportUnit.Where(l =>
+                                    l.HostUserId == s.TargetUserId && l.State == (int)SupportUnitState.Stay &&
+                                    l.IsActive)
+                                .ToList();
+
+
+                            foreach (var sup in supports)
+                            {
+                                var supBuff = BuffHelper.GetPlayersTotalBuff(sup.ClientUserId, sup.HeroId).Result;
+                                TPower += (int)(sup.TroopCount * TROOP_POWER * (supBuff.TroopDefenseMultiplier <= 1 ? 1 : TBuffs.TroopDefenseMultiplier));
+                                TTotalTroops += sup.TroopCount;
+
+                            }
                             
+                            if (!isGate)
+                            {
+                                TPower += (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.TroopDefenseMultiplier<=1?1:TBuffs.TroopDefenseMultiplier));
+                                TPower += ((TwallLevel ?? 0) * WALL_POWER);
+                                TTotalTroops += TplayerTroop.TroopCount;
+                            }
                             
-                            TPower += (int)(TplayerTroop.TroopCount * TROOP_POWER * (TBuffs.TroopDefenseMultiplier<=1?1:TBuffs.TroopDefenseMultiplier));
-                            TPower += (TwallLevel * WALL_POWER);
-                            
-                            Console.WriteLine("Defenser-Power-"+s.TargetUserId+":"+TPower);
                             
                             AttackSideEnum winnerSide = APower - TPower > 0 ? AttackSideEnum.Attacker : AttackSideEnum.Defenser;
                             int powerDiff = Math.Abs(APower - TPower);
@@ -147,13 +158,13 @@ public class RallyHelper
                             
                             if (winnerSide == AttackSideEnum.Attacker) // attacker wins 
                             {
-                                int TDead = RandomHelper.GetRandomInt(0,TplayerTroop.TroopCount/4);                                
-                                int ATotalPrisoner = RandomHelper.GetRandomInt(0,Math.Min(TplayerTroop.TroopCount-TDead,troopDiff));
-                                int TWounded = TplayerTroop.TroopCount - TDead - ATotalPrisoner;
+                                int TDead = RandomHelper.GetRandomInt(0,TTotalTroops/4);                                
+                                int ATotalPrisoner = RandomHelper.GetRandomInt(0,Math.Min(TTotalTroops-TDead,troopDiff));
+                                int TWounded = TTotalTroops - TDead - ATotalPrisoner;
                                 
                                 int ATotalDead = RandomHelper.GetRandomInt(0,(ATotalTroops-troopDiff)/3);
                                 int ATotalWounded = ATotalTroops-troopDiff-ATotalDead;
-                                int TotalLootedScrap = Math.Min(troopDiff*100,TplayerBaseInfo.Scraps);
+                                int TotalLootedScrap = isGate ? 0 : Math.Min(troopDiff*100,TplayerBaseInfo.Scraps);
 
                                 s.TargetsWoundedTroop = TWounded;
                                 s.TargetsDeadTroop = TDead;
@@ -161,13 +172,17 @@ public class RallyHelper
                                 s.TargetWallLevel = TwallLevel;
                                 s.LootedScrap = TotalLootedScrap;
                                 s.PrisonerCount = ATotalPrisoner;
-                                s.TargetScrap = TplayerBaseInfo.Scraps;
-                                s.TargetsTroop = TplayerTroop.TroopCount;
+                                s.TargetScrap = isGate ? 0 : TplayerBaseInfo.Scraps;
+                                s.TargetsTroop = TTotalTroops;
                                 s.WinnerSide = (byte)AttackSideEnum.Attacker;
                                 s.ATotalTroop = ATotalTroops;
                                 s.ATotalDeadTroop = ATotalDead;
                                 s.ATotalWoundedTroop = ATotalWounded;
-                                TplayerBaseInfo.Scraps -= s.LootedScrap??0;
+                                if (!isGate)
+                                {
+                                    TplayerBaseInfo.Scraps -= s.LootedScrap??0;
+                                }
+                                
 
                                 foreach (var part in s.RallyParts)
                                 {
@@ -186,16 +201,43 @@ public class RallyHelper
                                     }
                                 }
 
-                                TplayerBaseInfo.DefenseKillCount += ATotalDead;
-                                TplayerTroop.TroopCount = 0;
-                                TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
+                                foreach (var supPart in supports)
+                                {
+                                    supPart.Dead = (supPart.TroopCount / TTotalTroops) * TDead;
+                                    supPart.Wounded= (supPart.TroopCount / TTotalTroops) * TWounded;
+                                    supPart.TroopCount = 0;
+                                    _context.SaveChanges();
+                                    SupportUnitHelper.ComebackSupport(supPart);
+                                }
+
+                                if (isGate)
+                                {
+                                    var gateInfo = _context.GateInfo.Where(l => l.GateId == s.TargetUserId).FirstOrDefault();
+                                    if (gateInfo!=null)
+                                    {
+                                        gateInfo.GangId = s.LeaderGangId;
+                                        gateInfo.GangName = s.LeaderGangName;
+                                        gateInfo.GangShortName = s.LeaderGangName?.Split('[')[1].Split(']')[0];
+                                        gateInfo.TotalTroopCount = 0;
+                                        gateInfo.GangAvatarId = s.LeaderGangAvatarId;
+                                    }
+                                }
+
+                                if (!isGate)
+                                {
+                                    TplayerBaseInfo.DefenseKillCount += ATotalDead;
+                                    TplayerTroop.TroopCount = 0;
+                                    TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
                                     TPlayerHospital.InjuredCount + (s.TargetsWoundedTroop??0));
+                                }
+                                
+                                
                             }
                             else // defenser wins 
                             {
 
-                                int TDead = RandomHelper.GetRandomInt(0, (TplayerTroop.TroopCount - troopDiff) / 4);
-                                int TWounded = TplayerTroop.TroopCount - troopDiff - TDead;
+                                int TDead = RandomHelper.GetRandomInt(0, (TTotalTroops - troopDiff) / 4);
+                                int TWounded = TTotalTroops - troopDiff - TDead;
                                 
                                 int ATotalDead = RandomHelper.GetRandomInt(0,ATotalTroops/3);
                                 int TotalLootedScrap = 0;
@@ -230,20 +272,41 @@ public class RallyHelper
                                     }
                                 }
                                 
-                                TplayerBaseInfo.DefenseKillCount += ATotalDead;
-                                TplayerTroop.TroopCount -= s.TargetsWoundedTroop ?? 0;
-                                TplayerTroop.TroopCount -= s.TargetsDeadTroop ?? 0;
-                                TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
-                                    TPlayerHospital.InjuredCount + (s.TargetsWoundedTroop??0));
+                                foreach (var supPart in supports)
+                                {
+                                    supPart.Dead = (supPart.TroopCount / TTotalTroops) * TDead;
+                                    supPart.Wounded= (supPart.TroopCount / TTotalTroops) * TWounded;
+                                    supPart.TroopCount = supPart.TroopCount -(
+                                                         ((supPart.TroopCount / TTotalTroops) * TDead) + ((supPart.TroopCount / TTotalTroops) * TWounded));
+                                }
+
+                                _context.SaveChanges();
                                 
-                                
+                                if (isGate)
+                                {
+                                    var gateInfo = _context.GateInfo.Where(l => l.GateId == s.TargetUserId).FirstOrDefault();
+                                    if (gateInfo!=null)
+                                    {
+                                        gateInfo.TotalTroopCount = supports.Count != 0 ? supports.Sum(l=>l.TroopCount):0;
+                                    }
+                                    _context.SaveChanges();
+                                }
+
+                                if (!isGate)
+                                {
+                                    TplayerBaseInfo.DefenseKillCount += ATotalDead;
+                                    TplayerTroop.TroopCount -= s.TargetsWoundedTroop ?? 0;
+                                    TplayerTroop.TroopCount -= s.TargetsDeadTroop ?? 0;
+                                    TPlayerHospital.InjuredCount = Math.Min(TPlayerHospital.HospitalLevel.HospitalCapacity,
+                                        TPlayerHospital.InjuredCount + (s.TargetsWoundedTroop??0));
+                                }
                             }
 
                             var dbEnt =_context.Rally.Where(l => l.Id == s.Id).FirstOrDefault();
                             if (dbEnt != null)
                             {
                                 dbEnt.TargetsWoundedTroop = s.TargetsWoundedTroop;
-                                dbEnt.TargetsDeadTroop = s.TargetsWoundedTroop;
+                                dbEnt.TargetsDeadTroop = s.TargetsDeadTroop;
                                 dbEnt.TargetBarracksLevel = s.TargetBarracksLevel;
                                 dbEnt.TargetWallLevel = s.TargetWallLevel;
                                 dbEnt.LootedScrap = s.LootedScrap;
@@ -292,12 +355,11 @@ public class RallyHelper
                     if (rmvList.Count>0)
                     {
                         foreach (RallyPart r in rmvList)
-                        {                         
+                        {
                             r.IsActive = false;
                             var attackerPlayerHospital = _context.PlayerHospital.Include(l=>l.HospitalLevel).Where(l => l.UserId == r.UserId).FirstOrDefault();
                             var attackerPlayerTroops = _context.PlayerTroop.Where(l => l.UserId == r.UserId).FirstOrDefault();
                             var attackerPlayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == r.UserId).FirstOrDefault();
-                            var defenserPlayerBaseInfo = _context.PlayerBaseInfo.Where(l => l.UserId == r.Rally.TargetUserId).FirstOrDefault();
                             var attackerPlayerPrison = _context.PlayerPrison.Include(l=>l.PrisonLevel).Where(l => l.UserId == r.UserId).FirstOrDefault();
                             
                             var ABuffs = BuffHelper.GetPlayersTotalBuff(r.UserId).Result;

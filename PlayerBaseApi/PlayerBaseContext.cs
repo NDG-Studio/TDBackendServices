@@ -78,6 +78,7 @@ namespace PlayerBaseApi
         public DbSet<SupportUnit> SupportUnit { get; set; }
         public DbSet<PlayerScout> PlayerScout { get; set; }
         public DbSet<ScoutLevel> ScoutLevel { get; set; }
+        public DbSet<GateInfo> GateInfo { get; set; }
         
 
 

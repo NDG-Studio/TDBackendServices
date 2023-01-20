@@ -837,6 +837,32 @@ namespace PlayerBaseApi.Services
 
         }
         
+        public async Task<TDResponse<List<GateInfoDTO>>> GetGateInfo(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<GateInfoDTO>> response = new TDResponse<List<GateInfoDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetGateInfo");
+            try
+            {
+                var query = _context.GateInfo
+                    .Where(l => l.IsActive).OrderBy(l => l.GateId);
+
+                response.Data = await _mapper.ProjectTo<GateInfoDTO>(query).ToListAsync();
+
+
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
 
         #region RESEARCH UTILS
 
@@ -3807,7 +3833,7 @@ namespace PlayerBaseApi.Services
                         Coord = GetUserCoordinate(l.HostUserId).Result.Data,
                         HeroName = _context.Hero.Where(k=>k.Id==l.Hero.Id).Select(k=>k.Name).FirstOrDefault(),
                         TUserId = l.HostUserId,
-                        TUserName = _context.PlayerBaseInfo.Where(k=>k.UserId==l.HostUserId).Select(k=>k.Username).FirstOrDefault(),
+                        TUserName = _context.PlayerBaseInfo.Where(k=>k.UserId==l.HostUserId).Select(k=>k.Username).FirstOrDefault()??"Gate-"+(-1*l.HostUserId).ToString(),
                         TUserAvatarId = _context.PlayerBaseInfo.Where(k=>k.UserId==l.HostUserId).Select(k=>k.AvatarId).FirstOrDefault()??0,
                         ArrivedDate = l.ArrivedDate?.ToString(),
                         ComebackDate = l.ComeBackDate?.ToString(),
@@ -4085,7 +4111,7 @@ namespace PlayerBaseApi.Services
                     }
                 
                 
-                    if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
+                    if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount<=0)
                     {
                         info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                         response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -4133,6 +4159,7 @@ namespace PlayerBaseApi.Services
             try
             {
                 bool isFake = req.Data.TargetUserId==(long)FakeId.TutorialEnemy;
+                bool isGate = req.Data.TargetUserId<0 && !isFake;
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4143,7 +4170,7 @@ namespace PlayerBaseApi.Services
 
                 var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
                 var senderPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
-                if (targetPlayerbaseInfo == null && !isFake)
+                if (targetPlayerbaseInfo == null && !isFake && !isGate)
                 {
                     info.AddInfo(OperationMessages.InputError);
                     response.SetError(OperationMessages.InputError);
@@ -4185,7 +4212,7 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
-                if (!isFake)
+                if (!isFake && !isGate)
                 {
                     var playerPrisons = await _context.PlayerPrison
                         .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
@@ -4202,7 +4229,7 @@ namespace PlayerBaseApi.Services
                     }
                 
                 
-                    if (pt==null || pt.TroopCount<req.Data.SenderTroopCount || req.Data.SenderTroopCount==0)
+                    if (pt==null || pt.TroopCount<req.Data.SenderTroopCount || req.Data.SenderTroopCount<=0)
                     {
                         info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
                         response.SetError(OperationMessages.PlayerDoesNotHaveResource);
@@ -4223,11 +4250,11 @@ namespace PlayerBaseApi.Services
                     HeroId = req.Data.SenderHeroId,
                     TroopCount = req.Data.SenderTroopCount,
                     IsActive = true,
-                    ClientAvatarId = senderPlayerbaseInfo.AvatarId??0,
-                    ClientUsername = senderPlayerbaseInfo.Username,
-                    HostUsername = targetPlayerbaseInfo.Username,
+                    ClientAvatarId = senderPlayerbaseInfo?.AvatarId ?? 0,
+                    ClientUsername = senderPlayerbaseInfo?.Username ?? "",
+                    HostUsername = targetPlayerbaseInfo?.Username ?? "",
                     HeroName = playerHero.Hero.Name,
-                    HostAvatarId = targetPlayerbaseInfo.AvatarId??0,
+                    HostAvatarId = targetPlayerbaseInfo?.AvatarId??0,
                     Wounded = 0,
                     Dead = 0,
                     HostCoord = (await GetUserCoordinate(req.Data.TargetUserId)).Data,
@@ -4317,7 +4344,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "CreateRally");
             try
             {
-                //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4325,10 +4351,11 @@ namespace PlayerBaseApi.Services
                     _logger.LogInformation(info.ToString());
                     return response;
                 }
+                bool isGate = req.Data.TargetUserId<0;
 
                 var targetPlayerbaseInfo = await _context.GetPlayerBaseInfoByUserId(req.Data.TargetUserId);
                 var leaderPlayerbaseInfo = await _context.GetPlayerBaseInfoByUser(user);
-                if (targetPlayerbaseInfo == null)
+                if (targetPlayerbaseInfo == null && !isGate)
                 {
                     info.AddInfo(OperationMessages.InputError);
                     response.SetError(OperationMessages.InputError);
@@ -4370,14 +4397,7 @@ namespace PlayerBaseApi.Services
                     .Where(l => l.UserId == user.Id)
                     .FirstOrDefaultAsync());
 
-                var playerPrisons = await _context.PlayerPrison
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
-                var playerHospital = await _context.PlayerHospital
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();                
-                var playerTroop = await _context.PlayerTroop
-                    .Where(l => l.UserId == user.Id || l.UserId == req.Data.TargetUserId).CountAsync();
-                
-                
+
                 if (pt==null || pt.TroopCount<req.Data.AttackerTroopCount || req.Data.AttackerTroopCount==0)
                 {
                     info.AddInfo(OperationMessages.PlayerDoesNotHaveResource);
@@ -4388,7 +4408,10 @@ namespace PlayerBaseApi.Services
 
                 var leaderCoord = (await GetUserCoordinate(user.Id)).Data;
                 var targetCoord = (await GetUserCoordinate(req.Data.TargetUserId)).Data;
-                var targetGangInfo = (await GetGangInfoForRally(req.Data.TargetUserId)).Data;
+
+                GangInfo? targetGangInfo = isGate ? null : (await GetGangInfoForRally(req.Data.TargetUserId)).Data;
+                GateInfo? gateGang= isGate ?await _context.GateInfo.Where(l => l.GateId == req.Data.TargetUserId * -1)
+                    .FirstOrDefaultAsync() : null;
                 var leaderGangInfo = (await GetGangInfoForRally(user.Id)).Data;
                 
                 var now = DateTimeOffset.UtcNow;
@@ -4399,21 +4422,21 @@ namespace PlayerBaseApi.Services
                     RallyStartDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute),
                     LeaderUsername = user.Username,
                     LeaderAvatarId = leaderPlayerbaseInfo?.AvatarId??0,
-                    TargetUsername = targetPlayerbaseInfo.Username,
+                    TargetUsername = targetPlayerbaseInfo?.Username??("Gate-"+req.Data.TargetUserId * -1),
                     WarDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(2),
-                    ComeBackDate = now+ TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4),
+                    ComeBackDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4),
                     LeaderUserId = user.Id,
                     LeaderUserCoord = leaderCoord,
                     TargetUserCoord = targetCoord,
                     LeaderGangId = leaderGangInfo.Id.ToString(),
                     LeaderGangName = $"[{leaderGangInfo.ShortName}]{leaderGangInfo.Name}",
                     LeaderGangAvatarId = leaderGangInfo.AvatarId,
-                    TargetGangId = targetGangInfo.Id.ToString(),
-                    TargetGangName = $"[{targetGangInfo.ShortName}]{targetGangInfo.Name}",
-                    TargetGangAvatarId = targetGangInfo.AvatarId,
+                    TargetGangId = isGate ? gateGang.Id.ToString() : targetGangInfo?.Id.ToString(),
+                    TargetGangName = isGate ? $"[{gateGang.GangShortName}]{gateGang.GangName}" : $"[{targetGangInfo.ShortName}]{targetGangInfo.Name}",
+                    TargetGangAvatarId = isGate ? gateGang.GangAvatarId : targetGangInfo.AvatarId,
                     WinnerSide = null,
                     IsActive = true,
-                    TargetAvatarId = targetPlayerbaseInfo.AvatarId??0
+                    TargetAvatarId = targetPlayerbaseInfo.AvatarId ?? 0
                 };
                 
                 await _context.AddAsync(rally);
@@ -4506,11 +4529,7 @@ namespace PlayerBaseApi.Services
                 var pt = (await _context.PlayerTroop
                     .Where(l => l.UserId == user.Id)
                     .FirstOrDefaultAsync());
-
-                var playerPrisons = await _context.PlayerPrison
-                    .Where(l => l.UserId == user.Id ).AnyAsync();
-                var playerHospital = await _context.PlayerHospital
-                    .Where(l => l.UserId == user.Id ).AnyAsync();                       
+                     
                 var playerBaseInfo = await _context.PlayerBaseInfo
                     .Where(l => l.UserId == user.Id ).FirstOrDefaultAsync();       
                 
