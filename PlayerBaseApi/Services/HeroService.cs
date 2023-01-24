@@ -481,7 +481,7 @@ namespace PlayerBaseApi.Services
         }
 
 
-        public async Task<TDResponse<List<HeroSkillDTO>>> GetHeroSkillsByHeroId(BaseRequest<int> req, UserDto user) //TODO: yeterli skill point var mı bakılacak
+        public async Task<TDResponse<List<HeroSkillDTO>>> GetHeroSkillsByHeroId(BaseRequest<int> req, UserDto user)
         {
             TDResponse<List<HeroSkillDTO>> response = new TDResponse<List<HeroSkillDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetHeroSkillsByHeroId");
@@ -516,7 +516,7 @@ namespace PlayerBaseApi.Services
         }
 
 
-        public async Task<TDResponse> UpgradeHeroSkillBySkillId(BaseRequest<int> req, UserDto user) //TODO: yeterli skill point var mı bakılacak
+        public async Task<TDResponse> UpgradeHeroSkillBySkillId(BaseRequest<int> req, UserDto user)
         {
             TDResponse response = new TDResponse();
             var info = InfoDetail.CreateInfo(req, "UpgradeHeroSkillBySkillId");

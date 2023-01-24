@@ -244,6 +244,8 @@ namespace PlayerBaseApi.Entities
         public double AttackReturnSpeed { get; set; } = 0; //war
         public double AfterBattleHealth { get; set; } = 0; //war
         public double ActiveSkillCooldownDuration { get; set; } = 0; //war
+        public double WarLootMultiplier { get; set; } = 0; //war
+        public double WarHeroExpMultiplier { get; set; } = 0; //war
         
         
         

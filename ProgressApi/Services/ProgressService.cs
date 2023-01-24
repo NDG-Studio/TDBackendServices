@@ -72,7 +72,7 @@ namespace ProgressApi.Services
                 qTowerProgress.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
                 List<EnemyKill> enemyKill = _mapper.ProjectTo<EnemyKill>(req.Data!.EnemyKillList.AsQueryable()).ToList();
                 enemyKill.ForEach((l) => { l.UserProgressHistoryId = userProgressHistory.Id; });
-                List<UserTowerPlace> userTowerPlace = req.Data.TowerPlaceList.Where(l=>l.TowerLevelId != null && l.TowerLevelId != 0).Select(l => new UserTowerPlace() //TODO: Bu kuleleri ekleyebilir mi kontrol� eklenecek
+                List<UserTowerPlace> userTowerPlace = req.Data.TowerPlaceList.Where(l=>l.TowerLevelId != null && l.TowerLevelId != 0).Select(l => new UserTowerPlace()
                 {
                     PlaceId = l.PlaceId,
                     TowerLevelId = l.TowerLevelId,

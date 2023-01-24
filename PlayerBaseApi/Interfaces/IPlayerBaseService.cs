@@ -58,7 +58,9 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<PlayerTroopInfoDTOv2>> GetPlayerTroopInfoV2(BaseRequest req, UserDto user);
         Task<TDResponse> SpendGangCreateMoney(BaseRequest req, UserDto user);
         Task<TDResponse<PlayerTutorialQuestDTO>> GetNextTutorialQuest(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetTutorialQuestList(BaseRequest req, UserDto user);
         Task<TDResponse> DoneTutorialQuest(BaseRequest<bool> req, UserDto user);
+        Task<TDResponse> DoneTutorialQuestById(BaseRequest<DoneTutorialQuestRequest> req, UserDto user);
         Task<TDResponse<List<UsableItemDTO>>> GetPlayersSpeedUpItems(BaseRequest req, UserDto user);
         Task<TDResponse<List<PlayerItemDTO>>> GetTDWaveRewardsByWaveId(BaseRequest<int> req, UserDto user);
         Task<TDResponse> GetTDWaveRewardsDoneByWaveId(BaseRequest<int> req, UserDto user);

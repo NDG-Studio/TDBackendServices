@@ -516,7 +516,7 @@ namespace PlayerBaseApi.Services
                     _context.BuildingUpgradeCondition
                         .Include(l => l.PrereqBuildingType)
                         .Where(l => l.BuildingId == req.Data && l.BuildingLevel == query.BuildingLevel + 1)
-                    ).ToListAsync();
+                    ).OrderBy(l=>l.PrereqBuildingTypeId).ToListAsync();
                 buildingUpgradeTime.Conditions = new List<BuildingUpgradeConditionDTO>();
                 foreach (var cond in conditions)
                 {
@@ -957,7 +957,7 @@ namespace PlayerBaseApi.Services
                     .Include(l => l.ResearchNodeUpgradeNecessaries)
                     .ThenInclude(l => l.ResearchNode)
                     .Where(l => l.ResearchNodeUpgradeNecessaries.UpgradeLevel == nextLevel && l.ResearchNodeUpgradeNecessaries.ResearchNodeId == req.Data)
-                    .OrderBy(l => l.BuildingTypeId)
+                    .OrderBy(l => l.BuildingTypeId).ThenBy(l=>l.ResearchNodeId)
                     .ToListAsync();
 
                 response.Data.ResearchNodeUpgradeConditionList = new List<ResearchNodeUpgradeConditionDTO>();
@@ -1542,7 +1542,6 @@ namespace PlayerBaseApi.Services
                             playerBaseInfo!.Gems += gainedResource?.GemCount ?? 0;
                             gainedResource.StartDate = loot.OperationStartDate.ToString();
                             gainedResource.EndDate = loot.OperationEndDate.ToString();
-                            //response.Data.GainedLootRuns.Add(gainedResource); //TODO: SONRADAN MAIL ISLEMI YAZILACAK
                         }
                         else
                         {
@@ -1571,7 +1570,6 @@ namespace PlayerBaseApi.Services
                                 playerBaseInfo!.Scraps += gainedLoots?.ScrapCount ?? 0;
                                 playerBaseInfo!.BluePrints += gainedLoots?.BluePrintCount ?? 0;
                                 playerBaseInfo!.Gems += gainedLoots?.GemCount ?? 0;
-                                //response.Data.GainedLootRuns.Add(gainedLoots);//TODO: SONRADAN MAIL ISLEMI YAZILACAK
                             }
                             else
                             {
@@ -2915,6 +2913,8 @@ namespace PlayerBaseApi.Services
 
 
         #region TUTORIAL QUEST UTILS
+        
+        [Obsolete("deprecated")]
         public async Task<TDResponse<PlayerTutorialQuestDTO>> GetNextTutorialQuest(BaseRequest req, UserDto user)
         {
             TDResponse<PlayerTutorialQuestDTO> response = new TDResponse<PlayerTutorialQuestDTO>();
@@ -2924,7 +2924,7 @@ namespace PlayerBaseApi.Services
                 var currentOrderId = 1;
                 var playerTutorialQuest = await _context.PlayerTutorialQuest
                     .Include(l => l.TutorialQuest)
-                    .Where(l => l.UserId == user.Id && l.IsClaim)
+                    .Where(l => l.UserId == user.Id && l.IsClaim && l.TutorialQuest.ParentId != null)
                     .OrderByDescending(l => l.TutorialQuest.OrderId).FirstOrDefaultAsync();
 
                 if (playerTutorialQuest != null)
@@ -2934,10 +2934,10 @@ namespace PlayerBaseApi.Services
 
                 var playerQuest = await _context.PlayerTutorialQuest
                     .Include(l => l.TutorialQuest)
-                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive == true && l.TutorialQuest.OrderId == currentOrderId)
+                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive == true && l.TutorialQuest.OrderId == currentOrderId && l.TutorialQuest.ParentId != null)
                     .FirstOrDefaultAsync();
 
-                var tq = await _context.TutorialQuest.Where(l => l.OrderId == currentOrderId && l.IsActive).FirstOrDefaultAsync();
+                var tq = await _context.TutorialQuest.Where(l => l.OrderId == currentOrderId && l.IsActive && l.ParentId!=null ).FirstOrDefaultAsync();
                 response.Data = new PlayerTutorialQuestDTO()
                     {
                         IsClaim = playerQuest?.IsClaim ?? false,
@@ -2960,7 +2960,76 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetTutorialQuestList(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerTutorialQuestDTO>> response = new TDResponse<List<PlayerTutorialQuestDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetTutorialQuestList");
+            try
+            {
+                var currentOrderId = 1;
+                var playerTutorialQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.IsClaim && l.TutorialQuest.ParentId==null)
+                    .OrderByDescending(l => l.TutorialQuest.OrderId).FirstOrDefaultAsync();
+
+                if (playerTutorialQuest != null)
+                {
+                    currentOrderId = playerTutorialQuest.TutorialQuest.OrderId+1;
+                }
+
+                var playerQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id 
+                                && (
+                                    (l.TutorialQuest.IsActive == true&&l.TutorialQuest.Parent != null && l.TutorialQuest.Parent.OrderId == currentOrderId) 
+                                    || 
+                                    (l.TutorialQuest.OrderId == currentOrderId && l.TutorialQuest.ParentId==null))
+                                )
+                    .ToListAsync();
+
+                var tq = await _context.TutorialQuest
+                    .Where(l => 
+                                (l.IsActive == true&&l.Parent != null && l.Parent.OrderId == currentOrderId) 
+                                || 
+                                (l.OrderId == currentOrderId && l.ParentId==null)
+                                )
+                    .OrderBy(l=>l.OrderId).ThenBy(l=>l.ParentId)
+                    .ToListAsync();
                 
+                var res = new List<PlayerTutorialQuestDTO>();
+                foreach (var t in tq)
+                {
+                    PlayerTutorialQuest? tmp = playerQuest.FirstOrDefault(l => l.TutorialQuestId == t.Id);
+                    res.Add(new PlayerTutorialQuestDTO()
+                    {
+                        TutorialQuestName = t.Name,
+                        IsClaim = tmp?.IsClaim ?? false,
+                        IsDone = tmp?.IsDone ?? false,
+                        OrderId = t.OrderId,
+                        Id = t.Id,
+                        ParentId = t.ParentId,
+                        GiftList = await _mapper.ProjectTo<TutorialQuestGiftDTO>(_context.TutorialQuestsGift.Include(l=>l.Item).Where(l=>l.TutorialQuestId==t.Id && l.IsActive)).ToListAsync()
+                        
+                    });
+                }
+
+                response.Data = res;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+                
+        [Obsolete("deprecated")]
         public async Task<TDResponse> DoneTutorialQuest(BaseRequest<bool> req, UserDto user)
         {
             TDResponse response = new TDResponse();
@@ -3009,6 +3078,91 @@ namespace PlayerBaseApi.Services
                 }
 
                 if (req.Data)
+                {
+                    var gifts = await _context.TutorialQuestsGift
+                        .Where(l => l.TutorialQuestId == tq.Id && l.IsActive).ToListAsync();
+                    foreach (var g in gifts)
+                    {
+                        var playerItem = await _context.PlayerItem
+                            .Where(l => l.UserId == user.Id && l.ItemId == g.ItemId).FirstOrDefaultAsync();
+                        if (playerItem==null)
+                        {
+                            await _context.AddAsync(new PlayerItem()
+                            {
+                                Count = g.Count,
+                                UserId = user.Id,
+                                ItemId = g.ItemId
+                            });
+                        }
+                        else
+                        {
+                            playerItem.Count += g.Count;
+                        }
+                    }
+                }
+                
+                await _context.SaveChangesAsync();
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }     
+        
+        public async Task<TDResponse> DoneTutorialQuestById(BaseRequest<DoneTutorialQuestRequest> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "DoneTutorialQuestById");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+
+                var playerQuest = await _context.PlayerTutorialQuest
+                    .Include(l => l.TutorialQuest)
+                    .Where(l => l.UserId == user.Id && l.TutorialQuest.IsActive && l.TutorialQuest.Id == req.Data.QuestId)
+                    .FirstOrDefaultAsync();
+
+                var tq = await _context.TutorialQuest.Where(l => l.Id == req.Data.QuestId && l.IsActive).FirstOrDefaultAsync();
+                if (tq==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (playerQuest==null)
+                {
+                    var ent = new PlayerTutorialQuest()
+                    {
+                        TutorialQuestId = tq.Id,
+                        UserId = user.Id,
+                        IsClaim = req.Data.IsClaim,
+                        IsDone = true
+                    };
+                    await _context.AddAsync(ent);
+                }
+                else
+                {
+                    playerQuest.IsDone = true;
+                    playerQuest.IsClaim = req.Data.IsClaim;
+                }
+
+                if (req.Data.IsClaim)
                 {
                     var gifts = await _context.TutorialQuestsGift
                         .Where(l => l.TutorialQuestId == tq.Id && l.IsActive).ToListAsync();
@@ -3918,7 +4072,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "ScoutPlayer");
             try
             {
-                //todo: kac tane aktif scoutu var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -3969,7 +4122,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "ScoutPlayerV2");
             try
             {
-                //todo: kac tane aktif scoutu var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4040,7 +4192,6 @@ namespace PlayerBaseApi.Services
             try
             {
                 bool isFake = req.Data.TargetUserId==(long)FakeId.TutorialEnemy;
-                //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4414,30 +4565,32 @@ namespace PlayerBaseApi.Services
                     .FirstOrDefaultAsync() : null;
                 var leaderGangInfo = (await GetGangInfoForRally(user.Id)).Data;
                 
-                var now = DateTimeOffset.UtcNow;
-                var rally = new Rally()
-                {
-                    TargetUserId = req.Data.TargetUserId,
-                    Date= now,
-                    RallyStartDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute),
-                    LeaderUsername = user.Username,
-                    LeaderAvatarId = leaderPlayerbaseInfo?.AvatarId??0,
-                    TargetUsername = targetPlayerbaseInfo?.Username??("Gate-"+req.Data.TargetUserId * -1),
-                    WarDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(2),
-                    ComeBackDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4),
-                    LeaderUserId = user.Id,
-                    LeaderUserCoord = leaderCoord,
-                    TargetUserCoord = targetCoord,
-                    LeaderGangId = leaderGangInfo.Id.ToString(),
-                    LeaderGangName = $"[{leaderGangInfo.ShortName}]{leaderGangInfo.Name}",
-                    LeaderGangAvatarId = leaderGangInfo.AvatarId,
-                    TargetGangId = isGate ? gateGang.Id.ToString() : targetGangInfo?.Id.ToString(),
-                    TargetGangName = isGate ? $"[{gateGang.GangShortName}]{gateGang.GangName}" : $"[{targetGangInfo.ShortName}]{targetGangInfo.Name}",
-                    TargetGangAvatarId = isGate ? gateGang.GangAvatarId : targetGangInfo.AvatarId,
-                    WinnerSide = null,
-                    IsActive = true,
-                    TargetAvatarId = targetPlayerbaseInfo.AvatarId ?? 0
-                };
+                var now = DateTimeOffset.UtcNow;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                var rally = new Rally();
+                rally.TargetUserId = req.Data.TargetUserId;
+                rally.Date = now;
+                rally.RallyStartDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute);
+                rally.LeaderUsername = user.Username;
+                rally.LeaderAvatarId = leaderPlayerbaseInfo?.AvatarId ?? 0;
+                rally.TargetUsername = targetPlayerbaseInfo?.Username ?? ("Gate-" + req.Data.TargetUserId * -1);
+                rally.WarDate = now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(2);
+                rally.ComeBackDate =
+                    now + TimeSpan.FromMinutes(req.Data.RallyStartAfterMinute) + TimeSpan.FromMinutes(4);
+                rally.LeaderUserId = user.Id;
+                rally.LeaderUserCoord = leaderCoord;
+                rally.TargetUserCoord = targetCoord;
+                rally.LeaderGangId = leaderGangInfo.Id.ToString();
+                rally.LeaderGangName = $"[{leaderGangInfo.ShortName}]{leaderGangInfo.Name}";
+                rally.LeaderGangAvatarId = leaderGangInfo.AvatarId;
+                rally.TargetGangId = isGate ? gateGang.Id.ToString() : targetGangInfo?.Id.ToString();
+                rally.TargetGangName = isGate
+                    ? $"[{gateGang.GangShortName}]{gateGang.GangName}"
+                    : $"[{targetGangInfo?.ShortName}]{targetGangInfo?.Name}";
+                rally.TargetGangAvatarId = isGate ? gateGang?.GangAvatarId : targetGangInfo?.AvatarId;
+                rally.WinnerSide = null;
+                rally.IsActive = true;
+                rally.TargetAvatarId = targetPlayerbaseInfo.AvatarId ?? 0;
+                
                 
                 await _context.AddAsync(rally);
                 await _context.SaveChangesAsync();
@@ -4499,7 +4652,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "JoinRally");
             try
             {
-                //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4615,7 +4767,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "KickRallyPart");
             try
             {
-                //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);
@@ -4680,7 +4831,6 @@ namespace PlayerBaseApi.Services
             var info = InfoDetail.CreateInfo(req, "KickRallyPart");
             try
             {
-                //todo: kac tane aktif attack var kontrol edilecek
                 if (req.Data == null)
                 {
                     info.AddInfo(OperationMessages.InputError);

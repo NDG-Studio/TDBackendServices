@@ -616,7 +616,7 @@ namespace WebSocket.Socket
                 || l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat
                 || (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ApeChat && player.IsApe)
                 || (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.HumanChat && !player.IsApe)
-                )).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                )).AnyAsync())
                 {
                     isGlobal = true;
                 }
@@ -701,7 +701,7 @@ namespace WebSocket.Socket
                 var canSeeMessage = await _context.ChatRoomMember
                     .Include(l => l.ChatRoom)
                     .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
-                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat || l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat)).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && (l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat || l.ChatRoomTypeId == (int)ChatRoomTypeEnum.ServerChat)).AnyAsync())
                 {
                     canSeeMessage = true;
                 }
@@ -748,7 +748,7 @@ namespace WebSocket.Socket
                 var canSeeMessage = await _context.ChatRoomMember
                     .Include(l => l.ChatRoom)
                     .Where(l => l.ChatRoomId == chatGuid && l.UserId == player.UniqueId && l.IsActive && l.ChatRoom.IsActive).AnyAsync();
-                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())//TODO: ozel chat kontrolleri yapılacak
+                if (await _context.ChatRoom.Where(l => l.Id == chatGuid && l.ChatRoomTypeId == (int)ChatRoomTypeEnum.GlobalChat).AnyAsync())
                 {
                     canSeeMessage = true;
                 }

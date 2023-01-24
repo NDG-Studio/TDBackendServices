@@ -90,7 +90,6 @@ namespace MapApi.Services
                     return response;
                 }
                 var randArea = (await _context.Area.Where(l => (!isApe.Data ? l.ZoneId <= 6 : l.ZoneId > 9) && _context.MapItem.Where(k => k.AreaId == l.Id).Count() != 225).ToListAsync()).OrderBy(r => Guid.NewGuid()).FirstOrDefault();
-                //randArea = await _context.Area.Where(l => l.Id == 1).FirstOrDefaultAsync();    //TODO: TEStTEN SONRA SİL
                 var exclude = await _context.MapItem.Where(l => l.AreaId == randArea.Id).ToListAsync();
                 var m = new List<MapItemDTO>();
                 for (int i = randArea.XMin; i < randArea.XMax; i++)
@@ -244,10 +243,6 @@ namespace MapApi.Services
             {
 
                 var q = _context.MapItem.Where(l => req.Data.Contains(l.AreaId));
-                if (req.Data == null || req.Data?.Count == 0)//TODO: test için eklendi prodda sil
-                {
-                    q = _context.MapItem;
-                }
                 response.Data = await _mapper.ProjectTo<MapInfoDto>(q).ToListAsync();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);

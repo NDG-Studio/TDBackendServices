@@ -651,12 +651,34 @@ namespace PlayerBaseApi.Controllers
         /// </remarks>
         [LoginRequired]
         [HttpPost("GetNextTutorialQuest")]
+        [Obsolete("deprecated")]
         public async Task<TDResponse<PlayerTutorialQuestDTO>> GetNextTutorialQuest([FromBody] BaseRequest req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetNextTutorialQuest(req, user);
+        }
+
+        /// <summary>
+        /// Playerin tutorial gorev listesini doner 
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerTutorialQuestDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetTutorialQuestList")]
+        public async Task<TDResponse<List<PlayerTutorialQuestDTO>>> GetTutorialQuestList([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetTutorialQuestList(req, user);
         }
         
         /// <summary>
@@ -672,12 +694,34 @@ namespace PlayerBaseApi.Controllers
         /// </remarks>
         [LoginRequired]
         [HttpPost("DoneTutorialQuest")]
+        [Obsolete("deprecated")]
         public async Task<TDResponse> DoneTutorialQuest([FromBody] BaseRequest<bool> req)
         {
             var user = (HttpContext.Items["User"] as UserDto);
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.DoneTutorialQuest(req, user);
+        } 
+        
+        /// <summary>
+        /// Playerin tutorial gorevini bitirmesini saglar
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest  &lt; DoneTutorialQuestRequest &gt; NOT: claim islemi icin IsClaim true gonderilir, QuestId si verileni bitirir
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("DoneTutorialQuestById")]
+        public async Task<TDResponse> DoneTutorialQuestById([FromBody] BaseRequest<DoneTutorialQuestRequest> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.DoneTutorialQuestById(req, user);
         }
 
 
@@ -1208,7 +1252,7 @@ namespace PlayerBaseApi.Controllers
         /// Input: BaseRequest 
         /// <br/>
         /// Output: TDResponse &lt; List &lt; GateInfoDTO &gt; &gt;
-        /// </remarks>Task<TDResponse<List<GateInfoDTO>>> GetGateInfo(BaseRequest req, UserDto user)
+        /// </remarks>x
         [LoginRequired]
         [HttpPost("GetGateInfo")]
         public async Task<TDResponse<List<GateInfoDTO>>> GetGateInfo([FromBody] BaseRequest req)
