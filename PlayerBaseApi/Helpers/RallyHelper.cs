@@ -320,9 +320,30 @@ public class RallyHelper
                                 dbEnt.RallyParts = s.RallyParts; //TODO: rally partlarini kaydedecek mi kontrol et
                                 _context.SaveChanges();
                                 
-                                
-                                
-                                
+                                if (dbEnt.LeaderGangId != null && (dbEnt.LootedScrap > 0))
+                                {
+                                    var xxy = AddGangPool(new BaseRequest<AddGangPoolRequest>()
+                                    {
+                                        Data = new AddGangPoolRequest()
+                                        {
+                                            GangId = dbEnt.LeaderGangId,
+                                            ScrapCount = dbEnt.LootedScrap ?? 0
+                                        },
+                                        Info = new InfoDto()
+                                        {
+                                            Ip = "",
+                                            AppVersion = "",
+                                            DeviceId = "",
+                                            DeviceModel = "",
+                                            DeviceType = "",
+                                            OsVersion = "",
+                                            UserId = 111
+                                        }
+                                    }).Result;
+                                    Console.WriteLine("addgangpool---"+xxy.Message);
+                                }
+
+
                                 var xxx=SendRallyInfo(new BaseRequest<RallyDTO>()
                                 {
                                     Data = MapRallyDTO(dbEnt),
@@ -367,7 +388,7 @@ public class RallyHelper
                                 attackerPlayerHospital.HospitalLevel.HospitalCapacity,
                                 attackerPlayerHospital.InjuredCount + r.WoundedTroop);
 
-                            attackerPlayerBaseInfo.Scraps += r.LootedScrap;
+                            // attackerPlayerBaseInfo.Scraps += r.LootedScrap;
                             attackerPlayerTroops.TroopCount += r.TroopCount - r.DeadTroop -
                                                                r.WoundedTroop;
                             attackerPlayerPrison.PrisonerCount = Math.Min(
@@ -455,6 +476,31 @@ public class RallyHelper
         {
 
             var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/News/SendRallyNews"),
+                new StringContent(JsonConvert.SerializeObject(
+                    req
+                ), Encoding.UTF8, "application/json")).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                var res = JsonConvert.DeserializeObject<TDResponse>(content);
+                return res;
+            }
+            return null;
+        }
+    }            
+    
+    private static async Task<TDResponse> AddGangPool(BaseRequest<AddGangPoolRequest> req)
+    {
+        var handler = new HttpClientHandler();
+
+        handler.ServerCertificateCustomValidationCallback =
+            (message, cert, chain, errors) =>
+            { return true; }; //TODO: Prodda silinmeli
+
+        using (HttpClient client = new HttpClient(handler))
+        {
+
+            var response = client.PostAsync(new Uri( Environment.GetEnvironmentVariable("WebSocketUrl")+ "/api/Gang/AddGangPool"),
                 new StringContent(JsonConvert.SerializeObject(
                     req
                 ), Encoding.UTF8, "application/json")).Result;

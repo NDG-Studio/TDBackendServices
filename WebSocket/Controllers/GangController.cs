@@ -103,6 +103,25 @@ public class GangController : ControllerBase
 
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangInfoForRally(req);
+    }    
+    
+    /// <summary>
+    /// Gangin scrap pooluna ekleme yapmak icin kulllanilir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; AddGangPoolRequest &gt;
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    //[OnlyApps]
+    [HttpPost("AddGangPool")]
+    public async Task<TDResponse> AddGangPool([FromBody] BaseRequest<AddGangPoolRequest> req)
+    {
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.AddGangPool(req);
     }
 
 
@@ -128,6 +147,27 @@ public class GangController : ControllerBase
         req.SetUser(user.Id);
         req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
         return await _gangService.GetGangMembers(req, user);
+    }
+
+    /// <summary>
+    /// Gangin pooldaki parasini uyelere dagitir
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("DistrubutePoolScraps")]
+    public async Task<TDResponse> DistrubutePoolScraps([FromBody] BaseRequest req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.DistrubutePoolScraps(req, user);
     }
     
     /// <summary>

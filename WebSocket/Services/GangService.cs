@@ -1224,6 +1224,115 @@ namespace WebSocket.Services
             return response;
         }
         
+        public async Task<TDResponse> AddGangPool(BaseRequest<AddGangPoolRequest> req)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddGangPool");
+            try
+            {
+
+                if (req.Data == null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var gangId = new Guid(req.Data.GangId);
+                var gang = await _context.Gang
+                    .Where(l => l.Id == gangId).FirstOrDefaultAsync();
+                if (gang==null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (req.Data.ScrapCount>0)
+                {
+                    gang.ScrapPool += req.Data.ScrapCount;
+                }
+                
+                response.SetSuccess(OperationMessages.Success);
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
+        
+        public async Task<TDResponse> DistrubutePoolScraps(BaseRequest req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "AddGangPool");
+            try
+            {
+                var gangmember = await _context.GangMember.Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == user.Id && l.IsActive && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                    .FirstOrDefaultAsync();
+                
+                if (gangmember?.MemberType.Gang == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                if (!gangmember.MemberType.CanDistributeMoney)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var gang = gangmember.MemberType.Gang;
+
+                var poolScrap = gang.ScrapPool;
+                if (poolScrap<=0)
+                {
+                    response.SetError(OperationMessages.NoChanges);
+                    info.AddInfo(OperationMessages.NoChanges);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                var members = await _context.GangMember.Include(l => l.MemberType)
+                    .Where(l => l.MemberType.GangId == gang.Id && l.IsActive && l.MemberType.IsActive &&
+                                l.MemberType.Gang.IsActive)
+                    .ToListAsync();
+                var totalPoint = members.Select(l => l.MemberType).Distinct().Sum(l => l.PoolScore);
+                foreach (var m in members)
+                {
+                    var res= await DbService.SendLootGifts(new PlayerBaseInfoDTO()
+                    {
+                        UserId = m.UserId,
+                        Scraps = (int)(poolScrap/totalPoint*m.MemberType.PoolScore/(members.Count(l=>l.MemberTypeId==m.MemberTypeId)))
+                    });
+                    info.AddInfo((m.UserId)+"--"+res.Message);
+                }
+
+                gangmember.MemberType.Gang.ScrapPool = 0;
+                
+                response.SetSuccess(OperationMessages.Success);
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }
         public async Task<TDResponse<Paging<GangInfo>>> GetGangs(BaseRequest<int> req, UserDto user)
         {
             TDResponse<Paging<GangInfo>> response = new TDResponse<Paging<GangInfo>>();
