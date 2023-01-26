@@ -293,7 +293,7 @@ namespace PlayerBaseApi.Services
                         .Include(l=>l.TalentTreeNodeLevel).ThenInclude(l=>l.Buff)
                         .Where(l => l.TalentTreeNodeLevel.TalentTreeNode.TalentTreeId == qlist[i].Id && l.UserId == user.Id).ToListAsync();
                     qlist[i].NodeList = await _mapper.ProjectTo<TalentTreeNodeDTO>(qq).ToListAsync();
-                    qlist[i].NodeList.ForEach(l => l.TalentTreeNodeLevel = _mapper.Map<TalentTreeNodeLevel,TalentTreeNodeLevelDTO>(playerTalentTree.Where(k => k.TalentTreeNodeLevelId == l.Id).Select(l=>l.TalentTreeNodeLevel).FirstOrDefault()));
+                    qlist[i].NodeList.ForEach(l => l.TalentTreeNodeLevel = _mapper.Map<TalentTreeNodeLevel,TalentTreeNodeLevelDTO>(playerTalentTree.Where(k => k.TalentTreeNodeLevel.TalentTreeNodeId == l.Id).Select(l=>l.TalentTreeNodeLevel).FirstOrDefault()));
                 }
                 response.Data = qlist;
                 response.SetSuccess();
