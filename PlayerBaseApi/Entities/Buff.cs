@@ -182,11 +182,19 @@ namespace PlayerBaseApi.Entities
         public double HeroExpMultiplier { get; set; } = 0; //lootrun,savas,rally,reinforce,defense
         public double TroopDamageMultiplier { get; set; } = 0; //sadece savas
         public double EnemyTroopDamageMultiplier { get; set; } = 0; //sadece savas
+        public double EnemyTroopDefenseMultiplier { get; set; } = 0; //sadece savas
+        public double EnemyHeroDamageMultiplier { get; set; } = 0; //sadece savas
+        public double EnemyHeroDefenseMultiplier { get; set; } = 0; //sadece savas
+        public double EnemyGangTroopDamageMultiplier { get; set; } = 0; //sadece savas
+        public double EnemyGangTroopDefenseMultiplier { get; set; } = 0; //sadece savas
+        public double TroopCountMultiplier { get; set; } = 0; //sadece savas
         public double TroopDefenseMultiplier { get; set; } = 0; //sadece savas
         public double TroopHpMultiplier { get; set; } = 0; //sadece savas
         //public double TroopAttackSpeed { get; set; } //sadece savas
         public double TroopMarchingSpeedMultiplier { get; set; } = 0; //sadece savas (heronunki ile aynı iş)
 
+        
+        
 
         public double SupportUnitTroopCapacity { get; set; } = 0; //support unit (get max)
         public double SupportUnitTroopCapacityMultiplier { get; set; } = 0; //support unit
@@ -203,6 +211,7 @@ namespace PlayerBaseApi.Entities
 
 
         public double AllTowerDamageMultiplier { get; set; } = 0; //td
+        public double AllTowerRangeMultiplier { get; set; } = 0; //td
         public double TowerDamageMultiplier { get; set; } = 0; //td
         public double AllTowerAttackSpeedMultiplier { get; set; } = 0; //td
         public double TowerAttackSpeedMultiplier { get; set; } = 0; //td
@@ -214,6 +223,7 @@ namespace PlayerBaseApi.Entities
 
 
         #region TalentParameters
+        
 
         public int TroopHitCount { get; set; } //war AttackChance,DamageDiffrence,DamageDiffrenceNeutral
         public int EveryTroopsHitCount { get; set; } //war AttackChance,DamageDiffrence,DamageDiffrenceNeutral
@@ -224,6 +234,8 @@ namespace PlayerBaseApi.Entities
         public int DamageDiffrence { get; set; } //war,TroopHitCount,HeroHitCount,AttackChance,TroopBelowHealth
         public int DamageDiffrenceNeutral { get; set; } //war,TroopHitCount,HeroHitCount,AttackChance,TroopBelowHealth
         public double HeroLevelDamageMultiplier { get; set; } = 0; //war only troops level bazlı damage
+        public double HeroLevelHpMultiplier { get; set; } = 0; //war only troops level bazlı (hero level * HeroLevelHpMultiplier)
+        public double HeroLevelSpeedMultiplier { get; set; } = 0; //war only troops level bazlı (hero level * HeroLevelSpeedMultiplier)
         
         public double HealChance { get; set; } = 0; //war,HealChanceTroopCount
         public double HealChanceTroopCount { get; set; } = 0; //war,HealChance
@@ -240,6 +252,21 @@ namespace PlayerBaseApi.Entities
         public double CriticDamage { get; set; } = 0; //war
         public double AfterCriticHeal { get; set; } = 0; //war 
         public int AfterActiveSkillImmuneSecond { get; set; } = 0; //war
+        public string? AfterActiveSkillTroopDamageWithSecond{ get; set; } = null; //war (0.05,5) ilki damage yuzdesi ikinci suresi
+        public string? AfterActiveSkillTroopDefenseWithSecond{ get; set; } = null; //war (0.05,5) ilki defense yuzdesi ikinci suresi
+        public double AfterWinningTroopMarchSpeed{ get; set; } = 0; //war savas kazanilirsa donus hizi artar
+        public string? TroopFirstSecondDamageToEnemy{ get; set; } = null; //war (0.50,5) ilki damage yuzdesi ikinci suresi
+        public string? HeroFirstSecondDamageToEnemy{ get; set; } = null; //war (0.50,5) ilki damage yuzdesi ikinci suresi
+        public string? TroopFirstSecondDamageToNeutral{ get; set; } = null; //war (0.50,5) ilki damage yuzdesi ikinci suresi
+        public string? HeroFirstSecondDamageToNeutral{ get; set; } = null; //war (0.50,5) ilki damage yuzdesi ikinci suresi
+
+        
+        public string? TroopFirstSecondDefenseToEnemy{ get; set; } = null; //war (0.50,5) ilki defense yuzdesi ikinci suresi
+        public string? HeroFirstSecondDefenseToEnemy{ get; set; } = null; //war (0.50,5) ilki defense yuzdesi ikinci suresi
+        public string? TroopFirstSecondDefenseToNeutral{ get; set; } = null; //war (0.50,5) ilki defense yuzdesi ikinci suresi
+        public string? HeroFirstSecondDefenseToNeutral{ get; set; } = null; //war (0.50,5) ilki defense yuzdesi ikinci suresi
+
+        
         public double RallyReturnSpeed { get; set; } = 0; //war
         public double AttackReturnSpeed { get; set; } = 0; //war
         public double AfterBattleHealth { get; set; } = 0; //war

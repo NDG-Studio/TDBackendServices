@@ -1271,7 +1271,7 @@ namespace WebSocket.Services
         public async Task<TDResponse> DistrubutePoolScraps(BaseRequest req, UserDto user)
         {
             TDResponse response = new TDResponse();
-            var info = InfoDetail.CreateInfo(req, "AddGangPool");
+            var info = InfoDetail.CreateInfo(req, "DistrubutePoolScraps");
             try
             {
                 var gangmember = await _context.GangMember.Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
