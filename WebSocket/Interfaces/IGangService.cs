@@ -22,6 +22,7 @@ namespace WebSocket.Interfaces
         Task<TDResponse> EditGang(BaseRequest<GangEditDTO> req, UserDto user);
         Task<TDResponse> AddGangPool(BaseRequest<AddGangPoolRequest> req);
         Task<TDResponse> DistrubutePoolScraps(BaseRequest req, UserDto user);
+        Task<TDResponse> DonatePoolScrap(BaseRequest<int> req, UserDto user);
         Task<TDResponse<Paging<GangInfo>>> GetGangs(BaseRequest<int> req, UserDto user);
         Task<TDResponse<List<KeyValuePair<long, string>>>> GetGangAvatarsByUserIdList(BaseRequest<List<long>> req);
         Task<TDResponse<Paging<GangApplicationDTO>>> GetGangApplications(BaseRequest<int> req, UserDto user);

@@ -171,6 +171,27 @@ public class GangController : ControllerBase
     }
     
     /// <summary>
+    /// gangin pooluna bagis yapmayi saglar
+    /// </summary>
+    /// <remarks>
+    /// ### DETAILS ###
+    /// <br/>
+    /// <br/>
+    /// Input: BaseRequest &lt; int &gt; Not: bagislanacak miktar
+    /// <br/>
+    /// Output: TDResponse
+    /// </remarks>
+    [LoginRequired]
+    [HttpPost("DonatePoolScrap")]
+    public async Task<TDResponse> DonatePoolScrap([FromBody] BaseRequest<int> req)
+    {
+        var user = (HttpContext.Items["User"] as UserDto);
+        req.SetUser(user.Id);
+        req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+        return await _gangService.DonatePoolScrap(req, user);
+    }
+    
+    /// <summary>
     /// Kullanicinin gangine ait GangMemberTypelarini doner
     /// </summary>
     /// <remarks>

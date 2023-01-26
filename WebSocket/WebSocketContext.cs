@@ -35,6 +35,7 @@ namespace WebSocket
         public DbSet<ChatRoomMember> ChatRoomMember { get; set; }
         public DbSet<ChatMessage> ChatMessage { get; set; }
         public DbSet<GangApplication> GangApplication { get; set; }
+        public DbSet<DonationHistory> DonationHistory { get; set; }
 
 
 

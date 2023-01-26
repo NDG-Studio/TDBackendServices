@@ -1320,9 +1320,71 @@ namespace WebSocket.Services
                 }
 
                 gangmember.MemberType.Gang.ScrapPool = 0;
+                await _context.SaveChangesAsync();
                 
                 response.SetSuccess(OperationMessages.Success);
                 info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+        }        
+        public async Task<TDResponse> DonatePoolScrap(BaseRequest<int> req, UserDto user)
+        {
+            TDResponse response = new TDResponse();
+            var info = InfoDetail.CreateInfo(req, "DonatePoolScrap");
+            try
+            {
+                var gangmember = await _context.GangMember.Include(l=>l.MemberType).ThenInclude(l=>l.Gang)
+                    .Where(l => l.UserId == user.Id && l.IsActive && l.MemberType.IsActive && l.MemberType.Gang.IsActive)
+                    .FirstOrDefaultAsync();
+                
+                if (gangmember?.MemberType.Gang == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                var playerBase = GetOtherPlayersBaseInfo(user.Id).Result;
+                if (playerBase.Scraps>=req.Data)
+                {
+                    var history = new DonationHistory()
+                    {
+                        UserId = user.Id,
+                        ScrapCount = req.Data,
+                        GangId = gangmember.MemberType.GangId,
+                        DonationDate = DateTimeOffset.UtcNow
+                    };
+
+                    var donation = DbService.SendLootGifts(new PlayerBaseInfoDTO()
+                    {
+                        UserId = user.Id,
+                        Scraps = req.Data*-1
+                    }).Result;
+                    if (!donation.HasError)
+                    {
+                        gangmember.MemberType.Gang.ScrapPool += req.Data;
+                        history.IsSuccess = true;
+                        await _context.AddAsync(history);
+                        await _context.SaveChangesAsync();
+                        response.SetSuccess(OperationMessages.Success);
+                        info.AddInfo(OperationMessages.Success);
+                        _logger.LogInformation(info.ToString());
+                        return response;
+                    }
+                    await _context.AddAsync(history);
+                    await _context.SaveChangesAsync();
+                }
+                
+                response.SetError(OperationMessages.GeneralError);
+                info.AddInfo(OperationMessages.GeneralError);
                 _logger.LogInformation(info.ToString());
             }
             catch (Exception e)
