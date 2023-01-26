@@ -8,6 +8,7 @@ namespace PlayerBaseApi.Models
         public string? GangName { get; set; }
         public string? GangShortName { get; set; }
         public int? TotalTroopCount { get; set; }
+        public int PassPricePerUnit { get; set; } = 0;
         public int? GateStateEnum { get; set; }
     }
 }

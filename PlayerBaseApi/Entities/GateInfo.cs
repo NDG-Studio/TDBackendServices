@@ -13,6 +13,7 @@ namespace PlayerBaseApi.Entities
         public string? GangShortName { get; set; }
         public int? TotalTroopCount { get; set; }
         public int? GateStateEnum { get; set; }
+        public int PassPricePerUnit { get; set; } = 0;
         public bool IsActive { get; set; } = true;
     }
 }

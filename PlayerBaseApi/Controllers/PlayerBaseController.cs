@@ -1262,6 +1262,27 @@ namespace PlayerBaseApi.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetGateInfo(req, user);
         }
+                
+        /// <summary>
+        /// gange ait gateleri listeler
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest 
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; GateInfoDTO &gt; &gt;
+        /// </remarks>x
+        [LoginRequired]
+        [HttpPost("GetGangGates")]
+        public async Task<TDResponse<List<GateInfoDTO>>> GetGangGates([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.GetGangGates(req, user);
+        }
         
     }
 }

@@ -2907,6 +2907,37 @@ namespace PlayerBaseApi.Services
             return response;
 
         }
+        public async Task<TDResponse<List<GateInfoDTO>>> GetGangGates(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<GateInfoDTO>> response = new TDResponse<List<GateInfoDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetGangGates");
+            try
+            {
+                var gangInfo = await GetGangInfoForRally(user.Id);
+                if (gangInfo.HasError || gangInfo.Data == null)
+                {
+                    response.SetError(OperationMessages.PlayerIsNotInGangMember);
+                    info.AddInfo(OperationMessages.PlayerIsNotInGangMember);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var gangId = gangInfo.Data.Id.ToString();
+                var query = _context.GateInfo.Where(l => l.GangId == gangId);
+                response.Data = await _mapper.ProjectTo<GateInfoDTO>(query).ToListAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
         
 
         #endregion
