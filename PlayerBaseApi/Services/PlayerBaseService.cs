@@ -2939,6 +2939,56 @@ namespace PlayerBaseApi.Services
 
         }
         
+        public async Task<TDResponse> ChangeGangGates(BaseRequest<GateInfoDTO> req, UserDto user)
+        {
+            TDResponse<GateInfoDTO> response = new TDResponse<GateInfoDTO>();
+            var info = InfoDetail.CreateInfo(req, "ChangeGangGates");
+            try
+            {
+                
+                var gangInfo = await GetGangInfoForRally(user.Id);
+                if (gangInfo.HasError || gangInfo.Data == null)
+                {
+                    response.SetError(OperationMessages.PlayerIsNotInGangMember);
+                    info.AddInfo(OperationMessages.PlayerIsNotInGangMember);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                if (gangInfo.Data?.MemberType?.GateManager!=true)
+                {
+                    response.SetError(OperationMessages.PlayerNotHavePermission);
+                    info.AddInfo(OperationMessages.PlayerNotHavePermission);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                var gangId = gangInfo.Data.Id.ToString();
+                var query = await _context.GateInfo.Where(l => l.GangId == gangId && l.GateId == req.Data.GateId && l.IsActive).FirstOrDefaultAsync();
+                if (query == null)
+                {
+                    response.SetError(OperationMessages.DbItemNotFound);
+                    info.AddInfo(OperationMessages.DbItemNotFound);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+
+                query.PassPricePerUnit = query.PassPricePerUnit;
+                query.GateStateEnum = query.GateStateEnum;
+                await _context.SaveChangesAsync();
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+            return response;
+
+        }
+        
 
         #endregion
 

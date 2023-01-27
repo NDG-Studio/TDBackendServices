@@ -1252,7 +1252,7 @@ namespace PlayerBaseApi.Controllers
         /// Input: BaseRequest 
         /// <br/>
         /// Output: TDResponse &lt; List &lt; GateInfoDTO &gt; &gt;
-        /// </remarks>x
+        /// </remarks>
         [LoginRequired]
         [HttpPost("GetGateInfo")]
         public async Task<TDResponse<List<GateInfoDTO>>> GetGateInfo([FromBody] BaseRequest req)
@@ -1273,7 +1273,7 @@ namespace PlayerBaseApi.Controllers
         /// Input: BaseRequest 
         /// <br/>
         /// Output: TDResponse &lt; List &lt; GateInfoDTO &gt; &gt;
-        /// </remarks>x
+        /// </remarks>
         [LoginRequired]
         [HttpPost("GetGangGates")]
         public async Task<TDResponse<List<GateInfoDTO>>> GetGangGates([FromBody] BaseRequest req)
@@ -1282,6 +1282,27 @@ namespace PlayerBaseApi.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _playerBaseService.GetGangGates(req, user);
+        }
+                        
+        /// <summary>
+        /// GATE idsi verilen gange ait gate in gatemanager tarafinden PassPricePerUnit ve GateStateEnum niteliklerinin degisimi hedeflenir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; GateInfoDTO &gt; Not: Sadece PassPricePerUnit ve GateStateEnum degistirilebilir
+        /// <br/>
+        /// Output: TDResponse
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("ChangeGangGates")]
+        public async Task<TDResponse> ChangeGangGates([FromBody] BaseRequest<GateInfoDTO> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _playerBaseService.ChangeGangGates(req, user);
         }
         
     }

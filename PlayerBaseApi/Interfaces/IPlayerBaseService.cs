@@ -93,5 +93,6 @@ namespace PlayerBaseApi.Interfaces
         Task<TDResponse<List<TowerLevelPair>>> GetActiveTowers(BaseRequest<long> req);
         Task<TDResponse<List<GateInfoDTO>>> GetGateInfo(BaseRequest req, UserDto user);
         Task<TDResponse<List<GateInfoDTO>>> GetGangGates(BaseRequest req, UserDto user);
+        Task<TDResponse> ChangeGangGates(BaseRequest<GateInfoDTO> req, UserDto user);
     }
 }
