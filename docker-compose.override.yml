@@ -1,102 +1,123 @@
 version: '3.4'
 
 services:
-    identitydb:
-        container_name: identitydb_cont
+    ztddb:
+        container_name: ztddb_cont
         restart: always
         ports:
             - "3232:5432" 
         volumes:
-            - identitydb_volume:/var/lib/postgresql/data
+            - ztddb_volume:/var/lib/postgresql/data
         environment:
-            - POSTGRES_DB=identitydb
+            - POSTGRES_DB=ztddb
             - POSTGRES_USER=ndg
             - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
-    progressdb:
-        container_name: progressdb_cont
-        restart: always
-        ports:
-            - "3233:5432" 
-        volumes:
-            - progressdb_volume:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=progressdb
-            - POSTGRES_USER=ndg
-            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
-    playerbasedb:
-        container_name: playerbasedb_cont
-        restart: always
-        ports:
-            - "3234:5432" 
-        volumes:
-            - playerbasedb_volume:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=playerbasedb
-            - POSTGRES_USER=ndg
-            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS    
-    mapdb:
-        container_name: mapdb_cont
-        restart: always
-        ports:
-            - "3235:5432" 
-        volumes:
-            - mapdb_volume:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=mapdb
-            - POSTGRES_USER=ndg
-            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS    
-    socketdb:
-        container_name: socketdb_cont
-        restart: always
-        ports:
-            - "3236:5432" 
-        volumes:
-            - socketdb_volume:/var/lib/postgresql/data
-        environment:
-            - POSTGRES_DB=socketdb
-            - POSTGRES_USER=ndg
-            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
-    identityapi:
+    ztdapi:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
         ports:
-            - "4999:80"
-            - "5001:443"
+            - "8000:80"
+            - "8001:443"
         depends_on:
-            - identitydb
-    progressapi:
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ASPNETCORE_URLS=http://+:80
-        ports:
-            - "5002:80"
-            - "5003:443"
-        depends_on:
-            - progressdb
-    playerbaseapi:
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ASPNETCORE_URLS=http://+:80
-        ports:
-            - "5004:80"
-            - "5005:443"
-        depends_on:
-            - playerbasedb
-    mapapi:
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ASPNETCORE_URLS=http://+:80
-        ports:
-            - "5006:80"
-            - "5007:443"
-        depends_on:
-            - mapdb    
-    websocket:
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ASPNETCORE_URLS=http://+:80
-        ports:
-            - "5008:80"
-            - "5009:443"
-            - "8888:7777/udp"
+            - ztddb
+
+#    identitydb:
+#        container_name: identitydb_cont
+#        restart: always
+#        ports:
+#            - "3232:5432" 
+#        volumes:
+#            - identitydb_volume:/var/lib/postgresql/data
+#        environment:
+#            - POSTGRES_DB=identitydb
+#            - POSTGRES_USER=ndg
+#            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
+#    progressdb:
+#        container_name: progressdb_cont
+#        restart: always
+#        ports:
+#            - "3233:5432" 
+#        volumes:
+#            - progressdb_volume:/var/lib/postgresql/data
+#        environment:
+#            - POSTGRES_DB=progressdb
+#            - POSTGRES_USER=ndg
+#            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
+#    playerbasedb:
+#        container_name: playerbasedb_cont
+#        restart: always
+#        ports:
+#            - "3234:5432" 
+#        volumes:
+#            - playerbasedb_volume:/var/lib/postgresql/data
+#        environment:
+#            - POSTGRES_DB=playerbasedb
+#            - POSTGRES_USER=ndg
+#            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS    
+#    mapdb:
+#        container_name: mapdb_cont
+#        restart: always
+#        ports:
+#            - "3235:5432" 
+#        volumes:
+#            - mapdb_volume:/var/lib/postgresql/data
+#        environment:
+#            - POSTGRES_DB=mapdb
+#            - POSTGRES_USER=ndg
+#            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS    
+#    socketdb:
+#        container_name: socketdb_cont
+#        restart: always
+#        ports:
+#            - "3236:5432" 
+#        volumes:
+#            - socketdb_volume:/var/lib/postgresql/data
+#        environment:
+#            - POSTGRES_DB=socketdb
+#            - POSTGRES_USER=ndg
+#            - POSTGRES_PASSWORD=NDGSTUDIOPOSTGRESFORAWS
+#    identityapi:
+#        environment:
+#            - ASPNETCORE_ENVIRONMENT=Development
+#            - ASPNETCORE_URLS=http://+:80
+#        ports:
+#            - "4999:80"
+#            - "5001:443"
+#        depends_on:
+#            - identitydb
+#    progressapi:
+#        environment:
+#            - ASPNETCORE_ENVIRONMENT=Development
+#            - ASPNETCORE_URLS=http://+:80
+#        ports:
+#            - "5002:80"
+#            - "5003:443"
+#        depends_on:
+#            - progressdb
+#    playerbaseapi:
+#        environment:
+#            - ASPNETCORE_ENVIRONMENT=Development
+#            - ASPNETCORE_URLS=http://+:80
+#        ports:
+#            - "5004:80"
+#            - "5005:443"
+#        depends_on:
+#            - playerbasedb
+#    mapapi:
+#        environment:
+#            - ASPNETCORE_ENVIRONMENT=Development
+#            - ASPNETCORE_URLS=http://+:80
+#        ports:
+#            - "5006:80"
+#            - "5007:443"
+#        depends_on:
+#            - mapdb    
+#    websocket:
+#        environment:
+#            - ASPNETCORE_ENVIRONMENT=Development
+#            - ASPNETCORE_URLS=http://+:80
+#        ports:
+#            - "5008:80"
+#            - "5009:443"
+#            - "8888:7777/udp"

@@ -308,18 +308,18 @@ namespace ProgressApi.Services
                     .Where(l => l.UserId == user.Id && l.WaveId == userWave!.WaveId);
                 var creatableTowers = new List<CreatableTowerDTO>();
                 
-                var towerLevels = Environment.GetEnvironmentVariable("DefaultTowerLevels").Split(',')
-                    .Select(l => new TowerLevelPair
-                    {
-                        TowerId = Int32.Parse(l.Split('-')[0]),
-                        TowerLevel = Int32.Parse(l.Split('-')[1])
-                    }).ToList();
-                var researchTowers = await GetActiveTowerLevels(user.Id);
-                
-                if (researchTowers is { HasError: false, Data: { } })
-                {
-                    towerLevels.AddRange(researchTowers.Data);
-                }
+                // var towerLevels = Environment.GetEnvironmentVariable("DefaultTowerLevels").Split(',')
+                //     .Select(l => new TowerLevelPair
+                //     {
+                //         TowerId = Int32.Parse(l.Split('-')[0]),
+                //         TowerLevel = Int32.Parse(l.Split('-')[1])
+                //     }).ToList();
+                // var researchTowers = await GetActiveTowerLevels(user.Id);
+                //
+                // if (researchTowers is { HasError: false, Data: { } })
+                // {
+                //     towerLevels.AddRange(researchTowers.Data);
+                // }
                 
                 var qq = await _context.TowerLevel.Include(l => l.Tower).Where(l => l.Tower.IsActive).OrderBy(l => l.TowerId).ThenBy(l => l.Level).ToListAsync();
 
@@ -328,7 +328,7 @@ namespace ProgressApi.Services
                 
                 foreach (var tl in groupedLevels)
                 {
-                    var thatTowerLevels = towerLevels.Where(l => l.TowerId == tl.Key.Id).Select(l=>l.TowerLevel).ToList();
+                    // var thatTowerLevels = towerLevels.Where(l => l.TowerId == tl.Key.Id).Select(l=>l.TowerLevel).ToList();
                     // if (thatTowerLevels.Count == 0)
                     // {
                     //     continue;

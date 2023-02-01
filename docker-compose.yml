@@ -5,39 +5,72 @@ version: '3.4'
 #    driver: bridge
 
 services:
-    identitydb:
+#    identitydb:
+#        image: postgres:14.5-alpine
+#        mem_limit: 1g
+#        #networks:
+#        #    - isolation-network    
+    ztddb:
         image: postgres:14.5-alpine
         mem_limit: 1g
         #networks:
         #    - isolation-network
-    progressdb:
-        image: postgres:14.5-alpine
-        mem_limit: 1g
+#    progressdb:
+#        image: postgres:14.5-alpine
+#        mem_limit: 1g
+#        #networks:
+#        #    - isolation-network
+#    playerbasedb:
+#        image: postgres:14.5-alpine
+#        mem_limit: 1g
+#        #networks:
+#        #    - isolation-network
+#    mapdb:
+#        image: postgres:14.5-alpine
+#        mem_limit: 1g    
+#    socketdb:
+#        image: postgres:14.5-alpine
+#        mem_limit: 1g
+#        #networks:
+#        #    - isolation-network
+#    
+#    identityapi:
+#        #networks:
+#        #    - isolation-network
+#        image: ugurcanbagriyanik/identityapi
+#        mem_limit: 1g
+#        build:
+#            context: .
+#            dockerfile: IdentityApi/Dockerfile
+#        environment:
+#            - ConnectionStrings__IdentityContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
+#            - JWTSECRET=ApplicationSecretWhichUsed4Authentication.JwtToken*?xx23.45dsajdnjaIsykKhJdyshahbBHSBDA.HBDSHA33X3SJDNJSAKU.WHDEWO2348nG2mS9ASDrA34oS5D.J.SAD
+#            - MailConfigs__SignInMail__MailServer=smtp.yandex.com.tr
+#            - MailConfigs__SignInMail__MailPort=587
+#            - MailConfigs__SignInMail__EnableSsl=true
+#            - MailConfigs__SignInMail__SenderMail=authenticator@ndgstudio.com.tr
+#            - MailConfigs__SignInMail__SenderPassword=ndgstudio2020
+#            - MailConfigs__SignInMail__Topic=Welcome To TowerDefense
+#            - MailConfigs__SignInMail__Body=
+#            - MailConfigs__SignInMail__IsBodyHtml=true
+#            - Logging__LogLevel__Default=Information
+#            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+#            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
+#            - Logging__Database__Options__LogTable=Log
+#            - Logging__Database__Options__LogInfoTable=LogAction
+#            - Logging__Database__LogLevel__Default=Information
+#            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+#            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+    ztdapi:
         #networks:
         #    - isolation-network
-    playerbasedb:
-        image: postgres:14.5-alpine
-        mem_limit: 1g
-        #networks:
-        #    - isolation-network
-    mapdb:
-        image: postgres:14.5-alpine
-        mem_limit: 1g    
-    socketdb:
-        image: postgres:14.5-alpine
-        mem_limit: 1g
-        #networks:
-        #    - isolation-network
-    identityapi:
-        #networks:
-        #    - isolation-network
-        image: ugurcanbagriyanik/identityapi
+        image: ztdapi
         mem_limit: 1g
         build:
             context: .
-            dockerfile: IdentityApi/Dockerfile
+            dockerfile: ZTD/Dockerfile
         environment:
-            - ConnectionStrings__IdentityContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
+            - ConnectionStrings__ZTDContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=ztddb;Port=5432;Database=ztddb;Integrated Security=true;Pooling=true;
             - JWTSECRET=ApplicationSecretWhichUsed4Authentication.JwtToken*?xx23.45dsajdnjaIsykKhJdyshahbBHSBDA.HBDSHA33X3SJDNJSAKU.WHDEWO2348nG2mS9ASDrA34oS5D.J.SAD
             - MailConfigs__SignInMail__MailServer=smtp.yandex.com.tr
             - MailConfigs__SignInMail__MailPort=587
@@ -49,108 +82,111 @@ services:
             - MailConfigs__SignInMail__IsBodyHtml=true
             - Logging__LogLevel__Default=Information
             - Logging__LogLevel__Microsoft.AspNetCore=Warning
-            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=identitydb;Port=5432;Database=identitydb;Integrated Security=true;Pooling=true;
+            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=ztddb;Port=5432;Database=ztddb;Integrated Security=true;Pooling=true;
             - Logging__Database__Options__LogTable=Log
             - Logging__Database__Options__LogInfoTable=LogAction
             - Logging__Database__LogLevel__Default=Information
             - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
             - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-    progressapi:
-        #networks:
-        #    - isolation-network
-        image: ugurcanbagriyanik/progressapi
-        mem_limit: 1g
-        build:
-            context: .
-            dockerfile: ProgressApi/Dockerfile
-        environment:
-            - ConnectionStrings__ProgressContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=http://identityapi
-            - Logging__LogLevel__Default=Information
-            - Logging__LogLevel__Microsoft.AspNetCore=Warning
-            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
-            - Logging__Database__Options__LogTable=Log
-            - Logging__Database__Options__LogInfoTable=LogAction
-            - Logging__Database__LogLevel__Default=Information
-            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
-            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - TutorialLastLevel=900
-            - PlayerbaseUrl=http://playerbaseapi
-            - DefaultTowerLevels=1-1,2-1,3-1,5-1
-
-    playerbaseapi:
-        #networks:
-        #    - isolation-network
-        image: ugurcanbagriyanik/playerbaseapi
-        mem_limit: 1g
-        build:
-            context: .
-            dockerfile: PlayerBaseApi/Dockerfile
-        environment:
-            - ConnectionStrings__PlayerBaseContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=http://identityapi
-            - Logging__LogLevel__Default=Information
-            - Logging__LogLevel__Microsoft.AspNetCore=Warning
-            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
-            - Logging__Database__Options__LogTable=Log
-            - Logging__Database__Options__LogInfoTable=LogAction
-            - Logging__Database__LogLevel__Default=Information
-            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
-            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - WebSocketUrl=http://websocket
-            - MapApiUrl=http://mapapi
-    mapapi:
-        #networks:
-        #    - isolation-network
-        image: ugurcanbagriyanik/mapapi
-        mem_limit: 1g
-        build:
-            context: .
-            dockerfile: MapApi/Dockerfile
-        environment:
-            - ConnectionStrings__MapContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=http://identityapi
-            - Logging__LogLevel__Default=Information
-            - Logging__LogLevel__Microsoft.AspNetCore=Warning
-            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
-            - Logging__Database__Options__LogTable=Log
-            - Logging__Database__Options__LogInfoTable=LogAction
-            - Logging__Database__LogLevel__Default=Information
-            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
-            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - PlayerbaseUrl=http://playerbaseapi
-            - WebSocketUrl=http://websocket
-            - WALL_POWER=100
-            - TROOP_POWER=1
-    websocket:
-        #networks:
-        #    - isolation-network
-        image: ugurcanbagriyanik/websocket
-        mem_limit: 1g
-        build:
-            context: .
-            dockerfile: WebSocket/Dockerfile
-        environment:
-            - ConnectionStrings__WebSocketContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
-            - IdentityEndpoint=http://identityapi
-            - Logging__LogLevel__Default=Information
-            - Logging__LogLevel__Microsoft.AspNetCore=Warning
-            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
-            - Logging__Database__Options__LogTable=Log
-            - Logging__Database__Options__LogInfoTable=LogAction
-            - Logging__Database__LogLevel__Default=Information
-            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
-            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
-            - Identity_Url=http://identityapi
-            - PlayerBase_Url=http://playerbaseapi
-            - MapApi_Url=http://mapapi
-            - Admins=1,2
-            - TROOPPOWER=10
-            - WALLPOWER=10
+    
+    
+#    progressapi:
+#        #networks:
+#        #    - isolation-network
+#        image: ugurcanbagriyanik/progressapi
+#        mem_limit: 1g
+#        build:
+#            context: .
+#            dockerfile: ProgressApi/Dockerfile
+#        environment:
+#            - ConnectionStrings__ProgressContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
+#            - IdentityEndpoint=http://identityapi
+#            - Logging__LogLevel__Default=Information
+#            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+#            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=progressdb;Port=5432;Database=progressdb;Integrated Security=true;Pooling=true;
+#            - Logging__Database__Options__LogTable=Log
+#            - Logging__Database__Options__LogInfoTable=LogAction
+#            - Logging__Database__LogLevel__Default=Information
+#            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+#            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+#            - TutorialLastLevel=900
+#            - PlayerbaseUrl=http://playerbaseapi
+#            - DefaultTowerLevels=1-1,2-1,3-1,5-1
+#
+#    playerbaseapi:
+#        #networks:
+#        #    - isolation-network
+#        image: ugurcanbagriyanik/playerbaseapi
+#        mem_limit: 1g
+#        build:
+#            context: .
+#            dockerfile: PlayerBaseApi/Dockerfile
+#        environment:
+#            - ConnectionStrings__PlayerBaseContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
+#            - IdentityEndpoint=http://identityapi
+#            - Logging__LogLevel__Default=Information
+#            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+#            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=playerbasedb;Port=5432;Database=playerbasedb;Integrated Security=true;Pooling=true;
+#            - Logging__Database__Options__LogTable=Log
+#            - Logging__Database__Options__LogInfoTable=LogAction
+#            - Logging__Database__LogLevel__Default=Information
+#            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+#            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+#            - WebSocketUrl=http://websocket
+#            - MapApiUrl=http://mapapi
+#    mapapi:
+#        #networks:
+#        #    - isolation-network
+#        image: ugurcanbagriyanik/mapapi
+#        mem_limit: 1g
+#        build:
+#            context: .
+#            dockerfile: MapApi/Dockerfile
+#        environment:
+#            - ConnectionStrings__MapContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
+#            - IdentityEndpoint=http://identityapi
+#            - Logging__LogLevel__Default=Information
+#            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+#            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=mapdb;Port=5432;Database=mapdb;Integrated Security=true;Pooling=true;
+#            - Logging__Database__Options__LogTable=Log
+#            - Logging__Database__Options__LogInfoTable=LogAction
+#            - Logging__Database__LogLevel__Default=Information
+#            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+#            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+#            - PlayerbaseUrl=http://playerbaseapi
+#            - WebSocketUrl=http://websocket
+#            - WALL_POWER=100
+#            - TROOP_POWER=1
+#    websocket:
+#        #networks:
+#        #    - isolation-network
+#        image: ugurcanbagriyanik/websocket
+#        mem_limit: 1g
+#        build:
+#            context: .
+#            dockerfile: WebSocket/Dockerfile
+#        environment:
+#            - ConnectionStrings__WebSocketContext=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
+#            - IdentityEndpoint=http://identityapi
+#            - Logging__LogLevel__Default=Information
+#            - Logging__LogLevel__Microsoft.AspNetCore=Warning
+#            - Logging__Database__Options__ConnectionString=User Id=ndg;Password=NDGSTUDIOPOSTGRESFORAWS;Server=socketdb;Port=5432;Database=socketdb;Integrated Security=true;Pooling=true;
+#            - Logging__Database__Options__LogTable=Log
+#            - Logging__Database__Options__LogInfoTable=LogAction
+#            - Logging__Database__LogLevel__Default=Information
+#            - Logging__Database__LogLevel__Microsoft.AspNetCore=Error
+#            - Logging__Database__LogLevel__RoundTheCode.LoggerDb=Error
+#            - Identity_Url=http://identityapi
+#            - PlayerBase_Url=http://playerbaseapi
+#            - MapApi_Url=http://mapapi
+#            - Admins=1,2
+#            - TROOPPOWER=10
+#            - WALLPOWER=10
 
 volumes:
-    identitydb_volume:
-    progressdb_volume:
-    playerbasedb_volume:
-    mapdb_volume:
-    socketdb_volume:
+    ztddb_volume:
+#    identitydb_volume:
+#    progressdb_volume:
+#    playerbasedb_volume:
+#    mapdb_volume:
+#    socketdb_volume:
