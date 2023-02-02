@@ -9,5 +9,6 @@
         public double TowerDamage { get; set; }
         public double TowerDotDamage { get; set; }
         public double TowerArmorDamage { get; set; }
+        public int PlaceId { get; set; }
     }
 }

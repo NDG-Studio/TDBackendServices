@@ -61,7 +61,71 @@ namespace ZTD.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _service.GetLevels(req, user);
-        }        
+        }    
+        
+        /// <summary>
+        /// Levelleri detayli olarak wave ve wave parts bilgileri ile birlikte cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// BaseRequest icinde detayli oynanabilir verisi istenen levellerin idleri gonderilir
+        /// <br/>
+        /// Input: BaseRequest &lt; List &lt; int &gt; &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; LevelDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetTowers")]
+        public async Task<TDResponse<List<TowerDTO>>> GetTowers([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetTowers(req, user);
+        }
+        
+        /// <summary>
+        /// Geride kaldigi tablolar var mi kontrolu icin atilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; TableChangesDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetSyncStatus")]
+        public async Task<TDResponse<List<TableChangesDTO>>> GetSyncStatus([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetSyncStatus(req, user);
+        }
+        
+        /// <summary>
+        /// Progress eklemek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; List &lt; ProgressDTO &gt; &gt;
+        /// <br/>
+        /// Output: TDResponse 
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("AddProgressList")]
+        public async Task<TDResponse> AddProgressList([FromBody] BaseRequest<List<ProgressDTO>> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.AddProgressList(req, user);
+        }
         
 
     }

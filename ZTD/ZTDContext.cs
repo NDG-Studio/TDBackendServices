@@ -37,6 +37,8 @@ namespace ZTD
             public DbSet<EnemyLevel> EnemyLevel { get; set; }
             public DbSet<EnemyKill> EnemyKill { get; set; }
             public DbSet<UserTdStatus> UserTdStatus { get; set; }
+            public DbSet<TableChanges> TableChanges { get; set; }
+            
 
         #endregion
         

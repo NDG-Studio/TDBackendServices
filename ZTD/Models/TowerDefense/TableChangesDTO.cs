@@ -6,4 +6,3 @@ namespace ZTD.Models
         public string LastChangeDate { get; set; } = string.Empty;
     }
 }
-

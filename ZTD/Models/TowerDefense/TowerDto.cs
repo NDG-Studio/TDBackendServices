@@ -5,8 +5,10 @@ namespace ZTD.Models
 {
     public class TowerDTO
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
+
+        public List<TowerLevelDTO> TowerLevels { get; set; }
 
     }
 }
