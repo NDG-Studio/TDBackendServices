@@ -19,6 +19,7 @@ namespace ZTD.MapperProfiles
             CreateMap<Level, LevelInfoDTO>();
             CreateMap<TowerProgressDTO, TowerProgress>();
             CreateMap<EnemyKillDTO, EnemyKill>();
+            CreateMap<TableChanges, TableChangesDTO>();
         }
 
     }

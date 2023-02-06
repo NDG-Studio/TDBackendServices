@@ -34,12 +34,17 @@ namespace ZTD.Services
                 try
                 {
                     var userStatus =await _context.UserTdStatus.Include(l=>l.Level).Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                    var chapterId = 1;
+                    if (userStatus?.TdLevelId !=null)
+                    {
+                        chapterId = userStatus.Level.ChapterId;
+                    }
                     var query = _context.Chapter.Include(l => l.Levels)
-                        .Where(l => l.Id == userStatus.Level.ChapterId);
+                        .Where(l => l.Id == chapterId);
                     var chapter = await _mapper.ProjectTo<ChapterInfoDTO>(query).FirstOrDefaultAsync();
 
                     var userLevels = await _context.UserProgressHistory
-                        .Where(l => l.UserId == user.Id && l.GainedStar > 0 && l.Level.ChapterId ==chapter.Id)
+                        .Where(l => l.UserId == user.Id && l.GainedStar > 0 && l.Level.ChapterId == chapter.Id)
                         .GroupBy(l=>l.LevelId)
                         .Select(l=>l.OrderByDescending(x=>x.GainedStar).First())
                         .ToListAsync();
@@ -67,15 +72,26 @@ namespace ZTD.Services
 
                 return response;
         }
-        public async Task<TDResponse<List<LevelDTO>>> GetLevels(BaseRequest<List<int>> req, UserDto userDto)
+        public async Task<TDResponse<List<LevelDTO>>> GetLevels(BaseRequest<List<int>> req, UserDto user)
         {
             TDResponse<List<LevelDTO>> response = new TDResponse<List<LevelDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetLevels");
 
             try
             {
+                var chapterId = 1;
+                var userStatus = await _context.UserTdStatus.Include(l=>l.Level)
+                    .Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (userStatus!=null)
+                {
+                    chapterId = await _context.Level.Where(l => l.OrderId == userStatus.Level.OrderId + 1)
+                        .Select(l=>l.ChapterId)
+                        .FirstOrDefaultAsync();
+                }
+
                 var query = _context.Level.Include(l => l.Waves).ThenInclude(l=>l.WaveParts)
-                    .Where(l => req.Data.Contains(l.Id));
+                    .Where(l => req.Data == null ? l.ChapterId == chapterId : req.Data.Contains(l.Id));
+                
                 var levelDtos = await _mapper.ProjectTo<LevelDTO>(query).ToListAsync();
                 response.Data = levelDtos;
                 response.SetSuccess();
@@ -128,8 +144,12 @@ namespace ZTD.Services
                 var userLastSyncDate = await _context.User
                     .Where(l => l.Id == user.Id)
                     .Select(l => l.TdSyncDate).FirstOrDefaultAsync();
+                if (userLastSyncDate==null)
+                {
+                    userLastSyncDate=DateTimeOffset.MinValue;
+                }
                 
-                var query = _context.TableChanges.Where(l=>l.LastChangeDate > userLastSyncDate).Select(l=>l.TableEnum);
+                var query = _context.TableChanges.Where(l=>l.LastChangeDate > userLastSyncDate);
                 var tableChangesDtos = await _mapper.ProjectTo<TableChangesDTO>(query).ToListAsync();
                 
                 response.Data = tableChangesDtos;

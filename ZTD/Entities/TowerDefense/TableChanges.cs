@@ -11,4 +11,3 @@ namespace ZTD.Entities
         public DateTimeOffset LastChangeDate { get; set; }=DateTimeOffset.UtcNow;
     }
 }
-
