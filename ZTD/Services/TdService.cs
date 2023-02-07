@@ -132,6 +132,31 @@ namespace ZTD.Services
             }
 
             return response;
+        }        
+        
+        public async Task<TDResponse<List<EnemyDTO>>> GetEnemyList(BaseRequest req, UserDto userDto)
+        {
+            TDResponse<List<EnemyDTO>> response = new TDResponse<List<EnemyDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetEnemyList");
+
+            try
+            {
+                var query = _context.Enemy.Include(l => l.EnemyLevels).Where(l=>l.IsActive);
+                var enemyLevelDtos = await _mapper.ProjectTo<EnemyDTO>(query).ToListAsync();
+                
+                response.Data = enemyLevelDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
         }
         
         public async Task<TDResponse<List<TableChangesDTO>>> GetSyncStatus(BaseRequest req, UserDto user)

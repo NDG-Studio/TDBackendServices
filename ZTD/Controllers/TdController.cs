@@ -64,16 +64,15 @@ namespace ZTD.Controllers
         }    
         
         /// <summary>
-        /// Levelleri detayli olarak wave ve wave parts bilgileri ile birlikte cekmek icin kullanilir
+        /// Towerlari ve levellerini detayli olarak cekmek icin kullanilir
         /// </summary>
         /// <remarks>
         /// ### DETAILS ###
         /// <br/>
-        /// BaseRequest icinde detayli oynanabilir verisi istenen levellerin idleri gonderilir
         /// <br/>
-        /// Input: BaseRequest &lt; List &lt; int &gt; &gt;
+        /// Input: BaseRequest
         /// <br/>
-        /// Output: TDResponse &lt; List &lt; LevelDTO &gt; &gt;
+        /// Output: TDResponse &lt; List &lt; TowerDTO &gt; &gt;
         /// </remarks>
         [LoginRequired]
         [HttpPost("GetTowers")]
@@ -83,6 +82,27 @@ namespace ZTD.Controllers
             req.SetUser(user.Id);
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _service.GetTowers(req, user);
+        }
+                
+        /// <summary>
+        /// Enemyleri ve levellerini detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; EnemyDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetEnemyList")]
+        public async Task<TDResponse<List<EnemyDTO>>> GetEnemyList([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetEnemyList(req, user);
         }
         
         /// <summary>

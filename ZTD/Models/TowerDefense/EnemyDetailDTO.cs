@@ -4,6 +4,8 @@
     {
 
         public int EnemyLevelId { get; set; }
+        public int EnemyId { get; set; }
+        public int Level { get; set; }
         public double Health { get; set; }
         public double Armor { get; set; }
         public double Speed { get; set; }

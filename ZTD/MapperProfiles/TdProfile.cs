@@ -12,7 +12,12 @@ namespace ZTD.MapperProfiles
             CreateMap<Chapter, ChapterInfoDTO>();
             CreateMap<Wave, WaveDTO>();
             CreateMap<WavePart, WavePartDTO>();
-            CreateMap<Enemy, EnemyDTO>();
+            CreateMap<Enemy, EnemyDTO>().ForMember(dest => dest.EnemyDetails, operations => operations
+                .MapFrom(
+                    source => source.EnemyLevels));
+            CreateMap<EnemyLevel, EnemyDetailDTO>().ForMember(dest => dest.EnemyLevelId, operations => operations
+                .MapFrom(
+                    source => source.Id));
             CreateMap<Tower, TowerDTO>();
             CreateMap<TowerLevel, TowerLevelDTO>();
             CreateMap<Level, LevelDTO>();
