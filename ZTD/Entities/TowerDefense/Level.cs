@@ -18,6 +18,8 @@ namespace ZTD.Entities
         public Chapter Chapter { get; set; }
         
         public virtual List<Wave> Waves { get; set; }
+        public virtual List<LevelChestChance> LevelChestChances { get; set; }
+        public virtual List<LevelGift> LevelGifts { get; set; }
 
     }
 }

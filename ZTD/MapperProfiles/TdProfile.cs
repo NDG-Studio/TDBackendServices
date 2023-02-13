@@ -25,6 +25,21 @@ namespace ZTD.MapperProfiles
             CreateMap<TowerProgressDTO, TowerProgress>();
             CreateMap<EnemyKillDTO, EnemyKill>();
             CreateMap<TableChanges, TableChangesDTO>();
+            CreateMap<Item, ItemDTO>();
+            CreateMap<PlayerItem, PlayerItemDTO>();
+            CreateMap<ChestType, ChestTypeDTO>();
+            CreateMap<Chest, ChestDTO>().ForMember(dest => dest.OpenDuration, operations => operations
+                .MapFrom(
+                    source => source.OpenDuration.ToString()));
+            CreateMap<LevelChestChance, LevelChestChanceDTO>();
+            CreateMap<LevelGift, LevelGiftDTO>();
+            CreateMap<PlayerChest, PlayerChestDTO>()
+                .ForMember(dest => dest.OpenFinishDate, operations => operations
+                .MapFrom(source => source.OpenFinishDate.ToString()))
+                .ForMember(dest => dest.OpenStartDate, operations => operations
+                    .MapFrom(source => source.OpenStartDate.ToString()));
+
+
         }
 
     }

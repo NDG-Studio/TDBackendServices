@@ -9,6 +9,11 @@ namespace ZTD.Enums
         Wave = 5,
         WavePart = 6,
         Tower = 7,
-        TowerLevel = 8
+        TowerLevel = 8,
+        Chest=9,
+        ChestType=10,
+        Item=11,
+        LevelChestChance=12,
+        LevelGift=13
     }
 }

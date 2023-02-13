@@ -89,7 +89,10 @@ namespace ZTD.Services
                         .FirstOrDefaultAsync();
                 }
 
-                var query = _context.Level.Include(l => l.Waves).ThenInclude(l=>l.WaveParts)
+                var query = _context.Level
+                    .Include(l => l.Waves).ThenInclude(l=>l.WaveParts)
+                    .Include(l=>l.LevelGifts)
+                    .Include(l=>l.LevelChestChances)
                     .Where(l => req.Data == null ? l.ChapterId == chapterId : req.Data.Contains(l.Id));
                 
                 var levelDtos = await _mapper.ProjectTo<LevelDTO>(query).ToListAsync();
@@ -158,7 +161,282 @@ namespace ZTD.Services
 
             return response;
         }
+                
+        public async Task<TDResponse<List<ItemDTO>>> GetItems(BaseRequest req, UserDto userDto)
+        {
+            TDResponse<List<ItemDTO>> response = new TDResponse<List<ItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetItems");
+
+            try
+            {
+                var query = _context.Item.Where(l=>l.IsActive);
+                var itemDtos = await _mapper.ProjectTo<ItemDTO>(query).ToListAsync();
+                
+                response.Data = itemDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }                
         
+        public async Task<TDResponse<List<ChestTypeDTO>>> GetChestTypes(BaseRequest req, UserDto userDto)
+        {
+            TDResponse<List<ChestTypeDTO>> response = new TDResponse<List<ChestTypeDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetChestTypes");
+
+            try
+            {
+                var query = _context.ChestType.Include(l=>l.Chests.Where(k=>k.IsActive))
+                    .Where(l=>l.IsActive);
+                var chestTypeDtos = await _mapper.ProjectTo<ChestTypeDTO>(query).ToListAsync();
+                
+                response.Data = chestTypeDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }      
+        
+        public async Task<TDResponse<List<PlayerChestDTO>>> GetPlayerChests(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerChestDTO>> response = new TDResponse<List<PlayerChestDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerChests");
+            try
+            {
+                var query = _context.PlayerChest
+                    .Where(l=> l.Chest.IsActive && l.UserId == user.Id && l.OpenStartDate != null && l.SlotPlace != null);
+                var playerChestTypeDtos = await _mapper.ProjectTo<PlayerChestDTO>(query).ToListAsync();
+                
+                response.Data = playerChestTypeDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+        
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayerItems(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerItems");
+            try
+            {
+                var query = _context.PlayerItem.Include(l=>l.ItemId)
+                    .Where(l=> l.Item.IsActive && l.UserId == user.Id);
+                var playerItemDtos = await _mapper.ProjectTo<PlayerItemDTO>(query).ToListAsync();
+                
+                response.Data = playerItemDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }        
+        
+        public async Task<TDResponse<List<PlayerItemDTO>>> SetPlayerItems(BaseRequest<List<PlayerItemDTO>> req, UserDto user)
+        {
+            TDResponse<List<PlayerItemDTO>> response = new TDResponse<List<PlayerItemDTO>>();
+            var info = InfoDetail.CreateInfo(req, "SetPlayerItems");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                foreach (var ld in req.Data)
+                {
+                    if (ld.Id==0)
+                    {
+                        await _context.AddAsync(new PlayerItem()
+                        {
+                            UserId = user.Id,
+                            ItemId = ld.ItemId,
+                            Count = ld.Count,
+                        });
+                    }
+                    else
+                    {
+                        var ent = await _context.PlayerItem.Where(l => l.UserId == user.Id && l.Id == ld.Id)
+                            .FirstOrDefaultAsync();
+                        if (ent != null)
+                        {
+                            ent.Count = ld.Count;
+                        }
+
+                    }
+                    
+                    await _context.SaveChangesAsync();
+
+                }
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }    
+
+        
+        public async Task<TDResponse<PlayerVariableDTO>> GetPlayerVariable(BaseRequest req, UserDto user)
+        {
+            TDResponse<PlayerVariableDTO> response = new TDResponse<PlayerVariableDTO>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerVariable");
+            try
+            {
+                var query = _context.PlayerVariable
+                    .Where(l=> l.UserId == user.Id );
+                var playerVariable = await _mapper.ProjectTo<PlayerVariableDTO>(query).FirstOrDefaultAsync();
+                
+                response.Data = playerVariable;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+        
+        public async Task<TDResponse<PlayerVariableDTO>> SetPlayerVariable(BaseRequest<PlayerVariableDTO> req, UserDto user)
+        {
+            TDResponse<PlayerVariableDTO> response = new TDResponse<PlayerVariableDTO>();
+            var info = InfoDetail.CreateInfo(req, "SetPlayerVariable");
+            try
+            {
+                var query = await _context.PlayerVariable
+                    .Where(l => l.UserId == user.Id).FirstOrDefaultAsync();
+                if (query==null)
+                {
+                    await _context.AddAsync(new PlayerVariable()
+                    {
+                        UserId = user.Id,
+                        GemCount = req.Data?.GemCount ?? 0,
+                        ResearchPoint = req.Data?.ResearchPoint ?? 0
+                    });
+                    await _context.SaveChangesAsync();
+                }
+                
+                response.Data = _mapper.Map<PlayerVariableDTO>(query);
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+        
+        public async Task<TDResponse<List<PlayerChestDTO>>> SetPlayerChests(BaseRequest<List<PlayerChestDTO>> req, UserDto user)
+        {
+            TDResponse<List<PlayerChestDTO>> response = new TDResponse<List<PlayerChestDTO>>();
+            var info = InfoDetail.CreateInfo(req, "SetPlayerChests");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                foreach (var ld in req.Data)
+                {
+                    if (ld.Id==0)
+                    {
+                        await _context.AddAsync(new PlayerChest()
+                        {
+                            UserId = user.Id,
+                            SlotPlace = ld.SlotPlace,
+                            OpenStartDate = ld.OpenStartDate?.ToDateTimeOffsetUtc(),
+                            OpenFinishDate = ld.OpenFinishDate?.ToDateTimeOffsetUtc(),
+                            ChestId = ld.ChestId,
+                            GainedItems = ld.GainedItems,
+                            UsedGem = ld.UsedGem
+                        });
+                    }
+                    else
+                    {
+                        var ent = await _context.PlayerChest.Where(l => l.UserId == user.Id && l.Id == ld.Id)
+                            .FirstOrDefaultAsync();
+                        if (ent != null)
+                        {
+                            ent.SlotPlace = ld.SlotPlace;
+                            ent.UsedGem = ld.UsedGem;
+                            ent.OpenStartDate = ld.OpenStartDate?.ToDateTimeOffsetUtc();
+                            ent.OpenFinishDate = ld.OpenFinishDate?.ToDateTimeOffsetUtc();
+                        }
+
+                    }
+                    
+                    await _context.SaveChangesAsync();
+
+                }
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }    
         public async Task<TDResponse<List<TableChangesDTO>>> GetSyncStatus(BaseRequest req, UserDto user)
         {
             TDResponse<List<TableChangesDTO>> response = new TDResponse<List<TableChangesDTO>>();

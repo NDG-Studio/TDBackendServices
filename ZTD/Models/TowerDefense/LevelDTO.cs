@@ -7,6 +7,8 @@
         public int ChapterId { get; set; }
         public List<WaveDTO> Waves { get; set; } = new List<WaveDTO>();
         public List<CreatableTowerDTO> CreatableTowerList { get; set; } = new List<CreatableTowerDTO>();
+        public List<LevelChestChanceDTO> LevelChestChances { get; set; } = new List<LevelChestChanceDTO>();
+        public List<LevelGiftDTO> LevelGifts { get; set; }
     }
     
     public class LevelInfoDTO

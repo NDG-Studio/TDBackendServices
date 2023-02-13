@@ -104,6 +104,182 @@ namespace ZTD.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _service.GetEnemyList(req, user);
         }
+                
+                
+        /// <summary>
+        /// itemleri detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; ItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetItems")]
+        public async Task<TDResponse<List<ItemDTO>>> GetItems([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetItems(req, user);
+        }
+                        
+                
+        /// <summary>
+        /// chestleri ve chesttypeleri detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; ChestTypeDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetChestTypes")]
+        public async Task<TDResponse<List<ChestTypeDTO>>> GetChestTypes([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetChestTypes(req, user);
+        }
+                        
+                
+        /// <summary>
+        /// playera ait chestleri detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerChestDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerChests")]
+        public async Task<TDResponse<List<PlayerChestDTO>>> GetPlayerChests([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetPlayerChests(req, user);
+        }
+                        
+                                
+        /// <summary>
+        /// playerin chest bilgisini setler ve son halini doner 
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; List &lt; PlayerChestDTO &gt; &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerChestDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SetPlayerChests")]
+        public async Task<TDResponse<List<PlayerChestDTO>>> SetPlayerChests([FromBody] BaseRequest<List<PlayerChestDTO>> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.SetPlayerChests(req, user);
+        }                  
+        
+                
+        /// <summary>
+        /// playera ait itemlari detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerItems")]
+        public async Task<TDResponse<List<PlayerItemDTO>>> GetPlayerItems([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetPlayerItems(req, user);
+        }
+                        
+                                
+        /// <summary>
+        /// playerin item bilgilerini setler ve son halini doner 
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerItemDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SetPlayerItems")]
+        public async Task<TDResponse<List<PlayerItemDTO>>> SetPlayerItems([FromBody] BaseRequest<List<PlayerItemDTO>> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.SetPlayerItems(req, user);
+        }
+                        
+                
+        /// <summary>
+        /// playerin currency bilgisini detayli olarak cekmek icin kullanilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; PlayerVariableDTO &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerVariable")]
+        public async Task<TDResponse<PlayerVariableDTO>> GetPlayerVariable([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetPlayerVariable(req, user);
+        }
+                         
+                
+        /// <summary>
+        /// playerin currency bilgisini setler ve son halini doner 
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; PlayerVariableDTO &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; PlayerVariableDTO &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SetPlayerVariable")]
+        public async Task<TDResponse<PlayerVariableDTO>> SetPlayerVariable([FromBody] BaseRequest<PlayerVariableDTO> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.SetPlayerVariable(req, user);
+        }
         
         /// <summary>
         /// Geride kaldigi tablolar var mi kontrolu icin atilir

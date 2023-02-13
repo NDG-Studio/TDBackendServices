@@ -38,6 +38,14 @@ namespace ZTD
             public DbSet<EnemyKill> EnemyKill { get; set; }
             public DbSet<UserTdStatus> UserTdStatus { get; set; }
             public DbSet<TableChanges> TableChanges { get; set; }
+            public DbSet<Item> Item { get; set; }
+            public DbSet<PlayerItem> PlayerItem { get; set; }
+            public DbSet<ChestType> ChestType { get; set; }
+            public DbSet<Chest> Chest { get; set; }
+            public DbSet<LevelChestChance> LevelChestChance { get; set; }
+            public DbSet<LevelGift> LevelGift { get; set; }
+            public DbSet<PlayerChest> PlayerChest { get; set; }
+            public DbSet<PlayerVariable> PlayerVariable { get; set; }
             
 
         #endregion
