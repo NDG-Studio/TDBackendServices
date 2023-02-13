@@ -301,6 +301,70 @@ namespace ZTD.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _service.GetSyncStatus(req, user);
         }
+                
+        /// <summary>
+        /// researchle ilgili herseyi ceker
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; ResearchNodeDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetResearchNodes")]
+        public async Task<TDResponse<List<ResearchNodeDTO>>> GetResearchNodes([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetResearchNodes(req, user);
+        }
+             
+        
+        /// <summary>
+        /// playerin research durumunu doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerResearchNodeLevelDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerResearchNodeLevels")]
+        public async Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> GetPlayerResearchNodeLevels([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetPlayerResearchNodeLevels(req, user);
+        }
+        
+        /// <summary>
+        /// playerin research durumunu setler ve doner
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest &lt; List &lt; PlayerResearchNodeLevelDTO &gt; &gt;
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; PlayerResearchNodeLevelDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("SetPlayerResearchNodeLevels")]
+        public async Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> SetPlayerResearchNodeLevels([FromBody] BaseRequest<List<PlayerResearchNodeLevelDTO>> req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.SetPlayerResearchNodeLevels(req, user);
+        }
         
         /// <summary>
         /// Progress eklemek icin kullanilir

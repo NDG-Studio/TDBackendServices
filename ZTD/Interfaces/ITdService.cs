@@ -21,6 +21,11 @@ namespace ZTD.Interfaces
         Task<TDResponse<PlayerVariableDTO>> SetPlayerVariable(BaseRequest<PlayerVariableDTO> req, UserDto user);
         Task<TDResponse<List<PlayerChestDTO>>> SetPlayerChests(BaseRequest<List<PlayerChestDTO>> req, UserDto user);
         Task<TDResponse<List<TableChangesDTO>>> GetSyncStatus(BaseRequest req, UserDto user);
+
+        Task<TDResponse<List<ResearchNodeDTO>>> GetResearchNodes(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> GetPlayerResearchNodeLevels(BaseRequest req, UserDto user);
+        Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> SetPlayerResearchNodeLevels(
+            BaseRequest<List<PlayerResearchNodeLevelDTO>> req, UserDto user);
         Task<TDResponse> AddProgressList(BaseRequest<List<ProgressDTO>> req, UserDto user);
     }
 }

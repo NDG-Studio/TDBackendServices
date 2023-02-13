@@ -46,6 +46,10 @@ namespace ZTD
             public DbSet<LevelGift> LevelGift { get; set; }
             public DbSet<PlayerChest> PlayerChest { get; set; }
             public DbSet<PlayerVariable> PlayerVariable { get; set; }
+            public DbSet<ResearchNode> ResearchNode { get; set; }
+            public DbSet<ResearchNodeLevel> ResearchNodeLevel { get; set; }
+            public DbSet<ResearchNodeUpgradeCondition> ResearchNodeUpgradeCondition { get; set; }
+            public DbSet<PlayerResearchNodeLevel> PlayerResearchNodeLevel { get; set; }
             
 
         #endregion

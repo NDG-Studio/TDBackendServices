@@ -470,6 +470,109 @@ namespace ZTD.Services
             return response;
 
         }
+        
+        public async Task<TDResponse<List<ResearchNodeDTO>>> GetResearchNodes(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<ResearchNodeDTO>> response = new TDResponse<List<ResearchNodeDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetResearchNodes");
+            try
+            {
+                var query = _context.ResearchNode
+                    .Include(l=>l.ResearchNodeLevels)
+                    .ThenInclude(l=>l.Conditions);
+                var researchNodeDtos = await _mapper.ProjectTo<ResearchNodeDTO>(query).ToListAsync();
+                
+                response.Data = researchNodeDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+        
+        public async Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> GetPlayerResearchNodeLevels(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<PlayerResearchNodeLevelDTO>> response = new TDResponse<List<PlayerResearchNodeLevelDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetPlayerResearchNodeLevels");
+            try
+            {
+                var query = _context.PlayerResearchNodeLevel;
+                var playerResearchNodeDtos = await _mapper.ProjectTo<PlayerResearchNodeLevelDTO>(query).ToListAsync();
+                
+                response.Data = playerResearchNodeDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
+        
+        public async Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> SetPlayerResearchNodeLevels(BaseRequest<List<PlayerResearchNodeLevelDTO>> req, UserDto user)
+        {
+            TDResponse<List<PlayerResearchNodeLevelDTO>> response = new TDResponse<List<PlayerResearchNodeLevelDTO>>();
+            var info = InfoDetail.CreateInfo(req, "SetPlayerResearchNodeLevels");
+            try
+            {
+                if (req.Data==null)
+                {
+                    response.SetError(OperationMessages.InputError);
+                    info.AddInfo(OperationMessages.InputError);
+                    _logger.LogInformation(info.ToString());
+                    return response;
+                }
+                
+                foreach (var ld in req.Data)
+                {
+                    if (ld.Id==0)
+                    {
+                        await _context.AddAsync(new PlayerResearchNodeLevel()
+                        {
+                            UserId = user.Id,
+                            ResearchNodeLevelId = ld.ResearchNodeLevelId
+                        });
+                    }
+                    else
+                    {
+                        var ent = await _context.PlayerResearchNodeLevel.Where(l => l.UserId == user.Id && l.Id == ld.Id)
+                            .FirstOrDefaultAsync();
+                        if (ent != null)
+                        {
+                            ent.ResearchNodeLevelId = ld.ResearchNodeLevelId;
+                        }
+
+                    }
+                    
+                    await _context.SaveChangesAsync();
+
+                }
+                
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+        }
 
         public async Task<TDResponse> AddProgressList(BaseRequest<List<ProgressDTO>> req, UserDto user)
         {
