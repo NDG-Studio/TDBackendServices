@@ -3,6 +3,7 @@
   <component name="EfCoreDialogsState">
     <option name="keyValueStorage">
       <map>
+        <entry key="Common:4cb6b824-7ab0-475e-ba36-1575f7d38bbe:dbContext" value="ZTD.ZTDContext" />
         <entry key="Common:buildConfiguration" value="Debug" />
         <entry key="Common:dbContext" value="ZTD.ZTDContext" />
         <entry key="Common:noBuild" value="false" />

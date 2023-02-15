@@ -5,6 +5,7 @@ using AutoMapper;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
 using Microsoft.EntityFrameworkCore;
+using ZTD.Enums;
 
 namespace ZTD.Services
 {
@@ -62,6 +63,7 @@ namespace ZTD.Services
                     response.SetSuccess();
                     info.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(info.ToString());
+                    SyncPlayerTable(TableEnum.Chapter, user);
                 }
                 catch (Exception e)
                 {
@@ -100,6 +102,12 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.Level, user);
+                SyncPlayerTable(TableEnum.Wave, user);
+                SyncPlayerTable(TableEnum.WavePart, user);
+                SyncPlayerTable(TableEnum.LevelGift, user);
+                SyncPlayerTable(TableEnum.LevelChestChance, user);
+
             }
             catch (Exception e)
             {
@@ -110,7 +118,7 @@ namespace ZTD.Services
 
             return response;
         }
-        public async Task<TDResponse<List<TowerDTO>>> GetTowers(BaseRequest req, UserDto userDto)
+        public async Task<TDResponse<List<TowerDTO>>> GetTowers(BaseRequest req, UserDto user)
         {
             TDResponse<List<TowerDTO>> response = new TDResponse<List<TowerDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetTowers");
@@ -126,6 +134,9 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.Tower, user);
+                SyncPlayerTable(TableEnum.TowerLevel, user);
+
             }
             catch (Exception e)
             {
@@ -137,7 +148,7 @@ namespace ZTD.Services
             return response;
         }        
         
-        public async Task<TDResponse<List<EnemyDTO>>> GetEnemyList(BaseRequest req, UserDto userDto)
+        public async Task<TDResponse<List<EnemyDTO>>> GetEnemyList(BaseRequest req, UserDto user)
         {
             TDResponse<List<EnemyDTO>> response = new TDResponse<List<EnemyDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetEnemyList");
@@ -151,6 +162,9 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.Enemy, user);
+                SyncPlayerTable(TableEnum.EnemyLevel, user);
+
             }
             catch (Exception e)
             {
@@ -162,7 +176,7 @@ namespace ZTD.Services
             return response;
         }
                 
-        public async Task<TDResponse<List<ItemDTO>>> GetItems(BaseRequest req, UserDto userDto)
+        public async Task<TDResponse<List<ItemDTO>>> GetItems(BaseRequest req, UserDto user)
         {
             TDResponse<List<ItemDTO>> response = new TDResponse<List<ItemDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetItems");
@@ -176,6 +190,8 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.Item, user);
+
             }
             catch (Exception e)
             {
@@ -187,7 +203,7 @@ namespace ZTD.Services
             return response;
         }                
         
-        public async Task<TDResponse<List<ChestTypeDTO>>> GetChestTypes(BaseRequest req, UserDto userDto)
+        public async Task<TDResponse<List<ChestTypeDTO>>> GetChestTypes(BaseRequest req, UserDto user)
         {
             TDResponse<List<ChestTypeDTO>> response = new TDResponse<List<ChestTypeDTO>>();
             var info = InfoDetail.CreateInfo(req, "GetChestTypes");
@@ -202,6 +218,9 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.ChestType, user);
+                SyncPlayerTable(TableEnum.Chest, user);
+
             }
             catch (Exception e)
             {
@@ -471,6 +490,34 @@ namespace ZTD.Services
 
         }
         
+        public async Task<TDResponse<List<TableChangesDTO>>> GetPlayerSyncStatus(BaseRequest req, UserDto user)
+        {
+            TDResponse<List<TableChangesDTO>> response = new TDResponse<List<TableChangesDTO>>();
+            var info = InfoDetail.CreateInfo(req, "GetSyncStatus");
+
+            try
+            {
+                var playerSync = await _context.PlayerTableSync.Where(l => l.UserId == user.Id).ToListAsync();
+                var query = _context.TableChanges.Where(k=>
+                    playerSync.Any(l=>l.TableChangesId == k.Id && k.LastChangeDate > l.LastSyncDate ) || 
+                    !playerSync.Any(l=>l.TableChangesId == k.Id));
+                var tableChangesDtos = await _mapper.ProjectTo<TableChangesDTO>(query).ToListAsync();
+                response.Data = tableChangesDtos;
+                response.SetSuccess();
+                info.AddInfo(OperationMessages.Success);
+                _logger.LogInformation(info.ToString());
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+                info.SetException(e);
+                _logger.LogError(info.ToString());
+            }
+
+            return response;
+
+        }
+
         public async Task<TDResponse<List<ResearchNodeDTO>>> GetResearchNodes(BaseRequest req, UserDto user)
         {
             TDResponse<List<ResearchNodeDTO>> response = new TDResponse<List<ResearchNodeDTO>>();
@@ -486,6 +533,10 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                SyncPlayerTable(TableEnum.ResearchNode, user);
+                SyncPlayerTable(TableEnum.ResearchNodeLevel, user);
+                SyncPlayerTable(TableEnum.ResearchNodeLevelCondition, user);
+
             }
             catch (Exception e)
             {
@@ -636,6 +687,40 @@ namespace ZTD.Services
             }
 
             return response;
+        }
+
+
+        private async Task SyncPlayerTable(TableEnum tableEnum,UserDto user)
+        {
+            try
+            {
+                var playerTableSync = await _context.PlayerTableSync
+                    .Where(l => l.UserId == user.Id && l.TableChanges.TableEnum == (int)tableEnum)
+                    .FirstOrDefaultAsync();
+
+                if (playerTableSync==null)
+                {
+                    var ent = new PlayerTableSync()
+                    {
+                        TableChangesId = await _context.TableChanges
+                            .Where(l => l.TableEnum == (int)tableEnum)
+                            .Select(l => l.Id)
+                            .FirstOrDefaultAsync(),
+                        UserId = user.Id,
+                        LastSyncDate = DateTimeOffset.UtcNow
+                    };
+                    await _context.AddAsync(ent);
+                    await _context.SaveChangesAsync();
+                    return;
+                }
+
+                playerTableSync.LastSyncDate = DateTimeOffset.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

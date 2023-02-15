@@ -301,6 +301,27 @@ namespace ZTD.Controllers
             req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
             return await _service.GetSyncStatus(req, user);
         }
+                        
+        /// <summary>
+        /// (NEW) Geride kaldigi tablolar var mi kontrolu icin atilir
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// Input: BaseRequest
+        /// <br/>
+        /// Output: TDResponse &lt; List &lt; TableChangesDTO &gt; &gt;
+        /// </remarks>
+        [LoginRequired]
+        [HttpPost("GetPlayerSyncStatus")]
+        public async Task<TDResponse<List<TableChangesDTO>>> GetPlayerSyncStatus([FromBody] BaseRequest req)
+        {
+            var user = (HttpContext.Items["User"] as UserDto);
+            req.SetUser(user.Id);
+            req.SetIp(HttpContext.Connection.RemoteIpAddress?.ToString());
+            return await _service.GetPlayerSyncStatus(req, user);
+        }
                 
         /// <summary>
         /// researchle ilgili herseyi ceker

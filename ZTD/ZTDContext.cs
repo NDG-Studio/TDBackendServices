@@ -50,6 +50,7 @@ namespace ZTD
             public DbSet<ResearchNodeLevel> ResearchNodeLevel { get; set; }
             public DbSet<ResearchNodeUpgradeCondition> ResearchNodeUpgradeCondition { get; set; }
             public DbSet<PlayerResearchNodeLevel> PlayerResearchNodeLevel { get; set; }
+            public DbSet<PlayerTableSync> PlayerTableSync { get; set; }
             
 
         #endregion

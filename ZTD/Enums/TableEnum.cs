@@ -14,6 +14,9 @@ namespace ZTD.Enums
         ChestType=10,
         Item=11,
         LevelChestChance=12,
-        LevelGift=13
+        LevelGift=13,
+        ResearchNode = 14,
+        ResearchNodeLevel = 15,
+        ResearchNodeLevelCondition = 16,
     }
 }
