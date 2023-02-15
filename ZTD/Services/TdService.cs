@@ -239,7 +239,7 @@ namespace ZTD.Services
             try
             {
                 var query = _context.PlayerChest
-                    .Where(l=> l.Chest.IsActive && l.UserId == user.Id && l.OpenStartDate != null && l.SlotPlace != null);
+                    .Where(l=> l.Chest.IsActive && l.UserId == user.Id && l.SlotPlace > 0);
                 var playerChestTypeDtos = await _mapper.ProjectTo<PlayerChestDTO>(query).ToListAsync();
                 
                 response.Data = playerChestTypeDtos;
@@ -412,7 +412,7 @@ namespace ZTD.Services
                 
                 foreach (var ld in req.Data)
                 {
-                    if (ld.Id==0)
+                    if (ld.Id<0)
                     {
                         await _context.AddAsync(new PlayerChest()
                         {
@@ -443,6 +443,11 @@ namespace ZTD.Services
 
                 }
                 
+                var query = _context.PlayerChest
+                    .Where(l=> l.Chest.IsActive && l.UserId == user.Id && l.SlotPlace > 0);
+                var playerChestTypeDtos = await _mapper.ProjectTo<PlayerChestDTO>(query).ToListAsync();
+                
+                response.Data = playerChestTypeDtos;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
