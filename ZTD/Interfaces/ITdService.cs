@@ -28,5 +28,12 @@ namespace ZTD.Interfaces
         Task<TDResponse<List<PlayerResearchNodeLevelDTO>>> SetPlayerResearchNodeLevels(
             BaseRequest<List<PlayerResearchNodeLevelDTO>> req, UserDto user);
         Task<TDResponse> AddProgressList(BaseRequest<List<ProgressDTO>> req, UserDto user);
+
+
+
+
+
+
+        Task<TDResponse> AddWavePart(AddWavePartRequest req);
     }
 }

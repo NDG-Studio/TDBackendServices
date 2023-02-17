@@ -27,6 +27,8 @@ namespace ZTD.MapperProfiles
             CreateMap<TableChanges, TableChangesDTO>();
             CreateMap<Item, ItemDTO>();
             CreateMap<PlayerItem, PlayerItemDTO>();
+            CreateMap<PlayerVariable, PlayerVariableDTO>();
+            CreateMap<PlayerResearchNodeLevel, PlayerResearchNodeLevelDTO>();
             CreateMap<ChestType, ChestTypeDTO>();
             CreateMap<Chest, ChestDTO>().ForMember(dest => dest.OpenDuration, operations => operations
                 .MapFrom(

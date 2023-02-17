@@ -408,6 +408,40 @@ namespace ZTD.Controllers
             return await _service.AddProgressList(req, user);
         }
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                
+        /// <summary>
+        /// (ONLY ADMIN) P password
+        /// </summary>
+        /// <remarks>
+        /// ### DETAILS ###
+        /// <br/>
+        /// <br/>
+        /// <br/>
+        /// Output: TDResponse 
+        /// </remarks>
+        [HttpPost("AddWavePart")]
+        public async Task<TDResponse> AddWavePart([FromBody] AddWavePartRequest req)
+        {
+            return await _service.AddWavePart(req); 
+        }
+        
 
     }
 }

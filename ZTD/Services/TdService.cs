@@ -63,7 +63,9 @@ namespace ZTD.Services
                     response.SetSuccess();
                     info.AddInfo(OperationMessages.Success);
                     _logger.LogInformation(info.ToString());
-                    SyncPlayerTable(TableEnum.Chapter, user);
+                    await SyncPlayerTable( new []{
+                        TableEnum.Chapter
+                    }, user);
                 }
                 catch (Exception e)
                 {
@@ -102,11 +104,13 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.Level, user);
-                SyncPlayerTable(TableEnum.Wave, user);
-                SyncPlayerTable(TableEnum.WavePart, user);
-                SyncPlayerTable(TableEnum.LevelGift, user);
-                SyncPlayerTable(TableEnum.LevelChestChance, user);
+                await SyncPlayerTable( new []{
+                    TableEnum.Level,
+                    TableEnum.Wave,
+                    TableEnum.WavePart,
+                    TableEnum.LevelGift,
+                    TableEnum.LevelChestChance
+                }, user);
 
             }
             catch (Exception e)
@@ -134,8 +138,11 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.Tower, user);
-                SyncPlayerTable(TableEnum.TowerLevel, user);
+                await SyncPlayerTable(new []
+                {
+                    TableEnum.Tower,
+                    TableEnum.TowerLevel
+                }, user);
 
             }
             catch (Exception e)
@@ -162,8 +169,11 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.Enemy, user);
-                SyncPlayerTable(TableEnum.EnemyLevel, user);
+                await SyncPlayerTable(new []
+                {
+                    TableEnum.Enemy,
+                    TableEnum.EnemyLevel
+                }, user);
 
             }
             catch (Exception e)
@@ -190,7 +200,10 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.Item, user);
+                await SyncPlayerTable(new []
+                {
+                    TableEnum.Item
+                }, user);
 
             }
             catch (Exception e)
@@ -218,8 +231,10 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.ChestType, user);
-                SyncPlayerTable(TableEnum.Chest, user);
+                await SyncPlayerTable( new []{
+                    TableEnum.ChestType,
+                    TableEnum.Chest
+                }, user);
 
             }
             catch (Exception e)
@@ -263,7 +278,7 @@ namespace ZTD.Services
             var info = InfoDetail.CreateInfo(req, "GetPlayerItems");
             try
             {
-                var query = _context.PlayerItem.Include(l=>l.ItemId)
+                var query = _context.PlayerItem.Include(l=>l.Item)
                     .Where(l=> l.Item.IsActive && l.UserId == user.Id);
                 var playerItemDtos = await _mapper.ProjectTo<PlayerItemDTO>(query).ToListAsync();
                 
@@ -503,11 +518,11 @@ namespace ZTD.Services
             try
             {
                 var playerSync = await _context.PlayerTableSync.Where(l => l.UserId == user.Id).ToListAsync();
-                var query = _context.TableChanges.Where(k=>
-                    playerSync.Any(l=>l.TableChangesId == k.Id && k.LastChangeDate > l.LastSyncDate ) || 
-                    !playerSync.Any(l=>l.TableChangesId == k.Id));
+                var query = _context.TableChanges;
                 var tableChangesDtos = await _mapper.ProjectTo<TableChangesDTO>(query).ToListAsync();
-                response.Data = tableChangesDtos;
+                response.Data = tableChangesDtos.Where(k=>
+                    playerSync.Any(l=>l.TableChangesId == k.Id && l.LastSyncDate < k.LastChangeDate.ToDateTimeOffsetUtc()  ) || 
+                    !playerSync.Any(l=>l.TableChangesId == k.Id)).ToList();
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
@@ -538,9 +553,13 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
-                SyncPlayerTable(TableEnum.ResearchNode, user);
-                SyncPlayerTable(TableEnum.ResearchNodeLevel, user);
-                SyncPlayerTable(TableEnum.ResearchNodeLevelCondition, user);
+                await SyncPlayerTable(new []
+                {
+                    TableEnum.ResearchNode,
+                    TableEnum.ResearchNodeLevel,
+                    TableEnum.ResearchNodeLevelCondition
+                    
+                }, user);
 
             }
             catch (Exception e)
@@ -693,34 +712,136 @@ namespace ZTD.Services
 
             return response;
         }
+        
+        
+        public async Task<TDResponse> AddWavePart(AddWavePartRequest req)
+        {
+            TDResponse response = new TDResponse();
+            try
+            {
+                if (req.P!="s3ms1p4s4p4s4j1nd4s3si3uzus3s1c3l3r")
+                {
+                    response.SetError("derleeeer");
+                    return response;
+                }
+
+                var chapters = await _context.Chapter.Where(l => l.OrderId == req.ChapterOrder).ToListAsync();
+                if (chapters.Count>1)
+                {
+                    response.SetError("chapter order idleri aynı olan chapterlar var birininkini ya sil ya da degistir kirvem");
+                    return response;
+                }
+                if (chapters.Count==0)
+                {
+                    response.SetError("chapter order idsi "+ req.ChapterOrder +"  olan chapter yok dayicim");
+                    return response;
+                }
+
+                var levels = await _context.Level.Where(l => l.OrderId == req.LevelOrder && l.ChapterId == chapters[0].Id).ToListAsync();
+                
+                if (levels.Count>1)
+                {
+                    response.SetError("level order idleri aynı olan leveller var birininkini ya sil ya da degistir kirvem");
+                    return response;
+                }
+                if (levels.Count==0)
+                {
+                    response.SetError("level order idsi "+ req.LevelOrder +"  olan level yok dayicim");
+                    return response;
+                }
+                
+                
+                var waves = await _context.Wave.Where(l => l.OrderId == req.WaveOrder && l.LevelId == levels[0].Id).ToListAsync();
+                
+                if (waves.Count>1)
+                {
+                    response.SetError("wave order idleri aynı olan waveler var birininkini ya sil ya da degistir kirvem");
+                    return response;
+                }
+                if (waves.Count==0)
+                {
+                    response.SetError("wave order idsi "+ req.WaveOrder +"  olan wave yok dayicim");
+                    return response;
+                }
+
+                var enemy = await _context.Enemy.Where(l => l.Id == req.EnemyId).FirstOrDefaultAsync();
+
+                if (enemy==null)
+                {
+                    response.SetError("üstad bu enemy idde bi yanlislik var haberin olsun");
+                    return response;
+                }
+
+                if (!enemy.IsActive)
+                {
+                    response.SetError("kuzen bu enemy aktif degil git bunu bi aktiflestir önce");
+                    return response;
+                }
+                
+                var enemyLevel = await _context.EnemyLevel.Where(l => l.EnemyId == req.EnemyId && l.Level== req.EnemyLevel).FirstOrDefaultAsync();
+                
+                if (enemyLevel==null)
+                {
+                    response.SetError("moruk bu enemynin "+ req.EnemyLevel +" leveli yok buna bi bak");
+                    return response;
+                }
+
+                var ent = new WavePart()
+                {
+                    WaveId = waves[0].Id,
+                    EnemyLevelId = enemyLevel.Id,
+                    Count = req.Count
+                };
+
+                await _context.AddAsync(ent);
+                await _context.SaveChangesAsync();
+                
+                response.SetSuccess("ADAMSIN");
+            }
+            catch (Exception e)
+            {
+                response.SetError(OperationMessages.DbError);
+            }
+
+            return response;
+        }    
 
 
-        private async Task SyncPlayerTable(TableEnum tableEnum,UserDto user)
+        private async Task SyncPlayerTable(TableEnum[] tableEnum,UserDto user)
         {
             try
             {
+                var tableEnumAr = tableEnum.Cast<int>().ToArray();
                 var playerTableSync = await _context.PlayerTableSync
-                    .Where(l => l.UserId == user.Id && l.TableChanges.TableEnum == (int)tableEnum)
-                    .FirstOrDefaultAsync();
+                    .Include(l=>l.TableChanges)
+                    .Where(l => l.UserId == user.Id && tableEnumAr.Contains(l.TableChanges.TableEnum))
+                    .ToListAsync();
 
-                if (playerTableSync==null)
+                var now = DateTimeOffset.UtcNow;
+
+                for (int i = 0; i < tableEnumAr.Length; i++)
                 {
-                    var ent = new PlayerTableSync()
+                    if (playerTableSync.FirstOrDefault(l => l.TableChanges.TableEnum == tableEnumAr[i]) == null)
                     {
-                        TableChangesId = await _context.TableChanges
-                            .Where(l => l.TableEnum == (int)tableEnum)
-                            .Select(l => l.Id)
-                            .FirstOrDefaultAsync(),
-                        UserId = user.Id,
-                        LastSyncDate = DateTimeOffset.UtcNow
-                    };
-                    await _context.AddAsync(ent);
+                        var ent = new PlayerTableSync()
+                        {
+                            TableChangesId = await _context.TableChanges
+                                .Where(l => l.TableEnum == tableEnumAr[i])
+                                .Select(l => l.Id)
+                                .FirstOrDefaultAsync(),
+                            UserId = user.Id,
+                            LastSyncDate = now
+                        };
+                        await _context.AddAsync(ent);
+                        await _context.SaveChangesAsync();
+                        continue;
+                    }
+                    
+                    playerTableSync.FirstOrDefault(l => l.TableChanges.TableEnum == tableEnumAr[i])!.LastSyncDate =
+                        now;
                     await _context.SaveChangesAsync();
-                    return;
                 }
-
-                playerTableSync.LastSyncDate = DateTimeOffset.UtcNow;
-                await _context.SaveChangesAsync();
+            
             }
             catch (Exception e)
             {

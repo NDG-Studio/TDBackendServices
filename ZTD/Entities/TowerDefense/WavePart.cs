@@ -14,4 +14,8 @@ public class WavePart
     [ForeignKey("WaveId")]
     public Wave Wave { get; set; }
     
+        
+    [ForeignKey("EnemyLevelId")]
+    public EnemyLevel EnemyLevel { get; set; }
+    
 }
