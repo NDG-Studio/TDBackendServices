@@ -66,11 +66,13 @@ builder.Services.AddSwaggerGen(setup =>
 
 builder.Services.AddAutoMapper(
     typeof(UserProfile),
-    typeof(TdProfile)
+    typeof(TdProfile),
+    typeof(DialogProfile)
     );
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<ITdService, TdService>();
+builder.Services.AddScoped<IDialogService, DialogService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

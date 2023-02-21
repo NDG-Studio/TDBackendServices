@@ -51,6 +51,8 @@ namespace ZTD
             public DbSet<ResearchNodeUpgradeCondition> ResearchNodeUpgradeCondition { get; set; }
             public DbSet<PlayerResearchNodeLevel> PlayerResearchNodeLevel { get; set; }
             public DbSet<PlayerTableSync> PlayerTableSync { get; set; }
+            public DbSet<DialogScene> DialogScene { get; set; }
+            public DbSet<Dialog> Dialog { get; set; }
             
 
         #endregion
