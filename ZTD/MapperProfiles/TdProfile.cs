@@ -42,6 +42,10 @@ namespace ZTD.MapperProfiles
                     .MapFrom(source => source.OpenStartDate.ToString()));
 
 
+
+            CreateMap<ResearchNode, ResearchNodeDTO>();
+            CreateMap<ResearchNodeLevel, ResearchNodeLevelDTO>();
+            CreateMap<ResearchNodeUpgradeCondition, ResearchNodeUpgradeConditionDTO>();
         }
 
     }

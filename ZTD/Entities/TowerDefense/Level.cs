@@ -9,6 +9,7 @@ namespace ZTD.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public int OrderId { get; set; }
+        public int SceneId { get; set; } = 1;
         public int ChapterId { get; set; }
         public int LevelStarCondition { get; set; }
         public int Coin { get; set; }
