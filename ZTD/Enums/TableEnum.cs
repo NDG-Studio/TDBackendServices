@@ -18,5 +18,6 @@ namespace ZTD.Enums
         ResearchNode = 14,
         ResearchNodeLevel = 15,
         ResearchNodeLevelCondition = 16,
+        Dialog = 17,
     }
 }

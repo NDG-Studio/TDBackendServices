@@ -4,6 +4,8 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SharedLibrary.Helpers;
 using SharedLibrary.Models;
+using ZTD.Entities;
+using ZTD.Enums;
 
 namespace ZTD.Services
 {
@@ -39,6 +41,7 @@ namespace ZTD.Services
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
                 _logger.LogInformation(info.ToString());
+                await SyncPlayerTable(new[] { TableEnum.Dialog },user);
             }
             catch (Exception e)
             {
@@ -48,6 +51,50 @@ namespace ZTD.Services
             }
 
             return response;
+        }
+        
+        
+        
+        private async Task SyncPlayerTable(TableEnum[] tableEnum,UserDto user)
+        {
+            try
+            {
+                var tableEnumAr = tableEnum.Cast<int>().ToArray();
+                var playerTableSync = await _context.PlayerTableSync
+                    .Include(l=>l.TableChanges)
+                    .Where(l => l.UserId == user.Id && tableEnumAr.Contains(l.TableChanges.TableEnum))
+                    .ToListAsync();
+
+                var now = DateTimeOffset.UtcNow;
+
+                for (int i = 0; i < tableEnumAr.Length; i++)
+                {
+                    if (playerTableSync.FirstOrDefault(l => l.TableChanges.TableEnum == tableEnumAr[i]) == null)
+                    {
+                        var ent = new PlayerTableSync()
+                        {
+                            TableChangesId = await _context.TableChanges
+                                .Where(l => l.TableEnum == tableEnumAr[i])
+                                .Select(l => l.Id)
+                                .FirstOrDefaultAsync(),
+                            UserId = user.Id,
+                            LastSyncDate = now
+                        };
+                        await _context.AddAsync(ent);
+                        await _context.SaveChangesAsync();
+                        continue;
+                    }
+                    
+                    playerTableSync.FirstOrDefault(l => l.TableChanges.TableEnum == tableEnumAr[i])!.LastSyncDate =
+                        now;
+                    await _context.SaveChangesAsync();
+                }
+            
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
 
