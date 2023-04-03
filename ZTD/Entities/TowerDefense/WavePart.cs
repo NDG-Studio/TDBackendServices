@@ -9,6 +9,7 @@ public class WavePart
     public int Id { get; set; }
     public int WaveId { get; set; }
     public int EnemyLevelId { get; set; }
+    public double IntervalTime { get; set; } = 0;
     public int Count { get; set; }
     
     [ForeignKey("WaveId")]

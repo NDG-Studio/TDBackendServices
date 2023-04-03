@@ -6,7 +6,10 @@ public class AddWavePartRequest
     public int ChapterOrder { get; set; }
     public int LevelOrder { get; set; }
     public int WaveOrder { get; set; }
+    public double IntervalTime { get; set; }
     public int EnemyId { get; set; }
     public int EnemyLevel { get; set; }
     public int Count { get; set; }
+    
+    public int Difficulty { get; set; } = 1;
 }

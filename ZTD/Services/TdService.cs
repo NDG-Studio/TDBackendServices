@@ -100,6 +100,22 @@ namespace ZTD.Services
                     .Where(l => req.Data == null ? l.ChapterId == chapterId : req.Data.Contains(l.Id));
                 
                 var levelDtos = await _mapper.ProjectTo<LevelDTO>(query).ToListAsync();
+                
+                var userLevels = await _context.UserProgressHistory
+                    .Where(l => l.UserId == user.Id && l.GainedStar > 0 && l.Level.ChapterId == chapterId)
+                    .GroupBy(l=>l.LevelId)
+                    .Select(l=>l.OrderByDescending(x=>x.GainedStar).First())
+                    .ToListAsync();
+
+                foreach (var o in userLevels)
+                {
+                    var cc = levelDtos.FirstOrDefault(l => l.Id == o.LevelId);
+                    if (cc!=null)
+                    {
+                        cc.UserStar = o.GainedStar;
+                    }
+                }
+                
                 response.Data = levelDtos;
                 response.SetSuccess();
                 info.AddInfo(OperationMessages.Success);
@@ -737,7 +753,7 @@ namespace ZTD.Services
                     return response;
                 }
 
-                var levels = await _context.Level.Where(l => l.OrderId == req.LevelOrder && l.ChapterId == chapters[0].Id).ToListAsync();
+                var levels = await _context.Level.Where(l => l.OrderId == req.LevelOrder && l.ChapterId == chapters[0].Id && l.Difficulty==req.Difficulty).ToListAsync();
                 
                 if (levels.Count>1)
                 {

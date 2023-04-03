@@ -19,5 +19,6 @@
         public int SceneId { get; set; } = 1;
         public int UserStar { get; set; }
         public int LevelStarCondition { get; set; }
+        public int Difficulty { get; set; } = 1;
     }
 }

@@ -14,6 +14,7 @@ namespace ZTD.Entities
         public int LevelStarCondition { get; set; }
         public int Coin { get; set; }
         public int BarrierHealth { get; set; }
+        public int Difficulty { get; set; } = 1;
         
         [ForeignKey("ChapterId")]
         public Chapter Chapter { get; set; }

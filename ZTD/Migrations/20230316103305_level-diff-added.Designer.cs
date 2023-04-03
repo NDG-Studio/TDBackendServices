@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ZTD;
@@ -11,9 +12,10 @@ using ZTD;
 namespace ZTD.Migrations
 {
     [DbContext(typeof(ZTDContext))]
-    partial class ZTDContextModelSnapshot : ModelSnapshot
+    [Migration("20230316103305_level-diff-added")]
+    partial class leveldiffadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -897,12 +899,12 @@ namespace ZTD.Migrations
                         {
                             Id = 1L,
                             Email = "ugurcan.bagriyanik@ndgstudio.com.tr",
-                            FirstLogInDate = new DateTimeOffset(new DateTime(2023, 4, 3, 17, 1, 23, 547, DateTimeKind.Unspecified).AddTicks(2600), new TimeSpan(0, 3, 0, 0, 0)),
+                            FirstLogInDate = new DateTimeOffset(new DateTime(2023, 3, 16, 13, 33, 4, 906, DateTimeKind.Unspecified).AddTicks(9430), new TimeSpan(0, 3, 0, 0, 0)),
                             IsActive = true,
                             IsAndroid = true,
                             IsApe = true,
                             IsTutorialDone = false,
-                            LastSeen = new DateTimeOffset(new DateTime(2023, 4, 3, 17, 1, 23, 547, DateTimeKind.Unspecified).AddTicks(2660), new TimeSpan(0, 3, 0, 0, 0)),
+                            LastSeen = new DateTimeOffset(new DateTime(2023, 3, 16, 13, 33, 4, 906, DateTimeKind.Unspecified).AddTicks(9480), new TimeSpan(0, 3, 0, 0, 0)),
                             MobileUserId = "dummyMobileUserId1",
                             PasswordHash = "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
                             Username = "ugur"
@@ -1100,9 +1102,6 @@ namespace ZTD.Migrations
 
                     b.Property<int>("EnemyLevelId")
                         .HasColumnType("integer");
-
-                    b.Property<double>("IntervalTime")
-                        .HasColumnType("double precision");
 
                     b.Property<int>("WaveId")
                         .HasColumnType("integer");
